@@ -1,0 +1,64 @@
+<div class="row m-3 main_trainings">
+  <div class="col-12 trainings_filters row mb-2 mx-0 my-0 plx-2 border">
+    <div class="col-1 d-flex align-items-center border border-left-0 border-top-0 border-bottom-0"><h6 class="m-0">Filtri</h6><span class="fa fa-filter ml-2" style="font-size: 20px;"></span></div>
+    <div class="col-3 form-group pl-2 pr-1 m-0">
+      <label class="col-form-label col-form-label-sm p-0 text-muted">Autore</label>
+      <div class="input-group">
+        <input type="text" [(ngModel)]="filters.author.name" class="form-control form-control-sm" id="filterAuthorName" name="filterAuthorName" placeholder="Nome...">
+        <input type="text" [(ngModel)]="filters.author.surname" class="form-control form-control-sm" id="filterAuthorSurname" name="filterAuthorSurname" placeholder="Cognome...">
+      </div>
+    </div>
+    <div class="col-2 form-group px-1 m-0">
+      <label for="filterCreationDate" class="col-form-label col-form-label-sm p-0 text-muted">Creazione</label>
+      <input type="date" [(ngModel)]="filters.creationDate" class="form-control form-control-sm" id="filterCreationDate" name="filterCreationDate">
+    </div>
+    <div class="col-3 form-group px-1 m-0">
+      <label class="col-form-label col-form-label-sm p-0 text-muted">Atleta</label>
+      <div class="input-group">
+        <input type="text" [(ngModel)]="filters.atlete.name" class="form-control form-control-sm" id="filterAtleteName" name="filterAtleteName" placeholder="Nome...">
+        <input type="text" [(ngModel)]="filters.atlete.surname" class="form-control form-control-sm" id="filterAtleteSurname" name="filterAtleteSurname" placeholder="Cognome...">
+      </div>
+    </div>
+    <div class="col-2 form-group px-1 m-0">
+      <label class="col-form-label col-form-label-sm p-0 text-muted">Anno/Macro/Week</label>
+      <div class="input-group">
+        <input type="number" min="0" [(ngModel)]="filters.year" class="form-control form-control-sm" id="filterYear" name="filterYear" placeholder="/">
+        <input type="number" min="0" [(ngModel)]="filters.macro" class="form-control form-control-sm" id="filterMacro" name="filterMacro" placeholder="/">
+        <input type="number" min="0" [(ngModel)]="filters.week" class="form-control form-control-sm" id="filterWeek" name="filterWeek" placeholder="/">
+      </div>
+    </div>
+    <div class="col-1 form-group px-1 m-0">
+      <label for="filterType" class="col-form-label col-form-label-sm p-0 text-muted">Tipo</label>
+      <input type="text" [(ngModel)]="filters.type" class="form-control form-control-sm" id="filterType" name="filterType" placeholder="Tipo...">
+    </div>
+  </div>
+  <div class="card trainings_maincard col-12 p-0 border border-secondary border">
+    <div class="card-header maincard_header pl-2 pr-3 border border-secondary border-top-0 border-left-0 border-right-0 d-flex flex-column bg-dark text-white">
+      <div class="col-12 row m-0 p-0 d-flex align-items-center justify-content-center">
+        <div class="col-2"><b class="d-block">Autore</b><small class="d-block">Data creazione</small></div>
+        <div class="col-2"><b class="d-block">Atleta</b><small class="d-block">Eta &bull; bw</small></div>
+        <div class="col-1 text-center"><b>Anno</b></div>
+        <div class="col-1 text-center"><b>Macro</b></div>
+        <div class="col-1 text-center"><b>Week</b></div>
+        <div class="col-2 text-center"><b>Tipo</b></div>
+        <div class="col-2 text-center"><b>Rate</b></div>
+        <div class="col-1 text-center"><b>Azioni</b></div>
+      </div>
+    </div>
+    <div class="card-body maincard_body row w-100 align-content-start m-0 pl-2 pr-0 py-2">
+      <div class="list-group-item list-group-item-action list-group-item-light maincard_bodyitem d-flex align-items-center px-0 py-1" *ngFor="let elem of trainingList">
+        <div class="col-2"><span class="d-block">{{elem.autore.nome}} {{elem.autore.cognome}}</span><small>{{elem.autore.data_creazione}}</small></div>
+        <div class="col-2"><span class="d-block">{{elem.atleta.nome}} {{elem.atleta.cognome}}</span><small>{{elem.atleta.eta}} &bull; {{elem.atleta.bw}}kg</small></div>
+        <div class="col-1 text-center"><span>{{elem.allenamento.anno}}°</span></div>
+        <div class="col-1 text-center"><span>{{elem.allenamento.macro}}</span></div>
+        <div class="col-1 text-center"><span>{{elem.allenamento.settimana}}</span></div>
+        <div class="col-2 text-center"><span>{{elem.allenamento.tipo}}</span></div>
+        <div class="col-2 text-center"><span>{{elem.allenamento.rate}}</span></div>
+        <div class="col-1 text-center"><a [routerLink]="['/allenamento', elem.id]" routerLinkActive="active" class="fa fa-edit cursor-pointer" ngbTooltip="Visualizza" placement="left"></a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
