@@ -1,46 +1,46 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
-/dist
-/tmp
-/out-tsc
+WebApp/dist
+WebApp/tmp
+WebApp/out-tsc
 # Only exists if Bazel was run
-/bazel-out
+WebApp/bazel-out
 
 # dependencies
-/node_modules
+WebApp/node_modules
 
 # profiling files
-chrome-profiler-events*.json
-speed-measure-plugin*.json
+WebApp/chrome-profiler-events*.json
+WebApp/speed-measure-plugin*.json
 
 # IDEs and editors
-/.idea
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
+WebApp/.idea
+WebApp/.project
+WebApp/.classpath
+WebApp/.c9/
+WebApp/*.launch
+WebApp/.settings/
+WebApp/*.sublime-workspace
 
 # IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-.history/*
+WebApp/.vscode/*
+WebApp/!.vscode/settings.json
+WebApp/!.vscode/tasks.json
+WebApp/!.vscode/launch.json
+WebApp/!.vscode/extensions.json
+WebApp/.history/*
 
 # misc
-/.sass-cache
-/connect.lock
-/coverage
-/libpeerconnection.log
-npm-debug.log
-yarn-error.log
-testem.log
-/typings
+WebApp/.sass-cache
+WebApp/connect.lock
+WebApp/coverage
+WebApp/libpeerconnection.log
+WebApp/npm-debug.log
+WebApp/yarn-error.log
+WebApp/testem.log
+WebApp/typings
 
 # System Files
-.DS_Store
-Thumbs.db
+WebApp/.DS_Store
+WebApp/Thumbs.db

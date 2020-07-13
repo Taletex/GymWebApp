@@ -1,0 +1,104 @@
+<div class="row m-3 main_training">
+    <div class="card col-12 p-0 training_maincard">
+        <div class="card-header py-2">
+            <h5 class="m-0">Allenamento {{training.allenamento.tipo}} &bull; anno {{training.allenamento.anno}}, macro
+                {{training.allenamento.macro}}, settimana {{training.allenamento.settimana}}</h5>
+            <h6 class="m-0">Atleta {{training.atleta.nome}} {{training.atleta.cognome}} (età: {{training.atleta.eta}}
+                &bull; bw: {{training.atleta.bw}})</h6>
+        </div>
+        <div class="card-body maincard_body p-2">
+            <form>
+                <div class="form-row py-2 position-relative border border-top-0 border-left-0 border-right-0"
+                    [ngClass]="{'py-2': !outFirst, 'pb-2': outFirst}"
+                    *ngFor="let elem of training.allenamento.scheda; index as outIndex; first as outFirst">
+                    <div class="col-2 form-group pl-3">
+                        <label for="esercizio_{{outIndex}}" class="col-form-label col-form-label-sm">Esercizio</label>
+                        <input type="text" [(ngModel)]="elem.esercizio" class="form-control form-control-sm"
+                            id="esercizio_{{outIndex}}" name="esercizio_{{outIndex}}" placeholder="Esercizio...">
+                    </div>
+                    <div class="col-2 form-group pr-3">
+                        <label for="tipo_{{outIndex}}" class="col-form-label col-form-label-sm">Tipo</label>
+                        <input type="text" [(ngModel)]="elem.tipo" class="form-control form-control-sm"
+                            id="tipo_{{outIndex}}" name="tipo_{{outIndex}}" placeholder="Tipo esercizio...">
+                    </div>
+                    <div class="col-8 pr-5 pl-3 border border-right-0 border-top-0 border-bottom-0">
+                        <div class="form-row" *ngFor="let esercizio of elem.quantita; first as first; index as inIndex">
+                            <div class="col-3 form-group">
+                                <label for="serie_{{outIndex}}_{{inIndex}}" class="col-form-label col-form-label-sm"
+                                    [hidden]="!first">Serie</label>
+                                <input type="number" min="1" [(ngModel)]="esercizio.serie"
+                                    class="form-control form-control-sm" id="serie_{{outIndex}}_{{inIndex}}"
+                                    name="serie_{{outIndex}}_{{inIndex}}" placeholder="Serie...">
+                            </div>
+                            <div class="col-3 form-group">
+                                <label for="rep_{{outIndex}}_{{inIndex}}" class="col-form-label col-form-label-sm"
+                                    [hidden]="!first">Rep</label>
+                                <input type="number" min="1" [(ngModel)]="esercizio.rep"
+                                    class="form-control form-control-sm" id="rep_{{outIndex}}_{{inIndex}}"
+                                    name="rep_{{outIndex}}_{{inIndex}}" placeholder="Rep...">
+                            </div>
+                            <div class="col-2 form-group">
+                                <label for="peso_{{outIndex}}_{{inIndex}}" class="col-form-label col-form-label-sm"
+                                    [hidden]="!first">Peso</label>
+                                <input type="number" min="0" [(ngModel)]="esercizio.peso"
+                                    class="form-control form-control-sm" id="peso_{{outIndex}}_{{inIndex}}"
+                                    name="peso_{{outIndex}}_{{inIndex}}" placeholder="Peso...">
+                            </div>
+                            <div class="col-2 form-group">
+                                <label for="misura_{{outIndex}}_{{inIndex}}" class="col-form-label col-form-label-sm"
+                                    [hidden]="!first">Misura</label>
+                                <select [(ngModel)]="esercizio.misura" class="form-control form-control-sm"
+                                    id="misuraSelect_{{outIndex}}_{{inIndex}}"
+                                    name="misuraSelect_{{outIndex}}_{{inIndex}}">
+                                    <option [value]="'kg'">kg</option>
+                                    <option [value]="'lbs'">lbs</option>
+                                    <option [value]="'%'">% RM</option>
+                                    <option [value]="'altro'">Altro</option>
+                                </select>
+                                <input type="text" [(ngModel)]="esercizio.misura" [hidden]="esercizio.misura != 'altro'"
+                                    class="form-control form-control-sm" id="misura_{{outIndex}}_{{inIndex}}"
+                                    name="misura_{{outIndex}}_{{inIndex}}" placeholder="Altro...">
+                            </div>
+                            <div class="col-2 form-group">
+                                <label for="rest_{{outIndex}}_{{inIndex}}" class="col-form-label col-form-label-sm"
+                                    [hidden]="!first">Rest</label>
+                                <select [(ngModel)]="esercizio.recupero" class="form-control form-control-sm"
+                                    id="restSelect_{{outIndex}}_{{inIndex}}" name="restSelect_{{outIndex}}_{{inIndex}}">
+                                    <option [value]="'30s'">30s</option>
+                                    <option [value]="'1m'">1m</option>
+                                    <option [value]="'1m30s'">1m 30s</option>
+                                    <option [value]="'2m'">2m</option>
+                                    <option [value]="'3m'">3m</option>
+                                    <option [value]="'4m'">4m</option>
+                                    <option [value]="'5m'">5m</option>
+                                    <option [value]="'2-3m'">2-3m</option>
+                                    <option [value]="'3-4m'">3-4m</option>
+                                    <option [value]="'4-5m'">4-5m</option>
+                                    <option [value]="'2-5m'">2-5m</option>
+                                    <option [value]="'altro'">Altro</option>
+                                    <option [value]="'nessuno'">Nessuno</option>
+                                </select>
+                                <input type="text" [hidden]="esercizio.recupero != 'altro'"
+                                    [(ngModel)]="esercizio.recupero" class="form-control form-control-sm"
+                                    id="rest_{{outIndex}}_{{inIndex}}" name="rest_{{outIndex}}_{{inIndex}}"
+                                    placeholder="Altro...">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="position-absolute" style="bottom:23px; right:10px;" (click)="pushSeries(elem)"><button
+                            class="btn btn-sm btn-outline-info" ngbTooltip="Aggiungi serie x rep e peso">+</button>
+                    </div>
+                </div>
+                <div class="form-row d-flex justify-content-end">
+                    <button type="submit" class="btn btn-outline-info btn-small mt-2"
+                        (click)="pushExercize(training.allenamento)">Aggiungi esercizio +</button>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer d-flex justify-content-between py-2">
+            <div><small>Rating: AGGIUNGERE NGB-RATING</small></div>
+            <div><small>Allenamento creato da {{training.autore.nome}} {{training.autore.cognome}} il
+                    {{training.autore.data_creazione}}</small></div>
+        </div>
+    </div>
+</div>
