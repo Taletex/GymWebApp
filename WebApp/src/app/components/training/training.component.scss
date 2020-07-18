@@ -1,8 +1,18 @@
-.main_training {
-    .training_maincard {
-        .maincard_body {
+.main__training {
+
+    .training__maincontainer {
+
+        /* 
+        .maincontainer__header {
+        } 
+        */
+    
+        .maincontainer__body {
             overflow: auto;
             height: calc(100vh - 179px);
         }
+
     }
+    
 }
+

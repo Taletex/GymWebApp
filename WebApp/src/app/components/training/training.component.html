@@ -1,12 +1,12 @@
-<div class="row m-3 main_training">
-    <div class="card col-12 p-0 training_maincard">
-        <div class="card-header py-2">
+<div class="main__training row m-3">
+    <div class="training__maincontainer card col-12 p-0">
+        <div class="maincontainer__header card-header py-2">
             <h5 class="m-0">Allenamento {{training.allenamento.tipo}} &bull; anno {{training.allenamento.anno}}, macro
                 {{training.allenamento.macro}}, settimana {{training.allenamento.settimana}}</h5>
             <h6 class="m-0">Atleta {{training.atleta.nome}} {{training.atleta.cognome}} (età: {{training.atleta.eta}}
                 &bull; bw: {{training.atleta.bw}})</h6>
         </div>
-        <div class="card-body maincard_body p-2">
+        <div class="maincontainer__body card-body p-2">
             <form>
                 <div class="form-row py-2 position-relative border border-top-0 border-left-0 border-right-0"
                     [ngClass]="{'py-2': !outFirst, 'pb-2': outFirst}"

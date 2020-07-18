@@ -45,6 +45,15 @@
   height: 100%;
 }
 
+.main__maximum .maximum__maincontainer {
+  /* .maincontainer__header {
+
+  } */
+}
+.main__maximum .maximum__maincontainer .maincontainer__body {
+  height: 100%;
+}
+
 .main__sidebar.expanded {
   width: 180px;
   transition: all 1s;
@@ -63,13 +72,8 @@
   height: 44px;
 }
 .main__sidebar .sidebar__container .container__body .sidebar__element {
+  height: 40px;
   padding: 0.2rem 0.5rem 0.2rem 0.5rem;
-  /* 
-              &.deactive {
-                  img {
-                      transform: scale(1.0);
-                  }
-              } */
 }
 .main__sidebar .sidebar__container .container__body .sidebar__element:hover {
   box-shadow: 1px 1px rgba(0, 0, 0, 0.2);
@@ -86,25 +90,31 @@
   transform: scale(1.2);
 }
 
-.main_training .training_maincard .maincard_body {
+.main__training .training__maincontainer {
+  /* 
+  .maincontainer__header {
+  } 
+  */
+}
+.main__training .training__maincontainer .maincontainer__body {
   overflow: auto;
   height: calc(100vh - 179px);
 }
 
-.main_trainings .trainings_filters {
+.main__trainings .trainings__filters {
   font-size: 0.8rem;
   height: 60px;
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
   border-radius: 4px;
 }
-.main_trainings .trainings_maincard .maincard_header {
+.main__trainings .trainings__maincontainer .maincontainer__header {
   height: 60px;
 }
-.main_trainings .trainings_maincard .maincard_body {
+.main__trainings .trainings__maincontainer .maincontainer__body {
   overflow-y: scroll;
   height: calc(100vh - 206px);
 }
-.main_trainings .trainings_maincard .maincard_body .maincard_bodyitem {
+.main__trainings .trainings__maincontainer .maincontainer__body .body__element {
   height: 80px;
   overflow: hidden;
 }
