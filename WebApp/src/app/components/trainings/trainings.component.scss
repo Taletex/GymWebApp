@@ -1,0 +1,23 @@
+.main_trainings {
+    .trainings_filters {
+        font-size: 0.8rem;
+        height: 60px;
+        box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+        border-radius: 4px;
+    }
+
+    .trainings_maincard {
+        .maincard_header {
+            height: 60px;
+        }
+        .maincard_body {
+            overflow-y: scroll;
+            height: calc(100vh - 206px);
+
+            .maincard_bodyitem {
+                height: 80px;
+                overflow: hidden;
+            }
+        }
+    }
+}

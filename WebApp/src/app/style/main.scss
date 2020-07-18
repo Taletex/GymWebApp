@@ -1,120 +1,25 @@
+@use "../app.component";
+@use "../components/homepage/homepage.component"; 
+@use "../components/maximum/maximum.component";
+@use "../components/sidebar/sidebar.component";
+@use "../components/training/training.component";
+@use "../components/trainings/trainings.component";
+@use "../components/page-not-found/page-not-found.component";
+
 $menu-blue: #0f1042e6;
 
-.main__header {
-  cursor: default;
-  height: 44px;
-  box-shadow: 0px 2px 1px rgba(0,0,0,0.2);
+/* MISCELLANEOUS */
+[hidden] {
+  display: none !important;
 }
 
-.main__sidebar {
-  &.active {
-    width: 180px;
-    transition: all 1s;
-  }
-  &.deactive {
-    width: 50px;
-    transition: all 1s;
-  }
-  .sidebar__container {
-    background-color: $menu-blue;
-
-    .sidebar__header {
-      box-shadow: 0px 2px 1px rgba(0,0,0,0.2);
-      border-bottom: 1px solid #131746c7;
-      padding: 0.5rem;
-      height: 44px;
-    }
-
-    .sidebar__element {
-      height:40px;
-      padding: 0.2rem 0.5rem 0.2rem 0.5rem;
-
-      &:hover {
-        box-shadow:1px 1px rgba(0,0,0,0.2);
-        background-color:rgb(29,31,140)
-      }
-    }
-  }
+.w-auto {
+  width: auto !important;
 }
 
-/* ===== MAIN CONTAINER ===== */
-.main-content {
-  /* ===== Scrollbar ===== */
-  /* Customize website's scrollbar like Mac OS
-  Not supports in Firefox and IE */
-
-  /* total width */
-  ::-webkit-scrollbar {
-    background-color:#fff;
-    width: 15px;
-  }
-
-  /* background of the scrollbar except button or resizer */
-  ::-webkit-scrollbar-track {
-    background-color:#fff
-  }
-  ::-webkit-scrollbar-track:hover {
-    background-color:#f4f4f4
-  }
-
-  /* scrollbar itself */
-  ::-webkit-scrollbar-thumb {
-
-    background-color:#babac0;
-    border-radius:16px;
-    border:4px solid #fff
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background-color:#a0a0a5;
-    border:2px solid #f4f4f4
-  }
-
-  /* set button(top and bottom of the scrollbar) */
-  ::-webkit-scrollbar-button {display:none}
-
-  /* ===== END SCROLLBAR ===== */
-
-
-  /* ===== Trainings component ===== */
-  .main_trainings {
-    .trainings_filters {
-      font-size: 0.8rem;
-      height: 60px;
-      box-shadow:1px 1px 1px rgba(0,0,0,0.2);
-      border-radius: 4px;
-    }
-
-    .trainings_maincard {
-      .maincard_header {
-        height:60px;
-      }
-      .maincard_body {
-
-        overflow-y: scroll;
-        height: calc(100vh - 206px);
-
-        .maincard_bodyitem {
-          height: 80px;
-          overflow: hidden;
-        }
-      }
-    }
-  }
-  /* ===== END Trainings ===== */
-
-  /* ===== Training component ===== */
-  .main_training {
-    .training_maincard {
-      .maincard_body {
-        overflow: auto;
-        height: calc(100vh - 179px)
-      }
-    }
-  }
-  /* ===== END Trainings ===== */
-
+.h-auto {
+  height: auto !important;
 }
-
 
 .cursor-pointer {
   cursor: pointer !important;
@@ -123,23 +28,205 @@ $menu-blue: #0f1042e6;
 .overflow-auto {
   overflow: auto !important;
 }
-
-.link-button {
+x
+/* LINK STYLE */
+.link-text {
   text-decoration: none;
-  color: white;
+  color: black;
   display: inline-block;
 
-  &:hover, &:active {
+  &:hover {
+    color: $menu-blue;
+    text-decoration: none;
+  }
+}
+
+.link-text-inline {
+  text-decoration: none;
+  color: black;
+
+  &:hover {
+    color: $menu-blue;
+    text-decoration: none;
+  }
+}
+
+/* BUTTON STYLE */
+.normal-button {
+  text-decoration: none;
+  color: white;
+
+  &:hover,
+  &:active {
     color: white;
     text-decoration: none;
     display: inline-block;
   }
 }
 
-@for $i from 1 through 9 {
-  .font-weight-#{$i}00 {font-weight: 100*$i}
+.image-button {
+  cursor: pointer;
+
+  image,
+  span {
+    background-color: $menu-blue;
+  }
+
+  &:hover {
+    opacity: 75%;
+  }
 }
 
+.link-button {
+  cursor: pointer;
+  text-decoration: none;
+  color: white;
+
+  &:hover,
+  &:active {
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+  }
+}
+
+.text-button {
+  text-decoration: none;
+  color: black;
+  display: inline-block;
+
+  &:hover {
+    color: $menu-blue;
+    text-decoration: none;
+  }
+}
+
+.text-button {
+  text-decoration: none;
+  color: black;
+  display: inline;
+
+  &:hover {
+    color: $menu-blue;
+    text-decoration: none;
+  }
+}
+
+/* DIV STYLE */
+@for $i from 1 through 10 {
+  .opacity-#{$i} {
+    opacity: 0.1 * $i;
+  }
+}
+
+.overlay-full-center {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  .content {
+    display: none;
+  }
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+
+    .content {
+      width: 100%;
+      height: 100%;
+      color: white;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      overflow: hidden;
+    }
+  }
+}
+
+.overlay-full-bottomright {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  .content {
+    display: none;
+  }
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+
+    .content {
+      width: 100%;
+      height: 100%;
+      color: white;
+      display: flex !important;
+      align-items: flex-end !important;
+      justify-content: flex-end !important;
+      overflow: hidden;
+    }
+  }
+}
+
+/* FONT STYLE */
+@for $i from 1 through 9 {
+  .font-weight-#{$i}00 {
+    font-weight: 100 * $i;
+  }
+}
+
+/* TEXT STYLE */
+.truncate {
+  width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* BORDER STYLE */
+// Border radius
+@for $i from 0 through 9 {
+  .round-#{$i} {
+    border-radius: $i * 1px !important;
+  }
+}
+
+@for $i from 0 through 9 {
+  .round-left-#{$i} {
+    border-top-left-radius: $i * 1px !important;
+    border-bottom-left-radius: $i * 1px !important;
+  }
+}
+
+@for $i from 0 through 9 {
+  .round-top-#{$i} {
+    border-top-left-radius: $i * 1px !important;
+    border-top-right-radius: $i * 1px !important;
+  }
+}
+
+@for $i from 0 through 9 {
+  .round-right-#{$i} {
+    border-top-right-radius: $i * 1px !important;
+    border-bottom-right-radius: $i * 1px !important;
+  }
+}
+
+@for $i from 0 through 9 {
+  .round-bottom-#{$i} {
+    border-top-left-radius: $i * 1px !important;
+    border-bottom-left-radius: $i * 1px !important;
+  }
+}
+
+/* MODAL STYLE */
 .modal-lg {
   max-width: 1200px !important;
 }

@@ -9,9 +9,9 @@ import { PageNotFoundComponent } from 'src/app/components/page-not-found/page-no
 const routes: Routes = [
   { path: '', redirectTo: 'homepage', pathMatch: 'full' },
   { path: 'homepage', component: HomepageComponent},
-  { path: 'massimali', component: MaximumComponent},
-  { path: 'allenamenti', component: TrainingsComponent},
-  { path: 'allenamento/:id', component: TrainingComponent},
+  { path: 'maximum', component: MaximumComponent},
+  { path: 'trainings', component: TrainingsComponent},
+  { path: 'training/:id', component: TrainingComponent},
   { path: '**', component: PageNotFoundComponent }
 ];
 
