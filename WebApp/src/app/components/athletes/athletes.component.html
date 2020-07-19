@@ -1,9 +1,9 @@
-<div class="main__maximum row m-3">
+<div class="main__athletes row m-3">
 
-    <div class="maximum__maincontainer card col-12 p-0 border border-secondary">
+    <div class="athletes__maincontainer card col-12 p-0 border border-secondary">
 
         <div class="maincontainer__header card-header border border-secondary d-flex align-items-center bg-dark text-white">
-            <h5 class="m-0"><strong>LISTA MASSIMALI</strong></h5>
+            <h5 class="m-0"><strong>ATHLETE LIST</strong></h5>
         </div>
 
         <div class="maincontainer__body card-body row m-0">
@@ -18,20 +18,20 @@
                 <div class="col-2 text-center"><b>Military Press</b></div>
             </div>
             <div class="col-12 row m-0 border d-flex align-items-center justify-content-center"
-                *ngFor="let elem of massimaliList">
-                <div class="col-2 text-center border border-top-0 border-left-0 border-bottom-0">{{elem.atleta.nome}}
-                    {{elem.atleta.cognome}}</div>
+                *ngFor="let elem of athleteList">
+                <div class="col-2 text-center border border-top-0 border-left-0 border-bottom-0">{{elem.athlete.name}}
+                    {{elem.athlete.surname}}</div>
                 <div class="col-1 text-center border border-top-0 border-left-0 border-bottom-0">
-                    {{elem.massimali.squat}}</div>
+                    {{elem.maximum.squat}}</div>
                 <div class="col-1 text-center border border-top-0 border-left-0 border-bottom-0">
-                    {{elem.massimali.panca}}</div>
+                    {{elem.maximum.benchpress}}</div>
                 <div class="col-2 text-center border border-top-0 border-left-0 border-bottom-0">
-                    {{elem.massimali.stacco}}</div>
+                    {{elem.maximum.deadlift}}</div>
                 <div class="col-2 text-center border border-top-0 border-left-0 border-bottom-0">
-                    {{elem.massimali.clean_jerk}}</div>
+                    {{elem.maximum.cleanandjerk}}</div>
                 <div class="col-2 text-center border border-top-0 border-left-0 border-bottom-0">
-                    {{elem.massimali.front_squat}}</div>
-                <div class="col-2 text-center">{{elem.massimali.military_press}}</div>
+                    {{elem.maximum.frontsquat}}</div>
+                <div class="col-2 text-center">{{elem.maximum.militarypress}}</div>
             </div>
         </div>
     </div>

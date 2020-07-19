@@ -11,7 +11,7 @@ export class SidebarComponent implements OnInit {
 
   @Input() quote;
   @Output() sectionClick: EventEmitter<String> = new EventEmitter<String>();
-  public bActiveList = {homepage: false, trainings: false, maximum: false, notifications: false, userprofile: false};
+  public bActiveList = {homepage: false, trainings: false, exercises: false, athletes: false, coaches: false, notifications: false, userprofile: false};
   public bExpandedSidebar;
   public currentUsername;
   

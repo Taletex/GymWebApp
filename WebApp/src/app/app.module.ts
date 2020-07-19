@@ -10,23 +10,33 @@ import { HttpClientModule } from '@angular/common/http';
 /* app components */
 import { AppComponent } from './app.component';
 import { HomepageComponent } from './components/homepage/homepage.component';
-import { MaximumComponent } from './components/maximum/maximum.component';
+import { AthletesComponent } from './components/athletes/athletes.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { TrainingComponent } from './components/training/training.component';
 import { TrainingsComponent } from './components/trainings/trainings.component';
 import { ModalsComponent } from './components/modals/modals.component';
+import { ExercisesComponent } from './components/exercises/exercises.component';
+import { ExerciseComponent } from './components/exercise/exercise.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { StatsComponent } from './components/stats/stats.component';
+import { CoachesComponent } from './components/coaches/coaches.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomepageComponent,
-    MaximumComponent,
+    AthletesComponent,
     PageNotFoundComponent,
     SidebarComponent,
     TrainingComponent,
     TrainingsComponent,
-    ModalsComponent
+    ModalsComponent,
+    ExercisesComponent,
+    ExerciseComponent,
+    UserProfileComponent,
+    StatsComponent,
+    CoachesComponent
   ],
   imports: [
     BrowserModule,

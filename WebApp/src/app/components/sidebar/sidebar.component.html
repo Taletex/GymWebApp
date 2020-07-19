@@ -19,14 +19,32 @@
             <a routerLink="/trainings" routerLinkActive="active"
                 class="sidebar__element link-button w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
                 [ngClass]="{'active': bActiveList.trainings}">
-                <img src="assets/icons/sidebar/barbell.svg" style="width:24px; height:auto;" class="ml-1 mr-2">
+                <img src="assets/icons/sidebar/writing.svg" style="width:24px; height:auto;" class="ml-1 mr-2">
                 <span [hidden]="!bExpandedSidebar">Allenamenti</span>
             </a>
-            <a routerLink="/maximum" routerLinkActive="active"
+            <a routerLink="/exercises" routerLinkActive="active"
                 class="sidebar__element link-button w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
-                [ngClass]="{'active': bActiveList.maximum}">
-                <img src="assets/icons/sidebar/writing.svg" style="width:24px; height:auto;" class="ml-1 mr-2">
-                <span [hidden]="!bExpandedSidebar">Massimali</span>
+                [ngClass]="{'active': bActiveList.exercises}">
+                <img src="assets/icons/sidebar/barbell.svg" style="width:24px; height:auto;" class="ml-1 mr-2">
+                <span [hidden]="!bExpandedSidebar">Esercizi</span>
+            </a>
+            <a routerLink="/athletes" routerLinkActive="active"
+                class="sidebar__element link-button w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
+                [ngClass]="{'active': bActiveList.athletes}">
+                <img src="assets/icons/sidebar/athlete.svg" style="width:24px; height:auto;" class="ml-1 mr-2">
+                <span [hidden]="!bExpandedSidebar">Atleti</span>
+            </a>
+            <a routerLink="/coaches" routerLinkActive="active"
+                class="sidebar__element link-button w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
+                [ngClass]="{'active': bActiveList.coaches}">
+                <img src="assets/icons/sidebar/coach.svg" style="width:24px; height:auto;" class="ml-1 mr-2">
+                <span [hidden]="!bExpandedSidebar">Coach</span>
+            </a>
+            <a routerLink="/userprofile" routerLinkActive="active"
+                class="sidebar__element link-button w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
+                [ngClass]="{'active': bActiveList.userprofile}">
+                <img src="assets/icons/sidebar/user.svg" style="width:24px; height:auto;" class="ml-1 mr-2">
+                <span [hidden]="!bExpandedSidebar">Profilo Utente</span>
             </a>
         </div>
 

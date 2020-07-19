@@ -1,17 +1,25 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { MaximumComponent } from 'src/app/components/maximum/maximum.component';
+import { HomepageComponent } from 'src/app/components/homepage/homepage.component';
 import { TrainingsComponent } from 'src/app/components/trainings/trainings.component';
 import { TrainingComponent } from './components/training/training.component';
-import { HomepageComponent } from 'src/app/components/homepage/homepage.component';
+import { ExercisesComponent } from 'src/app/components/exercises/exercises.component';
+import { ExerciseComponent } from './components/exercise/exercise.component';
+import { AthletesComponent } from 'src/app/components/athletes/athletes.component';
+import { CoachesComponent } from 'src/app/components/coaches/coaches.component';
+import { UserProfileComponent } from 'src/app/components/user-profile/user-profile.component';
 import { PageNotFoundComponent } from 'src/app/components/page-not-found/page-not-found.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'homepage', pathMatch: 'full' },
   { path: 'homepage', component: HomepageComponent},
-  { path: 'maximum', component: MaximumComponent},
   { path: 'trainings', component: TrainingsComponent},
   { path: 'training/:id', component: TrainingComponent},
+  { path: 'exercises', component: ExercisesComponent},
+  { path: 'exercise/:id', component: ExerciseComponent},
+  { path: 'athletes', component: AthletesComponent},
+  { path: 'coaches', component: CoachesComponent},
+  { path: 'userprofile', component: UserProfileComponent},
   { path: '**', component: PageNotFoundComponent }
 ];
 
