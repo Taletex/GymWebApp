@@ -1,0 +1,85 @@
+[
+    {
+        "id": 00000001,
+        "author": 
+        {
+            "id": 00000001,
+            "name": "Alessandro",
+            "surname": "Messina",
+            "dateOfBirth": "Thu Jan 01 1970 01:00:00 GMT+0100 (Ora standard dell’Europa centrale)",
+            "sex": "male",
+            "bodyweight": "",
+            "yearsOfExperience": "2",
+            "contacts": 
+            {
+                "email": "alessandromessina95@hotmail.com",
+                "telephone": "3499999999"
+            },
+            "residence":
+            {
+                "state": "Italy",
+                "city": "Catania"
+            }
+
+        },
+        "athlete":
+        {
+            "id": 00000002,
+            "name": "Alberto",
+            "surname": "Messina",
+            "dateOfBirth": "Sat Feb 10 1996 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)",
+            "sex": "male",
+            "bodyweight": "74",
+            "yearsOfExperience": "6",
+            "contacts": 
+            {
+                "email": "albertomessina96@hotmail.com",
+                "telephone": "3499999999"
+            },
+            "residence":
+            {
+                "state": "Italy",
+                "city": "Catania"
+            }
+        },
+        "numberOfWeeks": 8,
+        "type": "powerlifting",
+        "creationDate": "Sun Jul 19 2020 19:46:40 GMT+0200 (Ora legale dell’Europa centrale)",
+        "startDate": "Thu Jan 01 1970 01:00:00 GMT+0100 (Ora standard dell’Europa centrale)",
+        "endDate": "Sun Jul 19 2020 00:00:00 GMT+0200 (Ora legale dell’Europa centrale)",
+        "comment": "Allenamento di prova",
+        "weeks": 
+        [
+            {
+                "exercise": 
+                {
+                    "name": "deadlift",
+                    "variant": 
+                    {
+                        "name": "deficit 6cm",
+                        "intensityCoefficent": 1.5,
+                    },
+                    "description": "stacco da terra deficit 6cm",
+                    "series":
+                    [
+                        {
+                            "seriesNumber": 5,
+                            "repNumber": 3,
+                            "weight": 80,
+                            "measure": "%",
+                            "rest": 120
+                        },
+                        {
+                            "seriesNumber": 2,
+                            "repNumber": 2,
+                            "weight": 90,
+                            "measure": "%",
+                            "rest": 180
+                        }
+                    ]
+                }
+            }
+        ]
+
+    }
+]
