@@ -1,85 +1,88 @@
 [
     {
-        "id": 00000001,
-        "author": 
-        {
-            "id": 00000001,
+        "id": 10000001,
+        "author": {
+            "id": 10000001,
             "name": "Alessandro",
             "surname": "Messina",
             "dateOfBirth": "Thu Jan 01 1970 01:00:00 GMT+0100 (Ora standard dell’Europa centrale)",
             "sex": "male",
             "bodyweight": "",
+            "userType": "COACH",
             "yearsOfExperience": "2",
-            "contacts": 
-            {
+            "contacts": {
                 "email": "alessandromessina95@hotmail.com",
                 "telephone": "3499999999"
             },
-            "residence":
-            {
+            "residence": {
                 "state": "Italy",
                 "city": "Catania"
             }
-
         },
-        "athlete":
-        {
-            "id": 00000002,
+        "athlete": {
+            "id": 10000002,
             "name": "Alberto",
             "surname": "Messina",
             "dateOfBirth": "Sat Feb 10 1996 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)",
             "sex": "male",
             "bodyweight": "74",
+            "userType": "ATHLETE",
             "yearsOfExperience": "6",
-            "contacts": 
-            {
+            "contacts": {
                 "email": "albertomessina96@hotmail.com",
                 "telephone": "3499999999"
             },
-            "residence":
-            {
+            "residence": {
                 "state": "Italy",
                 "city": "Catania"
             }
         },
-        "numberOfWeeks": 8,
-        "type": "powerlifting",
+        "type": "POWERLIFTING",
         "creationDate": "Sun Jul 19 2020 19:46:40 GMT+0200 (Ora legale dell’Europa centrale)",
         "startDate": "Thu Jan 01 1970 01:00:00 GMT+0100 (Ora standard dell’Europa centrale)",
         "endDate": "Sun Jul 19 2020 00:00:00 GMT+0200 (Ora legale dell’Europa centrale)",
         "comment": "Allenamento di prova",
-        "weeks": 
-        [
+        "weeks": [
             {
-                "exercise": 
-                {
-                    "name": "deadlift",
-                    "variant": 
+                "id": 10000001,
+                "name": "Week 1",
+                "comment": "Settimana 1 - Scarico",
+                "trainings": [
                     {
-                        "name": "deficit 6cm",
-                        "intensityCoefficent": 1.5,
-                    },
-                    "description": "stacco da terra deficit 6cm",
-                    "series":
-                    [
-                        {
-                            "seriesNumber": 5,
-                            "repNumber": 3,
-                            "weight": 80,
-                            "measure": "%",
-                            "rest": 120
-                        },
-                        {
-                            "seriesNumber": 2,
-                            "repNumber": 2,
-                            "weight": 90,
-                            "measure": "%",
-                            "rest": 180
-                        }
-                    ]
-                }
+                        "id": 10000001,
+                        "name": "Day 1",
+                        "comment": "Da fare lunedi mattina o pomeriggio",
+                        "exercises": [
+                            {
+                                "id": 12345678,
+                                "name": "deadlift",
+                                "variant": {
+                                    "name": "deficit 6cm",
+                                    "intensityCoefficent": 1.5
+                                },
+                                "description": "stacco da terra deficit 6cm",
+                                "series": [
+                                    {
+                                        "seriesNumber": 5,
+                                        "repNumber": 3,
+                                        "weight": 80,
+                                        "measure": "%",
+                                        "rest": 120
+                                    },
+                                    {
+                                        "seriesNumber": 2,
+                                        "repNumber": 2,
+                                        "weight": 90,
+                                        "measure": "%",
+                                        "rest": 180
+                                    }
+                                ],
+                                "comment": "abbassare il peso se viene pesante"
+                            }
+                        ]
+                    }
+                ]
             }
         ]
-
     }
 ]

@@ -140,12 +140,13 @@
   overflow: auto !important;
 }
 
-x .link-text {
+/* LINK STYLE */
+.link-text {
   text-decoration: none;
   color: black;
   display: inline-block;
 }
-x .link-text:hover {
+.link-text:hover {
   color: #0f1042e6;
   text-decoration: none;
 }
@@ -179,6 +180,15 @@ x .link-text:hover {
 }
 .image-button:hover {
   opacity: 75%;
+}
+
+.link-image-fontawesome {
+  cursor: pointer;
+  text-decoration: none;
+}
+.link-image-fontawesome:hover, .link-image-fontawesome:active {
+  text-decoration: none;
+  opacity: 65%;
 }
 
 .link-button {
@@ -346,6 +356,10 @@ x .link-text:hover {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.text-decoration-none {
+  text-decoration: none;
 }
 
 /* BORDER STYLE */

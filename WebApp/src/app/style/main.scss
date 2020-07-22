@@ -28,7 +28,7 @@ $menu-blue: #0f1042e6;
 .overflow-auto {
   overflow: auto !important;
 }
-x
+
 /* LINK STYLE */
 .link-text {
   text-decoration: none;
@@ -74,6 +74,17 @@ x
 
   &:hover {
     opacity: 75%;
+  }
+}
+
+.link-image-fontawesome {
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover,
+  &:active {
+    text-decoration: none;
+    opacity: 65%;
   }
 }
 
@@ -188,6 +199,10 @@ x
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.text-decoration-none {
+  text-decoration: none;
 }
 
 /* BORDER STYLE */
