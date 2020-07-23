@@ -15,12 +15,13 @@ export class SidebarComponent implements OnInit {
   public bExpandedSidebar;
   public currentUsername;
   
-  constructor(public router: Router, private securityService: SecurityService) { }
-
-  ngOnInit() {
+  constructor(public router: Router, private securityService: SecurityService) {
     this.bExpandedSidebar = true;
     this.bActiveList[(this.router.url).split('/')[1]] = true;
     this.currentUsername = this.securityService.getUsername();
+   }
+
+  ngOnInit() {
   }
 
 }

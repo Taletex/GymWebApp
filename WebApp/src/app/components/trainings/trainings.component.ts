@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
-import * as data from 'src/app/jsons/exercises.json';
+import * as data from 'src/app/jsons/trainings.json';
 
 @Component({
   selector: 'app-trainings',
@@ -13,10 +12,10 @@ export class TrainingsComponent implements OnInit {
 
   constructor() { 
     this.trainingList = (data as any).default;
+    this.filters = { author: { name: '', surname: '' }, creationDate: '', startDate: '', athlete: { name: '', surname: '' }, type: '' };
   }
 
   ngOnInit() {
-    this.filters = { author: { name: '', surname: '' }, creationDate: '', startDate: '', athlete: { name: '', surname: '' }, type: '' };
   }
 
 }

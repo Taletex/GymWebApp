@@ -1,4 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
+import { Router } from '@angular/router';
+import * as data from 'src/app/jsons/trainings.json';
 
 @Component({
   selector: 'app-training',
@@ -9,22 +11,22 @@ export class TrainingComponent implements OnInit {
 
   public training;
 
-  constructor() { }
+  constructor(public router: Router) { 
+    let trainingList = ((data as any).default);
+    let trainingId = (this.router.url).split('/')[2];
+
+    for(let i=0; i<trainingList.length; i++){
+      if (trainingList[i].id == trainingId) {
+        this.training = trainingList[i];
+        console.log(this.training);
+        break;
+      }
+    }
+
+  }
 
   ngOnInit() {
-    // TODO: prendere con una rest mirata
-    this.training = { id: 1,
-      autore: {nome: 'Alessandro', cognome: 'Messina', data_creazione: '28/01/2018'},
-      atleta: {nome: 'Alessandro', cognome: 'Messina', eta: '23', bw: '85', massimali: {squat: 220, stacco: 280, panca: 155, military_press: 97, front_squat: 170, clean_jerk: 135}},
-      allenamento: {
-        anno: 5, macro: 2, settimana: 13, tipo: 'powerlifting', rate: 3,
-        scheda: [
-          {esercizio: 'stacco', tipo: '5x3+2x2', quantita: [{serie: 5, rep: 3, peso: 82, misura: '%', recupero: '2m'}, {serie: 2, rep: 2, peso: 87, misura: '%', recupero: '2m'}]},
-          {esercizio: 'panca', tipo: '5x3+2x2', quantita: [{serie: 5, rep: 3, peso: 87, misura: '%', recupero: '2m'}, {serie: 2, rep: 2, peso: 92, misura: '%', recupero: '2m'}]},
-          {esercizio: 'squat', tipo: '5x3+2x2', quantita: [{serie: 5, rep: 3, peso: 85, misura: '%', recupero: '2m'}, {serie: 2, rep: 2, peso: 90, misura: '%', recupero: '2m'}]}
-        ]
-      }
-    };
+    
   }
 
   pushSeries(exercize: any) {
