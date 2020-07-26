@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import * as data from 'src/app/jsons/trainings.json';
+import * as _ from "lodash";
 
 @Component({
   selector: 'app-training',
@@ -10,8 +11,13 @@ import * as data from 'src/app/jsons/trainings.json';
 export class TrainingComponent implements OnInit {
 
   public training;
+  public defaultSeries;
+  public copiedSeries;
 
-  constructor(public router: Router) { 
+  constructor(public router: Router) {
+    this.defaultSeries = {seriesNumber: 1, repNumber: 1, weight: 50, measure: "%", rest: "90"};
+    this.copiedSeries = {seriesNumber: 1, repNumber: 1, weight: 50, measure: "%", rest: "90"};
+
     let trainingList = ((data as any).default);
     let trainingId = (this.router.url).split('/')[2];
 
@@ -29,19 +35,51 @@ export class TrainingComponent implements OnInit {
     
   }
 
-  pushSeries(exercize: any) {
-    if (exercize && exercize.quantita != null) {
-      exercize.quantita.push({serie: '', rep: '', peso: '', misura: '%', recupero: '1m30s'});
+  pushSeries(exercise: any) {
+    if (exercise && exercise.series != null) {
+      exercise.series.push(_.cloneDeep(this.defaultSeries));
     } else {
-      console.log('Error: "quantita" is not defined');
+      console.log('ERROR: pushing new series');
     }
   }
 
-  pushExercize(training: any) {
-    if (training && training.scheda != null) {
-      training.scheda.push({esercizio: '', tipo: '', quantita: [{serie: '', rep: '', peso: '', misura: '%', recupero: '1m30s'} ]});
+  resetSeries(exercise: any, index: number) {
+    if (exercise && exercise.series != null && index <exercise.series.length) {
+      exercise.series[index] = _.cloneDeep(this.defaultSeries);
     } else {
-      console.log('Error: "scheda" is not defined');
+      console.log('ERROR: resetting series of index ' + index);
+    }
+  }
+
+  deleteSeries(exercise: any, index: number) {
+    if (exercise && exercise.series != null && index <exercise.series.length) {
+      exercise.series.splice(index, 1);
+    } else {
+      console.log('ERROR: removing series of index ' + index);
+    }
+  }
+
+  copySeries(exercise: any, index: number) {
+    if (exercise && exercise.series != null && index <exercise.series.length) {
+      this.copiedSeries = _.cloneDeep(exercise.series[index]);
+    } else {
+      console.log('ERROR: copying series of index ' + index);
+    }
+  }
+
+  pasteSeries(exercise: any, index: number) {
+    if (exercise && exercise.series != null && index <exercise.series.length) {
+      exercise.series[index] = _.cloneDeep(this.copiedSeries);
+    } else {
+      console.log('ERROR: pasting series of index ' + index);
+    }
+  }
+
+  pushExercise(training: any) {
+    if (training && training.exercises != null) {
+      training.exercises.push({id: "12345678", name: "deadlift", variant: {name: "standard", intensityCoefficient: 1}, series: [{seriesNumber: 1, repNumber: 1, weight: 50, measure: "%", rest: "90"}]});
+    } else {
+      console.log('Error: "exercises" is not defined');
     }
   }
 }

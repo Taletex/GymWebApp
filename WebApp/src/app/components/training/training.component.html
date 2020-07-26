@@ -1,97 +1,139 @@
 <div class="main__training row m-3">
     <div class="training__maincontainer card col-12 p-0">
-        <div class="maincontainer__header card-header py-2">
-            <h5 class="m-0">ALLENAMENTO {{training.type | uppercase }}</h5>
-            <h6 class="m-0">
-                <span>Atleta {{training.athlete.name}} {{training.athlete.surname}} ({{training.athlete.dateOfBirth | date:'d MMMM yyyy'}} &bull; {{training.athlete.bodyweight}} kg)</span>
-                <span class="m-0 ml-3">Dal {{training.startDate | date:'d MMMM yyyy'}} al {{training.endDate | date:'d MMMM yyyy'}}</span>
-            </h6>
-        </div>
-        <div class="maincontainer__body card-body p-2">
-            <div *ngFor="let week of training.weeks; index as weekIndex; first as weekFirst">
-                <h6>{{week.name}}</h6>
-                <span>{{week.comment}}</span>
-                <div *ngFor="let singleTraining of week.trainings; index as singleTrainingIndex; first as singleTrainingFirst">
-                    <span>{{singleTraining.name}}</span>
-                    <span>{{singleTraining.comment}}</span>
-                    <form>
-                        <div class="form-row py-2 position-relative border border-top-0 border-left-0 border-right-0"
-                            [ngClass]="{'py-2': !outFirst, 'pb-2': outFirst}"
-                            *ngFor="let exercise of singleTraining.exercises; index as exerciseIndex; first as outFirst">
-                            <div class="col-2 form-group pl-3">
-                                <label for="esercizio_{{exerciseIndex}}" class="col-form-label col-form-label-sm">Esercizio</label>
-                                <input type="text" [(ngModel)]="exercise.name" class="form-control form-control-sm"
-                                    id="esercizio_{{exerciseIndex}}" name="esercizio_{{exerciseIndex}}" placeholder="Esercizio...">
-                            </div>
-                            <div class="col-2 form-group pr-3">
-                                <label for="tipo_{{exerciseIndex}}" class="col-form-label col-form-label-sm">Tipo</label>
-                                <input type="text" [(ngModel)]="exercise.variant.name" class="form-control form-control-sm"
-                                    id="tipo_{{exerciseIndex}}" name="tipo_{{exerciseIndex}}" placeholder="Tipo esercizio...">
-                            </div>
-                            <div class="col-8 pr-5 pl-3 border border-right-0 border-top-0 border-bottom-0">
-                                <div class="form-row" *ngFor="let elem of exercise.series; first as first; index as inIndex">
-                                    <div class="col-3 form-group">
-                                        <label for="serie_{{exerciseIndex}}_{{inIndex}}" class="col-form-label col-form-label-sm"
-                                            [hidden]="!first">Serie</label>
-                                        <input type="number" min="1" [(ngModel)]="elem.seriesNumber"
-                                            class="form-control form-control-sm" id="serie_{{exerciseIndex}}_{{inIndex}}"
-                                            name="serie_{{exerciseIndex}}_{{inIndex}}" placeholder="Serie...">
+        <form>
+            <div class="maincontainer__header card-header py-2">
+                <div class="d-flex align-items-baseline mb-2">
+                    <h5 class="m-0">ALLENAMENTO</h5>
+                    <div class="form-group m-0 ml-2">
+                        <select [(ngModel)]="training.type" class="form-control form-control-sm font-weight-bolder cursor-pointer" id="training_type" name="training_type">
+                            <option [value]="'POWERLIFTING'">POWERLIFTING</option>
+                            <option [value]="'WEIGHTLIFTING'">WEIGHTLIFTING</option>
+                            <option [value]="'CROSSFIT'">CROSSFIT</option>
+                            <option [value]="'BODYBUILDING'">BODYBUILDING</option>
+                            <option [value]="'SALA ATTREZZI'">SALA ATTREZZI</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <h6 class="m-0">
+                    <span>Atleta {{training.athlete.name}} {{training.athlete.surname}} ({{training.athlete.dateOfBirth | date:'d MMMM yyyy'}} &bull; {{training.athlete.bodyweight}} kg)</span>
+                    <span class="m-0">, dal {{training.startDate | date:'d MMMM yyyy'}} al {{training.endDate | date:'d MMMM yyyy'}}</span>
+                </h6>
+            </div>
+            <div class="maincontainer__body card-body p-2">
+                <div *ngFor="let week of training.weeks; index as weekIndex; first as weekFirst">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="m-0">WEEK {{weekIndex +1}}</h6>
+                        </div>
+                        <div class="card-body">
+                            <div *ngFor="let singleTraining of week.trainings; index as singleTrainingIndex; first as singleTrainingFirst">
+                                <div class="form-row">
+                                    <div class="col-2 form-group pl-0">
+                                        <label for="trainingName_{{weekIndex}}" class="col-form-label col-form-label-sm">Nome allenamento</label>
+                                        <input type="text" [(ngModel)]="singleTraining.name" class="form-control form-control-sm"
+                                            id="trainingName_{{weekIndex}}" name="trainingName_{{weekIndex}}" placeholder="Nome allenamento...">
                                     </div>
-                                    <div class="col-3 form-group">
-                                        <label for="rep_{{exerciseIndex}}_{{inIndex}}" class="col-form-label col-form-label-sm"
-                                            [hidden]="!first">Rep</label>
-                                        <input type="number" min="1" [(ngModel)]="elem.repNumber"
-                                            class="form-control form-control-sm" id="rep_{{exerciseIndex}}_{{inIndex}}"
-                                            name="rep_{{exerciseIndex}}_{{inIndex}}" placeholder="Rep...">
-                                    </div>
-                                    <div class="col-2 form-group">
-                                        <label for="peso_{{exerciseIndex}}_{{inIndex}}" class="col-form-label col-form-label-sm"
-                                            [hidden]="!first">Peso</label>
-                                        <input type="number" min="0" [(ngModel)]="elem.weight"
-                                            class="form-control form-control-sm" id="peso_{{exerciseIndex}}_{{inIndex}}"
-                                            name="peso_{{exerciseIndex}}_{{inIndex}}" placeholder="Peso...">
-                                    </div>
-                                    <div class="col-2 form-group">
-                                        <label for="misura_{{exerciseIndex}}_{{inIndex}}" class="col-form-label col-form-label-sm"
-                                            [hidden]="!first">Misura</label>
-                                        <select [(ngModel)]="elem.measure" class="form-control form-control-sm"
-                                            id="misuraSelect_{{exerciseIndex}}_{{inIndex}}"
-                                            name="misuraSelect_{{exerciseIndex}}_{{inIndex}}">
-                                            <option [value]="'kg'">kg</option>
-                                            <option [value]="'lbs'">lbs</option>
-                                            <option [value]="'%'">% RM</option>
-                                            <option [value]="'altro'">Altro</option>
-                                        </select>
-                                        <input type="text" [(ngModel)]="elem.measure" [hidden]="elem.measure != 'altro'"
-                                            class="form-control form-control-sm" id="misura_{{exerciseIndex}}_{{inIndex}}"
-                                            name="misura_{{exerciseIndex}}_{{inIndex}}" placeholder="Altro...">
-                                    </div>
-                                    <div class="col-2 form-group">
-                                        <label for="rest_{{exerciseIndex}}_{{inIndex}}" class="col-form-label col-form-label-sm"
-                                            [hidden]="!first">Rest</label>
-                                        <input type="number" min="0" [(ngModel)]="elem.rest" 
-                                            class="form-control form-control-sm" id="rest_{{exerciseIndex}}_{{inIndex}}" 
-                                            name="rest_{{exerciseIndex}}_{{inIndex}}">
+                                    <div class="col-10 form-group pr-0">
+                                        <label for="trainingComment_{{weekIndex}}" class="col-form-label col-form-label-sm">Commento</label>
+                                        <input type="text" [(ngModel)]="singleTraining.comment" class="form-control form-control-sm"
+                                            id="trainingComment_{{weekIndex}}" name="trainingComment_{{weekIndex}}" placeholder="Commento...">
                                     </div>
                                 </div>
-                            </div>
-                            <div class="position-absolute" style="bottom:23px; right:10px;" (click)="pushSeries(elem)"><button
-                                    class="btn btn-sm btn-outline-info" ngbTooltip="Aggiungi serie x rep e peso">+</button>
+                                <div class="form-row position-relative border" *ngFor="let exercise of singleTraining.exercises; index as exerciseIndex; first as outFirst">
+                                    <div class="col-2 form-group pl-3">
+                                        <label for="esercizio_{{exerciseIndex}}" class="col-form-label col-form-label-sm">Esercizio</label>
+                                        <input type="text" [(ngModel)]="exercise.name" class="form-control form-control-sm"
+                                            id="esercizio_{{exerciseIndex}}" name="esercizio_{{exerciseIndex}}" placeholder="Esercizio...">
+                                    </div>
+                                    <div class="col-2 form-group pr-3">
+                                        <label for="tipo_{{exerciseIndex}}" class="col-form-label col-form-label-sm">Tipo</label>
+                                        <input type="text" [(ngModel)]="exercise.variant.name" class="form-control form-control-sm"
+                                            id="tipo_{{exerciseIndex}}" name="tipo_{{exerciseIndex}}" placeholder="Tipo esercizio...">
+                                    </div>
+                                    <div class="col-8 pr-3 pl-3 border border-right-0 border-top-0 border-bottom-0">
+                                        <div class="form-row" *ngFor="let elem of exercise.series; first as seriesFirst; last as seriesLast; index as seriesIndex">
+                                            <div class="col-2 form-group">
+                                                <label for="serie_{{exerciseIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
+                                                    [hidden]="!seriesFirst">Serie</label>
+                                                <input type="number" min="1" [(ngModel)]="elem.seriesNumber"
+                                                    class="form-control form-control-sm" id="serie_{{exerciseIndex}}_{{seriesIndex}}"
+                                                    name="serie_{{exerciseIndex}}_{{seriesIndex}}" placeholder="Serie...">
+                                            </div>
+                                            <div class="col-2 form-group">
+                                                <label for="rep_{{exerciseIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
+                                                    [hidden]="!seriesFirst">Rep</label>
+                                                <input type="number" min="1" [(ngModel)]="elem.repNumber"
+                                                    class="form-control form-control-sm" id="rep_{{exerciseIndex}}_{{seriesIndex}}"
+                                                    name="rep_{{exerciseIndex}}_{{seriesIndex}}" placeholder="Rep...">
+                                            </div>
+                                            <div class="col-2 form-group">
+                                                <label for="peso_{{exerciseIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
+                                                    [hidden]="!seriesFirst">Peso</label>
+                                                <input type="number" min="0" [(ngModel)]="elem.weight"
+                                                    class="form-control form-control-sm" id="peso_{{exerciseIndex}}_{{seriesIndex}}"
+                                                    name="peso_{{exerciseIndex}}_{{seriesIndex}}" placeholder="Peso...">
+                                            </div>
+                                            <div class="col-2 form-group">
+                                                <label for="misura_{{exerciseIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
+                                                    [hidden]="!seriesFirst">Misura</label>
+                                                <select [(ngModel)]="elem.measure" class="form-control form-control-sm"
+                                                    id="misuraSelect_{{exerciseIndex}}_{{seriesIndex}}"
+                                                    name="misuraSelect_{{exerciseIndex}}_{{seriesIndex}}">
+                                                    <option [value]="'kg'">kg</option>
+                                                    <option [value]="'lbs'">lbs</option>
+                                                    <option [value]="'%'">% RM</option>
+                                                    <option [value]="'altro'">Altro</option>
+                                                </select>
+                                                <input type="text" [(ngModel)]="elem.measure" [hidden]="elem.measure != 'altro'"
+                                                    class="form-control form-control-sm" id="misura_{{exerciseIndex}}_{{seriesIndex}}"
+                                                    name="misura_{{exerciseIndex}}_{{seriesIndex}}" placeholder="Altro...">
+                                            </div>
+                                            <div class="col-2 form-group">
+                                                <label for="rest_{{exerciseIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
+                                                    [hidden]="!seriesFirst">Recupero</label>
+                                                <input type="number" min="0" [(ngModel)]="elem.rest" 
+                                                    class="form-control form-control-sm" id="rest_{{exerciseIndex}}_{{seriesIndex}}" 
+                                                    name="rest_{{exerciseIndex}}_{{seriesIndex}}">
+                                            </div>
+                                            <div class="col-2 form-group m-0 p-0 pl-2">
+                                                <label class="col-form-label col-form-label-sm" [hidden]="!seriesFirst">Azioni</label>
+                                                <div class="d-flex">
+                                                    <div class="image-button" ngbTooltip="Copia" placement="top" (click)="copySeries(exercise, seriesIndex)"><img src="assets/icons/actions/copy.svg" style="width:18px; height:auto;"></div>
+                                                    <div class="ml-2 image-button" ngbTooltip="Incolla" placement="top" (click)="pasteSeries(exercise, seriesIndex)"><img src="assets/icons/actions/contract.svg" style="width:18px; height:auto;"></div>
+                                                    <div class="ml-1 image-button" ngbTooltip="Reset" placement="top" (click)="resetSeries(exercise, seriesIndex)"><img src="assets/icons/actions/return.svg" style="width:18px; height:auto;"></div>
+                                                    <div class="ml-2 image-button" ngbTooltip="Elimina" placement="top" (click)="deleteSeries(exercise, seriesIndex)" [hidden]="exercise.series.length == 1"><img src="assets/icons/actions/garbage-can.svg" style="width:18px; height:auto;"></div>
+                                                    <div class="ml-2 image-button" ngbTooltip="Aggiungi" placement="top" (click)="pushSeries(exercise)" [hidden]="!seriesLast"><img src="assets/icons/actions/add.svg" style="width:18px; height:auto;"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-outline-info btn-small mt-2"
+                                        (click)="pushExercise(singleTraining)">Aggiungi esercizio +</button>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-row d-flex justify-content-end">
-                            <button type="submit" class="btn btn-outline-info btn-small mt-2"
-                                (click)="pushExercize(training.allenamento)">Aggiungi esercizio +</button>
+                        <div class="card-footer">
+                            <div class="col-2 form-group pl-3">
+                                <label for="weekcomment_{{weekIndex}}" class="col-form-label col-form-label-sm">Commento</label>
+                                <input type="text" [(ngModel)]="week.comment" class="form-control form-control-sm"
+                                    id="weekcomment_{{weekIndex}}" name="weekcomment_{{weekIndex}}" placeholder="Commento...">
+                            </div>
                         </div>
-                    </form>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="card-footer d-flex justify-content-between py-2">
+                <div><small>Allenamento creato da {{training.author.name}} {{training.author.surname}} il {{training.creationDate | date:'d MMMM yyyy'}}</small></div>
+                <div class="col-2 form-group pl-3">
+                    <label for="trainingcomment" class="col-form-label col-form-label-sm">Commento</label>
+                    <input type="text" [(ngModel)]="training.comment" class="form-control form-control-sm"
+                        id="trainingcomment" name="trainingcomment" placeholder="Commento...">
                 </div>
             </div>
-            
-        </div>
-        <div class="card-footer d-flex justify-content-between py-2">
-            <div><small>Rating: AGGIUNGERE NGB-RATING</small></div>
-            <div><small>Allenamento creato da {{training.author.name}} {{training.author.surname}} il
-                    {{training.creationDate | date:'d MMMM yyyy'}}</small></div>
-        </div>
+        </form>
     </div>
 </div>
