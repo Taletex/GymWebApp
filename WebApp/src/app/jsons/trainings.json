@@ -46,7 +46,7 @@
             {
                 "id": 10000001,
                 "comment": "Settimana 1 - Scarico",
-                "trainings": [
+                "sessions": [
                     {
                         "id": 10000001,
                         "name": "Day 1",

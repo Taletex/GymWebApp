@@ -1,18 +1,22 @@
 .main__training {
-
     .training__maincontainer {
-
         /* 
         .maincontainer__header {
         } 
         */
-    
+
         .maincontainer__body {
             overflow: auto;
             height: calc(100vh - 179px);
         }
 
+        .close {
+            font-size: 1.4rem;
+            opacity: 0.1;
+            transition: opacity 0.3s;
+        }
+        .nav-link:hover > .close {
+            opacity: 0.8;
+        }
     }
-    
 }
-
