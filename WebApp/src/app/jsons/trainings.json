@@ -45,7 +45,6 @@
         "weeks": [
             {
                 "id": 10000001,
-                "name": "Week 1",
                 "comment": "Settimana 1 - Scarico",
                 "trainings": [
                     {

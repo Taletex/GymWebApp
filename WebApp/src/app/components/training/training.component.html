@@ -41,15 +41,31 @@
                                     </div>
                                 </div>
                                 <div class="form-row position-relative border" *ngFor="let exercise of singleTraining.exercises; index as exerciseIndex; first as outFirst">
-                                    <div class="col-2 form-group pl-3">
-                                        <label for="esercizio_{{exerciseIndex}}" class="col-form-label col-form-label-sm">Esercizio</label>
-                                        <input type="text" [(ngModel)]="exercise.name" class="form-control form-control-sm"
-                                            id="esercizio_{{exerciseIndex}}" name="esercizio_{{exerciseIndex}}" placeholder="Esercizio...">
-                                    </div>
-                                    <div class="col-2 form-group pr-3">
-                                        <label for="tipo_{{exerciseIndex}}" class="col-form-label col-form-label-sm">Tipo</label>
-                                        <input type="text" [(ngModel)]="exercise.variant.name" class="form-control form-control-sm"
-                                            id="tipo_{{exerciseIndex}}" name="tipo_{{exerciseIndex}}" placeholder="Tipo esercizio...">
+                                    <div class="col-4 d-flex m-0 px-3">
+                                        <div class="row m-0">
+                                            <div class="col-6 form-group pl-0 pr-1 m-0">
+                                                <label for="esercizio_{{exerciseIndex}}" class="col-form-label col-form-label-sm">Esercizio</label>
+                                                <input type="text" [(ngModel)]="exercise.name" class="form-control form-control-sm"
+                                                    id="esercizio_{{exerciseIndex}}" name="esercizio_{{exerciseIndex}}" placeholder="Esercizio...">
+                                            </div>
+                                            <div class="col-6 form-group pl-1 pr-0 m-0">
+                                                <label for="tipo_{{exerciseIndex}}" class="col-form-label col-form-label-sm">Tipo</label>
+                                                <input type="text" [(ngModel)]="exercise.variant.name" class="form-control form-control-sm"
+                                                    id="tipo_{{exerciseIndex}}" name="tipo_{{exerciseIndex}}" placeholder="Tipo esercizio...">
+                                            </div>
+                                            <div class="col-12 form-group pl-0 pr-0">
+                                                <label for="description_{{exerciseIndex}}" class="col-form-label col-form-label-sm">Descrizione</label>
+                                                <input type="text" [(ngModel)]="exercise.description" class="form-control form-control-sm"
+                                                    id="description_{{exerciseIndex}}" name="description_{{exerciseIndex}}" placeholder="Descrizione esercizio...">
+                                            </div>
+                                        </div>
+                                        <div class="pl-3 pr-0 d-flex flex-column align-items-center mt-1">
+                                            <span style="font-size: 0.875rem;">Azioni</span>
+                                            <div class="image-button" ngbTooltip="Copia esercizio" placement="top" (click)="copyExercise(singleTraining, exerciseIndex)"><img src="assets/icons/actions/copy.svg" style="width:18px; height:auto;"></div>
+                                            <div class="ml-2 image-button" ngbTooltip="Incolla esercizio" placement="top" (click)="pasteExercise(singleTraining, exerciseIndex)"><img src="assets/icons/actions/contract.svg" style="width:18px; height:auto;"></div>
+                                            <div class="ml-1 image-button" ngbTooltip="Reset esercizio" placement="top" (click)="resetExercise(singleTraining, exerciseIndex)"><img src="assets/icons/actions/return.svg" style="width:18px; height:auto;"></div>
+                                            <div class="ml-2 image-button" ngbTooltip="Elimina esercizio" placement="top" (click)="deleteExercise(singleTraining, exerciseIndex)" [hidden]="singleTraining.exercises.length == 1"><img src="assets/icons/actions/garbage-can.svg" style="width:18px; height:auto;"></div>
+                                        </div>
                                     </div>
                                     <div class="col-8 pr-3 pl-3 border border-right-0 border-top-0 border-bottom-0">
                                         <div class="form-row" *ngFor="let elem of exercise.series; first as seriesFirst; last as seriesLast; index as seriesIndex">
@@ -103,7 +119,7 @@
                                                     <div class="ml-2 image-button" ngbTooltip="Incolla" placement="top" (click)="pasteSeries(exercise, seriesIndex)"><img src="assets/icons/actions/contract.svg" style="width:18px; height:auto;"></div>
                                                     <div class="ml-1 image-button" ngbTooltip="Reset" placement="top" (click)="resetSeries(exercise, seriesIndex)"><img src="assets/icons/actions/return.svg" style="width:18px; height:auto;"></div>
                                                     <div class="ml-2 image-button" ngbTooltip="Elimina" placement="top" (click)="deleteSeries(exercise, seriesIndex)" [hidden]="exercise.series.length == 1"><img src="assets/icons/actions/garbage-can.svg" style="width:18px; height:auto;"></div>
-                                                    <div class="ml-2 image-button" ngbTooltip="Aggiungi" placement="top" (click)="pushSeries(exercise)" [hidden]="!seriesLast"><img src="assets/icons/actions/add.svg" style="width:18px; height:auto;"></div>
+                                                    <div class="ml-2 image-button" ngbTooltip="Aggiungi" placement="top" (click)="pushSeries(exercise)" [hidden]="!seriesLast"><img src="assets/icons/actions/plus2.svg" style="width:18px; height:auto;"></div>
                                                 </div>
                                             </div>
                                         </div>

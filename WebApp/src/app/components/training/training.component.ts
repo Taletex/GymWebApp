@@ -11,10 +11,14 @@ import * as _ from "lodash";
 export class TrainingComponent implements OnInit {
 
   public training;
+  public defaultExercise;
+  public copiedExercise;
   public defaultSeries;
   public copiedSeries;
 
   constructor(public router: Router) {
+    this.defaultExercise = {id: "12345678", name: "deadlift", variant: {name: "standard", intensityCoefficient: 1}, series: [{seriesNumber: 1, repNumber: 1, weight: 50, measure: "%", rest: "90"}]};
+    this.copiedExercise = {id: "12345678", name: "deadlift", variant: {name: "standard", intensityCoefficient: 1}, series: [{seriesNumber: 1, repNumber: 1, weight: 50, measure: "%", rest: "90"}]};
     this.defaultSeries = {seriesNumber: 1, repNumber: 1, weight: 50, measure: "%", rest: "90"};
     this.copiedSeries = {seriesNumber: 1, repNumber: 1, weight: 50, measure: "%", rest: "90"};
 
@@ -77,9 +81,41 @@ export class TrainingComponent implements OnInit {
 
   pushExercise(training: any) {
     if (training && training.exercises != null) {
-      training.exercises.push({id: "12345678", name: "deadlift", variant: {name: "standard", intensityCoefficient: 1}, series: [{seriesNumber: 1, repNumber: 1, weight: 50, measure: "%", rest: "90"}]});
+      training.exercises.push(this.defaultExercise);
     } else {
       console.log('Error: "exercises" is not defined');
+    }
+  }
+
+  resetExercise(training: any, index: number) {
+    if (training && training.exercises != null && index <training.exercises.length) {
+      training.exercises[index] = _.cloneDeep(this.defaultExercise);
+    } else {
+      console.log('ERROR: resetting exercise of index ' + index);
+    }
+  }
+
+  deleteExercise(training: any, index: number) {
+    if (training && training.exercises != null && index <training.exercises.length) {
+      training.exercises.splice(index, 1);
+    } else {
+      console.log('ERROR: removing exercise of index ' + index);
+    }
+  }
+
+  copyExercise(training: any, index: number) {
+    if (training && training.exercises != null && index <training.exercises.length) {
+      this.copiedExercise = _.cloneDeep(training.exercises[index]);
+    } else {
+      console.log('ERROR: copying exercise of index ' + index);
+    }
+  }
+
+  pasteExercise(training: any, index: number) {
+    if (training && training.exercises != null && index <training.exercises.length) {
+      training.exercises[index] = _.cloneDeep(this.copiedExercise);
+    } else {
+      console.log('ERROR: pasting exercise of index ' + index);
     }
   }
 }
