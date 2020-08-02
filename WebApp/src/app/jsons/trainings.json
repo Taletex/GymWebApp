@@ -79,6 +79,162 @@
                                 "comment": "abbassare il peso se viene pesante"
                             }
                         ]
+                    },
+                    {
+                        "id": 10000001,
+                        "name": "Day 1",
+                        "comment": "Da fare lunedi mattina o pomeriggio",
+                        "exercises": [
+                            {
+                                "id": 12345678,
+                                "name": "deadlift",
+                                "variant": {
+                                    "name": "standard",
+                                    "intensityCoefficent": 1
+                                },
+                                "description": "stacco da terra deficit 6cm",
+                                "series": [
+                                    {
+                                        "seriesNumber": 10,
+                                        "repNumber": 2,
+                                        "weight": 80,
+                                        "measure": "%",
+                                        "rest": 120
+                                    }
+                                ],
+                                "comment": "abbassare il peso se viene pesante"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": 10000001,
+                "comment": "Settimana 1 - Scarico",
+                "sessions": [
+                    {
+                        "id": 10000001,
+                        "name": "Day 1",
+                        "comment": "Da fare lunedi mattina o pomeriggio",
+                        "exercises": [
+                            {
+                                "id": 12345678,
+                                "name": "deadlift",
+                                "variant": {
+                                    "name": "deficit 6cm",
+                                    "intensityCoefficent": 1.5
+                                },
+                                "description": "stacco da terra deficit 6cm",
+                                "series": [
+                                    {
+                                        "seriesNumber": 5,
+                                        "repNumber": 3,
+                                        "weight": 80,
+                                        "measure": "%",
+                                        "rest": 120
+                                    },
+                                    {
+                                        "seriesNumber": 2,
+                                        "repNumber": 2,
+                                        "weight": 90,
+                                        "measure": "%",
+                                        "rest": 180
+                                    }
+                                ],
+                                "comment": "abbassare il peso se viene pesante"
+                            }
+                        ]
+                    },
+                    {
+                        "id": 10000001,
+                        "name": "Day 1",
+                        "comment": "Da fare lunedi mattina o pomeriggio",
+                        "exercises": [
+                            {
+                                "id": 12345678,
+                                "name": "deadlift",
+                                "variant": {
+                                    "name": "standard",
+                                    "intensityCoefficent": 1
+                                },
+                                "description": "stacco da terra deficit 6cm",
+                                "series": [
+                                    {
+                                        "seriesNumber": 10,
+                                        "repNumber": 2,
+                                        "weight": 80,
+                                        "measure": "%",
+                                        "rest": 120
+                                    }
+                                ],
+                                "comment": "abbassare il peso se viene pesante"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": 10000001,
+                "comment": "Settimana 1 - Scarico",
+                "sessions": [
+                    {
+                        "id": 10000001,
+                        "name": "Day 1",
+                        "comment": "Da fare lunedi mattina o pomeriggio",
+                        "exercises": [
+                            {
+                                "id": 12345678,
+                                "name": "deadlift",
+                                "variant": {
+                                    "name": "deficit 6cm",
+                                    "intensityCoefficent": 1.5
+                                },
+                                "description": "stacco da terra deficit 6cm",
+                                "series": [
+                                    {
+                                        "seriesNumber": 5,
+                                        "repNumber": 3,
+                                        "weight": 80,
+                                        "measure": "%",
+                                        "rest": 120
+                                    },
+                                    {
+                                        "seriesNumber": 2,
+                                        "repNumber": 2,
+                                        "weight": 90,
+                                        "measure": "%",
+                                        "rest": 180
+                                    }
+                                ],
+                                "comment": "abbassare il peso se viene pesante"
+                            }
+                        ]
+                    },
+                    {
+                        "id": 10000001,
+                        "name": "Day 1",
+                        "comment": "Da fare lunedi mattina o pomeriggio",
+                        "exercises": [
+                            {
+                                "id": 12345678,
+                                "name": "deadlift",
+                                "variant": {
+                                    "name": "standard",
+                                    "intensityCoefficent": 1
+                                },
+                                "description": "stacco da terra deficit 6cm",
+                                "series": [
+                                    {
+                                        "seriesNumber": 10,
+                                        "repNumber": 2,
+                                        "weight": 80,
+                                        "measure": "%",
+                                        "rest": 120
+                                    }
+                                ],
+                                "comment": "abbassare il peso se viene pesante"
+                            }
+                        ]
                     }
                 ]
             }

@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import * as data from 'src/app/jsons/trainings.json';
 import * as _ from "lodash";
 
@@ -10,29 +11,24 @@ import * as _ from "lodash";
 })
 export class TrainingComponent implements OnInit {
 
-  public training;
-  public defaultSession;
-  public copiedSession;
-  public defaultExercise;
-  public copiedExercise;
-  public defaultSeries;
-  public copiedSeries;
-  public activeSession;
+  public training: any;
+  public defaultWeek: any;
+  public activeWeek: number;
+  public copiedWeek: any;
+  public defaultSession: any;
+  public copiedSession: any;
+  public activeSession: Array<number>;
+  public defaultExercise: any;
+  public copiedExercise: any;
+  public defaultSeries: any;
+  public copiedSeries: any;
 
-  constructor(public router: Router) {
-    // TODO: get last id for sessions
-    this.defaultSession = {id: 10000001, name: "", comment: "", exercises: [{id: "12345678", name: "deadlift", variant: {name: "standard", intensityCoefficient: 1}, series: [{seriesNumber: 1, repNumber: 1, weight: 50, measure: "%", rest: "90"}]} ]};
-    this.copiedSession = {id: 10000001, name: "", comment: "", exercises: [{id: "12345678", name: "deadlift", variant: {name: "standard", intensityCoefficient: 1}, series: [{seriesNumber: 1, repNumber: 1, weight: 50, measure: "%", rest: "90"}]} ]};
-    this.defaultExercise = {id: "12345678", name: "deadlift", variant: {name: "standard", intensityCoefficient: 1}, series: [{seriesNumber: 1, repNumber: 1, weight: 50, measure: "%", rest: "90"}]};
-    this.copiedExercise = {id: "12345678", name: "deadlift", variant: {name: "standard", intensityCoefficient: 1}, series: [{seriesNumber: 1, repNumber: 1, weight: 50, measure: "%", rest: "90"}]};
-    this.defaultSeries = {seriesNumber: 1, repNumber: 1, weight: 50, measure: "%", rest: "90"};
-    this.copiedSeries = {seriesNumber: 1, repNumber: 1, weight: 50, measure: "%", rest: "90"};
-    this.activeSession = 1;
+  constructor(public router: Router, private toastr: ToastrService) {
 
+    // Init training attribute
     let trainingList = ((data as any).default);
     let trainingId = (this.router.url).split('/')[2];
-
-    for(let i=0; i<trainingList.length; i++){
+    for(let i=0; i<trainingList.length; i++) {
       if (trainingList[i].id == trainingId) {
         this.training = trainingList[i];
         console.log(this.training);
@@ -40,13 +36,29 @@ export class TrainingComponent implements OnInit {
       }
     }
 
+    // Init "default" and "copied" attributes (TODO: get last id for week and session)
+    this.defaultSeries = {seriesNumber: 1, repNumber: 1, weight: 50, measure: "%", rest: "90"};
+    this.copiedSeries = _.cloneDeep(this.defaultSeries);
+    this.defaultExercise = {id: "12345678", name: "deadlift", variant: {name: "standard", intensityCoefficient: 1}, series: [_.cloneDeep(this.defaultSeries)]};
+    this.copiedExercise = _.cloneDeep(this.defaultExercise);
+    this.defaultSession = {id: 10000001, name: "", comment: "", exercises: [_.cloneDeep(this.defaultExercise)]};
+    this.copiedSession = _.cloneDeep(this.defaultSession);
+    this.defaultWeek  = {id: 10000001, comment: "", sessions: [_.cloneDeep(this.defaultSession)]};
+    this.copiedWeek  = _.cloneDeep(this.defaultWeek);
+    
+    
+    this.activeWeek = 1;
+    this.activeSession = [];
+    for(let i=0;i<this.training.weeks.length;i++) {
+      this.activeSession.push(1);
+    }
   }
 
-  ngOnInit() {
-    
-  }
+  ngOnInit() {}
+
 
   // TODO: quando si compie una di queste azioni mostrare un toastr che ti dice l'azione se andataa buon fine o meno
+
 
   /* SERIES FUNCTIONS */
   pushSeries(exercise: any) {
@@ -89,6 +101,7 @@ export class TrainingComponent implements OnInit {
     }
   }
 
+
   /* EXERCISES FUNCTIONS */
   pushExercise(training: any) {
     if (training && training.exercises != null) {
@@ -130,10 +143,12 @@ export class TrainingComponent implements OnInit {
     }
   }
 
+
   /* SESSIONS FUNCTIONS */
   pushSession(event: MouseEvent, week: any) {
     if (week && week.sessions != null) {
       week.sessions.push(_.cloneDeep(this.defaultSession));
+      this.toastr.success('Session added succesfully');
     } else {
       console.log('Error: "sessions" is not defined');
     }
@@ -150,10 +165,10 @@ export class TrainingComponent implements OnInit {
     event.stopImmediatePropagation();
   }
 
-  deleteSession(event: MouseEvent, week: any, index: number) {
+  deleteSession(event: MouseEvent, week: any, index: number, weekIndex: number) {
     if (week && week.sessions != null && index < week.sessions.length) {
       week.sessions.splice(index, 1);
-      this.activeSession = 1;
+      this.activeSession[weekIndex] = 1;
     } else {
       console.log('ERROR: removing session of index ' + index);
     }
@@ -181,5 +196,52 @@ export class TrainingComponent implements OnInit {
     event.stopImmediatePropagation();
   }
 
+
+  /* WEEKS FUNCTIONS */
+  pushWeek(event: MouseEvent) {
+    this.training.weeks.push(_.cloneDeep(this.defaultWeek));
+    event.preventDefault();
+  }
+
+  resetWeek(event: MouseEvent, index: number) {
+    if (this.training.weeks != null && index < this.training.weeks.length) {
+      this.training.weeks[index] = _.cloneDeep(this.defaultWeek);
+    } else {
+      console.log('ERROR: resetting week of index ' + index);
+    }
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }
+
+  deleteWeek(event: MouseEvent, index: number) {
+    if (this.training.weeks != null && index < this.training.weeks.length) {
+      this.training.weeks.splice(index, 1);
+      this.activeWeek = 1;
+    } else {
+      console.log('ERROR: removing week of index ' + index);
+    }
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }
+
+  copyWeek(event: MouseEvent, index: number) {
+    if (this.training.weeks != null && index < this.training.weeks.length) {
+      this.copiedWeek = _.cloneDeep(this.training.weeks[index]);
+    } else {
+      console.log('ERROR: copying week of index ' + index);
+    }
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }
+
+  pasteWeek(event: MouseEvent, index: number) {
+    if (this.training.weeks != null && index < this.training.weeks.length) {
+      this.training.weeks[index] = _.cloneDeep(this.copiedWeek);
+    } else {
+      console.log('ERROR: pasting week of index ' + index);
+    } 
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }
 
 }

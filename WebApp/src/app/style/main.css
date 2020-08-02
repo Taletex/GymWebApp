@@ -100,6 +100,14 @@
   overflow: auto;
   height: calc(100vh - 179px);
 }
+.main__training .training__maincontainer .close {
+  font-size: 1.4rem;
+  opacity: 0.1;
+  transition: opacity 0.3s;
+}
+.main__training .training__maincontainer .nav-link:hover > .close {
+  opacity: 0.8;
+}
 
 .main__trainings .trainings__filters {
   font-size: 0.8rem;

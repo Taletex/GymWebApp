@@ -6,6 +6,9 @@ import { AppRoutingModule } from './app-routing.module';
 /* npm imports */
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 /* app components */
 import { AppComponent } from './app.component';
@@ -43,7 +46,10 @@ import { CoachesComponent } from './components/coaches/coaches.component';
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    NgbModule
+    NgbModule,
+    CommonModule,
+    BrowserAnimationsModule, // required animations module
+    ToastrModule.forRoot(),  // ToastrModule added
   ],
   providers: [],
   bootstrap: [AppComponent]

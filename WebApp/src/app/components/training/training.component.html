@@ -20,23 +20,45 @@
                     <span class="m-0">, dal {{training.startDate | date:'d MMMM yyyy'}} al {{training.endDate | date:'d MMMM yyyy'}}</span>
                 </h6>
             </div>
-            <div class="maincontainer__body card-body p-2">
-                <div *ngFor="let week of training.weeks; index as weekIndex; first as weekFirst">
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 class="m-0">WEEK {{weekIndex +1}}</h6>
-                        </div>
-                        <div class="card-body">
-                            <ul ngbNav #nav="ngbNav" [(activeId)]="activeSession" class="nav-tabs">
+            <div class="maincontainer__body card-body p-2 d-flex">
+
+                <!-- WEEKS -->
+                <ul ngbNav #nav="ngbNav" [(activeId)]="activeWeek" class="nav-pills mt-2 mr-2 nav flex-column border border-left-0 border-top-0 border-bottom-0" orientation="vertical">
+                    <li ngbNavItem="0">
+                        <a ngbNavLink class="d-flex">INFO&nbsp;<img [hidden]="" src="assets/icons/actions/info-dark.svg" style="width:18px; height:auto;"></a>
+                        <ng-template ngbNavContent class="w-100">
+                            <div class="form-row m-0">
+                                <div class="col-12 form-group">Allenamento creato da {{training.author.name}} {{training.author.surname}} il {{training.creationDate | date:'d MMMM yyyy'}}</div>
+                                <div class="col-12 form-group">
+                                    <label for="trainingcomment" class="col-form-label col-form-label-sm">Commento</label>
+                                    <textarea [(ngModel)]="training.comment" class="form-control form-control-sm"
+                                        id="trainingcomment" name="trainingcomment" placeholder="Commento..."></textarea>
+                                </div>
+                            </div>
+                        </ng-template>  
+                    </li>
+                    <li *ngFor="let week of training.weeks; index as weekIndex; first as weekFirst" [ngbNavItem]="weekIndex+1">
+                        <a ngbNavLink class="d-flex">
+                            <span>WEEK&nbsp;{{weekIndex+1}}</span>
+                            <span class="ml-2 image-button" ngbTooltip="Copia settimana" placement="top" (click)="copyWeek($event, weekIndex)"><img src="assets/icons/actions/copy-light.svg" style="width:18px; height:auto;"></span>
+                            <span class="ml-2 image-button" ngbTooltip="Incolla settimana" placement="top" (click)="pasteWeek($event, weekIndex)"><img src="assets/icons/actions/contract-light.svg" style="width:18px; height:auto;"></span>
+                            <span class="ml-1 image-button" ngbTooltip="Reset settimana" placement="top" (click)="resetWeek($event, weekIndex)"><img src="assets/icons/actions/return-light.svg" style="width:18px; height:auto;"></span>
+                            <span class="ml-2 image-button" ngbTooltip="Elimina settimana" placement="top" (click)="deleteWeek($event, weekIndex)" [hidden]="training.weeks.length == 1"><img src="assets/icons/actions/garbage-can-light.svg" style="width:18px; height:auto;"></span>
+                        </a>
+                        <ng-template ngbNavContent>
+                        
+                            <!-- SESSIONS -->
+                            <ul ngbNav #nav="ngbNav" [(activeId)]="activeSession[weekIndex]" class="nav-tabs">
                                 <li *ngFor="let session of week.sessions; index as sessionIndex; first as sessionFirst" [ngbNavItem]="sessionIndex+1">
-                                    <a ngbNavLink>Sessione {{sessionIndex+1}} 
-                                        <span class="image-button" ngbTooltip="Copia esercizio" placement="top" (click)="copySession($event, week, sessionIndex)"><img src="assets/icons/actions/copy.svg" style="width:18px; height:auto;"></span>
-                                        <span class="ml-2 image-button" ngbTooltip="Incolla esercizio" placement="top" (click)="pasteSession($event, week, sessionIndex)"><img src="assets/icons/actions/contract.svg" style="width:18px; height:auto;"></span>
-                                        <span class="ml-1 image-button" ngbTooltip="Reset esercizio" placement="top" (click)="resetSession($event, week, sessionIndex)"><img src="assets/icons/actions/return.svg" style="width:18px; height:auto;"></span>
-                                        <span class="ml-2 image-button" ngbTooltip="Elimina esercizio" placement="top" (click)="deleteSession($event, week, sessionIndex)" [hidden]="week.sessions.length == 1"><img src="assets/icons/actions/garbage-can.svg" style="width:18px; height:auto;"></span>
+                                    <a ngbNavLink>
+                                        <span>Sessione {{sessionIndex+1}}</span>
+                                        <span class="ml-2 image-button" ngbTooltip="Copia Sessione" placement="top" (click)="copySession($event, week, sessionIndex)"><img src="assets/icons/actions/copy.svg" style="width:18px; height:auto;"></span>
+                                        <span class="ml-2 image-button" ngbTooltip="Incolla Sessione" placement="top" (click)="pasteSession($event, week, sessionIndex)"><img src="assets/icons/actions/contract.svg" style="width:18px; height:auto;"></span>
+                                        <span class="ml-1 image-button" ngbTooltip="Reset Sessione" placement="top" (click)="resetSession($event, week, sessionIndex, weekIndex)"><img src="assets/icons/actions/return.svg" style="width:18px; height:auto;"></span>
+                                        <span class="ml-2 image-button" ngbTooltip="Elimina Sessione" placement="top" (click)="deleteSession($event, week, sessionIndex, weekIndex)" [hidden]="week.sessions.length == 1"><img src="assets/icons/actions/garbage-can.svg" style="width:18px; height:auto;"></span>
                                     </a>
                                     <ng-template ngbNavContent>
-                                        <div class="form-row">
+                                        <div class="form-row m-0">
                                             <div class="col-2 form-group pl-0">
                                                 <label for="trainingName_{{weekIndex}}" class="col-form-label col-form-label-sm">Nome sessione</label>
                                                 <input type="text" [(ngModel)]="session.name" class="form-control form-control-sm"
@@ -48,7 +70,7 @@
                                                     id="trainingComment_{{weekIndex}}" name="trainingComment_{{weekIndex}}" placeholder="Commento...">
                                             </div>
                                         </div>
-                                        <div class="form-row position-relative border" *ngFor="let exercise of session.exercises; index as exerciseIndex; first as outFirst">
+                                        <div class="form-row m-0 position-relative border" *ngFor="let exercise of session.exercises; index as exerciseIndex; first as outFirst">
                                             <div class="col-4 d-flex m-0 px-3">
                                                 <div class="row m-0">
                                                     <div class="col-6 form-group pl-0 pr-1 m-0">
@@ -76,7 +98,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-8 pr-3 pl-3 border border-right-0 border-top-0 border-bottom-0">
-                                                <div class="form-row" *ngFor="let elem of exercise.series; first as seriesFirst; last as seriesLast; index as seriesIndex">
+                                                <div class="form-row m-0" *ngFor="let elem of exercise.series; first as seriesFirst; last as seriesLast; index as seriesIndex">
                                                     <div class="col-2 form-group">
                                                         <label for="serie_{{exerciseIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
                                                             [hidden]="!seriesFirst">Serie</label>
@@ -107,11 +129,7 @@
                                                             <option [value]="'kg'">kg</option>
                                                             <option [value]="'lbs'">lbs</option>
                                                             <option [value]="'%'">% RM</option>
-                                                            <option [value]="'altro'">Altro</option>
                                                         </select>
-                                                        <input type="text" [(ngModel)]="elem.measure" [hidden]="elem.measure != 'altro'"
-                                                            class="form-control form-control-sm" id="misura_{{exerciseIndex}}_{{seriesIndex}}"
-                                                            name="misura_{{exerciseIndex}}_{{seriesIndex}}" placeholder="Altro...">
                                                     </div>
                                                     <div class="col-2 form-group">
                                                         <label for="rest_{{exerciseIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
@@ -133,35 +151,29 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-row d-flex justify-content-end">
+                                        <div class="form-row m-0 d-flex justify-content-end">
                                             <button type="submit" class="btn btn-outline-info btn-small mt-2" (click)="pushExercise(session)">Aggiungi esercizio +</button>
                                         </div>
+                                        <!--<div class="col-2 form-group pl-3">
+                                            <label for="weekcomment_{{weekIndex}}" class="col-form-label col-form-label-sm">Commento</label>
+                                            <input type="text" [(ngModel)]="week.comment" class="form-control form-control-sm"
+                                                id="weekcomment_{{weekIndex}}" name="weekcomment_{{weekIndex}}" placeholder="Commento...">
+                                        </div> -->
                                     </ng-template>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href (click)="pushSession($event, week)">Aggiungi <img src="assets/icons/actions/plus.svg" style="width:18px; height:auto;"></a>
                                 </li>
                             </ul>
-                            <div [ngbNavOutlet]="nav" class="mt-2"></div>
-                        </div>
-                        <div class="card-footer">
-                            <div class="col-2 form-group pl-3">
-                                <label for="weekcomment_{{weekIndex}}" class="col-form-label col-form-label-sm">Commento</label>
-                                <input type="text" [(ngModel)]="week.comment" class="form-control form-control-sm"
-                                    id="weekcomment_{{weekIndex}}" name="weekcomment_{{weekIndex}}" placeholder="Commento...">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                            <div [ngbNavOutlet]="nav" class="mt-2 session-tab"></div>
+                        </ng-template>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link d-flex" href (click)="pushWeek($event)">Aggiungi&nbsp;<img src="assets/icons/actions/plus.svg" style="width:18px; height:auto;"></a>
+                    </li>
+                </ul>
+                <div [ngbNavOutlet]="nav" class="mt-2 week-tab w-100"></div>
                 
-            </div>
-            <div class="card-footer d-flex justify-content-between py-2">
-                <div><small>Allenamento creato da {{training.author.name}} {{training.author.surname}} il {{training.creationDate | date:'d MMMM yyyy'}}</small></div>
-                <div class="col-2 form-group pl-3">
-                    <label for="trainingcomment" class="col-form-label col-form-label-sm">Commento</label>
-                    <input type="text" [(ngModel)]="training.comment" class="form-control form-control-sm"
-                        id="trainingcomment" name="trainingcomment" placeholder="Commento...">
-                </div>
             </div>
         </form>
     </div>
