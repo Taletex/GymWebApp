@@ -13,6 +13,10 @@
                             <option [value]="'SALA ATTREZZI'">SALA ATTREZZI</option>
                         </select>
                     </div>
+                    <div class="ml-auto">
+                        <button type="submit" (click)="saveTraining()" class="btn btn-success btn-sm">SALVA</button>
+                        <button type="submit" (click)="deleteTraining()" class="btn btn-danger btn-sm ml-2">ELIMINA</button>
+                    </div>
                 </div>
                 
                 <h6 class="m-0">
@@ -25,10 +29,72 @@
                 <!-- WEEKS -->
                 <ul ngbNav #nav="ngbNav" [(activeId)]="activeWeek" class="nav-pills mt-2 mr-2 nav flex-column border border-left-0 border-top-0 border-bottom-0" orientation="vertical">
                     <li ngbNavItem="0">
-                        <a ngbNavLink class="d-flex">INFO&nbsp;<img [hidden]="" src="assets/icons/actions/info-dark.svg" style="width:18px; height:auto;"></a>
+                        <a ngbNavLink class="d-flex">INFO&nbsp;<img [hidden]="activeWeek != 0" src="assets/icons/actions/info-light.svg" style="width:15px; height:auto;"><img [hidden]="activeWeek == 0" src="assets/icons/actions/info-dark.svg" style="width:15px; height:auto;"></a>
                         <ng-template ngbNavContent class="w-100">
                             <div class="form-row m-0">
                                 <div class="col-12 form-group">Allenamento creato da {{training.author.name}} {{training.author.surname}} il {{training.creationDate | date:'d MMMM yyyy'}}</div>
+                                <div class="col-4 form-group">
+                                    <label for="trainingAthlete" class="col-form-label col-form-label-sm">Atleta</label>
+                                    <select [(ngModel)]="training.athlete" class="form-control form-control-sm" id="trainingAthlete" name="trainingAthlete">
+                                        <option *ngFor="let athlete of athleteList; index as athleteIndex" [value]="athlete" >{{athlete.name}} {{athlete.surname}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-8">
+                                    <div class="form-group hidden">
+                                        <div class="input-group">
+                                            <input name="datepicker"
+                                                    class="form-control"
+                                                    ngbDatepicker
+                                                    #datepicker="ngbDatepicker"
+                                                    [autoClose]="'outside'"
+                                                    (dateSelect)="onDateSelection($event)"
+                                                    [displayMonths]="2"
+                                                    [dayTemplate]="t"
+                                                    outsideDays="hidden"
+                                                    [startDate]="fromDate!">
+                                            <ng-template #t let-date let-focused="focused">
+                                                <span class="custom-day"
+                                                        [class.focused]="focused"
+                                                        [class.range]="isRange(date)"
+                                                        [class.faded]="isHovered(date) || isInside(date)"
+                                                        (mouseenter)="hoveredDate = date"
+                                                        (mouseleave)="hoveredDate = null">
+                                                    {{ date.day }}
+                                                </span>
+                                            </ng-template>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input #dpFromDate
+                                                    class="form-control" placeholder="yyyy-mm-dd"
+                                                    name="dpFromDate"
+                                                    [value]="formatter.format(fromDate)"
+                                                    (input)="fromDate = validateInput(fromDate, dpFromDate.value)">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary calendar" (click)="datepicker.toggle()" type="button"></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group ml-2">
+                                        <div class="input-group">
+                                            <input #dpToDate
+                                                    class="form-control" placeholder="yyyy-mm-dd"
+                                                    name="dpToDate"
+                                                    [value]="formatter.format(toDate)"
+                                                    (input)="toDate = validateInput(toDate, dpToDate.value)">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary calendar" (click)="datepicker.toggle()" type="button"></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-4 form-group">
+                                    <label for="trainingStartDate" class="col-form-label col-form-label-sm">Data inizio</label>
+                                    <input type="date" [(ngModel)]="training.startDate" class="form-control form-control-sm"
+                                        id="trainingStartDate" name="trainingStartDate">
+                                </div>
                                 <div class="col-12 form-group">
                                     <label for="trainingcomment" class="col-form-label col-form-label-sm">Commento</label>
                                     <textarea [(ngModel)]="training.comment" class="form-control form-control-sm"
@@ -40,22 +106,34 @@
                     <li *ngFor="let week of training.weeks; index as weekIndex; first as weekFirst" [ngbNavItem]="weekIndex+1">
                         <a ngbNavLink class="d-flex">
                             <span>WEEK&nbsp;{{weekIndex+1}}</span>
-                            <span class="ml-2 image-button" ngbTooltip="Copia settimana" placement="top" (click)="copyWeek($event, weekIndex)"><img src="assets/icons/actions/copy-light.svg" style="width:18px; height:auto;"></span>
-                            <span class="ml-2 image-button" ngbTooltip="Incolla settimana" placement="top" (click)="pasteWeek($event, weekIndex)"><img src="assets/icons/actions/contract-light.svg" style="width:18px; height:auto;"></span>
-                            <span class="ml-1 image-button" ngbTooltip="Reset settimana" placement="top" (click)="resetWeek($event, weekIndex)"><img src="assets/icons/actions/return-light.svg" style="width:18px; height:auto;"></span>
-                            <span class="ml-2 image-button" ngbTooltip="Elimina settimana" placement="top" (click)="deleteWeek($event, weekIndex)" [hidden]="training.weeks.length == 1"><img src="assets/icons/actions/garbage-can-light.svg" style="width:18px; height:auto;"></span>
+                            <span class="ml-2 image-button" ngbTooltip="Copia settimana" placement="top" (click)="copyWeek($event, weekIndex)"><img [hidden]="activeWeek != weekIndex+1" src="assets/icons/actions/copy-light.svg" style="width:15px; height:auto;"><img [hidden]="activeWeek == weekIndex+1" src="assets/icons/actions/copy.svg" style="width:15px; height:auto;"></span>
+                            <span class="ml-1 image-button" ngbTooltip="Incolla settimana" placement="top" (click)="pasteWeek($event, weekIndex)"><img [hidden]="activeWeek != weekIndex+1" src="assets/icons/actions/contract-light.svg" style="width:15px; height:auto;"><img [hidden]="activeWeek == weekIndex+1" src="assets/icons/actions/contract.svg" style="width:15px; height:auto;"></span>
+                            <span class="ml-1 image-button" ngbTooltip="Reset settimana" placement="top" (click)="resetWeek($event, weekIndex)"><img [hidden]="activeWeek != weekIndex+1" src="assets/icons/actions/return-light.svg" style="width:15px; height:auto;"><img [hidden]="activeWeek == weekIndex+1" src="assets/icons/actions/return.svg" style="width:15px; height:auto;"></span>
+                            <span class="ml-1 image-button" ngbTooltip="Elimina settimana" placement="top" (click)="deleteWeek($event, weekIndex)" [hidden]="training.weeks.length == 1"><img [hidden]="activeWeek != weekIndex+1" src="assets/icons/actions/garbage-can-light.svg" style="width:15px; height:auto;"><img [hidden]="activeWeek == weekIndex+1" src="assets/icons/actions/garbage-can.svg" style="width:15px; height:auto;"></span>
                         </a>
                         <ng-template ngbNavContent>
                         
                             <!-- SESSIONS -->
                             <ul ngbNav #nav="ngbNav" [(activeId)]="activeSession[weekIndex]" class="nav-tabs">
+                                <li [ngbNavItem]="0">
+                                    <a ngbNavLink class="d-flex">INFO&nbsp;<img src="assets/icons/actions/info-dark.svg" style="width:15px; height:auto;"></a>
+                                    <ng-template ngbNavContent>
+                                        <div class="form-row m-0">
+                                            <div class="col-12 form-group pl-3">
+                                                <label for="weekcomment_{{weekIndex}}" class="col-form-label col-form-label-sm">Commento</label>
+                                                <textarea [(ngModel)]="week.comment" class="form-control form-control-sm"
+                                                    id="weekcomment_{{weekIndex}}" name="weekcomment_{{weekIndex}}" placeholder="Commento..."></textarea>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                </li>
                                 <li *ngFor="let session of week.sessions; index as sessionIndex; first as sessionFirst" [ngbNavItem]="sessionIndex+1">
-                                    <a ngbNavLink>
+                                    <a ngbNavLink class="d-flex align-items-baseline">
                                         <span>Sessione {{sessionIndex+1}}</span>
-                                        <span class="ml-2 image-button" ngbTooltip="Copia Sessione" placement="top" (click)="copySession($event, week, sessionIndex)"><img src="assets/icons/actions/copy.svg" style="width:18px; height:auto;"></span>
-                                        <span class="ml-2 image-button" ngbTooltip="Incolla Sessione" placement="top" (click)="pasteSession($event, week, sessionIndex)"><img src="assets/icons/actions/contract.svg" style="width:18px; height:auto;"></span>
-                                        <span class="ml-1 image-button" ngbTooltip="Reset Sessione" placement="top" (click)="resetSession($event, week, sessionIndex, weekIndex)"><img src="assets/icons/actions/return.svg" style="width:18px; height:auto;"></span>
-                                        <span class="ml-2 image-button" ngbTooltip="Elimina Sessione" placement="top" (click)="deleteSession($event, week, sessionIndex, weekIndex)" [hidden]="week.sessions.length == 1"><img src="assets/icons/actions/garbage-can.svg" style="width:18px; height:auto;"></span>
+                                        <span class="ml-2 image-button" ngbTooltip="Copia Sessione" placement="top" (click)="copySession($event, week, sessionIndex)"><img src="assets/icons/actions/copy.svg" style="width:15px; height:auto;"></span>
+                                        <span class="ml-1 image-button" ngbTooltip="Incolla Sessione" placement="top" (click)="pasteSession($event, week, sessionIndex)"><img src="assets/icons/actions/contract.svg" style="width:15px; height:auto;"></span>
+                                        <span class="ml-1 image-button" ngbTooltip="Reset Sessione" placement="top" (click)="resetSession($event, week, sessionIndex, weekIndex)"><img src="assets/icons/actions/return.svg" style="width:15px; height:auto;"></span>
+                                        <span class="ml-1 image-button" ngbTooltip="Elimina Sessione" placement="top" (click)="deleteSession($event, week, sessionIndex, weekIndex)" [hidden]="week.sessions.length == 1"><img src="assets/icons/actions/garbage-can.svg" style="width:15px; height:auto;"></span>
                                     </a>
                                     <ng-template ngbNavContent>
                                         <div class="form-row m-0">
@@ -91,10 +169,10 @@
                                                 </div>
                                                 <div class="pl-3 pr-0 d-flex flex-column align-items-center mt-1">
                                                     <span style="font-size: 0.875rem;">Azioni</span>
-                                                    <div class="image-button" ngbTooltip="Copia esercizio" placement="top" (click)="copyExercise(session, exerciseIndex)"><img src="assets/icons/actions/copy.svg" style="width:18px; height:auto;"></div>
-                                                    <div class="ml-2 image-button" ngbTooltip="Incolla esercizio" placement="top" (click)="pasteExercise(session, exerciseIndex)"><img src="assets/icons/actions/contract.svg" style="width:18px; height:auto;"></div>
-                                                    <div class="ml-1 image-button" ngbTooltip="Reset esercizio" placement="top" (click)="resetExercise(session, exerciseIndex)"><img src="assets/icons/actions/return.svg" style="width:18px; height:auto;"></div>
-                                                    <div class="ml-2 image-button" ngbTooltip="Elimina esercizio" placement="top" (click)="deleteExercise(session, exerciseIndex)" [hidden]="session.exercises.length == 1"><img src="assets/icons/actions/garbage-can.svg" style="width:18px; height:auto;"></div>
+                                                    <div class="image-button" ngbTooltip="Copia esercizio" placement="top" (click)="copyExercise(session, exerciseIndex)"><img src="assets/icons/actions/copy.svg" style="width:15px; height:auto;"></div>
+                                                    <div class="ml-1 image-button" ngbTooltip="Incolla esercizio" placement="top" (click)="pasteExercise(session, exerciseIndex)"><img src="assets/icons/actions/contract.svg" style="width:15px; height:auto;"></div>
+                                                    <div class="ml-1 image-button" ngbTooltip="Reset esercizio" placement="top" (click)="resetExercise(session, exerciseIndex)"><img src="assets/icons/actions/return.svg" style="width:15px; height:auto;"></div>
+                                                    <div class="ml-1 image-button" ngbTooltip="Elimina esercizio" placement="top" (click)="deleteExercise(session, exerciseIndex)" [hidden]="session.exercises.length == 1"><img src="assets/icons/actions/garbage-can.svg" style="width:15px; height:auto;"></div>
                                                 </div>
                                             </div>
                                             <div class="col-8 pr-3 pl-3 border border-right-0 border-top-0 border-bottom-0">
@@ -141,11 +219,11 @@
                                                     <div class="col-2 form-group m-0 p-0 pl-2">
                                                         <label class="col-form-label col-form-label-sm" [hidden]="!seriesFirst">Azioni</label>
                                                         <div class="d-flex">
-                                                            <div class="image-button" ngbTooltip="Copia" placement="top" (click)="copySeries(exercise, seriesIndex)"><img src="assets/icons/actions/copy.svg" style="width:18px; height:auto;"></div>
-                                                            <div class="ml-2 image-button" ngbTooltip="Incolla" placement="top" (click)="pasteSeries(exercise, seriesIndex)"><img src="assets/icons/actions/contract.svg" style="width:18px; height:auto;"></div>
-                                                            <div class="ml-1 image-button" ngbTooltip="Reset" placement="top" (click)="resetSeries(exercise, seriesIndex)"><img src="assets/icons/actions/return.svg" style="width:18px; height:auto;"></div>
-                                                            <div class="ml-2 image-button" ngbTooltip="Elimina" placement="top" (click)="deleteSeries(exercise, seriesIndex)" [hidden]="exercise.series.length == 1"><img src="assets/icons/actions/garbage-can.svg" style="width:18px; height:auto;"></div>
-                                                            <div class="ml-2 image-button" ngbTooltip="Aggiungi" placement="top" (click)="pushSeries(exercise)" [hidden]="!seriesLast"><img src="assets/icons/actions/plus2.svg" style="width:18px; height:auto;"></div>
+                                                            <div class="image-button" ngbTooltip="Copia" placement="top" (click)="copySeries(exercise, seriesIndex)"><img src="assets/icons/actions/copy.svg" style="width:15px; height:auto;"></div>
+                                                            <div class="ml-1 image-button" ngbTooltip="Incolla" placement="top" (click)="pasteSeries(exercise, seriesIndex)"><img src="assets/icons/actions/contract.svg" style="width:15px; height:auto;"></div>
+                                                            <div class="ml-1 image-button" ngbTooltip="Reset" placement="top" (click)="resetSeries(exercise, seriesIndex)"><img src="assets/icons/actions/return.svg" style="width:15px; height:auto;"></div>
+                                                            <div class="ml-1 image-button" ngbTooltip="Elimina" placement="top" (click)="deleteSeries(exercise, seriesIndex)" [hidden]="exercise.series.length == 1"><img src="assets/icons/actions/garbage-can.svg" style="width:15px; height:auto;"></div>
+                                                            <div class="ml-1 image-button" ngbTooltip="Aggiungi" placement="top" (click)="pushSeries(exercise)" [hidden]="!seriesLast"><img src="assets/icons/actions/plus2.svg" style="width:15px; height:auto;"></div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -154,22 +232,17 @@
                                         <div class="form-row m-0 d-flex justify-content-end">
                                             <button type="submit" class="btn btn-outline-info btn-small mt-2" (click)="pushExercise(session)">Aggiungi esercizio +</button>
                                         </div>
-                                        <!--<div class="col-2 form-group pl-3">
-                                            <label for="weekcomment_{{weekIndex}}" class="col-form-label col-form-label-sm">Commento</label>
-                                            <input type="text" [(ngModel)]="week.comment" class="form-control form-control-sm"
-                                                id="weekcomment_{{weekIndex}}" name="weekcomment_{{weekIndex}}" placeholder="Commento...">
-                                        </div> -->
                                     </ng-template>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href (click)="pushSession($event, week)">Aggiungi <img src="assets/icons/actions/plus.svg" style="width:18px; height:auto;"></a>
+                                    <a class="nav-link" href (click)="pushSession($event, week)">Aggiungi <img src="assets/icons/actions/plus.svg" style="width:15px; height:auto;"></a>
                                 </li>
                             </ul>
                             <div [ngbNavOutlet]="nav" class="mt-2 session-tab"></div>
                         </ng-template>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex" href (click)="pushWeek($event)">Aggiungi&nbsp;<img src="assets/icons/actions/plus.svg" style="width:18px; height:auto;"></a>
+                        <a class="nav-link d-flex" href (click)="pushWeek($event)">Aggiungi&nbsp;<img src="assets/icons/actions/plus.svg" style="width:15px; height:auto;"></a>
                     </li>
                 </ul>
                 <div [ngbNavOutlet]="nav" class="mt-2 week-tab w-100"></div>

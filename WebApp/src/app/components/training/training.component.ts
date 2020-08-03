@@ -1,7 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import * as data from 'src/app/jsons/trainings.json';
+import {NgbDate, NgbCalendar, NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
+import * as trainingData from 'src/app/jsons/trainings.json';
+import * as athleteData from 'src/app/jsons/athletes.json';
 import * as _ from "lodash";
 
 @Component({
@@ -22,11 +24,16 @@ export class TrainingComponent implements OnInit {
   public copiedExercise: any;
   public defaultSeries: any;
   public copiedSeries: any;
+  public athleteList: any;
 
-  constructor(public router: Router, private toastr: ToastrService) {
+  public hoveredDate: NgbDate | null = null;
+  public fromDate: NgbDate;
+  public toDate: NgbDate | null = null;
+
+  constructor(public router: Router, private toastr: ToastrService, private calendar: NgbCalendar, public formatter: NgbDateParserFormatter) {
 
     // Init training attribute
-    let trainingList = ((data as any).default);
+    let trainingList = ((trainingData as any).default);
     let trainingId = (this.router.url).split('/')[2];
     for(let i=0; i<trainingList.length; i++) {
       if (trainingList[i].id == trainingId) {
@@ -35,6 +42,9 @@ export class TrainingComponent implements OnInit {
         break;
       }
     }
+
+    // Init athleteList attribute
+    this.athleteList = ((athleteData as any).default);
 
     // Init "default" and "copied" attributes (TODO: get last id for week and session)
     this.defaultSeries = {seriesNumber: 1, repNumber: 1, weight: 50, measure: "%", rest: "90"};
@@ -46,15 +56,45 @@ export class TrainingComponent implements OnInit {
     this.defaultWeek  = {id: 10000001, comment: "", sessions: [_.cloneDeep(this.defaultSession)]};
     this.copiedWeek  = _.cloneDeep(this.defaultWeek);
     
-    
     this.activeWeek = 1;
     this.activeSession = [];
     for(let i=0;i<this.training.weeks.length;i++) {
       this.activeSession.push(1);
     }
+
+    this.fromDate = calendar.getToday();
+    this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
   }
 
   ngOnInit() {}
+
+  onDateSelection(date: NgbDate) {
+    if (!this.fromDate && !this.toDate) {
+      this.fromDate = date;
+    } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
+      this.toDate = date;
+    } else {
+      this.toDate = null;
+      this.fromDate = date;
+    }
+  }
+
+  isHovered(date: NgbDate) {
+    return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate);
+  }
+
+  isInside(date: NgbDate) {
+    return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
+  }
+
+  isRange(date: NgbDate) {
+    return date.equals(this.fromDate) || (this.toDate && date.equals(this.toDate)) || this.isInside(date) || this.isHovered(date);
+  }
+
+  validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
+    const parsed = this.formatter.parse(input);
+    return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
+  }
 
 
   // TODO: quando si compie una di queste azioni mostrare un toastr che ti dice l'azione se andataa buon fine o meno
@@ -244,4 +284,12 @@ export class TrainingComponent implements OnInit {
     event.stopImmediatePropagation();
   }
 
+  /* TRAINING FUNCTIONS */
+  saveTraining() {
+    alert("TODO");
+  }
+  
+  deleteTraining() {
+    alert("TODO");
+  }
 }

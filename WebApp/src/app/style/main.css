@@ -98,7 +98,14 @@
 }
 .main__training .training__maincontainer .maincontainer__body {
   overflow: auto;
-  height: calc(100vh - 179px);
+  height: calc(100vh - 153px);
+}
+.main__training .training__maincontainer .maincontainer__body .week-tab .session-tab {
+  margin: 0px !important;
+  padding: 0.5rem 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 0rem 0.25rem 0.25rem 0.25rem;
+  border-top: 0px;
 }
 .main__training .training__maincontainer .close {
   font-size: 1.4rem;
@@ -190,9 +197,11 @@
 .image-button {
   cursor: pointer;
 }
-.image-button image,
-.image-button span {
-  background-color: #0f1042e6;
+@media screen and (max-width: 1400px) {
+  .image-button img {
+    width: 14px !important;
+    height: auto;
+  }
 }
 .image-button:hover {
   opacity: 75%;
@@ -622,6 +631,35 @@
 /* MODAL STYLE */
 .modal-lg {
   max-width: 1200px !important;
+}
+
+/* VARIOUS COMPONENTS */
+.form-group.hidden {
+  width: 0;
+  margin: 0;
+  border: none;
+  padding: 0;
+}
+
+.custom-day {
+  text-align: center;
+  padding: 0.185rem 0.25rem;
+  display: inline-block;
+  height: 2rem;
+  width: 2rem;
+}
+
+.custom-day.focused {
+  background-color: #e6e6e6;
+}
+
+.custom-day.range, .custom-day:hover {
+  background-color: #0275d8;
+  color: white;
+}
+
+.custom-day.faded {
+  background-color: rgba(2, 117, 216, 0.5);
 }
 
 /*# sourceMappingURL=main.css.map */
