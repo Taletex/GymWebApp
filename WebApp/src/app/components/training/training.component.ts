@@ -2,9 +2,11 @@ import {Component, Input, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import {NgbDate, NgbCalendar, NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
+import { HttpService } from 'src/app/services/http-service/http-service.service';
 import * as trainingData from 'src/app/jsons/trainings.json';
 import * as athleteData from 'src/app/jsons/athletes.json';
 import * as _ from "lodash";
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-training',
@@ -30,7 +32,9 @@ export class TrainingComponent implements OnInit {
   public fromDate: NgbDate;
   public toDate: NgbDate | null = null;
 
-  constructor(public router: Router, private toastr: ToastrService, private calendar: NgbCalendar, public formatter: NgbDateParserFormatter) {
+  public bLoading = false;
+
+  constructor(public router: Router, private toastr: ToastrService, private calendar: NgbCalendar, public formatter: NgbDateParserFormatter, public httpService: HttpService) {
 
     // Init training attribute
     let trainingList = ((trainingData as any).default);
@@ -63,41 +67,10 @@ export class TrainingComponent implements OnInit {
     }
 
     this.fromDate = calendar.getToday();
-    this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
+    this.toDate = calendar.getNext(calendar.getToday(), 'd', 28);
   }
 
   ngOnInit() {}
-
-  onDateSelection(date: NgbDate) {
-    if (!this.fromDate && !this.toDate) {
-      this.fromDate = date;
-    } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
-      this.toDate = date;
-    } else {
-      this.toDate = null;
-      this.fromDate = date;
-    }
-  }
-
-  isHovered(date: NgbDate) {
-    return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate);
-  }
-
-  isInside(date: NgbDate) {
-    return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
-  }
-
-  isRange(date: NgbDate) {
-    return date.equals(this.fromDate) || (this.toDate && date.equals(this.toDate)) || this.isInside(date) || this.isHovered(date);
-  }
-
-  validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
-    const parsed = this.formatter.parse(input);
-    return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
-  }
-
-
-  // TODO: quando si compie una di queste azioni mostrare un toastr che ti dice l'azione se andataa buon fine o meno
 
 
   /* SERIES FUNCTIONS */
@@ -108,7 +81,6 @@ export class TrainingComponent implements OnInit {
       console.log('ERROR: pushing new series');
     }
   }
-
   resetSeries(exercise: any, index: number) {
     if (exercise && exercise.series != null && index < exercise.series.length) {
       exercise.series[index] = _.cloneDeep(this.defaultSeries);
@@ -188,7 +160,6 @@ export class TrainingComponent implements OnInit {
   pushSession(event: MouseEvent, week: any) {
     if (week && week.sessions != null) {
       week.sessions.push(_.cloneDeep(this.defaultSession));
-      this.toastr.success('Session added succesfully');
     } else {
       console.log('Error: "sessions" is not defined');
     }
@@ -286,10 +257,33 @@ export class TrainingComponent implements OnInit {
 
   /* TRAINING FUNCTIONS */
   saveTraining() {
-    alert("TODO");
+    this.bLoading = true;
+    this.httpService.updateTraining(this.training.id, this.training)
+    .subscribe(
+      (data: any) => {
+        this.bLoading = false;
+        this.training = data.training;
+        this.toastr.success('Training successfully updated!');
+      },
+      (error: HttpErrorResponse) => {
+        this.bLoading = false;
+        this.toastr.error('An error occurred while updating the training!');
+        console.log(error.error.message);
+      });
   }
   
   deleteTraining() {
-    alert("TODO");
+    this.bLoading = true;
+    this.httpService.deleteTraining(this.training.id)
+    .subscribe(
+      (data: any) => {
+        this.bLoading = false;
+        this.toastr.success('Training successfully deleted!');
+      },
+      (error: HttpErrorResponse) => {
+        this.bLoading = false;
+        this.toastr.error('An error occurred while deleting the training!');
+        console.log(error.error.message);
+      });
   }
 }

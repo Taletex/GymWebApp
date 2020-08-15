@@ -39,8 +39,8 @@
         },
         "type": "POWERLIFTING",
         "creationDate": "Sun Jul 19 2020 19:46:40 GMT+0200 (Ora legale dell’Europa centrale)",
-        "startDate": "Fri Mar 06 2020 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)",
-        "endDate": "Sun Jul 19 2020 00:00:00 GMT+0200 (Ora legale dell’Europa centrale)",
+        "startDate": "2020-03-06",
+        "endDate": "2020-07-06",
         "comment": "Allenamento di prova",
         "weeks": [
             {
@@ -75,8 +75,7 @@
                                         "measure": "%",
                                         "rest": 180
                                     }
-                                ],
-                                "comment": "abbassare il peso se viene pesante"
+                                ]
                             }
                         ]
                     },
@@ -101,8 +100,7 @@
                                         "measure": "%",
                                         "rest": 120
                                     }
-                                ],
-                                "comment": "abbassare il peso se viene pesante"
+                                ]
                             }
                         ]
                     }
@@ -140,8 +138,7 @@
                                         "measure": "%",
                                         "rest": 180
                                     }
-                                ],
-                                "comment": "abbassare il peso se viene pesante"
+                                ]
                             }
                         ]
                     },
@@ -166,8 +163,7 @@
                                         "measure": "%",
                                         "rest": 120
                                     }
-                                ],
-                                "comment": "abbassare il peso se viene pesante"
+                                ]
                             }
                         ]
                     }
@@ -205,8 +201,7 @@
                                         "measure": "%",
                                         "rest": 180
                                     }
-                                ],
-                                "comment": "abbassare il peso se viene pesante"
+                                ]
                             }
                         ]
                     },
@@ -231,8 +226,7 @@
                                         "measure": "%",
                                         "rest": 120
                                     }
-                                ],
-                                "comment": "abbassare il peso se viene pesante"
+                                ]
                             }
                         ]
                     }
