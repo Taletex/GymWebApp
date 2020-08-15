@@ -9,6 +9,7 @@ WebApp/bazel-out
 
 # dependencies
 WebApp/node_modules
+NodeServer/node_modules
 
 # profiling files
 WebApp/chrome-profiler-events*.json
