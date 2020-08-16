@@ -1,0 +1,18 @@
+{
+    "database": {
+        "ip": "localhost",
+        "port": "27017",
+        "dbname": "gymapp",
+        "address": "mongodb://localhost:27017/gymapp"
+    },
+    "webapp": {
+        "ip": "localhost",
+        "port": "4200",
+        "address": "http://localhost:4200"
+    },
+    "nodeserver": {
+        "ip": "localhost",
+        "port": "3000",
+        "address": "http://localhost:3000"
+    }
+}

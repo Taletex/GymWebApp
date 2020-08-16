@@ -11,12 +11,10 @@ const ResidenceSchema = mongoose.Schema({
 }, { _id: false})
 
 const UserSchema = mongoose.Schema({
-    id: Number,
     name: String,
     surname: String,
     dateOfBirth: Date,
     sex: String,
-    bodyWeight: Number,
     userType: String,
     yearsOfExperience: Number,
     contacts: ContactsSchema,
@@ -39,28 +37,26 @@ const SeriesSchema = mongoose.Schema({
 }, { _id: false})
 
 const ExerciseSchema = mongoose.Schema({
-    id: Number,
     name: String,
     variant: VariantSchema,
     description: String,
     series: [SeriesSchema]
-})
+}, {
+    timestamps: true
+});
 
 const SessionSchema = mongoose.Schema({
-    id: Number,
     name: String,
     comment: String,
     exercises: [ExerciseSchema]
 }, { _id: false})
 
 const WeekSchema = mongoose.Schema({
-    id: Number,
     comment: String,
     sessions: [SessionSchema]
 }, { _id: false})
 
 const TrainingSchema = mongoose.Schema({
-    id: Number,
     author: UserSchema,
     athlete: UserSchema,
     type: String,

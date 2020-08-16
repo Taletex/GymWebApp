@@ -3,10 +3,10 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import {NgbDate, NgbCalendar, NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
 import { HttpService } from 'src/app/services/http-service/http-service.service';
+import { HttpErrorResponse } from '@angular/common/http';
 import * as trainingData from 'src/app/jsons/trainings.json';
 import * as athleteData from 'src/app/jsons/athletes.json';
 import * as _ from "lodash";
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-training',
@@ -40,7 +40,7 @@ export class TrainingComponent implements OnInit {
     let trainingList = ((trainingData as any).default);
     let trainingId = (this.router.url).split('/')[2];
     for(let i=0; i<trainingList.length; i++) {
-      if (trainingList[i].id == trainingId) {
+      if (trainingList[i]._id == trainingId) {
         this.training = trainingList[i];
         console.log(this.training);
         break;
@@ -50,14 +50,14 @@ export class TrainingComponent implements OnInit {
     // Init athleteList attribute
     this.athleteList = ((athleteData as any).default);
 
-    // Init "default" and "copied" attributes (TODO: get last id for week and session)
+    // Init "default" and "copied" attributes (TODO: get last _id for week and session)
     this.defaultSeries = {seriesNumber: 1, repNumber: 1, weight: 50, measure: "%", rest: "90"};
     this.copiedSeries = _.cloneDeep(this.defaultSeries);
-    this.defaultExercise = {id: "12345678", name: "deadlift", variant: {name: "standard", intensityCoefficient: 1}, series: [_.cloneDeep(this.defaultSeries)]};
+    this.defaultExercise = {_id: "12345678", name: "deadlift", variant: {name: "standard", intensityCoefficient: 1}, series: [_.cloneDeep(this.defaultSeries)]};
     this.copiedExercise = _.cloneDeep(this.defaultExercise);
-    this.defaultSession = {id: 10000001, name: "", comment: "", exercises: [_.cloneDeep(this.defaultExercise)]};
+    this.defaultSession = {_id: 10000001, name: "", comment: "", exercises: [_.cloneDeep(this.defaultExercise)]};
     this.copiedSession = _.cloneDeep(this.defaultSession);
-    this.defaultWeek  = {id: 10000001, comment: "", sessions: [_.cloneDeep(this.defaultSession)]};
+    this.defaultWeek  = {_id: 10000001, comment: "", sessions: [_.cloneDeep(this.defaultSession)]};
     this.copiedWeek  = _.cloneDeep(this.defaultWeek);
     
     this.activeWeek = 1;
@@ -258,7 +258,7 @@ export class TrainingComponent implements OnInit {
   /* TRAINING FUNCTIONS */
   saveTraining() {
     this.bLoading = true;
-    this.httpService.updateTraining(this.training.id, this.training)
+    this.httpService.updateTraining(this.training._id, this.training)
     .subscribe(
       (data: any) => {
         this.bLoading = false;
@@ -274,7 +274,7 @@ export class TrainingComponent implements OnInit {
   
   deleteTraining() {
     this.bLoading = true;
-    this.httpService.deleteTraining(this.training.id)
+    this.httpService.deleteTraining(this.training._id)
     .subscribe(
       (data: any) => {
         this.bLoading = false;

@@ -7,9 +7,6 @@ const rscPath = "../rsc";
 var fs = require('fs');
 var readline = require('readline');
 
-function getNewTrainingId(){
-    return 00000001;
-};
 
 // Create and Save a new Training
 exports.createTraining = (req, res) => {
@@ -19,10 +16,9 @@ exports.createTraining = (req, res) => {
             message: "Training content can not be empty"
         });
     }
-
+    
     // Create a Training
     const training = new Training({
-        id: getNewTrainingId(),
         author: req.body.author,
         athlete: req.body.athlete,
         type: req.body.type,
@@ -58,22 +54,22 @@ exports.findAllTraining = (req, res) => {
 
 // Find a single training with a id
 exports.findOneTraining = (req, res) => {
-    Training.find({id: req.params.id})
+    Training.find({_id: req.params._id})
     .then(training => {
         if(!training) {
             return res.status(404).send({
-                message: "Training not found with id " + req.params.id
+                message: "Training not found with id " + req.params._id
             });            
         }
         res.send(training);
     }).catch(err => {
         if(err.kind === 'ObjectId') {
             return res.status(404).send({
-                message: "Training not found with id " + req.params.id
+                message: "Training not found with id " + req.params._id
             });                
         }
         return res.status(500).send({
-            message: "Error retrieving training with id " + req.params.id
+            message: "Error retrieving training with id " + req.params._id
         });
     });
 };
@@ -88,8 +84,7 @@ exports.updateTraining = (req, res) => {
     }
 
     // Find training and update it with the request body
-    Training.findOneAndUpdate({id: req.params.id}, {
-        id: req.params.id,
+    Training.findOneAndUpdate({_id: req.params._id}, {
         author: req.body.author,
         athlete: req.body.athlete,
         type: req.body.type,
@@ -102,40 +97,40 @@ exports.updateTraining = (req, res) => {
     .then(training => {
         if(!training) {
             return res.status(404).send({
-                message: "Training not found with id " + req.params.id
+                message: "Training not found with id " + req.params._id
             });
         }
         res.send(training);
     }).catch(err => {
         if(err.kind === 'ObjectId') {
             return res.status(404).send({
-                message: "Training not found with id " + req.params.id
+                message: "Training not found with id " + req.params._id
             });                
         }
         return res.status(500).send({
-            message: "Error updating training with id " + req.params.id
+            message: "Error updating training with id " + req.params._id
         });
     });
 };
 
 // Delete a training with the specified id in the request
 exports.deleteTraining = (req, res) => {
-    Training.findOneAndRemove({id: req.params.id})
+    Training.findOneAndRemove({_id: req.params._id})
     .then(training => {
         if(!training) {
             return res.status(404).send({
-                message: "Training not found with id " + req.params.id
+                message: "Training not found with id " + req.params._id
             });
         }
         res.send({message: "Training deleted successfully!"});
     }).catch(err => {
         if(err.kind === 'ObjectId' || err.name === 'NotFound') {
             return res.status(404).send({
-                message: "Training not found with id " + req.params.id
+                message: "Training not found with id " + req.params._id
             });                
         }
         return res.status(500).send({
-            message: "Could not delete training with id " + req.params.id
+            message: "Could not delete training with id " + req.params._id
         });
     });
 };

@@ -12,10 +12,9 @@ config.database.address = "mongodb://" + config.database.ip + ":" + config.datab
 config.webapp = 
     {
         ip: "localhost",
-        port: "8081",
-        basepath: "#gymapp"
+        port: "4200"
     };
-config.webapp.address = "http://" + config.webapp.ip + ":" + config.webapp.port + "/" + config.webapp.basepath;
+config.webapp.address = "http://" + config.webapp.ip + ":" + config.webapp.port;
 
 config.nodeserver = 
     {

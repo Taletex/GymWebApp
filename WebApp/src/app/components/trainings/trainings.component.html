@@ -69,13 +69,22 @@
                 </div>
                 <div class="col-2"><span>{{elem.comment}}</span></div>
                 <div class="col-2 d-flex">
-                    <a [routerLink]="['/trainings', elem.id]" routerLinkActive="active" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/url.svg" style="width:20px; height:auto;"></a>
-                    <a [routerLink]="['/trainings', elem.id]" routerLinkActive="active" class="ml-2 image-button" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></a>
-                    <a [routerLink]="['/trainings', elem.id]" routerLinkActive="active" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></a>
-                    <a [routerLink]="['/trainings', elem.id]" routerLinkActive="active" class="ml-2 image-button" ngbTooltip="Statistiche" placement="left"><img src="assets/icons/actions/graph.svg" style="width:20px; height:auto;"></a>
+                    <a [routerLink]="['/trainings', elem._id]" routerLinkActive="active" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/url.svg" style="width:20px; height:auto;"></a>
+                    <a [routerLink]="['/trainings', elem._id]" routerLinkActive="active" class="ml-2 image-button" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></a>
+                    <a [routerLink]="['/trainings', elem._id]" routerLinkActive="active" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></a>
+                    <a [routerLink]="['/trainings', elem._id]" routerLinkActive="active" class="ml-2 image-button" ngbTooltip="Statistiche" placement="left"><img src="assets/icons/actions/graph.svg" style="width:20px; height:auto;"></a>
                 </div>
             </div>
-            <div style="position: absolute; right: 15px; bottom: 15px" class="image-button" ngbTooltip="Nuovo" placement="top"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></div>
+            <div (click)="createTraining()" style="position: absolute; right: 15px; bottom: 15px" class="image-button" ngbTooltip="Nuovo" placement="top"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></div>
+        </div>
+    </div>
+
+     <!-- Loader -->
+     <div class='h-100 w-100' [hidden]="!bLoading">
+        <div style="position:absolute; background-color:black; opacity:50%; right:0; top:0;" class="w-100 h-100">
+            <div class="container d-flex align-items-center justify-content-center w-100 h-100">
+                <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+            </div>
         </div>
     </div>
 </div>

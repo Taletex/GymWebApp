@@ -1,8 +1,8 @@
 [
     {
-        "id": 10000001,
+        "_id": 10000001,
         "author": {
-            "id": 10000001,
+            "_id": 10000001,
             "name": "Alessandro",
             "surname": "Messina",
             "dateOfBirth": "Thu Jan 01 1970 01:00:00 GMT+0100 (Ora standard dell’Europa centrale)",
@@ -20,7 +20,7 @@
             }
         },
         "athlete": {
-            "id": 10000002,
+            "_id": 10000002,
             "name": "Alberto",
             "surname": "Messina",
             "dateOfBirth": "Sat Feb 10 1996 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)",
@@ -44,16 +44,16 @@
         "comment": "Allenamento di prova",
         "weeks": [
             {
-                "id": 10000001,
+                "_id": 10000001,
                 "comment": "Settimana 1 - Scarico",
                 "sessions": [
                     {
-                        "id": 10000001,
+                        "_id": 10000001,
                         "name": "Day 1",
                         "comment": "Da fare lunedi mattina o pomeriggio",
                         "exercises": [
                             {
-                                "id": 12345678,
+                                "_id": 12345678,
                                 "name": "deadlift",
                                 "variant": {
                                     "name": "deficit 6cm",
@@ -80,12 +80,12 @@
                         ]
                     },
                     {
-                        "id": 10000001,
+                        "_id": 10000001,
                         "name": "Day 1",
                         "comment": "Da fare lunedi mattina o pomeriggio",
                         "exercises": [
                             {
-                                "id": 12345678,
+                                "_id": 12345678,
                                 "name": "deadlift",
                                 "variant": {
                                     "name": "standard",
@@ -107,16 +107,16 @@
                 ]
             },
             {
-                "id": 10000001,
+                "_id": 10000001,
                 "comment": "Settimana 1 - Scarico",
                 "sessions": [
                     {
-                        "id": 10000001,
+                        "_id": 10000001,
                         "name": "Day 1",
                         "comment": "Da fare lunedi mattina o pomeriggio",
                         "exercises": [
                             {
-                                "id": 12345678,
+                                "_id": 12345678,
                                 "name": "deadlift",
                                 "variant": {
                                     "name": "deficit 6cm",
@@ -143,12 +143,12 @@
                         ]
                     },
                     {
-                        "id": 10000001,
+                        "_id": 10000001,
                         "name": "Day 1",
                         "comment": "Da fare lunedi mattina o pomeriggio",
                         "exercises": [
                             {
-                                "id": 12345678,
+                                "_id": 12345678,
                                 "name": "deadlift",
                                 "variant": {
                                     "name": "standard",
@@ -170,16 +170,16 @@
                 ]
             },
             {
-                "id": 10000001,
+                "_id": 10000001,
                 "comment": "Settimana 1 - Scarico",
                 "sessions": [
                     {
-                        "id": 10000001,
+                        "_id": 10000001,
                         "name": "Day 1",
                         "comment": "Da fare lunedi mattina o pomeriggio",
                         "exercises": [
                             {
-                                "id": 12345678,
+                                "_id": 12345678,
                                 "name": "deadlift",
                                 "variant": {
                                     "name": "deficit 6cm",
@@ -206,12 +206,12 @@
                         ]
                     },
                     {
-                        "id": 10000001,
+                        "_id": 10000001,
                         "name": "Day 1",
                         "comment": "Da fare lunedi mattina o pomeriggio",
                         "exercises": [
                             {
-                                "id": 12345678,
+                                "_id": 12345678,
                                 "name": "deadlift",
                                 "variant": {
                                     "name": "standard",
