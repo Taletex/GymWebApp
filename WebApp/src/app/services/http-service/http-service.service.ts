@@ -36,15 +36,15 @@ export class HttpService {
     return this.http.post<any>(this.baseServerUrl + "/trainings", training);
   }
 
-  getTraining(id: number): Observable<any> {
+  getTraining(id: string): Observable<any> {
     return this.http.get<any>(this.baseServerUrl + "/trainings/" + id);
   }
 
-  updateTraining(id: number, training: any): Observable<any> {
+  updateTraining(id: string, training: any): Observable<any> {
     return this.http.put<any>(this.baseServerUrl + "/trainings/" + id, training);
   }
 
-  deleteTraining(id: number): Observable<any> {
+  deleteTraining(id: string): Observable<any> {
     return this.http.delete<any>(this.baseServerUrl + "/trainings/" + id);
   }
 
@@ -62,15 +62,15 @@ export class HttpService {
     return this.http.post<any>(this.baseServerUrl + "/exercises", exercise);
   }
 
-  getExercise(id: number): Observable<any> {
+  getExercise(id: string): Observable<any> {
     return this.http.get<any>(this.baseServerUrl + "/exercises/" + id);
   }
 
-  updateExercise(id: number, exercise: any): Observable<any> {
+  updateExercise(id: string, exercise: any): Observable<any> {
     return this.http.put<any>(this.baseServerUrl + "/exercises/" + id, exercise);
   }
 
-  deleteExercise(id: number): Observable<any> {
+  deleteExercise(id: string): Observable<any> {
     return this.http.delete<any>(this.baseServerUrl + "/exercises/" + id);
   }
 }

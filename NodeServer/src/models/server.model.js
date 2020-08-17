@@ -69,4 +69,7 @@ const TrainingSchema = mongoose.Schema({
     timestamps: true
 });
 
-module.exports = mongoose.model('Training', TrainingSchema);
+const trainingSchema =  mongoose.model('Training', TrainingSchema);
+const exerciseSchema =  mongoose.model('Exercise', TrainingSchema);
+const userSchema =  mongoose.model('User', TrainingSchema);
+module.exports = {Training: trainingSchema, Exercise: exerciseSchema, User: userSchema};

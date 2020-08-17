@@ -6,6 +6,7 @@ module.exports = (app) => {
 
     app.options('*', cors(corsOptions)) // enable pre-flight request for all requests
     
+    /* TRAININGS ROUTING */
     // Create a new Training
     app.post('/trainings', cors(corsOptions), server.createTraining);
 
@@ -13,11 +14,28 @@ module.exports = (app) => {
     app.get('/trainings', cors(corsOptions), server.findAllTraining);
 
     // Retrieve a single Training with id
-    app.get('/trainings/:id', cors(corsOptions), server.findOneTraining);
+    app.get('/trainings/:_id', cors(corsOptions), server.findOneTraining);
     
     // Update a Training with id
-    app.put('/trainings/:id', cors(corsOptions), cors(corsOptions), server.updateTraining);
+    app.put('/trainings/:_id', cors(corsOptions), cors(corsOptions), server.updateTraining);
 
     // Delete a Training with id
-    app.delete('/trainings/:id', cors(corsOptions), server.deleteTraining);
+    app.delete('/trainings/:_id', cors(corsOptions), server.deleteTraining);
+
+
+    /* EXERCISES ROUTING */
+    // Create a new Exercise
+    app.post('/exercises', cors(corsOptions), server.createExercise);
+
+    // Retrieve all Exercise
+    app.get('/exercises', cors(corsOptions), server.findAllExercise);
+
+    // Retrieve a single Exercise with id
+    app.get('/exercises/:_id', cors(corsOptions), server.findOneExercise);
+    
+    // Update a Exercise with id
+    app.put('/exercises/:_id', cors(corsOptions), cors(corsOptions), server.updateExercise);
+
+    // Delete a Exercise with id
+    app.delete('/exercises/:_id', cors(corsOptions), server.deleteExercise);
 }

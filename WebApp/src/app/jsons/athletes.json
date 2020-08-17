@@ -1,6 +1,5 @@
 [
     {
-        "id": 10000002,
         "name": "Alberto",
         "surname": "Messina",
         "dateOfBirth": "Sat Feb 10 1996 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)",
@@ -18,7 +17,6 @@
         }
     },
     {
-        "id": 10000001,
         "name": "Alessandro",
         "surname": "Messina",
         "dateOfBirth": "Mon Mar 06 1995 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)",

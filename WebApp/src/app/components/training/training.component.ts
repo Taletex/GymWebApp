@@ -1,9 +1,10 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import {NgbDate, NgbCalendar, NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
+import { NgbDate, NgbCalendar, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { HttpService } from 'src/app/services/http-service/http-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Training, Week, Series, Exercise, Session, User } from 'src/model';
 import * as trainingData from 'src/app/jsons/trainings.json';
 import * as athleteData from 'src/app/jsons/athletes.json';
 import * as _ from "lodash";
@@ -15,18 +16,14 @@ import * as _ from "lodash";
 })
 export class TrainingComponent implements OnInit {
 
-  public training: any;
-  public defaultWeek: any;
+  public training: Training = new Training();
   public activeWeek: number;
-  public copiedWeek: any;
-  public defaultSession: any;
-  public copiedSession: any;
+  public copiedWeek: Week = new Week();
+  public copiedSession: Session = new Session();
   public activeSession: Array<number>;
-  public defaultExercise: any;
-  public copiedExercise: any;
-  public defaultSeries: any;
-  public copiedSeries: any;
-  public athleteList: any;
+  public copiedExercise: Exercise = new Exercise();
+  public copiedSeries: Series = new Series();
+  public athleteList: Array<User>;
 
   public hoveredDate: NgbDate | null = null;
   public fromDate: NgbDate;
@@ -37,37 +34,33 @@ export class TrainingComponent implements OnInit {
   constructor(public router: Router, private toastr: ToastrService, private calendar: NgbCalendar, public formatter: NgbDateParserFormatter, public httpService: HttpService) {
 
     // Init training attribute
-    let trainingList = ((trainingData as any).default);
-    let trainingId = (this.router.url).split('/')[2];
-    for(let i=0; i<trainingList.length; i++) {
-      if (trainingList[i]._id == trainingId) {
-        this.training = trainingList[i];
-        console.log(this.training);
-        break;
-      }
-    }
-
-    // Init athleteList attribute
-    this.athleteList = ((athleteData as any).default);
-
-    // Init "default" and "copied" attributes (TODO: get last _id for week and session)
-    this.defaultSeries = {seriesNumber: 1, repNumber: 1, weight: 50, measure: "%", rest: "90"};
-    this.copiedSeries = _.cloneDeep(this.defaultSeries);
-    this.defaultExercise = {_id: "12345678", name: "deadlift", variant: {name: "standard", intensityCoefficient: 1}, series: [_.cloneDeep(this.defaultSeries)]};
-    this.copiedExercise = _.cloneDeep(this.defaultExercise);
-    this.defaultSession = {_id: 10000001, name: "", comment: "", exercises: [_.cloneDeep(this.defaultExercise)]};
-    this.copiedSession = _.cloneDeep(this.defaultSession);
-    this.defaultWeek  = {_id: 10000001, comment: "", sessions: [_.cloneDeep(this.defaultSession)]};
-    this.copiedWeek  = _.cloneDeep(this.defaultWeek);
     
-    this.activeWeek = 1;
-    this.activeSession = [];
-    for(let i=0;i<this.training.weeks.length;i++) {
-      this.activeSession.push(1);
-    }
+    let trainingId = (this.router.url).split('/')[2];
+    this.bLoading = true;
+    this.httpService.getTraining(trainingId)
+      .subscribe(
+        (data: any) => {
+          this.training = data;
+          this.bLoading = false;
+          console.log(this.training);
 
-    this.fromDate = calendar.getToday();
-    this.toDate = calendar.getNext(calendar.getToday(), 'd', 28);
+          // Init athleteList attribute TODO: prendere la lista quando si creeranno gli atleti
+          this.athleteList = ((athleteData as any).default);
+          
+          this.activeWeek = 1;
+          this.activeSession = [];
+          for(let i=0;i<this.training.weeks.length;i++) {
+            this.activeSession.push(1);
+          }
+
+          this.fromDate = calendar.getToday();
+          this.toDate = calendar.getNext(calendar.getToday(), 'd', 28);
+        },
+        (error: HttpErrorResponse) => {
+          this.bLoading = false;
+          this.toastr.error('An error occurred while loading the training!');
+          console.log(error.error.message);
+        });
   }
 
   ngOnInit() {}
@@ -76,14 +69,14 @@ export class TrainingComponent implements OnInit {
   /* SERIES FUNCTIONS */
   pushSeries(exercise: any) {
     if (exercise && exercise.series != null) {
-      exercise.series.push(_.cloneDeep(this.defaultSeries));
+      exercise.series.push(_.cloneDeep(new Series()));
     } else {
       console.log('ERROR: pushing new series');
     }
   }
   resetSeries(exercise: any, index: number) {
     if (exercise && exercise.series != null && index < exercise.series.length) {
-      exercise.series[index] = _.cloneDeep(this.defaultSeries);
+      exercise.series[index] = _.cloneDeep(new Series());
     } else {
       console.log('ERROR: resetting series of index ' + index);
     }
@@ -117,7 +110,7 @@ export class TrainingComponent implements OnInit {
   /* EXERCISES FUNCTIONS */
   pushExercise(training: any) {
     if (training && training.exercises != null) {
-      training.exercises.push(_.cloneDeep(this.defaultExercise));
+      training.exercises.push(_.cloneDeep(new Exercise()));
     } else {
       console.log('Error: "exercises" is not defined');
     }
@@ -125,7 +118,7 @@ export class TrainingComponent implements OnInit {
 
   resetExercise(training: any, index: number) {
     if (training && training.exercises != null && index < training.exercises.length) {
-      training.exercises[index] = _.cloneDeep(this.defaultExercise);
+      training.exercises[index] = _.cloneDeep(new Exercise());
     } else {
       console.log('ERROR: resetting exercise of index ' + index);
     }
@@ -159,7 +152,7 @@ export class TrainingComponent implements OnInit {
   /* SESSIONS FUNCTIONS */
   pushSession(event: MouseEvent, week: any) {
     if (week && week.sessions != null) {
-      week.sessions.push(_.cloneDeep(this.defaultSession));
+      week.sessions.push(new Session());
     } else {
       console.log('Error: "sessions" is not defined');
     }
@@ -168,7 +161,7 @@ export class TrainingComponent implements OnInit {
 
   resetSession(event: MouseEvent, week: any, index: number) {
     if (week && week.sessions != null && index < week.sessions.length) {
-      week.sessions[index] = _.cloneDeep(this.defaultSession);
+      week.sessions[index] = new Session();
     } else {
       console.log('ERROR: resetting session of index ' + index);
     }
@@ -210,13 +203,13 @@ export class TrainingComponent implements OnInit {
 
   /* WEEKS FUNCTIONS */
   pushWeek(event: MouseEvent) {
-    this.training.weeks.push(_.cloneDeep(this.defaultWeek));
+    this.training.weeks.push(_.cloneDeep(new Week()));
     event.preventDefault();
   }
 
   resetWeek(event: MouseEvent, index: number) {
     if (this.training.weeks != null && index < this.training.weeks.length) {
-      this.training.weeks[index] = _.cloneDeep(this.defaultWeek);
+      this.training.weeks[index] = _.cloneDeep(new Week());
     } else {
       console.log('ERROR: resetting week of index ' + index);
     }
@@ -262,7 +255,7 @@ export class TrainingComponent implements OnInit {
     .subscribe(
       (data: any) => {
         this.bLoading = false;
-        this.training = data.training;
+        this.training = data;
         this.toastr.success('Training successfully updated!');
       },
       (error: HttpErrorResponse) => {
@@ -279,6 +272,7 @@ export class TrainingComponent implements OnInit {
       (data: any) => {
         this.bLoading = false;
         this.toastr.success('Training successfully deleted!');
+        this.router.navigate(['trainings']);
       },
       (error: HttpErrorResponse) => {
         this.bLoading = false;
