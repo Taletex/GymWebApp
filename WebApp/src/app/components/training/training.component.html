@@ -14,8 +14,8 @@
                         </select>
                     </div>
                     <div class="ml-auto">
-                        <button type="submit" (click)="saveTraining()" class="btn btn-success btn-sm">SALVA</button>
-                        <button type="submit" (click)="deleteTraining()" class="btn btn-danger btn-sm ml-2">ELIMINA</button>
+                        <div (click)="saveTraining()" class="btn btn-success btn-sm">SALVA</div>
+                        <div (click)="deleteTraining()" class="btn btn-danger btn-sm ml-2">ELIMINA</div>
                     </div>
                 </div>
                 
@@ -107,18 +107,26 @@
                                                 <div class="row m-0">
                                                     <div class="col-6 form-group pl-0 pr-1 m-0">
                                                         <label for="esercizio_{{exerciseIndex}}" class="col-form-label col-form-label-sm">Esercizio</label>
-                                                        <input type="text" [(ngModel)]="exercise.name" class="form-control form-control-sm"
-                                                            id="esercizio_{{exerciseIndex}}" name="esercizio_{{exerciseIndex}}" placeholder="Esercizio...">
+                                                        <input id="esercizio_{{exerciseIndex}}" name="esercizio_{{exerciseIndex}}" type="text" class="form-control"
+                                                            [(ngModel)]="exercise.name"
+                                                            [ngbTypeahead]="search"
+                                                            [resultTemplate]="rt"
+                                                            [editable]='false'
+                                                            (selectItem)="selectExercise($event, session.exercises, exerciseIndex)">
+                                                            
+                                                            <ng-template #rt let-r="result" let-t="term">
+                                                                <ngb-highlight [result]="r.name + ' (' + r.variant.name + ')'" [term]="t"></ngb-highlight>
+                                                            </ng-template>
                                                     </div>
                                                     <div class="col-6 form-group pl-1 pr-0 m-0">
                                                         <label for="tipo_{{exerciseIndex}}" class="col-form-label col-form-label-sm">Tipo</label>
                                                         <input type="text" [(ngModel)]="exercise.variant.name" class="form-control form-control-sm"
-                                                            id="tipo_{{exerciseIndex}}" name="tipo_{{exerciseIndex}}" placeholder="Tipo esercizio...">
+                                                            id="tipo_{{exerciseIndex}}" name="tipo_{{exerciseIndex}}" placeholder="Tipo esercizio..." disabled>
                                                     </div>
                                                     <div class="col-12 form-group pl-0 pr-0">
                                                         <label for="description_{{exerciseIndex}}" class="col-form-label col-form-label-sm">Descrizione</label>
                                                         <input type="text" [(ngModel)]="exercise.description" class="form-control form-control-sm"
-                                                            id="description_{{exerciseIndex}}" name="description_{{exerciseIndex}}" placeholder="Descrizione esercizio...">
+                                                            id="description_{{exerciseIndex}}" name="description_{{exerciseIndex}}" placeholder="Descrizione esercizio..." disabled>
                                                     </div>
                                                 </div>
                                                 <div class="pl-3 pr-0 d-flex flex-column align-items-center mt-1">
@@ -184,7 +192,7 @@
                                             </div>
                                         </div>
                                         <div class="form-row m-0 d-flex justify-content-end">
-                                            <button type="submit" class="btn btn-outline-info btn-small mt-2" (click)="pushExercise(session)">Aggiungi esercizio +</button>
+                                            <div class="btn btn-outline-info btn-small mt-2" (click)="pushExercise(session)">Aggiungi esercizio +</div>
                                         </div>
                                     </ng-template>
                                 </li>

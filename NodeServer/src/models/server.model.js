@@ -70,6 +70,6 @@ const TrainingSchema = mongoose.Schema({
 });
 
 const trainingSchema =  mongoose.model('Training', TrainingSchema);
-const exerciseSchema =  mongoose.model('Exercise', TrainingSchema);
-const userSchema =  mongoose.model('User', TrainingSchema);
+const exerciseSchema =  mongoose.model('Exercise', ExerciseSchema);
+const userSchema =  mongoose.model('User', UserSchema);
 module.exports = {Training: trainingSchema, Exercise: exerciseSchema, User: userSchema};

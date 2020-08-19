@@ -1,11 +1,12 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+import { debounceTime, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { NgbDate, NgbCalendar, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDate, NgbCalendar, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 import { HttpService } from 'src/app/services/http-service/http-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Training, Week, Series, Exercise, Session, User } from 'src/model';
-import * as trainingData from 'src/app/jsons/trainings.json';
+import { Training, Week, Series, Exercise, Session, User, Variant } from 'src/app/model';
 import * as athleteData from 'src/app/jsons/athletes.json';
 import * as _ from "lodash";
 
@@ -23,15 +24,27 @@ export class TrainingComponent implements OnInit {
   public activeSession: Array<number>;
   public copiedExercise: Exercise = new Exercise();
   public copiedSeries: Series = new Series();
-  public athleteList: Array<User>;
-
+  public athleteList: Array<User> = [new User()];
+  public exerciseList: Array<Exercise> = [new Exercise()];
   public hoveredDate: NgbDate | null = null;
   public fromDate: NgbDate;
   public toDate: NgbDate | null = null;
 
   public bLoading = false;
 
-  constructor(public router: Router, private toastr: ToastrService, private calendar: NgbCalendar, public formatter: NgbDateParserFormatter, public httpService: HttpService) {
+  // Init exercise typeahead
+  search = (text$: Observable<string>) => 
+    text$.pipe(
+      debounceTime(200),
+      map(term => term === '' ? this.exerciseList
+        : ((this.exerciseList.filter(v => (v.name + " (" + v.variant.name + ")").toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)).length==0 ?
+          [new Exercise("Nuovo allenamento", new Variant("new", -1))] : (this.exerciseList.filter(v => (v.name + " (" + v.variant.name + ")").toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)))
+        )
+    )
+
+
+  /* CONSTRUCTOR */
+  constructor(public router: Router, private toastr: ToastrService, private calendar: NgbCalendar, public httpService: HttpService) {
 
     // Init training attribute
     
@@ -41,10 +54,22 @@ export class TrainingComponent implements OnInit {
       .subscribe(
         (data: any) => {
           this.training = data;
-          this.bLoading = false;
           console.log(this.training);
 
-          // Init athleteList attribute TODO: prendere la lista quando si creeranno gli atleti
+          // Init exercise list
+          this.httpService.getExercises()
+          .subscribe(
+            (data: any) => {
+              this.exerciseList = data;
+              this.bLoading = false;
+            },
+            (error: HttpErrorResponse) => {
+              this.bLoading = false;
+              this.toastr.error('An error occurred while loading the exercise list!');
+              console.log(error.error.message);
+            });
+
+          // Init athleteList | TODO: prendere la lista quando si creeranno gli atleti
           this.athleteList = ((athleteData as any).default);
           
           this.activeWeek = 1;
@@ -65,6 +90,16 @@ export class TrainingComponent implements OnInit {
 
   ngOnInit() {}
 
+  /** After selecting an exercise this function performs a copy of all fields of selected exercises in the current exercise (except for series) */
+  selectExercise(event, exerciseList: Array<Exercise>, exerciseIndex: number) {
+    if(event.item.variant.intensityCoefficient == -1) {
+      // TODO: CREARE NUOVO ESERCIZIO TRAMITE MODALE
+      // Assegnare ad event.item il nuovo esercizio cosi dopo fa le azioni giuste
+    } 
+    let series = _.cloneDeep(exerciseList[exerciseIndex].series);
+    exerciseList[exerciseIndex] = _.cloneDeep(event.item);
+    exerciseList[exerciseIndex].series = _.cloneDeep(series);
+  }
 
   /* SERIES FUNCTIONS */
   pushSeries(exercise: any) {

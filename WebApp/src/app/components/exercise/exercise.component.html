@@ -3,11 +3,40 @@
     <div class="exercise__maincontainer col-12 card p-0">
 
         <div class="maincontainer__header card-header">
-            <h6 class="m-0">EXERCISE SECTION</h6>
+            <div class="d-flex align-items-baseline mb-2">
+                <h5 class="m-0">ESERCIZIO {{exercise.name}}</h5>
+                <div class="ml-auto">
+                    <div (click)="saveExercise()" class="btn btn-success btn-sm">SALVA</div>
+                    <div (click)="deleteExercise()" class="btn btn-danger btn-sm ml-2">ELIMINA</div>
+                </div>
+            </div>
         </div>
 
         <div class="maincontainer__body card-body">
-            TODO
+            <form>
+                <div class="form-row m-0">
+                    <div class="col-4 form-group">
+                        <label for="exerciseName" class="col-form-label col-form-label-sm">Nome</label>
+                        <input type="text" [(ngModel)]="exercise.name" class="form-control form-control-sm"
+                            id="exerciseName" name="exerciseName">
+                    </div>
+                    <div class="col-4 form-group">
+                        <label for="exerciseVariantName" class="col-form-label col-form-label-sm">Nome Variante</label>
+                        <input type="text" [(ngModel)]="exercise.variant.name" class="form-control form-control-sm"
+                            id="exerciseVariantName" name="exerciseVariantName">
+                    </div>
+                    <div class="col-4 form-group">
+                        <label for="exerciseVariantCoefficient" class="col-form-label col-form-label-sm">Coefficente di intensità</label>
+                        <input type="number" min=0.1 [(ngModel)]="exercise.variant.intensityCoefficient" class="form-control form-control-sm"
+                            id="exerciseVariantCoefficient" name="exerciseVariantCoefficient">
+                    </div>
+                    <div class="col-12 form-group">
+                        <label for="exerciseDescription" class="col-form-label col-form-label-sm">Descrizione</label>
+                        <textarea [(ngModel)]="exercise.description" class="form-control form-control-sm"
+                            id="exerciseDescription" name="exerciseDescription"></textarea>
+                    </div>
+                </div>
+            </form>
         </div>
 
     </div>

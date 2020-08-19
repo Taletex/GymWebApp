@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
+import { Training, Exercise, User } from 'src/app/model';
 import * as configs from 'configs.json';
 
 // Usato per iniettare il service nell'app. Nota che 'root' serve per indicare che viene fornito al root level (AppModule). Nota che cosi facendo si rende il service un singleton!
@@ -58,7 +59,7 @@ export class HttpService {
   }
 
   /* EXERCISE CRUD */
-  createExercise(exercise: any): Observable<any> {
+  createExercise(exercise: Exercise): Observable<any> {
     return this.http.post<any>(this.baseServerUrl + "/exercises", exercise);
   }
 

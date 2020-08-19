@@ -51,7 +51,7 @@ export class Variant {
     name: string;
     intensityCoefficient: number;
 
-    constructor(name: string = "standard", intensityCoefficient: number = 1) {
+    constructor(name: string = "Standard", intensityCoefficient: number = 1) {
         this.name = name;
         this.intensityCoefficient = intensityCoefficient;
     }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpService } from 'src/app/services/http-service/http-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
-import { Training } from 'src/model';
+import { Training } from 'src/app/model';
 
 @Component({
   selector: 'app-trainings',
@@ -10,12 +10,11 @@ import { Training } from 'src/model';
   styleUrls: ['./trainings.component.scss']
 })
 export class TrainingsComponent implements OnInit {
-  public trainingList: Array<Training>;
-  public filters: any;
-  public bLoading: boolean;
+  public trainingList: Array<Training> = [new Training()];
+  public filters: any = {};
+  public bLoading: boolean = false;
 
   constructor(private httpService: HttpService, private toastr: ToastrService) {
-    this.bLoading = false;
     this.filters = { author: { name: '', surname: '' }, creationDate: '', startDate: '', athlete: { name: '', surname: '' }, type: '' };
     this.getTrainings();
   }

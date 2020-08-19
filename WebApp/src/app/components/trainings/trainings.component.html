@@ -53,6 +53,10 @@
             </div>
         </div>
         <div class="maincontainer__body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2">
+            <div class="h-100 w-100 d-flex flex-column align-items-center justify-content-center badge badge-light" *ngIf="trainingList.length == 0">
+                <img src="assets/icons/misc/alert.svg" style="width:40px; height:auto;">
+                <span>Nessun allenamento presente nella piattaforma</span>
+            </div>
             <div class="body__element list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1" *ngFor="let elem of trainingList">
                 <div class="col-2">
                     <span class="d-block">{{elem.author.name}} {{elem.author.surname}}</span>

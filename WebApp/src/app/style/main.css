@@ -124,11 +124,11 @@
   border-radius: 4px;
 }
 .main__trainings .trainings__maincontainer .maincontainer__header {
-  height: 60px;
+  height: 70px;
 }
 .main__trainings .trainings__maincontainer .maincontainer__body {
   overflow-y: scroll;
-  height: calc(100vh - 206px);
+  height: calc(100vh - 216px);
 }
 .main__trainings .trainings__maincontainer .maincontainer__body .body__element {
   height: 80px;
