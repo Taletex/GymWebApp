@@ -74,4 +74,9 @@ export class HttpService {
   deleteExercise(id: string): Observable<any> {
     return this.http.delete<any>(this.baseServerUrl + "/exercises/" + id);
   }
+
+  /* USERS CRUD */
+  getUsers(): Observable<any> {
+    return this.http.get<any>(this.baseServerUrl + "/users");
+  }
 }

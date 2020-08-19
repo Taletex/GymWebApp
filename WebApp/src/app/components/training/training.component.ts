@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -29,25 +29,17 @@ export class TrainingComponent implements OnInit {
   public hoveredDate: NgbDate | null = null;
   public fromDate: NgbDate;
   public toDate: NgbDate | null = null;
-
   public bLoading = false;
 
-  // Init exercise typeahead
-  search = (text$: Observable<string>) => 
-    text$.pipe(
-      debounceTime(200),
-      map(term => term === '' ? this.exerciseList
-        : ((this.exerciseList.filter(v => (v.name + " (" + v.variant.name + ")").toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)).length==0 ?
-          [new Exercise("Nuovo allenamento", new Variant("new", -1))] : (this.exerciseList.filter(v => (v.name + " (" + v.variant.name + ")").toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)))
-        )
-    )
-
+  // Aux attributes for new exercise handling
+  public newExercise: Exercise = new Exercise();
+  private currentExerciseIndex: number = 0;
+  private currentExerciseList: Array<Exercise> = [new Exercise()];
 
   /* CONSTRUCTOR */
   constructor(public router: Router, private toastr: ToastrService, private calendar: NgbCalendar, public httpService: HttpService) {
 
-    // Init training attribute
-    
+    // Init training attributes
     let trainingId = (this.router.url).split('/')[2];
     this.bLoading = true;
     this.httpService.getTraining(trainingId)
@@ -90,14 +82,54 @@ export class TrainingComponent implements OnInit {
 
   ngOnInit() {}
 
-  /** After selecting an exercise this function performs a copy of all fields of selected exercises in the current exercise (except for series) */
+  // Init exercise typeahead
+  search = (text$: Observable<string>) => 
+    text$.pipe(
+      debounceTime(200),
+      map(term => term === '' ? this.exerciseList
+        : ((this.exerciseList.filter(v => (v.name + " (" + v.variant.name + ")").toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)).length==0 ?
+          [new Exercise("Nuovo Esercizio", new Variant("new", -1))] : (this.exerciseList.filter(v => (v.name + " (" + v.variant.name + ")").toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)))
+        )
+    )
+
+  createExercise() {
+    this.bLoading = true;
+    this.httpService.createExercise(this.newExercise)
+      .subscribe(
+        (data: any) => {
+          this.bLoading = false;
+          this.assignExercise(data, this.currentExerciseList, this.currentExerciseIndex);
+          this.toastr.success('Exercise successfully created!');
+        },
+        (error: HttpErrorResponse) => {
+          this.bLoading = false;
+          this.toastr.error('An error occurred while creating the exercise!');
+          console.log(error.error.message);
+        });
+  }
+
+  abortCreateExercise() {
+    this.assignExercise(new Exercise(), this.currentExerciseList, this.currentExerciseIndex);
+  }
+  
+
+  /* This function calls a modal if a new exercise need to be created, else calls assignExercise function */
   selectExercise(event, exerciseList: Array<Exercise>, exerciseIndex: number) {
     if(event.item.variant.intensityCoefficient == -1) {
-      // TODO: CREARE NUOVO ESERCIZIO TRAMITE MODALE
-      // Assegnare ad event.item il nuovo esercizio cosi dopo fa le azioni giuste
-    } 
+      this.currentExerciseList = exerciseList;
+      this.currentExerciseIndex = exerciseIndex;
+      this.newExercise.name = (document.getElementById("exercise_" + exerciseIndex) as HTMLInputElement).value;
+      document.getElementById("exerciseModalButton").click();
+    }
+    else 
+      this.assignExercise(event.item, exerciseList, exerciseIndex);
+    
+  }
+
+  /** After selecting an exercise this function performs a copy of all fields of selected exercises in the current exercise (except for series) */
+  assignExercise(newExercise, exerciseList: Array<Exercise>, exerciseIndex: number) {
     let series = _.cloneDeep(exerciseList[exerciseIndex].series);
-    exerciseList[exerciseIndex] = _.cloneDeep(event.item);
+    exerciseList[exerciseIndex] = _.cloneDeep(newExercise);
     exerciseList[exerciseIndex].series = _.cloneDeep(series);
   }
 

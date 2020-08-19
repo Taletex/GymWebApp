@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { User } from 'src/app/model';
+import { HttpErrorResponse } from '@angular/common/http';
+import { HttpService } from 'src/app/services/http-service/http-service.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-athletes',
@@ -6,21 +10,31 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./athletes.component.scss']
 })
 export class AthletesComponent implements OnInit {
-  private pokemonData: any;
-  public athleteList: Array<Object>;
+  public userList: Array<User> = [new User()];
+  public filters: any = {};
+  public bLoading: boolean = false;
 
-  constructor() {}
+  constructor(private httpService: HttpService, private toastr: ToastrService) {
+    this.filters = { name: '', variant: {name: '', intensityCoefficient: 1}, description: ''};
+    this.getUsers();
+  }
 
-  ngOnInit() {
+  ngOnInit() {}
 
-    this.athleteList = [
-      { athlete: {name: 'Alessandro', surname: 'Messina', age: '23', bodyweight: '85'},
-        maximum: {squat: 210, deadlift: 280, benchpress: 150, militarypress: 97, frontsquat: 170, cleanandjerk: 130}
-      },
-      { athlete: {name: 'Alberto', surname: 'Messina', age: '22', bodyweight: '81'},
-        maximum: {squat: 180, deadlift: 220, benchpress: 140, militarypress: 90, frontsquat: 130, cleanandjerk: 100}
-      }
-    ];
+  getUsers() {
+    this.bLoading = true;
+    this.httpService.getUsers()
+      .subscribe(
+        (data: any) => {
+          this.userList = data;
+          this.bLoading = false;
+          console.log(this.userList);
+        },
+        (error: HttpErrorResponse) => {
+          this.bLoading = false;
+          this.toastr.error('An error occurred while loading the user list!');
+          console.log(error.error.message);
+        });
   }
 
 }

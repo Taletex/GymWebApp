@@ -64,7 +64,7 @@
                     <a (click)="deleteExercise(elem._id, exerciseIndex)" routerLinkActive="active" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></a>
                 </div>
             </div>
-            <app-exercise-modal (onClose)="createExercise()" [(newExercise)] = "newExercise" style="position: absolute; right: 15px; bottom: 15px" (onHide)="createExercise()">
+            <app-exercise-modal (onClose)="createExercise()" [(newExercise)] = "newExercise" style="position: absolute; right: 15px; bottom: 15px">
                 <div class="image-button cursor-pointer" ngbTooltip="Nuovo" placement="top"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></div>
             </app-exercise-modal>
         </div>
@@ -78,52 +78,4 @@
             </div>
         </div>
     </div>
-
 </div>
-
-<ng-template #exerciseModal let-modal>
-    <div class="exercisemodal__container">
-        <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">Crea Esercizio</h4>
-            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <div class="card h-100">
-                <div class="card-body h-100">
-                    <form>
-                        <div class="form-row m-0">
-                            <div class="col-4 form-group">
-                                <label for="exerciseName" class="col-form-label col-form-label-sm">Nome</label>
-                                <input type="text" [(ngModel)]="newExercise.name" class="form-control form-control-sm"
-                                    id="exerciseName" name="exerciseName">
-                            </div>
-                            <div class="col-4 form-group">
-                                <label for="exerciseVariantName" class="col-form-label col-form-label-sm">Nome Variante</label>
-                                <input type="text" [(ngModel)]="newExercise.variant.name" class="form-control form-control-sm"
-                                    id="exerciseVariantName" name="exerciseVariantName">
-                            </div>
-                            <div class="col-4 form-group">
-                                <label for="exerciseVariantCoefficient" class="col-form-label col-form-label-sm">Coefficente di intensità</label>
-                                <input type="number" min=0.1 [(ngModel)]="newExercise.variant.intensityCoefficient" class="form-control form-control-sm"
-                                    id="exerciseVariantCoefficient" name="exerciseVariantCoefficient">
-                            </div>
-                            <div class="col-12 form-group">
-                                <label for="exerciseDescription" class="col-form-label col-form-label-sm">Descrizione</label>
-                                <textarea [(ngModel)]="newExercise.description" class="form-control form-control-sm"
-                                    id="exerciseDescription" name="exerciseDescription"></textarea>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer" style="overflow:visible">
-            <button class="btn btn-success" ngbAutofocus [disabled]="newExercise.name == ''" style="position:relative;" (click)="modal.close(newExercise)">
-                <span>Crea</span> 
-                <div style="position: absolute; right: 0px; bottom: 0px; width:100%; height:100%;" ngbTooltip="Campo 'nome' vuoto" placement="top" [hidden]="newExercise.name != ''"></div>
-            </button>
-        </div>
-    </div>
-</ng-template>

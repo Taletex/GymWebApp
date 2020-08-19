@@ -54,6 +54,7 @@ import { TrainingModalComponent } from './components/modals/training-modal/train
     ToastrModule.forRoot(),  // ToastrModule added
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [ExerciseModalComponent]
 })
 export class AppModule { }
