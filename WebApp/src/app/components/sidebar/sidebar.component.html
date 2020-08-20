@@ -28,17 +28,11 @@
                 <img src="assets/icons/sidebar/barbell.svg" style="width:24px; height:auto;" class="ml-1 mr-2">
                 <span [hidden]="!bExpandedSidebar">Esercizi</span>
             </a>
-            <a routerLink="/athletes" routerLinkActive="active"
+            <a routerLink="/users" routerLinkActive="active"
                 class="sidebar__element link-button w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
-                [ngClass]="{'active': bActiveList.athletes}">
+                [ngClass]="{'active': bActiveList.users}">
                 <img src="assets/icons/sidebar/athlete.svg" style="width:24px; height:auto;" class="ml-1 mr-2">
-                <span [hidden]="!bExpandedSidebar">Atleti</span>
-            </a>
-            <a routerLink="/coaches" routerLinkActive="active"
-                class="sidebar__element link-button w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
-                [ngClass]="{'active': bActiveList.coaches}">
-                <img src="assets/icons/sidebar/coach.svg" style="width:24px; height:auto;" class="ml-1 mr-2">
-                <span [hidden]="!bExpandedSidebar">Coach</span>
+                <span [hidden]="!bExpandedSidebar">Utenti</span>
             </a>
             <a routerLink="/userprofile" routerLinkActive="active"
                 class="sidebar__element link-button w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"

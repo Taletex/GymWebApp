@@ -1,0 +1,87 @@
+<div class="main__users row m-3">
+
+    <!-- FILTERS -->
+    <div class="users__filters col-12 row mb-2 mx-0 my-0 plx-2 border">
+        <div class="col-1 d-flex align-items-center border border-left-0 border-top-0 border-bottom-0">
+            <h6 class="m-0">Filtri</h6><span class="fa fa-filter ml-2" style="font-size: 20px;"></span>
+        </div>
+        <div class="col-3 form-group pl-2 pr-1 m-0">
+            <label class="col-form-label col-form-label-sm p-0 text-muted">Utente</label>
+            <div class="input-group">
+                <input type="text" [(ngModel)]="filters.name" class="form-control form-control-sm"
+                    id="filterAuthorName" name="filterAuthorName" placeholder="Nome...">
+                <input type="text" [(ngModel)]="filters.surname" class="form-control form-control-sm"
+                    id="filterAuthorSurname" name="filterAuthorSurname" placeholder="Cognome...">
+            </div>
+        </div>
+        <div class="col-2 form-group px-1 m-0">
+            <label for="filterDoB" class="col-form-label col-form-label-sm p-0 text-muted">DoB</label>
+            <input type="text" [(ngModel)]="filters.dateOfBirth" class="form-control form-control-sm"
+                    id="filterDoB" name="filterDoB" placeholder="Data nascita...">
+        </div>
+        <div class="col-1 form-group px-1 m-0">
+            <label for="filterSex" class="col-form-label col-form-label-sm p-0 text-muted">Sex</label>
+            <select [(ngModel)]="filters.sex" class="form-control form-control-sm cursor-pointer" id="filterSex" name="filterSex">
+                <option [value]="'M'">Uomo</option>
+                <option [value]="'F'">Donna</option>
+            </select>
+        </div>
+        <div class="col-2 form-group px-1 m-0">
+            <label for="filterBw" class="col-form-label col-form-label-sm p-0 text-muted">BodyWeight</label>
+            <input type="text" [(ngModel)]="filters.BodyWeight" class="form-control form-control-sm"
+                    id="filterBw" name="filterBw" placeholder="Peso corporeo...">
+        </div>
+        <div class="col-2 form-group px-1 m-0">
+            <label for="filterExperience" class="col-form-label col-form-label-sm p-0 text-muted">Esperienza (anni)</label>
+            <input type="text" [(ngModel)]="filters.yearsOfExperience" class="form-control form-control-sm"
+                    id="filterExperience" name="filterExperience" placeholder="Esperienza (anni)...">
+        </div>
+        
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="users__maincontainer card col-12 p-0 border border-secondary border">
+
+        <div class="maincontainer__header card-header pl-2 pr-3 border border-secondary border-top-0 border-left-0 border-right-0 d-flex flex-column bg-dark text-white">
+            <div class="col-12 row m-0 p-0 d-flex align-items-center justify-content-center">
+                <div class="col-2"><b>Atleta</b></div>
+                <div class="col-2"><b>DoB</b></div>
+                <div class="col-2"><b>Sex</b></div>
+                <div class="col-2"><b>BodyWeight</b></div>
+                <div class="col-2"><b>Experience (years)</b></div>
+                <div class="col-2"><b>Azioni</b></div>
+            </div>
+        </div>
+
+        <div class="maincontainer__body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2">
+            <div class="h-100 w-100 d-flex flex-column align-items-center justify-content-center" *ngIf="userList.length == 0">
+                <img src="assets/icons/misc/alert.svg" style="width:40px; height:auto;">
+                <span class="badge badge-light mt-2">Nessun utente presente nella piattaforma</span>
+            </div>
+            <div class="body__element list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1" *ngFor="let elem of userList; index as userIndex">
+                <div class="col-2"><span>{{elem.name}} {{elem.surname}}</span></div>
+                <div class="col-2"><span>{{elem.dateOfBirth | date:'d MMMM yyyy' }}</span></div>
+                <div class="col-2"><span>{{elem.sex}}</span></div>
+                <div class="col-2"><span>{{elem.bodyWeight}} kg</span></div>
+                <div class="col-2"><span>{{elem.yearsOfExperience}}</span></div>
+                <div class="col-2 d-flex">
+                    <a [routerLink]="['/users', elem._id]" routerLinkActive="active" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/url.svg" style="width:20px; height:auto;"></a>
+                    <a [routerLink]="['/users', elem._id]" routerLinkActive="active" class="ml-2 image-button" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></a>
+                    <a (click)="deleteExercise(elem._id, userIndex)" routerLinkActive="active" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></a>
+                </div>
+            </div>
+            <app-user-modal (onClose)="createUser()" [(newUser)] = "newUser" style="position: absolute; right: 15px; bottom: 15px">
+                <div class="image-button cursor-pointer" ngbTooltip="Nuovo" placement="top"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></div>
+            </app-user-modal>
+        </div>
+    </div>
+
+    <!-- Loader -->
+    <div class='h-100 w-100' [hidden]="!bLoading">
+        <div style="position:absolute; background-color:black; opacity:50%; right:0; top:0;" class="w-100 h-100">
+            <div class="container d-flex align-items-center justify-content-center w-100 h-100">
+                <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+            </div>
+        </div>
+    </div>
+</div>

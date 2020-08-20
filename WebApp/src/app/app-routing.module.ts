@@ -5,8 +5,7 @@ import { TrainingsComponent } from 'src/app/components/trainings/trainings.compo
 import { TrainingComponent } from './components/training/training.component';
 import { ExercisesComponent } from 'src/app/components/exercises/exercises.component';
 import { ExerciseComponent } from './components/exercise/exercise.component';
-import { AthletesComponent } from 'src/app/components/athletes/athletes.component';
-import { CoachesComponent } from 'src/app/components/coaches/coaches.component';
+import { UsersComponent } from 'src/app/components/users/users.component';
 import { UserProfileComponent } from 'src/app/components/user-profile/user-profile.component';
 import { PageNotFoundComponent } from 'src/app/components/page-not-found/page-not-found.component';
 
@@ -17,8 +16,7 @@ const routes: Routes = [
   { path: 'trainings/:_id', component: TrainingComponent},
   { path: 'exercises', component: ExercisesComponent},
   { path: 'exercises/:_id', component: ExerciseComponent},
-  { path: 'athletes', component: AthletesComponent},
-  { path: 'coaches', component: CoachesComponent},
+  { path: 'users', component: UsersComponent},
   { path: 'userprofile', component: UserProfileComponent},
   { path: '**', component: PageNotFoundComponent }
 ];

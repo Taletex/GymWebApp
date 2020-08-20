@@ -1,16 +1,16 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Training } from 'src/app/model';
+import { User } from 'src/app/model';
 
 @Component({
-  selector: 'app-training-modal',
-  templateUrl: './training-modal.component.html',
-  styleUrls: ['./training-modal.component.scss']
+  selector: 'app-user-modal',
+  templateUrl: './user-modal.component.html',
+  styleUrls: ['./user-modal.component.scss']
 })
-export class TrainingModalComponent implements OnInit {
+export class UserModalComponent implements OnInit {
 
   public closeResult: string;
-  @Input() newTraining: Training;
+  @Input() newUser: User;
   @Output() onClose: EventEmitter<any> = new EventEmitter();
   @Output() onAbort: EventEmitter<any> = new EventEmitter();
 
@@ -19,12 +19,11 @@ export class TrainingModalComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  public openTrainingModal(content) {
+  public openUserModal(content) {
     this.modalService.open(content, { size: "lg", centered: true, scrollable: true, backdrop: "static" }).result.then((result) => {
       this.onClose.emit(null);
     }, (reason) => {
       this.onAbort.emit(null);
     });
   }
-
 }

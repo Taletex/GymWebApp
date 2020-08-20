@@ -38,4 +38,21 @@ module.exports = (app) => {
 
     // Delete a Exercise with id
     app.delete('/exercises/:_id', cors(corsOptions), server.deleteExercise);
+
+
+     /* USERS ROUTING */
+    // Create a new User
+    app.post('/users', cors(corsOptions), server.createUser);
+
+    // Retrieve all User
+    app.get('/users', cors(corsOptions), server.findAllUser);
+
+    // Retrieve a single User with id
+    app.get('/users/:_id', cors(corsOptions), server.findOneUser);
+    
+    // Update a User with id
+    app.put('/users/:_id', cors(corsOptions), cors(corsOptions), server.updateUser);
+
+    // Delete a User with id
+    app.delete('/users/:_id', cors(corsOptions), server.deleteUser);
 }

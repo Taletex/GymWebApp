@@ -10,7 +10,7 @@ import { Exercise } from 'src/app/model';
   styleUrls: ['./exercises.component.scss']
 })
 export class ExercisesComponent implements OnInit {
-  public exerciseList: Array<Exercise> = [new Exercise()];
+  public exerciseList: Array<Exercise> = [];
   public filters: any = {};
   public bLoading: boolean = false;
   public newExercise: Exercise = new Exercise();

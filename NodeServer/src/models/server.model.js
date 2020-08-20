@@ -7,7 +7,8 @@ const ContactsSchema = mongoose.Schema({
 
 const ResidenceSchema = mongoose.Schema({
     state: String,
-    city: String
+    city: String,
+    address: String
 }, { _id: false})
 
 const UserSchema = mongoose.Schema({
@@ -15,6 +16,7 @@ const UserSchema = mongoose.Schema({
     surname: String,
     dateOfBirth: Date,
     sex: String,
+    bodyWeight: Number,
     userType: String,
     yearsOfExperience: Number,
     contacts: ContactsSchema,

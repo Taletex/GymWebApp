@@ -1,7 +1,7 @@
 <div class="main__exercises row m-3">
 
     <!-- FILTERS -->
-    <div class="trainings__filters col-12 row mb-2 mx-0 my-0 plx-2 border">
+    <div class="exercises__filters col-12 row mb-2 mx-0 my-0 plx-2 border">
         <div class="col-1 d-flex align-items-center border border-left-0 border-top-0 border-bottom-0">
             <h6 class="m-0">Filtri</h6><span class="fa fa-filter ml-2" style="font-size: 20px;"></span>
         </div>
@@ -36,7 +36,7 @@
     </div>
 
     <!-- MAIN CONTAINER -->
-    <div class="exercises__maincontainer col-12 card p-0 border border-secondary border">
+    <div class="exercises__maincontainer card col-12 p-0 border border-secondary border">
         <div class="maincontainer__header card-header pl-2 pr-3 border border-secondary border-top-0 border-left-0 border-right-0 d-flex flex-column bg-dark text-white">
             <div class="col-12 row m-0 p-0 d-flex align-items-center justify-content-center">
                 <div class="col-2"><b>Nome</b></div>
@@ -52,10 +52,10 @@
             </div>
             <div class="body__element list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1" *ngFor="let elem of exerciseList; index as exerciseIndex">
                 <div class="col-2">
-                    <span class="d-block">{{elem.name}}</span>
+                    <span>{{elem.name}}</span>
                 </div>
                 <div class="col-4">
-                    <span class="d-block">{{elem.variant.name}} &bull; {{elem.variant.intensityCoefficient}}</span>
+                    <span>{{elem.variant.name}} &bull; {{elem.variant.intensityCoefficient}}</span>
                 </div>
                 <div class="col-4"><span>{{elem.description}}</span></div>
                 <div class="col-2 d-flex">

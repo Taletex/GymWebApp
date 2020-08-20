@@ -99,7 +99,7 @@
 }
 .main__training .training__maincontainer .maincontainer__body {
   overflow: auto;
-  height: calc(100vh - 153px);
+  height: calc(100vh - 155px);
 }
 .main__training .training__maincontainer .maincontainer__body .week-tab .session-tab {
   margin: 0px !important;

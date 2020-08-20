@@ -12,10 +12,12 @@ export class Contacts {
 export class Residence {
     state: string;
     city: string;
+    address: string;
 
-    constructor(state: string = "", city: string = "") {
+    constructor(state: string = "Italy", city: string = "", address: string = "") {
         this.state = state;
         this.city = city;
+        this.address = address;
     }
 }
 

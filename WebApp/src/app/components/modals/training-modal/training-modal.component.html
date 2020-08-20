@@ -1,1 +1,51 @@
-<p>training-modal works!</p>
+<ng-template #trainingModal let-modal>
+    <div class="trainingmodal__container">
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Crea Esercizio</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="card h-100">
+                <div class="card-body h-100">
+                    <form>
+                        <div class="form-row m-0">
+                            <div class="col-4 form-group">
+                                <label for="trainingName" class="col-form-label col-form-label-sm">Nome</label>
+                                <input type="text" required [(ngModel)]="newTraining.name" class="form-control form-control-sm"
+                                    id="trainingName" name="trainingName">
+                            </div>
+                            <div class="col-4 form-group">
+                                <label for="trainingVariantName" class="col-form-label col-form-label-sm">Nome Variante</label>
+                                <input type="text" [(ngModel)]="newTraining.variant.name" class="form-control form-control-sm"
+                                    id="trainingVariantName" name="trainingVariantName">
+                            </div>
+                            <div class="col-4 form-group">
+                                <label for="trainingVariantCoefficient" class="col-form-label col-form-label-sm">Coefficente di intensità</label>
+                                <input type="number" min=0.1 [(ngModel)]="newTraining.variant.intensityCoefficient" class="form-control form-control-sm"
+                                    id="trainingVariantCoefficient" name="trainingVariantCoefficient">
+                            </div>
+                            <div class="col-12 form-group">
+                                <label for="trainingDescription" class="col-form-label col-form-label-sm">Descrizione</label>
+                                <textarea [(ngModel)]="newTraining.description" class="form-control form-control-sm"
+                                    id="trainingDescription" name="trainingDescription"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" style="overflow:visible">
+            <button class="btn btn-success" ngbAutofocus [disabled]="newTraining.name == ''" style="position:relative;" (click)="modal.close(newTraining)">
+                <span>Crea</span> 
+                <div style="position: absolute; right: 0px; bottom: 0px; width:100%; height:100%;" ngbTooltip="Campo 'nome' vuoto" placement="top" [hidden]="newTraining.name != ''"></div>
+            </button>
+        </div>
+    </div>
+</ng-template>
+
+<div (click)="openTrainingModal(trainingModal)">
+    <ng-content></ng-content>
+</div>
+

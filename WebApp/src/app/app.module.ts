@@ -13,7 +13,7 @@ import { ToastrModule } from 'ngx-toastr';
 /* app components */
 import { AppComponent } from './app.component';
 import { HomepageComponent } from './components/homepage/homepage.component';
-import { AthletesComponent } from './components/athletes/athletes.component';
+import { UsersComponent } from './components/users/users.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { TrainingComponent } from './components/training/training.component';
@@ -22,15 +22,15 @@ import { ExercisesComponent } from './components/exercises/exercises.component';
 import { ExerciseComponent } from './components/exercise/exercise.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { StatsComponent } from './components/stats/stats.component';
-import { CoachesComponent } from './components/coaches/coaches.component';
 import { ExerciseModalComponent } from './components/modals/exercise-modal/exercise-modal.component';
 import { TrainingModalComponent } from './components/modals/training-modal/training-modal.component';
+import { UserModalComponent } from './components/modals/user-modal/user-modal.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomepageComponent,
-    AthletesComponent,
+    UsersComponent,
     PageNotFoundComponent,
     SidebarComponent,
     TrainingComponent,
@@ -39,9 +39,9 @@ import { TrainingModalComponent } from './components/modals/training-modal/train
     ExerciseComponent,
     UserProfileComponent,
     StatsComponent,
-    CoachesComponent,
     ExerciseModalComponent,
-    TrainingModalComponent
+    TrainingModalComponent,
+    UserModalComponent
   ],
   imports: [
     BrowserModule,

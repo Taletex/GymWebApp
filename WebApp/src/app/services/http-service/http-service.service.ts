@@ -28,9 +28,9 @@ export class HttpService {
     return this.http.get<any>(this.baseServerUrl + "/trainings");
   }
 
-  deleteTrainings(): Observable<any> {
+  /* deleteTrainings(): Observable<any> {
     return this.http.delete<any>(this.baseServerUrl + "/trainings");
-  }
+  } */
 
   /* TRAINING CRUD */
   createTraining(training: any): Observable<any> {
@@ -54,9 +54,9 @@ export class HttpService {
     return this.http.get<any>(this.baseServerUrl + "/exercises");
   }
 
-  deleteExercises(): Observable<any> {
+  /* deleteExercises(): Observable<any> {
     return this.http.delete<any>(this.baseServerUrl + "/exercises");
-  }
+  } */
 
   /* EXERCISE CRUD */
   createExercise(exercise: Exercise): Observable<any> {
@@ -78,5 +78,26 @@ export class HttpService {
   /* USERS CRUD */
   getUsers(): Observable<any> {
     return this.http.get<any>(this.baseServerUrl + "/users");
+  }
+
+  deleteUsers(): Observable<any> {
+    return this.http.delete<any>(this.baseServerUrl + "/users");
+  }
+
+  /* USER CRUD */
+  createUser(user: User): Observable<any> {
+    return this.http.post<any>(this.baseServerUrl + "/users", user);
+  }
+
+  getUser(id: string): Observable<any> {
+    return this.http.get<any>(this.baseServerUrl + "/users/" + id);
+  }
+
+  updateUser(id: string, user: any): Observable<any> {
+    return this.http.put<any>(this.baseServerUrl + "/users/" + id, user);
+  }
+
+  deleteUser(id: string): Observable<any> {
+    return this.http.delete<any>(this.baseServerUrl + "/users/" + id);
   }
 }

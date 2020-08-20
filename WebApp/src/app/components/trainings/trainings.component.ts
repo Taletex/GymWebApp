@@ -10,7 +10,7 @@ import { Training } from 'src/app/model';
   styleUrls: ['./trainings.component.scss']
 })
 export class TrainingsComponent implements OnInit {
-  public trainingList: Array<Training> = [new Training()];
+  public trainingList: Array<Training> = [];
   public filters: any = {};
   public bLoading: boolean = false;
 
