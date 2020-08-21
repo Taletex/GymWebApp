@@ -17,7 +17,7 @@ export class UsersComponent implements OnInit {
   public newUser: User = new User();
 
   constructor(private router: Router, private httpService: HttpService, private toastr: ToastrService) {
-    this.filters = { name: '', surname: '', dateOfBirth: '', sex: '', bodyweight: '', yearsOfExperience: ''};
+    this.filters = { name: '', surname: '', dateOfBirth: '', sex: '', bodyWeight: '', yearsOfExperience: ''};
     this.getUsers();
   }
 

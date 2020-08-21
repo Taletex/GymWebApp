@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 /* npm imports */
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -14,6 +14,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { AppComponent } from './app.component';
 import { HomepageComponent } from './components/homepage/homepage.component';
 import { UsersComponent } from './components/users/users.component';
+import { UserComponent } from './components/user/user.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { TrainingComponent } from './components/training/training.component';
@@ -41,13 +42,15 @@ import { UserModalComponent } from './components/modals/user-modal/user-modal.co
     StatsComponent,
     ExerciseModalComponent,
     TrainingModalComponent,
-    UserModalComponent
+    UserModalComponent,
+    UserComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     NgbModule,
     CommonModule,
     BrowserAnimationsModule, // required animations module

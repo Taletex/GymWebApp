@@ -12,22 +12,22 @@
                     <form>
                         <div class="form-row m-0">
                             <div class="col-4 form-group">
-                                <label for="trainingName" class="col-form-label col-form-label-sm">Nome</label>
+                                <label for="trainingName" class="col-form-label col-form-label-sm text-muted">Nome</label>
                                 <input type="text" required [(ngModel)]="newTraining.name" class="form-control form-control-sm"
                                     id="trainingName" name="trainingName">
                             </div>
                             <div class="col-4 form-group">
-                                <label for="trainingVariantName" class="col-form-label col-form-label-sm">Nome Variante</label>
+                                <label for="trainingVariantName" class="col-form-label col-form-label-sm text-muted">Nome Variante</label>
                                 <input type="text" [(ngModel)]="newTraining.variant.name" class="form-control form-control-sm"
                                     id="trainingVariantName" name="trainingVariantName">
                             </div>
                             <div class="col-4 form-group">
-                                <label for="trainingVariantCoefficient" class="col-form-label col-form-label-sm">Coefficente di intensità</label>
+                                <label for="trainingVariantCoefficient" class="col-form-label col-form-label-sm text-muted">Coefficente di intensità</label>
                                 <input type="number" min=0.1 [(ngModel)]="newTraining.variant.intensityCoefficient" class="form-control form-control-sm"
                                     id="trainingVariantCoefficient" name="trainingVariantCoefficient">
                             </div>
                             <div class="col-12 form-group">
-                                <label for="trainingDescription" class="col-form-label col-form-label-sm">Descrizione</label>
+                                <label for="trainingDescription" class="col-form-label col-form-label-sm text-muted">Descrizione</label>
                                 <textarea [(ngModel)]="newTraining.description" class="form-control form-control-sm"
                                     id="trainingDescription" name="trainingDescription"></textarea>
                             </div>

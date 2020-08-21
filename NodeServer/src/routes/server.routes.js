@@ -46,6 +46,9 @@ module.exports = (app) => {
 
     // Retrieve all User
     app.get('/users', cors(corsOptions), server.findAllUser);
+    
+    // Retrieve all User
+    app.get('/athletes', cors(corsOptions), server.findAllAthlete);
 
     // Retrieve a single User with id
     app.get('/users/:_id', cors(corsOptions), server.findOneUser);

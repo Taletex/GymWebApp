@@ -39,7 +39,6 @@ export class TrainingsComponent implements OnInit {
         });
   }
 
-
   createTraining() {
     this.bLoading = true;
     this.httpService.createTraining(new Training())
@@ -52,6 +51,22 @@ export class TrainingsComponent implements OnInit {
         (error: HttpErrorResponse) => {
           this.bLoading = false;
           this.toastr.error('An error occurred while creating the training!');
+          console.log(error.error.message);
+        });
+  }
+
+  deleteTraining(id: string, index: number) {
+    this.bLoading = true;
+    this.httpService.deleteTraining(id)
+      .subscribe(
+        (data: any) => {
+          this.bLoading = false;
+          this.trainingList.splice(index, 1);
+          this.toastr.success('Training successfully deleted!');
+        },
+        (error: HttpErrorResponse) => {
+          this.bLoading = false;
+          this.toastr.error('An error occurred while deleting the training!');
           console.log(error.error.message);
         });
   }

@@ -1,6 +1,6 @@
 <div class="main__training row m-3">
     <div class="training__maincontainer card col-12 p-0">
-        <form #trainingForm="ngForm">
+        <form>
             <div class="maincontainer__header card-header py-2">
                 <div class="d-flex align-items-baseline mb-2">
                     <h5 class="m-0">ALLENAMENTO</h5>
@@ -34,23 +34,23 @@
                             <div class="form-row m-0">
                                 <div class="col-12 form-group">Allenamento creato da {{training.author.name}} {{training.author.surname}} il {{training.creationDate | date:'d MMMM yyyy'}}</div>
                                 <div class="col-4 form-group">
-                                    <label for="trainingAthlete" class="col-form-label col-form-label-sm">Atleta</label>
-                                    <select [(ngModel)]="training.athlete" class="form-control form-control-sm" id="trainingAthlete" name="trainingAthlete">
-                                        <option *ngFor="let athlete of athleteList; index as athleteIndex" [value]="athlete" >{{athlete.name}} {{athlete.surname}}</option>
+                                    <label for="trainingAthlete" class="col-form-label col-form-label-sm text-muted">Atleta</label>
+                                    <select [(ngModel)]="training.athlete" class="form-control form-control-sm" id="trainingAthlete" name="trainingAthlete" [compareWith]="compareObjects">
+                                        <option [ngValue]="athlete" *ngFor="let athlete of athleteList; index as athleteIndex">{{athlete.name}} {{athlete.surname}}</option>
                                     </select>
                                 </div>
                                 <div class="col-4 form-group">
-                                    <label for="trainingStartDate" class="col-form-label col-form-label-sm">Data inizio</label>
-                                    <input type="date" [(ngModel)]="training.startDate" class="form-control form-control-sm"
+                                    <label for="trainingStartDate" class="col-form-label col-form-label-sm text-muted">Data inizio</label>
+                                    <input type="date"  [ngModel] ="training.startDate | date:'yyyy-MM-dd'" (ngModelChange)="training.startDate = $event" class="form-control form-control-sm"
                                         id="trainingStartDate" name="trainingStartDate">
                                 </div>
                                 <div class="col-4 form-group">
-                                    <label for="trainingEndDate" class="col-form-label col-form-label-sm">Data inizio</label>
-                                    <input type="date" [(ngModel)]="training.endDate" class="form-control form-control-sm"
+                                    <label for="trainingEndDate" class="col-form-label col-form-label-sm text-muted">Data inizio</label>
+                                    <input type="date" [ngModel] ="training.endDate | date:'yyyy-MM-dd'" (ngModelChange)="training.endDate = $event" class="form-control form-control-sm"
                                         id="trainingEndDate" name="trainingEndDate">
                                 </div>
                                 <div class="col-12 form-group">
-                                    <label for="trainingcomment" class="col-form-label col-form-label-sm">Commento</label>
+                                    <label for="trainingcomment" class="col-form-label col-form-label-sm text-muted">Commento</label>
                                     <textarea [(ngModel)]="training.comment" class="form-control form-control-sm"
                                         id="trainingcomment" name="trainingcomment" placeholder="Commento..."></textarea>
                                 </div>
@@ -74,7 +74,7 @@
                                     <ng-template ngbNavContent>
                                         <div class="form-row m-0">
                                             <div class="col-12 form-group pl-3">
-                                                <label for="weekcomment_{{weekIndex}}" class="col-form-label col-form-label-sm">Commento</label>
+                                                <label for="weekcomment_{{weekIndex}}" class="col-form-label col-form-label-sm text-muted">Commento</label>
                                                 <textarea [(ngModel)]="week.comment" class="form-control form-control-sm"
                                                     id="weekcomment_{{weekIndex}}" name="weekcomment_{{weekIndex}}" placeholder="Commento..."></textarea>
                                             </div>
@@ -92,12 +92,12 @@
                                     <ng-template ngbNavContent>
                                         <div class="form-row m-0">
                                             <div class="col-2 form-group pl-0">
-                                                <label for="trainingName_{{weekIndex}}" class="col-form-label col-form-label-sm">Nome sessione</label>
+                                                <label for="trainingName_{{weekIndex}}" class="col-form-label col-form-label-sm text-muted">Nome sessione</label>
                                                 <input type="text" [(ngModel)]="session.name" class="form-control form-control-sm"
                                                     id="trainingName_{{weekIndex}}" name="trainingName_{{weekIndex}}" placeholder="Nome sessione...">
                                             </div>
                                             <div class="col-10 form-group pr-0">
-                                                <label for="trainingComment_{{weekIndex}}" class="col-form-label col-form-label-sm">Commento</label>
+                                                <label for="trainingComment_{{weekIndex}}" class="col-form-label col-form-label-sm text-muted">Commento</label>
                                                 <input type="text" [(ngModel)]="session.comment" class="form-control form-control-sm"
                                                     id="trainingComment_{{weekIndex}}" name="trainingComment_{{weekIndex}}" placeholder="Commento...">
                                             </div>
@@ -106,7 +106,7 @@
                                             <div class="col-4 d-flex m-0 px-3">
                                                 <div class="row m-0">
                                                     <div class="col-6 form-group pl-0 pr-1 m-0">
-                                                        <label for="exercise_{{exerciseIndex}}" class="col-form-label col-form-label-sm">Esercizio</label>
+                                                        <label for="exercise_{{exerciseIndex}}" class="col-form-label col-form-label-sm text-muted">Esercizio</label>
                                                         <input id="exercise_{{exerciseIndex}}" name="exercise_{{exerciseIndex}}" type="text" class="form-control"
                                                             [(ngModel)]="exercise.name"
                                                             [ngbTypeahead]="search"
@@ -119,12 +119,12 @@
                                                             </ng-template>
                                                     </div>
                                                     <div class="col-6 form-group pl-1 pr-0 m-0">
-                                                        <label for="tipo_{{exerciseIndex}}" class="col-form-label col-form-label-sm">Tipo</label>
+                                                        <label for="tipo_{{exerciseIndex}}" class="col-form-label col-form-label-sm text-muted">Tipo</label>
                                                         <input type="text" [(ngModel)]="exercise.variant.name" class="form-control form-control-sm"
                                                             id="tipo_{{exerciseIndex}}" name="tipo_{{exerciseIndex}}" placeholder="Tipo esercizio..." disabled>
                                                     </div>
                                                     <div class="col-12 form-group pl-0 pr-0">
-                                                        <label for="description_{{exerciseIndex}}" class="col-form-label col-form-label-sm">Descrizione</label>
+                                                        <label for="description_{{exerciseIndex}}" class="col-form-label col-form-label-sm text-muted">Descrizione</label>
                                                         <input type="text" [(ngModel)]="exercise.description" class="form-control form-control-sm"
                                                             id="description_{{exerciseIndex}}" name="description_{{exerciseIndex}}" placeholder="Descrizione esercizio..." disabled>
                                                     </div>

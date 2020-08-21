@@ -1,5 +1,6 @@
 const {Training, Exercise, User} = require('../models/server.model.js');
 const appConfig = require('../../config.js')
+const _ = require('lodash');
 const http = require('http');
 const webAppBaseUrl = appConfig.webapp.address + "/";
 const webAppTrainingUrl = webAppBaseUrl + "trainings/";
@@ -295,6 +296,18 @@ exports.findAllUser = (req, res) => {
     User.find()
     .then(users => {
         res.send(users);
+    }).catch(err => {
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving users."
+        });
+    });
+};
+
+// Retrieve and return all users from the database.
+exports.findAllAthlete = (req, res) => {
+    User.find()
+    .then(users => {
+        res.send(_.filter(users, function(user) { return user.userType == "athlete"; }));
     }).catch(err => {
         res.status(500).send({
             message: err.message || "Some error occurred while retrieving users."

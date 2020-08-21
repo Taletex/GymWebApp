@@ -12,7 +12,7 @@ export class UtilsService {
    * @param date the date which need to be checked respect now
    * @returns number
    */
-  public getTimeDifferenceFromNow(dateToCompare: string):string {
+  public getTimeDifferenceFromNow(dateToCompare: string): string {
     let date = new Date(dateToCompare);
     let now = new Date();
     let yearDiff = now.getFullYear() - date.getFullYear();
@@ -32,5 +32,9 @@ export class UtilsService {
         } else return (dayDiff.toString() + " days");
       } else return (monthDiff.toString() + " months");
     } else return (yearDiff.toString() + " years")
+  }
+
+  public compareObjects(a: any, b: any): boolean {
+    return (a && b && a._id === b._id);
   }
 }

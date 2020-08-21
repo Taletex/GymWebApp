@@ -84,6 +84,10 @@ export class HttpService {
     return this.http.delete<any>(this.baseServerUrl + "/users");
   }
 
+  getAthletes(): Observable<any> {
+    return this.http.get<any>(this.baseServerUrl + "/athletes");
+  }
+
   /* USER CRUD */
   createUser(user: User): Observable<any> {
     return this.http.post<any>(this.baseServerUrl + "/users", user);

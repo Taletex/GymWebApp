@@ -6,6 +6,7 @@ import { TrainingComponent } from './components/training/training.component';
 import { ExercisesComponent } from 'src/app/components/exercises/exercises.component';
 import { ExerciseComponent } from './components/exercise/exercise.component';
 import { UsersComponent } from 'src/app/components/users/users.component';
+import { UserComponent } from './components/user/user.component';
 import { UserProfileComponent } from 'src/app/components/user-profile/user-profile.component';
 import { PageNotFoundComponent } from 'src/app/components/page-not-found/page-not-found.component';
 
@@ -17,6 +18,7 @@ const routes: Routes = [
   { path: 'exercises', component: ExercisesComponent},
   { path: 'exercises/:_id', component: ExerciseComponent},
   { path: 'users', component: UsersComponent},
+  { path: 'users/:_id', component: UserComponent},
   { path: 'userprofile', component: UserProfileComponent},
   { path: '**', component: PageNotFoundComponent }
 ];

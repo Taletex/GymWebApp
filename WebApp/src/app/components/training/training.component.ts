@@ -5,9 +5,10 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { NgbDate, NgbCalendar, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 import { HttpService } from 'src/app/services/http-service/http-service.service';
+import { UtilsService } from 'src/app/services/utils-service/utils-service.service';
+import { TrainingService } from 'src/app/services/training-service/training-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Training, Week, Series, Exercise, Session, User, Variant } from 'src/app/model';
-import * as athleteData from 'src/app/jsons/athletes.json';
 import * as _ from "lodash";
 
 @Component({
@@ -24,8 +25,8 @@ export class TrainingComponent implements OnInit {
   public activeSession: Array<number>;
   public copiedExercise: Exercise = new Exercise();
   public copiedSeries: Series = new Series();
-  public athleteList: Array<User> = [new User()];
-  public exerciseList: Array<Exercise> = [new Exercise()];
+  public athleteList: Array<User> = [];
+  public exerciseList: Array<Exercise> = [];
   public hoveredDate: NgbDate | null = null;
   public fromDate: NgbDate;
   public toDate: NgbDate | null = null;
@@ -37,7 +38,7 @@ export class TrainingComponent implements OnInit {
   private currentExerciseList: Array<Exercise> = [new Exercise()];
 
   /* CONSTRUCTOR */
-  constructor(public router: Router, private toastr: ToastrService, private calendar: NgbCalendar, public httpService: HttpService) {
+  constructor(private utilsService: UtilsService, private trainingService: TrainingService, public router: Router, private toastr: ToastrService, private calendar: NgbCalendar, public httpService: HttpService) {
 
     // Init training attributes
     let trainingId = (this.router.url).split('/')[2];
@@ -51,8 +52,9 @@ export class TrainingComponent implements OnInit {
           // Init exercise list
           this.httpService.getExercises()
           .subscribe(
-            (data: any) => {
+            (data: Array<Exercise>) => {
               this.exerciseList = data;
+              console.log(this.exerciseList);
               this.bLoading = false;
             },
             (error: HttpErrorResponse) => {
@@ -61,8 +63,19 @@ export class TrainingComponent implements OnInit {
               console.log(error.error.message);
             });
 
-          // Init athleteList | TODO: prendere la lista quando si creeranno gli atleti
-          this.athleteList = ((athleteData as any).default);
+          // Init athleteList
+          this.httpService.getAthletes()
+          .subscribe(
+            (data: Array<User>) => {
+              this.athleteList = data;
+              console.log(this.athleteList);
+              this.bLoading = false;
+            },
+            (error: HttpErrorResponse) => {
+              this.bLoading = false;
+              this.toastr.error('An error occurred while loading the athlete list!');
+              console.log(error.error.message);
+            });
           
           this.activeWeek = 1;
           this.activeSession = [];
@@ -81,6 +94,9 @@ export class TrainingComponent implements OnInit {
   }
 
   ngOnInit() {}
+
+  // From services
+  compareObjects = this.utilsService.compareObjects;
 
   // Init exercise typeahead
   search = (text$: Observable<string>) => 
@@ -112,7 +128,6 @@ export class TrainingComponent implements OnInit {
     this.assignExercise(new Exercise(), this.currentExerciseList, this.currentExerciseIndex);
   }
   
-
   /* This function calls a modal if a new exercise need to be created, else calls assignExercise function */
   selectExercise(event, exerciseList: Array<Exercise>, exerciseIndex: number) {
     if(event.item.variant.intensityCoefficient == -1) {
@@ -347,4 +362,5 @@ export class TrainingComponent implements OnInit {
         console.log(error.error.message);
       });
   }
+
 }

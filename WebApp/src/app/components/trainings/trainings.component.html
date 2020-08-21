@@ -64,7 +64,7 @@
                 </div>
                 <div class="col-2">
                     <span class="d-block">{{elem.athlete.name}} {{elem.athlete.surname}}</span>
-                    <small>{{elem.athlete.dateOfBirth | date:'d MMMM yyyy'}} &bull; {{elem.athlete.bodyweight}} kg</small>
+                    <small>{{elem.athlete.dateOfBirth | date:'d MMMM yyyy'}} &bull; {{elem.athlete.bodyWeight}} kg</small>
                 </div>
                 <div class="col-2"><span>{{elem.type}}</span></div>
                 <div class="col-2">
@@ -75,7 +75,7 @@
                 <div class="col-2 d-flex">
                     <a [routerLink]="['/trainings', elem._id]" routerLinkActive="active" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/url.svg" style="width:20px; height:auto;"></a>
                     <a [routerLink]="['/trainings', elem._id]" routerLinkActive="active" class="ml-2 image-button" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></a>
-                    <a [routerLink]="['/trainings', elem._id]" routerLinkActive="active" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></a>
+                    <a (click)="deleteTraining(elem._id, exerciseIndex)" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></a>
                     <a [routerLink]="['/trainings', elem._id]" routerLinkActive="active" class="ml-2 image-button" ngbTooltip="Statistiche" placement="left"><img src="assets/icons/actions/graph.svg" style="width:20px; height:auto;"></a>
                 </div>
             </div>
