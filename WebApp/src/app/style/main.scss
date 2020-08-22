@@ -3,6 +3,12 @@
 $menu-blue: #0f1042e6;
 
 /* MISCELLANEOUS */
+.bottom-right-absolute {
+  position: absolute; 
+  right: 15px; 
+  bottom: 15px
+}
+
 [hidden] {
   display: none !important;
 }
@@ -78,6 +84,26 @@ $menu-blue: #0f1042e6;
 
   &:hover {
     opacity: 75%;
+  }
+}
+
+.inverse-image-button {
+  cursor: pointer;
+  opacity: 30%; 
+
+  @media screen and (max-width: 1400px) {
+    img {
+      width: 14px !important;
+      height: auto;
+    }
+  }
+
+  &:hover {
+    opacity: 75%;
+  }
+
+  &.active {
+    opacity: 100%;
   }
 }
 

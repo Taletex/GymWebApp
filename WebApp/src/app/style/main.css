@@ -38,6 +38,12 @@
 }
 
 /* MISCELLANEOUS */
+.bottom-right-absolute {
+  position: absolute;
+  right: 15px;
+  bottom: 15px;
+}
+
 [hidden] {
   display: none !important;
 }
@@ -108,6 +114,23 @@
 }
 .image-button:hover {
   opacity: 75%;
+}
+
+.inverse-image-button {
+  cursor: pointer;
+  opacity: 30%;
+}
+@media screen and (max-width: 1400px) {
+  .inverse-image-button img {
+    width: 14px !important;
+    height: auto;
+  }
+}
+.inverse-image-button:hover {
+  opacity: 75%;
+}
+.inverse-image-button.active {
+  opacity: 100%;
 }
 
 .link-image-fontawesome {

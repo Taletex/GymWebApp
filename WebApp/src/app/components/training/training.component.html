@@ -1,31 +1,27 @@
 <div class="main__training row m-3">
     <div class="training__maincontainer card col-12 p-0">
-        <form>
-            <div class="maincontainer__header card-header py-2">
-                <div class="d-flex align-items-baseline mb-2">
-                    <h5 class="m-0">ALLENAMENTO</h5>
-                    <div class="form-group m-0 ml-2">
-                        <select [(ngModel)]="training.type" class="form-control form-control-sm font-weight-bolder cursor-pointer" id="training_type" name="training_type">
-                            <option [value]="'POWERLIFTING'">POWERLIFTING</option>
-                            <option [value]="'WEIGHTLIFTING'">WEIGHTLIFTING</option>
-                            <option [value]="'CROSSFIT'">CROSSFIT</option>
-                            <option [value]="'BODYBUILDING'">BODYBUILDING</option>
-                            <option [value]="'SALA ATTREZZI'">SALA ATTREZZI</option>
-                        </select>
-                    </div>
-                    <div class="ml-auto">
-                        <div (click)="saveTraining()" class="btn btn-success btn-sm">SALVA</div>
-                        <div (click)="deleteTraining()" class="btn btn-danger btn-sm ml-2">ELIMINA</div>
+        <div class="maincontainer__header card-header py-2">
+            <div class="d-flex align-items-baseline mb-2">
+                <h5 class="m-0">ALLENAMENTO {{training.type}}</h5>
+                <div class="d-flex input-group w-auto ml-auto">
+                    <div class="input-group-prepend"><span class="input-group-text">ACTIONS</span></div>
+                    <div class="d-flex align-items-center form-control">
+                        <div (click)="changeMode(PAGEMODE.READONLY)" class="inverse-image-button" [ngClass]="{'active': pageStatus[PAGES.TRAININGS] == PAGEMODE.READONLY}"  ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
+                        <div (click)="changeMode(PAGEMODE.WRITE)" class="ml-2 inverse-image-button" [ngClass]="{'active': pageStatus[PAGES.TRAININGS] == PAGEMODE.WRITE}"  ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></div>
+                        <div (click)="changeMode(PAGEMODE.STATS)" class="ml-2 inverse-image-button" [ngClass]="{'active': pageStatus[PAGES.TRAININGS] == PAGEMODE.STATS}"  ngbTooltip="Statistiche" placement="left"><img src="assets/icons/actions/graph.svg" style="width:20px; height:auto;"></div>
+                        <div (click)="deleteTraining()" class="ml-2 inverse-image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
                     </div>
                 </div>
-                
-                <h6 class="m-0">
-                    <span>Atleta {{training.athlete.name}} {{training.athlete.surname}} ({{training.athlete.dateOfBirth | date:'d MMMM yyyy'}} &bull; {{training.athlete.bodyWeight}} kg)</span>
-                    <span class="m-0">, dal {{training.startDate | date:'d MMMM yyyy'}} al {{training.endDate | date:'d MMMM yyyy'}}</span>
-                </h6>
             </div>
-            <div class="maincontainer__body card-body p-2 d-flex">
+            <h6 class="m-0">
+                <span>Atleta {{training.athlete.name}} {{training.athlete.surname}} ({{training.athlete.dateOfBirth | date:'d MMMM yyyy'}} &bull; {{training.athlete.bodyWeight}} kg)</span>
+                <span class="m-0">, dal {{training.startDate | date:'d MMMM yyyy'}} al {{training.endDate | date:'d MMMM yyyy'}}</span>
+            </h6>
+        </div>
+        <div class="maincontainer__body card-body p-2">
 
+            <!-- WRITE MODE CONTENT -->
+            <form class="d-flex" *ngIf="pageStatus[PAGES.TRAININGS] == PAGEMODE.WRITE">
                 <!-- WEEKS -->
                 <ul ngbNav #nav="ngbNav" [(activeId)]="activeWeek" class="nav-pills mt-2 mr-2 nav flex-column border border-left-0 border-top-0 border-bottom-0" orientation="vertical">
                     <li ngbNavItem="0">
@@ -34,18 +30,28 @@
                             <div class="form-row m-0">
                                 <div class="col-12 form-group">Allenamento creato da {{training.author.name}} {{training.author.surname}} il {{training.creationDate | date:'d MMMM yyyy'}}</div>
                                 <div class="col-4 form-group">
-                                    <label for="trainingAthlete" class="col-form-label col-form-label-sm text-muted">Atleta</label>
-                                    <select [(ngModel)]="training.athlete" class="form-control form-control-sm" id="trainingAthlete" name="trainingAthlete" [compareWith]="compareObjects">
-                                        <option [ngValue]="athlete" *ngFor="let athlete of athleteList; index as athleteIndex">{{athlete.name}} {{athlete.surname}}</option>
+                                    <label for="trainingType" class="col-form-label col-form-label-sm text-muted">Atleta</label>
+                                    <select [(ngModel)]="training.type" class="form-control form-control-sm cursor-pointer" id="trainingType" name="trainingType">
+                                        <option [value]="'POWERLIFTING'">POWERLIFTING</option>
+                                        <option [value]="'WEIGHTLIFTING'">WEIGHTLIFTING</option>
+                                        <option [value]="'CROSSFIT'">CROSSFIT</option>
+                                        <option [value]="'BODYBUILDING'">BODYBUILDING</option>
+                                        <option [value]="'SALA ATTREZZI'">SALA ATTREZZI</option>
                                     </select>
                                 </div>
                                 <div class="col-4 form-group">
+                                    <label for="trainingAthlete" class="col-form-label col-form-label-sm text-muted">Atleta</label>
+                                    <select [(ngModel)]="training.athlete" class="form-control form-control-sm cursor-pointer" id="trainingAthlete" name="trainingAthlete" [compareWith]="compareObjects">
+                                        <option [ngValue]="athlete" *ngFor="let athlete of athleteList; index as athleteIndex">{{athlete.name}} {{athlete.surname}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-2 form-group">
                                     <label for="trainingStartDate" class="col-form-label col-form-label-sm text-muted">Data inizio</label>
                                     <input type="date"  [ngModel] ="training.startDate | date:'yyyy-MM-dd'" (ngModelChange)="training.startDate = $event" class="form-control form-control-sm"
                                         id="trainingStartDate" name="trainingStartDate">
                                 </div>
-                                <div class="col-4 form-group">
-                                    <label for="trainingEndDate" class="col-form-label col-form-label-sm text-muted">Data inizio</label>
+                                <div class="col-2 form-group">
+                                    <label for="trainingEndDate" class="col-form-label col-form-label-sm text-muted">Data fine</label>
                                     <input type="date" [ngModel] ="training.endDate | date:'yyyy-MM-dd'" (ngModelChange)="training.endDate = $event" class="form-control form-control-sm"
                                         id="trainingEndDate" name="trainingEndDate">
                                 </div>
@@ -191,7 +197,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-row m-0 d-flex justify-content-end">
+                                        <div class="form-row m-0 d-flex justify-content-start">
                                             <div class="btn btn-outline-info btn-small mt-2" (click)="pushExercise(session)">Aggiungi esercizio +</div>
                                         </div>
                                     </ng-template>
@@ -208,9 +214,13 @@
                     </li>
                 </ul>
                 <div [ngbNavOutlet]="nav" class="mt-2 week-tab w-100"></div>
-                
+                <button type="submit" (click)="saveTraining()" class="bottom-right-absolute btn btn-success">SALVA</button>
+            </form>
+
+            <div *ngIf="pageStatus[PAGES.TRAININGS] == PAGEMODE.STATS">
+                <training-line-chart></training-line-chart>
             </div>
-        </form>
+        </div>
     </div>
 
     <!-- Loader -->

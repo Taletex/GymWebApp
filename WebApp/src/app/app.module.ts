@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { ChartsModule } from 'ng2-charts';
 
 /* app components */
 import { AppComponent } from './app.component';
@@ -26,6 +27,7 @@ import { StatsComponent } from './components/stats/stats.component';
 import { ExerciseModalComponent } from './components/modals/exercise-modal/exercise-modal.component';
 import { TrainingModalComponent } from './components/modals/training-modal/training-modal.component';
 import { UserModalComponent } from './components/modals/user-modal/user-modal.component';
+import { TrainingLineChartComponent } from './components/training-line-chart/training-line-chart.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +45,8 @@ import { UserModalComponent } from './components/modals/user-modal/user-modal.co
     ExerciseModalComponent,
     TrainingModalComponent,
     UserModalComponent,
-    UserComponent
+    UserComponent,
+    TrainingLineChartComponent
   ],
   imports: [
     BrowserModule,
@@ -52,6 +55,7 @@ import { UserModalComponent } from './components/modals/user-modal/user-modal.co
     FormsModule,
     ReactiveFormsModule,
     NgbModule,
+    ChartsModule,
     CommonModule,
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot(),  // ToastrModule added

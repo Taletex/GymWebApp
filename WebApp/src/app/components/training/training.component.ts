@@ -10,6 +10,7 @@ import { TrainingService } from 'src/app/services/training-service/training-serv
 import { HttpErrorResponse } from '@angular/common/http';
 import { Training, Week, Series, Exercise, Session, User, Variant } from 'src/app/model';
 import * as _ from "lodash";
+import { GeneralService, PAGES, PAGEMODE } from 'src/app/services/general-service/general-service.service';
 
 @Component({
   selector: 'app-training',
@@ -30,7 +31,12 @@ export class TrainingComponent implements OnInit {
   public hoveredDate: NgbDate | null = null;
   public fromDate: NgbDate;
   public toDate: NgbDate | null = null;
+
+  // Visual notifies 
   public bLoading = false;
+  public PAGEMODE = PAGEMODE;
+  public PAGES = PAGES;
+  public pageStatus = this.generalService.pageStatus;
 
   // Aux attributes for new exercise handling
   public newExercise: Exercise = new Exercise();
@@ -38,7 +44,7 @@ export class TrainingComponent implements OnInit {
   private currentExerciseList: Array<Exercise> = [new Exercise()];
 
   /* CONSTRUCTOR */
-  constructor(private utilsService: UtilsService, private trainingService: TrainingService, public router: Router, private toastr: ToastrService, private calendar: NgbCalendar, public httpService: HttpService) {
+  constructor(private generalService: GeneralService, private utilsService: UtilsService, private trainingService: TrainingService, public router: Router, private toastr: ToastrService, private calendar: NgbCalendar, public httpService: HttpService) {
 
     // Init training attributes
     let trainingId = (this.router.url).split('/')[2];
@@ -85,6 +91,8 @@ export class TrainingComponent implements OnInit {
 
           this.fromDate = calendar.getToday();
           this.toDate = calendar.getNext(calendar.getToday(), 'd', 28);
+
+          console.log(this.pageStatus);
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
@@ -107,6 +115,10 @@ export class TrainingComponent implements OnInit {
           [new Exercise("Nuovo Esercizio", new Variant("new", -1))] : (this.exerciseList.filter(v => (v.name + " (" + v.variant.name + ")").toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)))
         )
     )
+
+  changeMode(mode: PAGEMODE) {
+    this.pageStatus[PAGES.TRAININGS] = mode;
+  }
 
   createExercise() {
     this.bLoading = true;

@@ -59,7 +59,7 @@
                 </div>
                 <div class="col-4"><span>{{elem.description}}</span></div>
                 <div class="col-2 d-flex">
-                    <a [routerLink]="['/exercises', elem._id]" routerLinkActive="active" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/url.svg" style="width:20px; height:auto;"></a>
+                    <a [routerLink]="['/exercises', elem._id]" routerLinkActive="active" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></a>
                     <a [routerLink]="['/exercises', elem._id]" routerLinkActive="active" class="ml-2 image-button" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></a>
                     <a (click)="deleteExercise(elem._id, exerciseIndex)" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></a>
                 </div>

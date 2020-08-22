@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { HttpService } from 'src/app/services/http-service/http-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
-import { Training } from 'src/app/model';
+import { Training, User } from 'src/app/model';
+import { GeneralService, PAGEMODE, PAGES } from 'src/app/services/general-service/general-service.service';
 
 @Component({
   selector: 'app-trainings',
@@ -13,8 +14,10 @@ export class TrainingsComponent implements OnInit {
   public trainingList: Array<Training> = [];
   public filters: any = {};
   public bLoading: boolean = false;
+  public PAGEMODE = PAGEMODE;
+  public PAGES = PAGES;
 
-  constructor(private httpService: HttpService, private toastr: ToastrService) {
+  constructor(private httpService: HttpService, private toastr: ToastrService, public generalService: GeneralService) {
     this.filters = { author: { name: '', surname: '' }, creationDate: '', startDate: '', athlete: { name: '', surname: '' }, type: '' };
     this.getTrainings();
   }
@@ -22,6 +25,10 @@ export class TrainingsComponent implements OnInit {
   ngOnInit() {
   }
 
+  // From services
+  openPageWithMode(mode: string, page: string, id: string) {
+    this.generalService.openPageWithMode(mode, page, id);
+  } 
 
   getTrainings() {
     this.bLoading = true;
@@ -41,7 +48,7 @@ export class TrainingsComponent implements OnInit {
 
   createTraining() {
     this.bLoading = true;
-    this.httpService.createTraining(new Training())
+    this.httpService.createTraining(new Training(new User("Andrea", "Adornetto")))
       .subscribe(
         (data: any) => {
           this.bLoading = false;
@@ -70,4 +77,5 @@ export class TrainingsComponent implements OnInit {
           console.log(error.error.message);
         });
   }
+
 }
