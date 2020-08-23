@@ -10,7 +10,7 @@ import { TrainingService } from 'src/app/services/training-service/training-serv
 import { HttpErrorResponse } from '@angular/common/http';
 import { Training, Week, Series, Exercise, Session, User, Variant } from 'src/app/model';
 import * as _ from "lodash";
-import { GeneralService, PAGES, PAGEMODE } from 'src/app/services/general-service/general-service.service';
+import { GeneralService, PAGES, PAGEMODE, PageStatus } from 'src/app/services/general-service/general-service.service';
 
 @Component({
   selector: 'app-training',
@@ -36,7 +36,7 @@ export class TrainingComponent implements OnInit {
   public bLoading = false;
   public PAGEMODE = PAGEMODE;
   public PAGES = PAGES;
-  public pageStatus = this.generalService.pageStatus;
+  public pageStatus: PageStatus = new PageStatus();
 
   // Aux attributes for new exercise handling
   public newExercise: Exercise = new Exercise();
@@ -92,6 +92,7 @@ export class TrainingComponent implements OnInit {
           this.fromDate = calendar.getToday();
           this.toDate = calendar.getNext(calendar.getToday(), 'd', 28);
 
+          this.pageStatus = this.generalService.getPageStatus();
           console.log(this.pageStatus);
         },
         (error: HttpErrorResponse) => {
@@ -118,6 +119,7 @@ export class TrainingComponent implements OnInit {
 
   changeMode(mode: PAGEMODE) {
     this.pageStatus[PAGES.TRAININGS] = mode;
+    this.generalService.setPageStatus(mode, PAGES.TRAININGS);
   }
 
   createExercise() {

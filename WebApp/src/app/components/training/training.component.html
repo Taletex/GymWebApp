@@ -217,8 +217,9 @@
                 <button type="submit" (click)="saveTraining()" class="bottom-right-absolute btn btn-success">SALVA</button>
             </form>
 
+            <!-- STATS MODE CONTENT -->
             <div *ngIf="pageStatus[PAGES.TRAININGS] == PAGEMODE.STATS">
-                <training-line-chart></training-line-chart>
+                <training-line-chart [currentTraining]="training"></training-line-chart>
             </div>
         </div>
     </div>

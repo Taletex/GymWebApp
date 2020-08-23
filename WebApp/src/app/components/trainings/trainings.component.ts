@@ -26,7 +26,7 @@ export class TrainingsComponent implements OnInit {
   }
 
   // From services
-  openPageWithMode(mode: string, page: string, id: string) {
+  openPageWithMode(mode: PAGEMODE, page: PAGES, id: string) {
     this.generalService.openPageWithMode(mode, page, id);
   } 
 

@@ -1,4 +1,5 @@
 $menu-blue: #0f1042e6;
+$media-screen-max-1000px: "screen and (max-width: 1000px)";
 
 .main__sidebar {
     &.expanded {
@@ -8,6 +9,12 @@ $menu-blue: #0f1042e6;
     &.not-expanded {
         width: 50px;
         transition: all 1s;
+    }
+
+    @media #{$media-screen-max-1000px} {
+        &.expanded {
+            width: 140px;
+        }
     }
 
     .sidebar__container {

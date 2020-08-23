@@ -10,8 +10,4 @@ export class AppComponent {
   title = 'GYM WEB APP';
 
   constructor(public router: Router) { }
-
-  setSection($event) {
-    
-  }
 }

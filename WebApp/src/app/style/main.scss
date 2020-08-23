@@ -216,6 +216,14 @@ $menu-blue: #0f1042e6;
   }
 }
 
+.position-relative {
+  position: relative !important;
+}
+
+.position-absolute {
+  position: absolute !important;
+}
+
 /* FONT STYLE */
 @for $i from 1 through 9 {
   .font-weight-#{$i}00 {

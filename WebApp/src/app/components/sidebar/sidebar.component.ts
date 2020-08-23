@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SecurityService } from 'src/app/services/security-service/security-service.service';
 
@@ -9,8 +9,6 @@ import { SecurityService } from 'src/app/services/security-service/security-serv
 })
 export class SidebarComponent implements OnInit {
 
-  @Input() quote;
-  @Output() sectionClick: EventEmitter<String> = new EventEmitter<String>();
   public bActiveList = {homepage: false, trainings: false, exercises: false, users: false, notifications: false, userprofile: false};
   public bExpandedSidebar;
   public currentUsername;

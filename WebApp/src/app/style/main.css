@@ -264,6 +264,14 @@
   overflow: hidden;
 }
 
+.position-relative {
+  position: relative !important;
+}
+
+.position-absolute {
+  position: absolute !important;
+}
+
 /* FONT STYLE */
 .font-weight-100 {
   font-weight: 100;

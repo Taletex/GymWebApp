@@ -1,11 +1,27 @@
-<div style="display: block;">
+<div *ngIf="bDatasetInitialized && graphType=='week'" class="chart-container">
   <canvas baseChart width="400" height="400"
-    [datasets]="lineChartData"
-    [labels]="lineChartLabels"
+    [datasets]="weekChartData"
+    [labels]="weekChartLabels"
     [options]="lineChartOptions"
     [colors]="lineChartColors"
     [legend]="lineChartLegend"
     [chartType]="lineChartType"
     [plugins]="lineChartPlugins">
   </canvas>
+</div>
+<div *ngIf="bDatasetInitialized && graphType=='session'" class="chart-container">
+  <canvas baseChart width="400" height="400"
+    [datasets]="sessionChartData"
+    [labels]="sessionChartLabels"
+    [options]="lineChartOptions"
+    [colors]="lineChartColors"
+    [legend]="lineChartLegend"
+    [chartType]="lineChartType"
+    [plugins]="lineChartPlugins">
+  </canvas>
+</div>
+<div class="d-flex w-100 justify-content-center mt-4">
+  <button class="btn btn-danger" (click)="initDataset()">RE INIT GRAPHS</button>
+  <button class="btn btn-primary ml-2" (click)="graphType = 'session'">SESSION GRAPHS</button>
+  <button class="btn btn-success ml-2" (click)="graphType = 'week'">WEEK GRAPHS</button>
 </div>
