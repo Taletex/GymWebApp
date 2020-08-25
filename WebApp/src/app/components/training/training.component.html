@@ -20,8 +20,85 @@
         </div>
         <div class="maincontainer__body card-body p-2">
 
+            <!-- READ ONLY MODE CONTENT -->
+            <div class="row m-0" *ngIf="pageStatus[PAGES.TRAININGS] == PAGEMODE.READONLY && !bLoading">
+                <div class="card w-100 border-0">
+                    <div class="card-header border bg-dark text-white round-5">
+                        <h5>ALLENAMENTO {{training.type}} {{training._id}}</h5>
+                        <h6 class="m-0">Allenamento creato da {{training.author.name}} {{training.author.surname}} il {{training.creationDate | date:'d MMMM yyyy'}}</h6>
+                        <h6 class="m-0">
+                            <span>Atleta {{training.athlete.name}} {{training.athlete.surname}} ({{training.athlete.dateOfBirth | date:'d MMMM yyyy'}} &bull; {{training.athlete.bodyWeight}} kg)</span>
+                            <span class="m-0">, dal {{training.startDate | date:'d MMMM yyyy'}} al {{training.endDate | date:'d MMMM yyyy'}}</span>
+                        </h6>
+                        <span [hidden]="(training.comment == null || training.comment == '')">Commento: {{training.comment}}</span>
+                    </div>
+                    <div class="card-body p-0 ">
+                        <div class="card my-3 border-lightdark" *ngFor="let week of training.weeks; index as weekIndex;">
+                            <div class="card-header border border-dark bg-dark text-white">
+                                <h6 class="m-0">WEEK {{weekIndex+1}}</h6>
+                                <span [hidden]="(week.comment == null || week.comment == '')">Commento: {{week.comment}}</span>
+                            </div>
+                            <div class="card-body border-0 p-0 ">
+                                <div *ngFor="let session of week.sessions; index as sessionIndex" class="card border-0 round-0" style="box-shadow: 0px 2px 0px rgba(0,0,0,.5);">
+                                    <div class="card-header m-0 px-0 bg-lightdark border-0 round-0 text-white">
+                                        <h6 class="m-0 px-3">Sessione {{session.name}} - {{session.name}}</h6>
+                                        <div class="sub-header row m-0 px-3 py-0">
+                                            <div class="col-4 px-0">
+                                                <span>Esercizio (variante)</span>
+                                            </div>
+                                            <div class="col-8 pr-0">
+                                                <div class="row m-0 d-flex">
+                                                    <span>Serie &times; Ripetizioni</span>
+                                                    <span class="ml-auto">Riposo</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <div *ngFor="let exercise of session.exercises; index as exerciseIndex" class="row m-0 px-3 py-1 border border-left-0 border-right-0 border-top-0">
+                                            <div class="col-4 px-0">
+                                                <div><span>{{exercise.name}} ({{exercise.variant.name}})</span></div>
+                                                <div><span>{{exercise.description}}</span></div>
+                                            </div>
+                                            <div class="col-8 pr-0">
+                                                <div *ngFor="let series of exercise.series; index as seriesIndex" class="row m-0 d-flex">
+                                                    <span>{{series.seriesNumber}} &times; {{series.repNumber}} @ {{series.weight}} {{series.measure}}</span>
+                                                    <span class="ml-auto">{{series.rest}}''</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer border-0 bg-white px-3">
+                                        <span>{{(session.comment == null || session.comment == '') ? 'Nessun commento' : ('Commento: ' + session.comment)}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+                
+                
+                
+                <!-- <editor apiKey="nezikf86u3tkn42uasu6wth68lb9qcfa2dszno3h7anr94qq" initialValue={{editorContent}}
+                [init]="{
+                    plugins: [
+                    'advlist autolink lists link image charmap print preview anchor',
+                    'searchreplace visualblocks code fullscreen',
+                    'insertdatetime media table paste code help wordcount'
+                    ],
+                    toolbar:
+                    'undo redo | formatselect | bold italic backcolor | \
+                    alignleft aligncenter alignright alignjustify | \
+                    bullist numlist outdent indent | removeformat | help',
+                    content_css: 'assets/libraries/css/bootstrap.css'
+                }" 
+                ></editor> -->
+            </div>
+
             <!-- WRITE MODE CONTENT -->
-            <form class="d-flex" *ngIf="pageStatus[PAGES.TRAININGS] == PAGEMODE.WRITE">
+            <form class="d-flex" *ngIf="pageStatus[PAGES.TRAININGS] == PAGEMODE.WRITE && !bLoading">
                 <!-- WEEKS -->
                 <ul ngbNav #nav="ngbNav" [(activeId)]="activeWeek" class="nav-pills mt-2 mr-2 nav flex-column border border-left-0 border-top-0 border-bottom-0" orientation="vertical">
                     <li ngbNavItem="0">
@@ -30,7 +107,7 @@
                             <div class="form-row m-0">
                                 <div class="col-12 form-group">Allenamento creato da {{training.author.name}} {{training.author.surname}} il {{training.creationDate | date:'d MMMM yyyy'}}</div>
                                 <div class="col-4 form-group">
-                                    <label for="trainingType" class="col-form-label col-form-label-sm text-muted">Atleta</label>
+                                    <label for="trainingType" class="col-form-label col-form-label-sm text-muted">Disciplina</label>
                                     <select [(ngModel)]="training.type" class="form-control form-control-sm cursor-pointer" id="trainingType" name="trainingType">
                                         <option [value]="'POWERLIFTING'">POWERLIFTING</option>
                                         <option [value]="'WEIGHTLIFTING'">WEIGHTLIFTING</option>
@@ -218,7 +295,7 @@
             </form>
 
             <!-- STATS MODE CONTENT -->
-            <div *ngIf="pageStatus[PAGES.TRAININGS] == PAGEMODE.STATS">
+            <div *ngIf="pageStatus[PAGES.TRAININGS] == PAGEMODE.STATS && !bLoading">
                 <training-line-chart [currentTraining]="training"></training-line-chart>
             </div>
         </div>

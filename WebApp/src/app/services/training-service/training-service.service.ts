@@ -11,4 +11,5 @@ export class TrainingService {
   public trainingDecorator(training: Training) {
     return;
   }
+
 }

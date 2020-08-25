@@ -139,6 +139,10 @@ export class Training {
         this.comment = comment;
         this.weeks = weeks;
     }
+
+    public trainingToString() {
+        
+    }
 }
 
 

@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { ChartsModule } from 'ng2-charts';
+import { EditorModule } from '@tinymce/tinymce-angular';
 
 /* app components */
 import { AppComponent } from './app.component';
@@ -57,6 +58,7 @@ import { TrainingLineChartComponent } from './components/training-line-chart/tra
     NgbModule,
     ChartsModule,
     CommonModule,
+    EditorModule,
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot(),  // ToastrModule added
   ],

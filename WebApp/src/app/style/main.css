@@ -38,6 +38,19 @@
 }
 
 /* MISCELLANEOUS */
+.sub-header {
+  font-size: small;
+  font-style: italic;
+}
+
+.bg-lightdark {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+}
+
+.border-lightdark {
+  border-color: rgba(0, 0, 0, 0.6) !important;
+}
+
 .bottom-right-absolute {
   position: absolute;
   right: 15px;

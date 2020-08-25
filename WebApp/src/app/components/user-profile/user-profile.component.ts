@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
+import { HttpService } from 'src/app/services/http-service/http-service.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -7,7 +8,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserProfileComponent implements OnInit {
 
-  constructor() { }
+  constructor(private httpService: HttpService) {
+  }
 
   ngOnInit(): void {
   }
