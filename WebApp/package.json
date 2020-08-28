@@ -26,6 +26,7 @@
     "bootstrap": "^4.5.0",
     "chart.js": "^2.9.3",
     "font-awesome": "^4.7.0",
+    "jspdf": "^1.5.3",
     "lodash": "^4.17.19",
     "ng2-charts": "^2.3.3",
     "ngx-toastr": "^13.0.0",

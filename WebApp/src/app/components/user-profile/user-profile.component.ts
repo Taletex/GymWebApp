@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpService } from 'src/app/services/http-service/http-service.service';
 
 @Component({

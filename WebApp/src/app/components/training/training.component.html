@@ -22,27 +22,32 @@
 
             <!-- READ ONLY MODE CONTENT -->
             <div class="row m-0" *ngIf="pageStatus[PAGES.TRAININGS] == PAGEMODE.READONLY && !bLoading">
-                <div class="card w-100 border-0">
-                    <div class="card-header border bg-dark text-white round-5">
-                        <h5>ALLENAMENTO {{training.type}} {{training._id}}</h5>
-                        <h6 class="m-0">Allenamento creato da {{training.author.name}} {{training.author.surname}} il {{training.creationDate | date:'d MMMM yyyy'}}</h6>
-                        <h6 class="m-0">
-                            <span>Atleta {{training.athlete.name}} {{training.athlete.surname}} ({{training.athlete.dateOfBirth | date:'d MMMM yyyy'}} &bull; {{training.athlete.bodyWeight}} kg)</span>
-                            <span class="m-0">, dal {{training.startDate | date:'d MMMM yyyy'}} al {{training.endDate | date:'d MMMM yyyy'}}</span>
-                        </h6>
-                        <span [hidden]="(training.comment == null || training.comment == '')">Commento: {{training.comment}}</span>
+                <div class="card w-100 border-0" [hidden]="bTinyMCEEditorOpen">
+                    <div class="card-header d-flex border bg-dark text-white" style="border-radius: 5px !important;">
+                        <div>
+                            <h5>ALLENAMENTO {{training.type}} {{training._id}}</h5>
+                            <h6 class="m-0">Allenamento creato da {{training.author.name}} {{training.author.surname}} il {{training.creationDate | date:'d MMMM yyyy'}}</h6>
+                            <h6 class="m-0">
+                                <span>Atleta {{training.athlete.name}} {{training.athlete.surname}} ({{training.athlete.dateOfBirth | date:'d MMMM yyyy'}} &bull; {{training.athlete.bodyWeight}} kg)</span>
+                                <span class="m-0">, dal {{training.startDate | date:'d MMMM yyyy'}} al {{training.endDate | date:'d MMMM yyyy'}}</span>
+                            </h6>
+                            <span [hidden]="(training.comment == null || training.comment == '')">Commento: {{training.comment}}</span>
+                        </div>
+                        <div class="ml-auto">
+                            <button class="btn btn-primary" ngbTooltip="Apri in Editor di testo" placement="top" (click)="openTinyMCEEditor()">Apri Editor</button>
+                        </div>
                     </div>
-                    <div class="card-body p-0 ">
-                        <div class="card my-3 border-lightdark" *ngFor="let week of training.weeks; index as weekIndex;">
+                    <div class="card-body p-0">
+                        <div class="card my-3" *ngFor="let week of training.weeks; index as weekIndex;" style="border-color: rgba(0, 0, 0, 0.6) !important;">
                             <div class="card-header border border-dark bg-dark text-white">
                                 <h6 class="m-0">WEEK {{weekIndex+1}}</h6>
                                 <span [hidden]="(week.comment == null || week.comment == '')">Commento: {{week.comment}}</span>
                             </div>
                             <div class="card-body border-0 p-0 ">
-                                <div *ngFor="let session of week.sessions; index as sessionIndex" class="card border-0 round-0" style="box-shadow: 0px 2px 0px rgba(0,0,0,.5);">
-                                    <div class="card-header m-0 px-0 bg-lightdark border-0 round-0 text-white">
+                                <div *ngFor="let session of week.sessions; index as sessionIndex" class="card border-0" style="box-shadow: 0px 2px 0px rgba(0,0,0,.5); border-radius: 0px !important;">
+                                    <div class="card-header m-0 px-0 border-0 text-white" style="background-color: rgba(0, 0, 0, 0.6) !important; border-radius: 0px !important;">
                                         <h6 class="m-0 px-3">Sessione {{session.name}} - {{session.name}}</h6>
-                                        <div class="sub-header row m-0 px-3 py-0">
+                                        <div class="row m-0 px-3 py-0" style="font-size: small; font-style: italic;">
                                             <div class="col-4 px-0">
                                                 <span>Esercizio (variante)</span>
                                             </div>
@@ -74,27 +79,18 @@
                                 </div>
                             </div>
                         </div>
-                        
+                    </div>
+                    <div class='mceNonEditable'>
+                        <span>Allenamento creato sulla piattaforma <em>MyTrainingPlatform</em></span>
                     </div>
                 </div>
-                
-                
-                
-                
-                <!-- <editor apiKey="nezikf86u3tkn42uasu6wth68lb9qcfa2dszno3h7anr94qq" initialValue={{editorContent}}
-                [init]="{
-                    plugins: [
-                    'advlist autolink lists link image charmap print preview anchor',
-                    'searchreplace visualblocks code fullscreen',
-                    'insertdatetime media table paste code help wordcount'
-                    ],
-                    toolbar:
-                    'undo redo | formatselect | bold italic backcolor | \
-                    alignleft aligncenter alignright alignjustify | \
-                    bullist numlist outdent indent | removeformat | help',
-                    content_css: 'assets/libraries/css/bootstrap.css'
-                }" 
-                ></editor> -->
+                <div [hidden]="!bTinyMCEEditorOpen" class="w-100 h-100 tiniMCE-container position-relative">
+                    <div class="button-container">
+                        <button class="btn btn-sm btn-primary" ngbTooltip="Chiudi Editor di testo" placement="left" (click)="closeTinyMCEEditor()">Chiudi Editor</button>
+                        <button class="btn btn-sm btn-primary ml-1" ngbTooltip="Crea pdf dal testo dell'editor" placement="left" (click)="createPdfFromEditor()">Crea PDF</button>
+                    </div>
+                    <editor class="w-100 h-100" apiKey="nezikf86u3tkn42uasu6wth68lb9qcfa2dszno3h7anr94qq" initialValue={{editorContent}} [(ngModel)]="editorContent" [init]=tinyMCEoptions></editor>
+                </div>
             </div>
 
             <!-- WRITE MODE CONTENT -->

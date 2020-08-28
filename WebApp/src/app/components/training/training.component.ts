@@ -11,6 +11,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Training, Week, Series, Exercise, Session, User, Variant } from 'src/app/model';
 import * as _ from "lodash";
 import { GeneralService, PAGES, PAGEMODE, PageStatus } from 'src/app/services/general-service/general-service.service';
+import * as jsPDF from 'jspdf';
+
+declare const tinymce: any;
 
 @Component({
   selector: 'app-training',
@@ -42,6 +45,36 @@ export class TrainingComponent implements OnInit {
   public newExercise: Exercise = new Exercise();
   private currentExerciseIndex: number = 0;
   private currentExerciseList: Array<Exercise> = [new Exercise()];
+
+  // TinyMCE variables
+  public editorContent: string = "";
+  public bTinyMCEEditorOpen: boolean = false;
+  public tinyMCEoptions = {
+    height: 1000,
+    plugins: [
+    'advlist autolink lists link image charmap print preview anchor noneditable',
+    'searchreplace visualblocks code fullscreen',
+    'insertdatetime media table paste code help wordcount'
+    ], 
+    toolbar:
+    'closeEditor undo redo | formatselect | bold italic backcolor | \
+    alignleft aligncenter alignright alignjustify | \
+    bullist numlist outdent indent | removeformat | help',
+    content_css: 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css',
+    noneditable_noneditable_class: 'mceNonEditable',
+    content_style: '.mceNonEditable{ background-color: #343a40 !important; color: white !important; cursor: not-allowed !important; }'
+    /* setup: function (editor) {
+      editor.ui.registry.addButton('closeEditor', {
+        icon: 'insert-time',
+        tooltip: 'Close Current Editor',
+        text: 'Close Editor',
+        onAction: function () {
+          alert('Button clicked!');
+        }
+      }); 
+    } */
+
+  };
 
   /* CONSTRUCTOR */
   constructor(private generalService: GeneralService, private utilsService: UtilsService, private trainingService: TrainingService, public router: Router, private toastr: ToastrService, private calendar: NgbCalendar, public httpService: HttpService) {
@@ -91,6 +124,8 @@ export class TrainingComponent implements OnInit {
 
           this.fromDate = calendar.getToday();
           this.toDate = calendar.getNext(calendar.getToday(), 'd', 28);
+
+          this.editorContent = this.trainingService.trainingReadViewToString(this.training);
 
           this.pageStatus = this.generalService.getPageStatus();
           console.log(this.pageStatus);
@@ -377,4 +412,27 @@ export class TrainingComponent implements OnInit {
       });
   }
 
+  // TinyMCE Handling functions
+  openTinyMCEEditor() {
+    this.editorContent = this.trainingService.trainingReadViewToString(this.training);
+    this.bTinyMCEEditorOpen = true;
+  }
+
+  closeTinyMCEEditor() {
+    this.bTinyMCEEditorOpen = false;
+  }
+
+  //TODO: Improve functionality
+  createPdfFromEditor() {
+    /* let pdf = new jsPDF('p', 'pt', 'letter');
+    pdf.fromHTML(
+      tinymce.activeEditor.getContent(), // HTML string or DOM elem ref.
+      10, // x coord
+      10,
+    );
+    pdf.save(this.training._id + ".pdf");
+    console.log(this.editorContent); */
+    
+    tinymce.activeEditor.execCommand('mcePrint');
+  }
 }

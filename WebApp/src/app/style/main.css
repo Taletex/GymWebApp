@@ -703,5 +703,15 @@ ngb-carousel .picsum-img-wrapper > img {
     transform: rotate(360deg);
   }
 }
+/* TINY MCE */
+.tiniMCE-container .tox {
+  height: calc(100vh - 215px) !important;
+}
+.tiniMCE-container .button-container {
+  position: absolute;
+  z-index: 2;
+  top: 5px;
+  right: 5px;
+}
 
 /*# sourceMappingURL=main.css.map */
