@@ -1,0 +1,13 @@
+﻿{
+    "connectionString": "mongodb://localhost:27017/gymapp",
+    "secret": "b4f8fda1-de22-4e89-a65b-de96a682cee7f6f6329e-da10-49f1-9b01-0d2b71ffda65",
+    "emailFrom": "info@gymapp.com",
+    "smtpOptions": {
+        "host": "smtp.ethereal.email",
+        "port": 587,
+        "auth": {
+            "user": "colby8@ethereal.email",
+            "pass": "Z21xH8EB1RjnmNj9DP"
+        }
+    }
+}

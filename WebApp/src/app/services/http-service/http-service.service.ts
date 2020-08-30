@@ -85,7 +85,7 @@ export class HttpService {
   }
 
   getAthletes(): Observable<any> {
-    return this.http.get<any>(this.baseServerUrl + "/athletes");
+    return this.http.get<any>(this.baseServerUrl + "/users/athletes");
   }
 
   /* USER CRUD */

@@ -12,7 +12,7 @@
     },
     "nodeserver": {
         "ip": "localhost",
-        "port": "3000",
-        "address": "http://localhost:3000"
+        "port": "4000",
+        "address": "http://localhost:4000"
     }
 }
