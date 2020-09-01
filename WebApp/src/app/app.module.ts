@@ -14,41 +14,12 @@ import { EditorModule } from '@tinymce/tinymce-angular';
 
 /* app components */
 import { AppComponent } from './app.component';
-import { HomepageComponent } from './components/homepage/homepage.component';
-import { UsersComponent } from './components/users/users.component';
-import { UserComponent } from './components/user/user.component';
-import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
-import { TrainingComponent } from './components/training/training.component';
-import { TrainingsComponent } from './components/trainings/trainings.component';
-import { ExercisesComponent } from './components/exercises/exercises.component';
-import { ExerciseComponent } from './components/exercise/exercise.component';
-import { UserProfileComponent } from './components/user-profile/user-profile.component';
-import { StatsComponent } from './components/stats/stats.component';
-import { ExerciseModalComponent } from './components/modals/exercise-modal/exercise-modal.component';
-import { TrainingModalComponent } from './components/modals/training-modal/training-modal.component';
-import { UserModalComponent } from './components/modals/user-modal/user-modal.component';
-import { TrainingLineChartComponent } from './components/training-line-chart/training-line-chart.component';
+import { HomepageComponent } from './_components/homepage/homepage.component';
+import { PageNotFoundComponent } from './_components/page-not-found/page-not-found.component';
+import { SidebarComponent } from './_components/sidebar/sidebar.component';
+import { UserProfileComponent } from './_components/user-profile/user-profile.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomepageComponent,
-    UsersComponent,
-    PageNotFoundComponent,
-    SidebarComponent,
-    TrainingComponent,
-    TrainingsComponent,
-    ExercisesComponent,
-    ExerciseComponent,
-    UserProfileComponent,
-    StatsComponent,
-    ExerciseModalComponent,
-    TrainingModalComponent,
-    UserModalComponent,
-    UserComponent,
-    TrainingLineChartComponent
-  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -59,11 +30,18 @@ import { TrainingLineChartComponent } from './components/training-line-chart/tra
     ChartsModule,
     CommonModule,
     EditorModule,
-    BrowserAnimationsModule, // required animations module
-    ToastrModule.forRoot(),  // ToastrModule added
+    BrowserAnimationsModule, 
+    ToastrModule.forRoot(), 
+  ],
+  declarations: [
+    AppComponent,
+    HomepageComponent,
+    PageNotFoundComponent,
+    SidebarComponent,
+    UserProfileComponent
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [ExerciseModalComponent]
+  //entryComponents: [ExerciseModalComponent]
 })
 export class AppModule { }
