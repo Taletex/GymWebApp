@@ -23,10 +23,10 @@ const profileModule = () => import('./profile/profile.module').then(x => x.Profi
 const routes: Routes = [
   { path: '', redirectTo: 'homepage', pathMatch: 'full', canActivate: [AuthGuard]},
   { path: 'homepage', component: HomepageComponent, canActivate: [AuthGuard]},
-  { path: 'trainings', loadChildren: trainingModule},
-  { path: 'exercises', loadChildren: exerciseModule},
-  { path: 'users', loadChildren: userModule},
-  { path: 'userprofile', component: UserProfileComponent},
+  { path: 'trainings', loadChildren: trainingModule, canActivate: [AuthGuard]},
+  { path: 'exercises', loadChildren: exerciseModule, canActivate: [AuthGuard]},
+  { path: 'users', loadChildren: userModule, canActivate: [AuthGuard]},
+  { path: 'userprofile', component: UserProfileComponent, canActivate: [AuthGuard]},
   
   { path: 'account', loadChildren: accountModule },
   { path: 'profile', loadChildren: profileModule, canActivate: [AuthGuard] },
