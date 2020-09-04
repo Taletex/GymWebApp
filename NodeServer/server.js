@@ -22,6 +22,7 @@ app.get('/', (req, res) => { res.json({"message": "Welcome to GymWebApp database
 app.use('/trainings', require('src/trainings/training.controller'));
 app.use('/exercises', require('src/exercises/exercise.controller'));
 app.use('/users', require('src/users/user.controller'));
+app.use('/accounts', require('src/accounts/accounts.controller'));
 
 // swagger docs route
 app.use('/api-docs', require('src/_helpers/swagger'));
