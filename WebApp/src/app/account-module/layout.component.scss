@@ -1,0 +1,19 @@
+.main__account {
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+
+    .account__maincontainer {
+        height: 100%;
+
+        /* 
+        .maincontainer__header {
+        } 
+        */
+
+        .maincontainer__body {
+            overflow: auto;
+            height: 100%;
+            width: 100%;
+        }
+    }
+}

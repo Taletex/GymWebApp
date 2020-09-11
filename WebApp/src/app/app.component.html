@@ -1,4 +1,4 @@
-<div class="d-flex p-0 m-0" style="height:100vh!important">
+<div class="d-flex p-0 m-0" style="height:100vh!important" *ngIf="account && account.jwtToken">
 
   <div class="p-0">
     <app-sidebar></app-sidebar>
@@ -11,9 +11,14 @@
         <span><span class="fa fa-arrow-right mx-2"></span> <em>{{(router.url).split('/')[1] | uppercase}}</em></span>
         <span [hidden]="((router.url).split('/')[2]) == null || ((router.url).split('/')[2]) == ''"><span class="fa fa-arrow-right mx-2"></span> <em>{{(router.url).split('/')[2] | uppercase}}</em></span>
       </h4>
+      <button class="btn btn-sm btn-primary ml-auto m-1" (click)="logout()">Logout</button>
     </div>
 
     <router-outlet class="h-100"></router-outlet>
   </div>
 
+</div>
+
+<div *ngIf="!account || !account.jwtToken" style="height:100vh!important" class="">
+  <router-outlet class="h-100 w-100"></router-outlet>
 </div>

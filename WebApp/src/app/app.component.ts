@@ -14,11 +14,11 @@ export class AppComponent {
   Role = Role;
   account: Account;
 
-  constructor(public router: Router, private accountService: AccountService) { 
+  constructor(public router: Router, private accountService: AccountService) {
     this.accountService.account.subscribe(x => this.account = x);
   }
 
   logout() {
     this.accountService.logout();
-}
+  }
 }

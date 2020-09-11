@@ -15,7 +15,7 @@ const exerciseModule = () => import('./exercise-module/exercise.module').then(x 
 const userModule = () => import('./user-module/user.module').then(x => x.UserModule);
 const sharedModule = () => import('./shared-module/shared.module').then(x => x.SharedModule);
 
-const accountModule = () => import('./account/account.module').then(x => x.AccountModule);
+const accountModule = () => import('./account-module/account.module').then(x => x.AccountModule);
 const adminModule = () => import('./admin/admin.module').then(x => x.AdminModule);
 const profileModule = () => import('./profile/profile.module').then(x => x.ProfileModule);
 
