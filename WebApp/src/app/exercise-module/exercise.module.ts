@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
+/* components */
 import { ExerciseRoutingModule } from './exercise-routing.module';
 import { LayoutComponent } from './layout.component';
 import { ExerciseComponent } from './components/exercise/exercise.component';

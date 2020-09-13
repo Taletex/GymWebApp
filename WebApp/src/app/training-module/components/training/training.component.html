@@ -89,7 +89,7 @@
                         <button class="btn btn-sm btn-primary" ngbTooltip="Chiudi Editor di testo" placement="left" (click)="closeTinyMCEEditor()">Chiudi Editor</button>
                         <button class="btn btn-sm btn-primary ml-1" ngbTooltip="Crea pdf dal testo dell'editor" placement="left" (click)="createPdfFromEditor()">Crea PDF</button>
                     </div>
-                    <editor class="w-100 h-100" apiKey="nezikf86u3tkn42uasu6wth68lb9qcfa2dszno3h7anr94qq" initialValue={{editorContent}} [(ngModel)]="editorContent" [init]=tinyMCEoptions></editor>
+                    <editor class="w-100 h-100" apiKey="nezikf86u3tkn42uasu6wth68lb9qcfa2dszno3h7anr94qq" initialValue={{editorContent}} [(ngModel)]="editorContent" [init]=tinyMCEoptions name="tinymceeditor" ngDefaultControl></editor>
                 </div>
             </div>
 

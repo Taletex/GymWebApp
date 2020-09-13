@@ -1,5 +1,5 @@
 <div *ngIf="bDatasetInitialized && graphType=='week'" class="chart-container">
-  <canvas baseChart width="400" height="400"
+  <canvas baseChart width="400" height="400" ngDefaultControl
     [datasets]="weekChartData"
     [labels]="weekChartLabels"
     [options]="lineChartOptions"
@@ -10,7 +10,7 @@
   </canvas>
 </div>
 <div *ngIf="bDatasetInitialized && graphType=='session'" class="chart-container">
-  <canvas baseChart width="400" height="400"
+  <canvas baseChart width="400" height="400" ngDefaultControl
     [datasets]="sessionChartData"
     [labels]="sessionChartLabels"
     [options]="lineChartOptions"
