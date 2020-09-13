@@ -3,6 +3,11 @@
   height: 44px;
   box-shadow: 0px 2px 1px rgba(0, 0, 0, 0.2);
 }
+.main__header .logout-btn {
+  position: absolute;
+  right: 16px;
+  bottom: 6px;
+}
 
 .main-content {
   /* ===== Scrollbar ===== */
