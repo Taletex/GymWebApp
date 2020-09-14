@@ -1,24 +1,25 @@
-<div class="d-flex p-0 m-0" style="height:100vh!important" *ngIf="account && account.jwtToken">
+<div class="d-flex p-0 m-0" style="height:100vh!important" >
 
-  <div class="p-0">
+  <div class="p-0" *ngIf="account && account.jwtToken">
     <app-sidebar></app-sidebar>
   </div>
 
   <div class="w-100 bg-light h-100 overflow-auto main-content scrollbar">
-    <div class="main__header row m-0 p-2 pl-3 position-relative">
+    <div class="main__header row m-0 p-2 pl-3 position-relative" *ngIf="account && account.jwtToken">
       <img src="assets/icons/favicon.ico" style="max-height:100%; width:auto;" class="mr-2">
       <h4 class="font-weight-700"><span>{{title}}</span> 
         <span><span class="fa fa-arrow-right mx-2"></span> <em>{{(router.url).split('/')[1] | uppercase}}</em></span>
         <span [hidden]="((router.url).split('/')[2]) == null || ((router.url).split('/')[2]) == ''"><span class="fa fa-arrow-right mx-2"></span> <em>{{(router.url).split('/')[2] | uppercase}}</em></span>
       </h4>
-      <button class="btn btn-sm btn-primary logout-btn" (click)="logout()">Logout <img src="assets/icons/misc/logout.svg" style="height:15px; width:auto;" class="ml-1"></button>
+      <div class="account-info">
+          <div class="input-group-prepend">
+            <span class="input-group-text rounded-left bg-light" id="user-info">{{account.firstName}} {{account.lastName}}</span>
+          </div>
+          <button class="btn btn-sm btn-primary rounded-right" style="border-radius: 0px 3px 3px 0px;" id="logout-button" aria-describedby="user-info" (click)="logout()">Logout <img src="assets/icons/misc/logout.svg" style="height:15px; width:auto;" class="ml-1"></button>
+      </div>
     </div>
 
-    <router-outlet class="h-100"></router-outlet>
+    <router-outlet class="h-100 w-100"></router-outlet><!-- subnav router outlet -->
   </div>
 
-</div>
-
-<div *ngIf="!account || !account.jwtToken" style="height:100vh!important" class="">
-  <router-outlet class="h-100 w-100"></router-outlet>
 </div>

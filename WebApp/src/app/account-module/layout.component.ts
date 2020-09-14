@@ -1,7 +1,7 @@
 ﻿import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AccountService } from '@app/_services/account.service';
+import { AccountService } from '@app/_services/account-service/account-service.service';
 
 @Component({
     templateUrl: './layout.component.html',

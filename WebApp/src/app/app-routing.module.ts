@@ -3,9 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 /* Components import */
 import { HomepageComponent } from '@app/_components/homepage/homepage.component';
-import { UserProfileComponent } from '@app/_components/user-profile/user-profile.component';
 import { PageNotFoundComponent } from '@app/_components/page-not-found/page-not-found.component';
-import { HomeComponent } from './home';
 import { AuthGuard } from './_helpers';
 import { Role } from './_models';
 
@@ -16,8 +14,8 @@ const userModule = () => import('./user-module/user.module').then(x => x.UserMod
 const sharedModule = () => import('./shared-module/shared.module').then(x => x.SharedModule);
 
 const accountModule = () => import('./account-module/account.module').then(x => x.AccountModule);
-const adminModule = () => import('./admin/admin.module').then(x => x.AdminModule);
-const profileModule = () => import('./profile/profile.module').then(x => x.ProfileModule);
+const profileModule = () => import('./profile-module/profile.module').then(x => x.ProfileModule);
+const adminModule = () => import('./admin-module/admin.module').then(x => x.AdminModule);
 
 
 const routes: Routes = [
@@ -26,7 +24,7 @@ const routes: Routes = [
   { path: 'trainings', loadChildren: trainingModule, canActivate: [AuthGuard]},
   { path: 'exercises', loadChildren: exerciseModule, canActivate: [AuthGuard]},
   { path: 'users', loadChildren: userModule, canActivate: [AuthGuard]},
-  { path: 'userprofile', component: UserProfileComponent, canActivate: [AuthGuard]},
+  { path: 'userprofile', loadChildren: profileModule, canActivate: [AuthGuard]},
   
   { path: 'account', loadChildren: accountModule },
   { path: 'profile', loadChildren: profileModule, canActivate: [AuthGuard] },

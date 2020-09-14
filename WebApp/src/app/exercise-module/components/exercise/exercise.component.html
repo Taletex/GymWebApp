@@ -7,7 +7,7 @@
                 <h5 class="m-0">ESERCIZIO {{exercise.name}}</h5>
                 <div class="ml-auto">
                     <div (click)="saveExercise()" class="btn btn-success btn-sm">SALVA</div>
-                    <div (click)="deleteExercise()" class="btn btn-danger btn-sm ml-2">ELIMINA</div>
+                    <div *ngIf="account.role == Role.Admin" (click)="deleteExercise()" class="btn btn-danger btn-sm ml-2">ELIMINA</div>
                 </div>
             </div>
         </div>

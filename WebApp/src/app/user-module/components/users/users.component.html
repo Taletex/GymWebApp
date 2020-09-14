@@ -67,7 +67,7 @@
                 <div class="col-2 d-flex">
                     <a [routerLink]="['/users', elem._id]" routerLinkActive="active" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></a>
                     <a [routerLink]="['/users', elem._id]" routerLinkActive="active" class="ml-2 image-button" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></a>
-                    <a (click)="deleteUser(elem._id, userIndex)" routerLinkActive="active" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></a>
+                    <a *ngIf="account.role == Role.Admin" (click)="deleteUser(elem._id, userIndex)" routerLinkActive="active" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></a>
                 </div>
             </div>
             <app-user-modal (onClose)="createUser()" [(newUser)] = "newUser" style="position: absolute; right: 15px; bottom: 15px">

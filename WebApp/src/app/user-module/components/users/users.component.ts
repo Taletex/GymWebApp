@@ -4,6 +4,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { HttpService } from '@app/_services/http-service/http-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { Account, Role } from '@app/_models';
+import { AccountService } from '@app/_services/account-service/account-service.service';
 
 @Component({
   selector: 'app-users',
@@ -15,9 +17,13 @@ export class UsersComponent implements OnInit {
   public filters: any = {};
   public bLoading: boolean = false;
   public newUser: User = new User();
+  public account: Account;
+  public Role = Role;
 
-  constructor(private router: Router, private httpService: HttpService, private toastr: ToastrService) {
+  constructor(private router: Router, private accountService: AccountService, private httpService: HttpService, private toastr: ToastrService) {
     this.filters = { name: '', surname: '', dateOfBirth: '', sex: '', bodyWeight: '', yearsOfExperience: ''};
+    this.accountService.account.subscribe(x => this.account = x);
+    
     this.getUsers();
   }
 

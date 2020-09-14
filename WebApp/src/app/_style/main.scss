@@ -264,6 +264,14 @@ $menu-blue: #0f1042e6;
   }
 }
 
+.rounded-right {
+  border-radius: 0rem 0.25rem 0.25rem 0rem !important;
+}
+
+.rounded-left {
+  border-radius: 0.25rem 0rem 0rem 0.25rem !important;
+}
+
 @for $i from 0 through 9 {
   .round-left-#{$i} {
     border-top-left-radius: $i * 1px !important;

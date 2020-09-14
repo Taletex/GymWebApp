@@ -8,9 +8,11 @@ import { AccountService } from '@app/_services/account-service/account-service.s
 import { MustMatch } from '@app/_helpers';
 import { ToastrService } from 'ngx-toastr';
 
-@Component({ templateUrl: 'register.component.html' })
-export class RegisterComponent implements OnInit {
+@Component({ templateUrl: 'add-edit.component.html' })
+export class AddEditComponent implements OnInit {
     form: FormGroup;
+    id: string;
+    isAddMode: boolean;
     loading = false;
     submitted = false;
 
@@ -20,20 +22,29 @@ export class RegisterComponent implements OnInit {
         private router: Router,
         private accountService: AccountService,
         private toastr: ToastrService
-    ) { }
+    ) {}
 
     ngOnInit() {
+        this.id = this.route.snapshot.params['id'];
+        this.isAddMode = !this.id;
+
         this.form = this.formBuilder.group({
             title: ['', Validators.required],
             firstName: ['', Validators.required],
             lastName: ['', Validators.required],
             email: ['', [Validators.required, Validators.email]],
-            password: ['', [Validators.required, Validators.minLength(6)]],
-            confirmPassword: ['', Validators.required],
-            acceptTerms: [false, Validators.requiredTrue]
+            role: ['', Validators.required],
+            password: ['', [Validators.minLength(6), this.isAddMode ? Validators.required : Validators.nullValidator]],
+            confirmPassword: ['']
         }, {
             validator: MustMatch('password', 'confirmPassword')
         });
+
+        if (!this.isAddMode) {
+            this.accountService.getById(this.id)
+                .pipe(first())
+                .subscribe(x => this.form.patchValue(x));
+        }
     }
 
     // convenience getter for easy access to form fields
@@ -48,12 +59,36 @@ export class RegisterComponent implements OnInit {
         }
 
         this.loading = true;
-        this.accountService.register(this.form.value)
+        if (this.isAddMode) {
+            this.createAccount();
+        } else {
+            this.updateAccount();
+        }
+    }
+
+    private createAccount() {
+        this.accountService.create(this.form.value)
             .pipe(first())
             .subscribe({
                 next: () => {
-                    this.router.navigate(['../login'], { relativeTo: this.route }).then(() => {
-                        this.toastr.success('Registration successful, please check your email for verification instructions');
+                    this.router.navigate(['../'], { relativeTo: this.route }).then(() => {
+                        this.toastr.success('Account created successfully');
+                    });
+                },
+                error: error => {
+                    this.toastr.error(error);
+                    this.loading = false;
+                }
+            });
+    }
+
+    private updateAccount() {
+        this.accountService.update(this.id, this.form.value)
+            .pipe(first())
+            .subscribe({
+                next: () => {
+                    this.router.navigate(['../../'], { relativeTo: this.route }).then(() => {
+                        this.toastr.success('Update successful');
                     });
                 },
                 error: error => {

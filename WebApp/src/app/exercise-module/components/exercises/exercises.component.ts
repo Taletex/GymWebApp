@@ -3,6 +3,8 @@ import { HttpService } from '@app/_services/http-service/http-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { Exercise } from '@app/_models/training-model';
+import { AccountService } from '@app/_services/account-service/account-service.service';
+import { Account, Role } from '@app/_models';
 
 @Component({
   selector: 'app-exercises',
@@ -14,8 +16,12 @@ export class ExercisesComponent implements OnInit {
   public filters: any = {};
   public bLoading: boolean = false;
   public newExercise: Exercise = new Exercise();
+  public account: Account;
+  public Role = Role;
 
-  constructor(private httpService: HttpService, private toastr: ToastrService) { 
+
+  constructor(private httpService: HttpService, private toastr: ToastrService, private accountService: AccountService) { 
+    this.accountService.account.subscribe(x => this.account = x);
     this.filters = { name: '', variant: {name: '', intensityCoefficient: 1}, description: ''};
     this.getExercises();
   }

@@ -380,6 +380,14 @@
   border-radius: 9px !important;
 }
 
+.rounded-right {
+  border-radius: 0rem 0.25rem 0.25rem 0rem !important;
+}
+
+.rounded-left {
+  border-radius: 0.25rem 0rem 0rem 0.25rem !important;
+}
+
 .round-left-0 {
   border-top-left-radius: 0px !important;
   border-bottom-left-radius: 0px !important;

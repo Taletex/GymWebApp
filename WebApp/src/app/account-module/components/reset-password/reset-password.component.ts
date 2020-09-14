@@ -3,8 +3,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
-import { AccountService, AlertService } from '@app/_services';
+import { AccountService } from '@app/_services/account-service/account-service.service';
+
 import { MustMatch } from '@app/_helpers';
+import { ToastrService } from 'ngx-toastr';
 
 enum TokenStatus {
     Validating,
@@ -26,7 +28,7 @@ export class ResetPasswordComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private accountService: AccountService,
-        private alertService: AlertService
+        private toastr: ToastrService
     ) { }
 
     ngOnInit() {
@@ -61,9 +63,6 @@ export class ResetPasswordComponent implements OnInit {
     onSubmit() {
         this.submitted = true;
 
-        // reset alerts on submit
-        this.alertService.clear();
-
         // stop here if form is invalid
         if (this.form.invalid) {
             return;
@@ -74,11 +73,12 @@ export class ResetPasswordComponent implements OnInit {
             .pipe(first())
             .subscribe({
                 next: () => {
-                    this.alertService.success('Password reset successful, you can now login', { keepAfterRouteChange: true });
-                    this.router.navigate(['../login'], { relativeTo: this.route });
+                    this.router.navigate(['../login'], { relativeTo: this.route }).then(() => {
+                        this.toastr.success('Password reset successful, you can now login');
+                    });;
                 },
                 error: error => {
-                    this.alertService.error(error);
+                    this.toastr.error(error);
                     this.loading = false;
                 }
             });

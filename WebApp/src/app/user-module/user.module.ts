@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -14,6 +15,7 @@ import { UserModalComponent, SharedModule } from '@app/shared-module/shared.modu
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
+        NgbModule,
         UserRoutingModule,
         SharedModule
     ],

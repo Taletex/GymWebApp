@@ -7,7 +7,7 @@
                 <h5 class="m-0">UTENTE {{user.name}}</h5>
                 <div class="ml-auto">
                     <div (click)="saveUser()" class="btn btn-success btn-sm">SALVA</div>
-                    <div (click)="deleteUser()" class="btn btn-danger btn-sm ml-2">ELIMINA</div>
+                    <div *ngIf="account.role == Role.Admin" (click)="deleteUser()" class="btn btn-danger btn-sm ml-2">ELIMINA</div>
                 </div>
             </div>
         </div>

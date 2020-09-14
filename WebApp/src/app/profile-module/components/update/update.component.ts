@@ -4,16 +4,17 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
 import { AccountService } from '@app/_services/account-service/account-service.service';
+
+import { MustMatch } from '@app/_helpers';
 import { ToastrService } from 'ngx-toastr';
 
-@Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html'
-})
-export class LoginComponent implements OnInit {
+@Component({ templateUrl: 'update.component.html' })
+export class UpdateComponent implements OnInit {
+    account = this.accountService.accountValue;
     form: FormGroup;
     loading = false;
     submitted = false;
+    deleting = false;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -25,8 +26,14 @@ export class LoginComponent implements OnInit {
 
     ngOnInit() {
         this.form = this.formBuilder.group({
-            email: ['', [Validators.required, Validators.email]],
-            password: ['', Validators.required]
+            title: [this.account.title, Validators.required],
+            firstName: [this.account.firstName, Validators.required],
+            lastName: [this.account.lastName, Validators.required],
+            email: [this.account.email, [Validators.required, Validators.email]],
+            password: ['', [Validators.minLength(6)]],
+            confirmPassword: ['']
+        }, {
+            validator: MustMatch('password', 'confirmPassword')
         });
     }
 
@@ -42,18 +49,29 @@ export class LoginComponent implements OnInit {
         }
 
         this.loading = true;
-        this.accountService.login(this.f.email.value, this.f.password.value)
+        this.accountService.update(this.account.id, this.form.value)
             .pipe(first())
             .subscribe({
                 next: () => {
-                    // get return url from query parameters or default to home page
-                    const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-                    this.router.navigateByUrl(returnUrl);
+                    this.router.navigate(['../'], { relativeTo: this.route }).then(() => {
+                        this.toastr.success('Update successful');
+                    });
                 },
                 error: error => {
                     this.toastr.error(error);
                     this.loading = false;
                 }
             });
+    }
+
+    onDelete() {
+        if (confirm('Are you sure?')) {
+            this.deleting = true;
+            this.accountService.delete(this.account.id)
+                .pipe(first())
+                .subscribe(() => {
+                    this.toastr.success('Account deleted successfully');
+                });
+        }
     }
 }

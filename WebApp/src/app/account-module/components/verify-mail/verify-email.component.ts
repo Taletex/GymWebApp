@@ -2,7 +2,9 @@
 import { Router, ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
 
-import { AccountService, AlertService } from '@app/_services';
+import { AccountService } from '@app/_services/account-service/account-service.service';
+
+import { ToastrService } from 'ngx-toastr';
 
 enum EmailStatus {
     Verifying,
@@ -18,7 +20,7 @@ export class VerifyEmailComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private accountService: AccountService,
-        private alertService: AlertService
+        private toastr: ToastrService
     ) { }
 
     ngOnInit() {
@@ -31,8 +33,9 @@ export class VerifyEmailComponent implements OnInit {
             .pipe(first())
             .subscribe({
                 next: () => {
-                    this.alertService.success('Verification successful, you can now login', { keepAfterRouteChange: true });
-                    this.router.navigate(['../login'], { relativeTo: this.route });
+                    this.router.navigate(['../login'], { relativeTo: this.route }).then(() => {
+                        this.toastr.success('Verification successful, you can now login');
+                    });
                 },
                 error: () => {
                     this.emailStatus = EmailStatus.Failed;

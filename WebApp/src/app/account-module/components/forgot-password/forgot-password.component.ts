@@ -2,7 +2,8 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first, finalize } from 'rxjs/operators';
 
-import { AccountService, AlertService } from '@app/_services';
+import { AccountService } from '@app/_services/account-service/account-service.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({ templateUrl: 'forgot-password.component.html' })
 export class ForgotPasswordComponent implements OnInit {
@@ -13,7 +14,7 @@ export class ForgotPasswordComponent implements OnInit {
     constructor(
         private formBuilder: FormBuilder,
         private accountService: AccountService,
-        private alertService: AlertService
+        private toastr: ToastrService
     ) { }
 
     ngOnInit() {
@@ -28,22 +29,18 @@ export class ForgotPasswordComponent implements OnInit {
     onSubmit() {
         this.submitted = true;
 
-        // reset alerts on submit
-        this.alertService.clear();
-
         // stop here if form is invalid
         if (this.form.invalid) {
             return;
         }
 
         this.loading = true;
-        this.alertService.clear();
         this.accountService.forgotPassword(this.f.email.value)
             .pipe(first())
             .pipe(finalize(() => this.loading = false))
             .subscribe({
-                next: () => this.alertService.success('Please check your email for password reset instructions'),
-                error: error => this.alertService.error(error)
+                next: () => this.toastr.success('Please check your email for password reset instructions'),
+                error: error => this.toastr.error(error)
             });
     }
 }

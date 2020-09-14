@@ -17,11 +17,9 @@ import { AppComponent } from './app.component';
 import { HomepageComponent } from './_components/homepage/homepage.component';
 import { PageNotFoundComponent } from './_components/page-not-found/page-not-found.component';
 import { SidebarComponent } from './_components/sidebar/sidebar.component';
-import { UserProfileComponent } from './_components/user-profile/user-profile.component';
 
 import { JwtInterceptor, ErrorInterceptor, appInitializer } from './_helpers';
-import { AccountService } from './_services';
-import { AlertComponent } from './_components';
+import { AccountService } from '@app/_services/account-service/account-service.service';
 
 @NgModule({
   imports: [
@@ -33,7 +31,7 @@ import { AlertComponent } from './_components';
     NgbModule,
     ChartsModule,
     CommonModule,
-    EditorModule,
+    EditorModule, 
     BrowserAnimationsModule, 
     ToastrModule.forRoot(), 
   ],
@@ -41,16 +39,13 @@ import { AlertComponent } from './_components';
     AppComponent,
     HomepageComponent,
     PageNotFoundComponent,
-    SidebarComponent,
-    UserProfileComponent,
-    AlertComponent
+    SidebarComponent
   ],
   providers: [
     { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AccountService] },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ],
-  bootstrap: [AppComponent],
-  //entryComponents: [ExerciseModalComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

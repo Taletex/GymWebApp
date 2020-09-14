@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AccountService } from '@app/_services/account-service/account-service.service';
+
+import { Account, Role } from '@app/_models';
 
 @Component({
   selector: 'app-sidebar',
@@ -8,14 +11,16 @@ import { Router } from '@angular/router';
 })
 export class SidebarComponent implements OnInit {
 
-  public bActiveList = {homepage: false, trainings: false, exercises: false, users: false, notifications: false, userprofile: false};
+  public bActiveList = {homepage: false, trainings: false, exercises: false, users: false, notifications: false, userprofile: false, admin: false};
   public bExpandedSidebar;
-  public currentUsername;
+  public account: Account;
+  public Role = Role;
   
-  constructor(public router: Router) {
+  constructor(public router: Router, private accountService: AccountService) {
     this.bExpandedSidebar = true;
     this.bActiveList[(this.router.url).split('/')[1]] = true;
-   }
+    this.accountService.account.subscribe(x => this.account = x);
+  }
 
   ngOnInit() {
   }
