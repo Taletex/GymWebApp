@@ -173,6 +173,48 @@ $menu-blue: #0f1042e6;
   }
 }
 
+@for $i from 0 through 9 {
+  .w-#{$i*10} {
+    width: $i * 10% !important;
+  }
+}
+
+@for $i from 0 through 9 {
+  .h-#{$i*10} {
+    height: $i * 10% !important;
+  }
+}
+
+@for $i from 6 through 9 {
+  .p-#{$i*1} {
+    padding: $i * 1rem !important;
+  }
+}
+
+@for $i from 6 through 9 {
+  .pt-#{$i*1} {
+    padding-top: $i * 1rem !important;
+  }
+}
+
+@for $i from 6 through 9 {
+  .pb-#{$i*1} {
+    padding-bottom: $i * 1rem !important;
+  }
+}
+
+@for $i from 6 through 9 {
+  .pr-#{$i*1} {
+    padding-right: $i * 1rem !important;
+  }
+}
+
+@for $i from 6 through 9 {
+  .pl-#{$i*1} {
+    padding-left: $i * 1rem !important;
+  }
+}
+
 .overlay-full-center {
   position: absolute;
   left: 0px;
@@ -244,6 +286,10 @@ $menu-blue: #0f1042e6;
   }
 }
 
+.font-header-homepage {
+  font-size: 5rem;
+}
+
 /* TEXT STYLE */
 .truncate {
   width: 250px;
@@ -299,6 +345,7 @@ $menu-blue: #0f1042e6;
     border-bottom-left-radius: $i * 1px !important;
   }
 }
+
 
 /* MODAL STYLE */
 .modal-lg {

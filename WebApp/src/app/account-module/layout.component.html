@@ -2,44 +2,57 @@
 
     <div class="account__maincontainer col-12 p-0">
 
+        <!-- NAVBAR -->
         <div class="nav-container">
-            <nav class="navbar navbar-expand-lg navbar-dark bg-light bg-dark">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-black-custom">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
                     aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-                    <a class="navbar-brand" href="#top-elem"><img src="assets/icons/favicon.ico"
-                            style="max-height:20px; width:auto;"></a>
+                    <a class="navbar-brand mr-2" href="account/login#top-elem"><img src="assets/icons/favicon-white.png" style="max-height:35px; width:auto;"></a>
                     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#top-elem">Home</a>
+                        <li class="nav-item" (click)="setActiveElem('home')" [ngClass]="{'active': navbarActiveList['home']}">
+                            <a class="nav-link" href="account/login#top-elem">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#services-elem">Servizi</a>
+                        <li class="nav-item" (click)="setActiveElem('services')" [ngClass]="{'active': navbarActiveList['services']}">
+                            <a class="nav-link" href="account/login#services-elem">Servizi</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#contacts-elem">Contatti</a>
+                        <li class="nav-item" (click)="setActiveElem('contacts')" [ngClass]="{'active': navbarActiveList['contacts']}">
+                            <a class="nav-link" href="account/login#contacts-elem">Contatti</a>
+                        </li>
+                        <li class="nav-item ml-auto" (click)="setActiveElem('login')" [ngClass]="{'active': navbarActiveList['login']}">
+                            <a class="nav-link" href="account/login#login-elem">Login</a>
+                        </li>
+                        <li class="nav-item ml-auto" (click)="setActiveElem('login')" [ngClass]="{'active': navbarActiveList['register']}">
+                            <a class="nav-link" href="account/register#login-elem">Registrati</a>
                         </li>
                     </ul>
                 </div>
             </nav>
         </div>
 
-        <section id="top-elem" class="maincontainer__header d-flex align-items-center justify-content-around text-white"
-            style="background-image: url('../../assets/img/HomepageHeader.jpg')">
-            <div>
-                <h1 style="font-size: 5rem" class="mb-4">My Training Platform</h1>
-                <h4>The platform for athletes and coaches training handling</h4>
-            </div>
-            <div>
-                <img src="assets/icons/favicon-white.ico" style="max-height:30rem; width:auto;">
-            </div>
+        <!-- HEADER -->
+        <section id="top-elem" class="maincontainer__header text-white h-100 d-flex">
+                <div class="row w-100 m-0 d-flex align-items-center justify-content-left h-60">
+                    <div class="col-7">
+                        <h1 class="font-header-homepage mb-4">My Training Platform</h1>
+                        <h4>The platform for athletes and coaches training handling</h4>
+                        <h4>Developed with the latest technologies by sport experts like you</h4>
+                    </div>
+                    <!-- Router Outlet Elem -->
+                    <div class="col-5 homepage-router-outlet border-dark border-right-0 border-radius-5" id="login-elem">
+                        <router-outlet></router-outlet>
+                    </div>
+                </div>
+            <div class="h-40">&nbsp;</div>
         </section>
 
+        <!-- MAIN CONTAINER -->
         <section class="maincontainer__body">
-            <div class="row m-0 body__element pb-0">
-                <h1 class="p-4" id="services-elem">Servizi</h1>
+            <!-- Services -->
+            <div class="row m-0 body__element pb-0 pt-8" id="services-elem">
+                <h1 class="p-4">Servizi</h1>
             </div>
             <div class="row m-0 body__element">
                 <div class="col-4 px-4">
@@ -47,17 +60,15 @@
                         freedom on the creation process (exercise, sessions, weeks, etc.)</p>
                 </div>
                 <div class="col-8 px-4">
-                    <img src="assets/img/01-edit-training-preview.png" style="max-height:100%; width:100%;"
-                        class="card img-container border-0 border-radius-8">
+                    <img src="assets/img/01-edit-training-preview.png">
                 </div>
             </div>
             <div class="row m-0 body__element">
                 <div class="col-8 px-4">
-                    <img src="assets/img/02-editor-training-preview.png" style="max-height:100%; width:100%;"
-                        class="card img-container border-0 border-radius-8">
+                    <img src="assets/img/02-editor-training-preview.png">
                 </div>
                 <div class="col-4 px-4">
-                    <p>As a <em><b>coach</b></em>edit training format as you prefer before send it to your athlete!</p>
+                    <p>As a <em><b>coach</b></em> edit training format as you prefer before send it to your athlete!</p>
                 </div>
             </div>
             <div class="row m-0 body__element">
@@ -65,14 +76,12 @@
                     <p>As an <em><b>athlete</b></em>, visualize the trainings your coaches assigned to you!</p>
                 </div>
                 <div class="col-8 px-4">
-                    <img src="assets/img/03-read-training-preview.png" style="max-height:100%; width:100%;"
-                        class="card img-container border-0 border-radius-8">
+                    <img src="assets/img/03-read-training-preview.png">
                 </div>
             </div>
             <div class="row m-0 body__element">
                 <div class="col-8 px-4">
-                    <img src="assets/img/04-stats-training-preview.png" style="max-height:100%; width:100%;"
-                        class="card img-container border-0 border-radius-8">
+                    <img src="assets/img/04-stats-training-preview.png">
                 </div>
                 <div class="col-4 px-4">
                     <p>For each training visualize statistics about intensity and more!</p>
@@ -84,154 +93,50 @@
                         creation process!</p>
                 </div>
                 <div class="col-8 px-4">
-                    <img src="assets/img/05-create-exercise-preview.png" style="max-height:100%; width:100%;"
-                        class="card img-container border-0 border-radius-8">
+                    <img src="assets/img/05-create-exercise-preview.png">
                 </div>
             </div>
         </section>
 
-        <footer class="maincontainer__footer footer">
-            <div class="footer-widgets">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <!-- Text widget-->
-                            <aside class="widget widget-text">
-                                <div class="widget-title">
-                                    <h6>About Us</h6>
-                                </div>
-                                <div class="textwidget">
-                                    <p>Map where your photos were taken and discover local points of interest. Map
-                                        where your photos.</p>
-                                    <p>
-                                        Location: 12 London Avenue, Suite 18<br>
-                                        E-mail: support@theme.com<br>
-                                        Phone: 8 800 123 4567<br>
-                                    </p>
-                                    <ul class="social-icons">
-                                        <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                                        <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-                                        <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                                        <li><a href="#"><i class="fab fa-pinterest-p"></i></a></li>
-                                    </ul>
-                                </div>
-                            </aside>
+        <!-- FOOTER -->
+        <footer class="maincontainer__footer footer p-5" id="contacts-elem">
+            <div class="row px-5 mb-5">
+                <div class="col-md-3"></div>
+                <div class="col-md-3">
+                    <aside>
+                        <h6 class="text-uppercase">About Me</h6>
+                        <div>
+                            <p>I'm a Computer Engineer and powerlifter 
+                                playing sports since I was 6. I think 
+                                sport is very important to grow up 
+                                mentally and physically.</p>
                         </div>
-                        <div class="col-md-3">
-                            <!-- Recent entries widget-->
-                            <aside class="widget widget-recent-entries">
-                                <div class="widget-title">
-                                    <h6>Recent Posts</h6>
-                                </div>
-                                <ul>
-                                    <li><a href="#">Map where your photos were taken and discover local
-                                            points.</a><span class="post-date">May 8, 2018</span></li>
-                                    <li><a href="#">Map where your photos were taken and discover local
-                                            points.</a><span class="post-date">April 7, 2018</span></li>
-                                    <li><a href="#">Map where your photos were taken and discover local
-                                            points.</a><span class="post-date">September 7, 2018</span></li>
-                                </ul>
-                            </aside>
-                        </div>
-                        <div class="col-md-3">
-                            <!-- Twitter widget-->
-                            <aside class="widget twitter-feed-widget">
-                                <div class="widget-title">
-                                    <h6>Twitter Feed</h6>
-                                </div>
-                                <div class="twitter-feed" data-twitter="double_theme" data-number="1" id="twitter-0">
-                                    <ul>
-                                        <li>
-                                            <div class="user">
-                                                <a data-scribe="element:user_link"
-                                                    href="https://twitter.com/ProductHuntHi"
-                                                    aria-label="Product Hunt Hi (screen name: ProductHuntHi)"
-                                                    target="_blank"><img data-scribe="element:avatar"
-                                                        data-src-2x="https://pbs.twimg.com/profile_images/662417488806711296/NucHBWWQ_bigger.png"
-                                                        alt=""
-                                                        data-src-1x="https://pbs.twimg.com/profile_images/662417488806711296/NucHBWWQ_normal.png"
-                                                        src="https://pbs.twimg.com/profile_images/662417488806711296/NucHBWWQ_bigger.png"></a>
-
-
-
-
-                                                <div data-scribe="component:author">
-                                                    <a data-scribe="element:user_link"
-                                                        href="https://twitter.com/ProductHuntHi"
-                                                        aria-label="Product Hunt Hi (screen name: ProductHuntHi)"
-                                                        target="_blank">
-                                                        <div>
-                                                            <span>
-                                                                <span title="Product Hunt Hi"
-                                                                    data-scribe="element:name">Product Hunt
-                                                                    Hi</span>
-
-                                                            </span>
-                                                            <span title="@ProductHuntHi"
-                                                                data-scribe="element:screen_name">@ProductHuntHi</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-
-                                            </div>
-                                            <p class="tweet"><a href="https://twitter.com/double_theme"
-                                                    data-mentioned-user-id="250123871" data-scribe="element:mention"
-                                                    target="_blank"><span>@</span><span>double_theme</span></a> FYI,
-                                                you've been added as a maker of Bright - Free Bootstrap 4 Template
-                                                on <a href="https://twitter.com/ProductHunt"
-                                                    data-mentioned-user-id="2208027565" data-scribe="element:mention"
-                                                    target="_blank"><span>@</span><span>ProductHunt</span></a> <a
-                                                    href="https://t.co/3WYj7sMNzF"
-                                                    data-expanded-url="https://www.producthunt.com/posts/bright-free-bootstrap-4-template"
-                                                    target="_blank"
-                                                    title="https://www.producthunt.com/posts/bright-free-bootstrap-4-template"
-                                                    data-scribe="element:url"><span>https://www.</span>producthunt.com/posts/bright-f<span>ree-bootstrap-4-template&nbsp;</span>…</a>
-                                            </p>
-                                            <p class="timePosted">Posted on Apr 24, 2019</p>
-                                            <p class="interact"><a
-                                                    href="https://twitter.com/intent/tweet?in_reply_to=1127603804499795970"
-                                                    class="twitter_reply_icon" target="_blank"
-                                                    rel="noopener">Reply</a><a
-                                                    href="https://twitter.com/intent/retweet?tweet_id=1127603804499795970"
-                                                    class="twitter_retweet_icon" target="_blank"
-                                                    rel="noopener">Retweet</a><a
-                                                    href="https://twitter.com/intent/favorite?tweet_id=1127603804499795970"
-                                                    class="twitter_fav_icon" target="_blank" rel="noopener">Favorite</a>
-                                            </p>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </aside>
-                        </div>
-                        <div class="col-md-3">
-                            <!-- Recent works-->
-                            <aside class="widget widget-recent-works">
-                                <div class="widget-title">
-                                    <h6>Portfolio</h6>
-                                </div>
-                                <ul>
-                                    <li><a href="#"><img src="assets/images/widgets/1.jpg" alt=""></a></li>
-                                    <li><a href="#"><img src="assets/images/widgets/2.jpg" alt=""></a></li>
-                                    <li><a href="#"><img src="assets/images/widgets/3.jpg" alt=""></a></li>
-                                    <li><a href="#"><img src="assets/images/widgets/7.jpg" alt=""></a></li>
-                                    <li><a href="#"><img src="assets/images/widgets/8.jpg" alt=""></a></li>
-                                    <li><a href="#"><img src="assets/images/widgets/6.jpg" alt=""></a></li>
-                                </ul>
-                            </aside>
-                        </div>
-                    </div>
+                    </aside>
                 </div>
-            </div>
-            <div class="footer-bar">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="copyright">
-                                <p>© 2018 Boomerang, All Rights Reserved. Design with love by <a href="#">2theme</a>
-                                </p>
-                            </div>
+                <div class="col-md-3">
+                    <aside>
+                        <h6 class="text-uppercase">Contacts</h6>
+                        <div>
+                            <p>
+                                Location: Riposto (CT), Italy<br>
+                                E-mail: alessandromessina95@hotmail.com<br>
+                                Phone: n.d.<br>
+                            </p>
                         </div>
-                    </div>
+                        <div class="d-flex justify-content-left">
+                            <span>You can find me on</span>
+                            <div class="ml-2"><a href="https://www.linkedin.com/feed/" target="blank"><span class="fa fa-linkedin"></span></a></div>
+                            <div class="ml-2"><a href="https://www.instagram.com/alessandro_messina95/" target="blank"><span class="fa fa-instagram"></span></a></div>
+                            <div class="ml-2"><a href="https://twitter.com/alessandro_mess" target="blank"><span class="fa fa-twitter"></span></a></div>
+                            <div class="ml-2"><a href="https://github.com/Taletex" target="blank"><span class="fa fa-github"></span></a></div>
+                        </div>
+                    </aside>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 d-flex align-items-center justify-content-center">
+                    <span>© 2020 Alessandro Messina, All Rights Reserved.</span>
                 </div>
             </div>
         </footer>

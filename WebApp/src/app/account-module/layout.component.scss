@@ -1,3 +1,6 @@
+$white-custom: rgba(255,255,255,0.08);
+$black-custom: #141414;
+
 .main__account {
     height: 100%;
     background-color: rgba(0,0,0,0.8);
@@ -12,6 +15,7 @@
             width: 100%; 
             height: 60px; 
             background-color: rgba(0,0,0,0.5); 
+            box-shadow: 2px 2px 8px 1px rgba(0,0,0,1);
             z-index: 2;
 
             nav {
@@ -22,8 +26,16 @@
         
         .maincontainer__header {
             min-height: 100vh;
+            background-image: url('../../assets/img/HomepageHeader3.jpg');
             background-position: center;
             background-size: cover;
+            padding: 4rem 0rem 4rem 4rem;
+
+            .homepage-router-outlet {
+                background-color:rgba(255,255,255,0.08); 
+                border-radius: 10px 0px 0px 10px; 
+                padding:0px;
+            }
         } 
        
 
@@ -32,7 +44,7 @@
             
             .body__element {
                 margin-bottom: 3rem;
-                padding: 3rem;
+                padding: 0rem 8rem 10rem 8rem;
                 width: 100%;
 
                 p {
@@ -43,13 +55,24 @@
                     box-shadow: -0.0625rem 0 0.625rem 0 rgba(0,0,0,0.07),0.3125rem 1.25rem 2.5rem 0 rgba(0,0,0,0.04) !important;
                     transition: border-color 0.2s ease-in-out,box-shadow 0.2s ease-in-out;
                     border-radius: 1.5rem;
+                    max-height:100%; 
+                    width:100%;
                 }
             }
         }
 
 
         .maincontainer__footer {
-            background-color: #343a40;
+            background-color: #141414;
+            color:white;
         }
     }
+}
+
+.bg-white-custom {
+    background-color: $white-custom;
+}
+
+.bg-black-custom {
+    background-color: $black-custom;
 }

@@ -8,13 +8,19 @@ import { AccountService } from '@app/_services/account-service/account-service.s
     styleUrls: ['./layout.component.scss']
 })
 export class LayoutComponent {
-    constructor(
-        private router: Router,
-        private accountService: AccountService
-    ) {
+    public navbarActiveList = {home: true, services: false, contacts: false, login: false, register: false}; 
+
+    constructor(private router: Router, private accountService: AccountService) {
         // redirect to home if already logged in
         if (this.accountService.accountValue) {
             this.router.navigate(['/']);
         }
+    }
+
+    setActiveElem(elem: string) {
+        for(let key in this.navbarActiveList) {
+            this.navbarActiveList[key] = false;
+        }
+        this.navbarActiveList[elem] = true;
     }
 }

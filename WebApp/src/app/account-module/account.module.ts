@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -13,6 +14,7 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 @NgModule({
     imports: [
         CommonModule,
+        NgbModule,
         ReactiveFormsModule,
         AccountRoutingModule
     ],
