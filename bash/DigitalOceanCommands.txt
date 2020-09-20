@@ -1,9 +1,45 @@
-Comandi
+https://cloud.digitalocean.com/droplets/208667120/graphs?i=73e048&period=hour&preserveScrollPosition=true
+tutorial base: https://marketplace.digitalocean.com/apps/nodejs?ipAddress=139.59.153.56#getting-started
 
-NodeJS Server
-- Restart: sudo -u nodejs pm2 restart hello
-- Start: pm2 start server-js
-- Quit: pm2 delete server
+Comandi
+- Connessione: ssh root@139.59.153.56
+Nota: se non funziona un comando prova a lanciarlo preceduto da sudo -u nodejs (e.g. sudo -u nodejs pm2 restart hello)
+
+NodeJS Server (posizionati dentro il node server)
+- Start: pm2 start server.js
+- Restart: sudo -u nodejs pm2 restart server
+- Delete: pm2 delete server
 - Sbloccare la porta 4000: sudo ufw allow 4000
 Alla fine lancia sempre pm2 save
+
+
+WebApp (posizionati dentro la webapp)
+- Start: pm2 start "ng serve --host 0.0.0.0 --port 1738"
+- Restart: sudo -u nodejs pm2 restart (mettere id del processo)
+- Delete: pm2 delete (id del processo)
+- Sbloccare la porta 1738: sudo ufw allow 1738
+
+How to avviare Su Digital Ocean:
+- Connessione da terminale: 
+   + ssh root@139.59.153.56
+   + Mettere la password
+- Update repo:
+   + cd GymWebApp
+   + git pull
+- Cambiare le porte e gli indirizzi nei 3 file di configurazione: configs.json (nella webapp), config.json (nel server), environment.ts (nella webapp, è l'indirizzo del server). Il db lascia "localhost", per gli altri metti tutti 139.59.153.56, porta del server 4000, porta del client 1738.
+- Avviare con pm2:
+  + cd root
+  + cd GymWebApp
+  + cd WebApp
+  + pm2 start "ng serve --host 0.0.0.0 --port 1738"
+  + pm2 save
+  + cd ..
+  + cd NodeServer
+  + pm2 start server.js
+  + pm2 save
+
+Aspettare che viene buildata l'app angular e accedere
+
+
+
 
