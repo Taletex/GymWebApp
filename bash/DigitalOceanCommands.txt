@@ -1,0 +1,9 @@
+Comandi
+
+NodeJS Server
+- Restart: sudo -u nodejs pm2 restart hello
+- Start: pm2 start server-js
+- Quit: pm2 delete server
+- Sbloccare la porta 4000: sudo ufw allow 4000
+Alla fine lancia sempre pm2 save
+
