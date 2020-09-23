@@ -3,11 +3,58 @@
     <div class="homepage__maincontainer col-12 card p-0">
 
         <div class="maincontainer__header card-header">
-            <h6 class="m-0">BENVENUTO NELL'APPLICAZIONE WEB PER LA GESTIONE DEI TUOI ALLENAMENTI!</h6>
+            <h6 class="m-0"><b>BENVENUTO NELL'APPLICAZIONE WEB PER LA GESTIONE DEI TUOI ALLENAMENTI!</b></h6>
         </div>
 
         <div class="maincontainer__body card-body">
-            <img src="assets/img/homepage_wallpaper.jpg" style="width:60%; height:auto">
+            <div>Accedi alle diverse sezioni dell'applicazione per gestire al meglio i tuoi allenamenti:</div>
+            
+            <ul class="mt-1 list-group">
+                <li class="my-2 list-group-item list-group-item-action cursor-pointer" (click)="goToSection('trainings')" ngbTooltip="Vai alla sezione Allenamenti" placement="top">
+                    <div class="d-flex">
+                        <div class="p-0 d-flex align-items-center justify-content-center">
+                            <img src="assets/icons/sidebar/writing-primary.svg" style="width:60px; height:auto;">
+                        </div>
+                        <div class="ml-2">
+                            <a routerLink="/trainings" routerLinkActive="active"><b>Sezione Allenamenti</b></a><br>
+                            <span>Accedi come <b>Coach</b> per visualizzare, modificare e controllare le statistiche degli allenamenti dei tuoi atleti, o come <b>Atleta</b> per visualizzare gli allenamenti che i tuoi coach ti hanno assegnato!</span>
+                        </div>  
+                    </div>
+                </li>
+                <li class="my-2 list-group-item list-group-item-action cursor-pointer" (click)="goToSection('exercises')" ngbTooltip="Vai alla sezione Esercizi" placement="top">
+                    <div class="d-flex">
+                        <div class="p-0 d-flex align-items-center justify-content-center">
+                            <img src="assets/icons/sidebar/barbell-primary.svg" style="width:60px; height:auto;">
+                        </div>
+                        <div class="ml-2">
+                            <a routerLink="/exercises" routerLinkActive="active"><b>Sezione Esercizi</b></a><br>
+                            <span>Accedi come <b>Coach</b> per visualizzare e modificare gli esercizi che potrai usare negli allenamenti da te creati, o come <b>Atleta</b> per visualizzare gli esercizi già esistenti!</span>
+                        </div>  
+                    </div>
+                </li>
+                <li class="my-2 list-group-item list-group-item-action cursor-pointer" (click)="goToSection('users')" ngbTooltip="Vai alla sezione Utenti" placement="top">
+                    <div class="d-flex">
+                        <div class="p-0 d-flex align-items-center justify-content-center">
+                            <img src="assets/icons/sidebar/athlete-primary.svg" style="width:60px; height:auto;">
+                        </div>
+                        <div class="ml-2">
+                            <a routerLink="/users" routerLinkActive="active"><b>Sezione Utenti</b></a><br>
+                            <span>Accedi come <b>Coach</b> per visualizzare tutti gli atleti, o come <b>Atleta</b> per visualizzare tutti i coach e inviare richieste di coaching!</span>
+                        </div>  
+                    </div>
+                </li>
+                <li class="my-2 list-group-item list-group-item-action cursor-pointer" (click)="goToSection('userprofile')" ngbTooltip="Vai alla sezione Profilo Utente" placement="top">
+                    <div class="d-flex">
+                        <div class="p-0 d-flex align-items-center justify-content-center">
+                            <img src="assets/icons/sidebar/user-primary.svg" style="width:60px; height:auto;">
+                        </div>
+                        <div class="ml-2">
+                            <a routerLink="/userprofile" routerLinkActive="active"><b>Sezione Profilo Utente</b></a><br>
+                            <span>Accedi alla sezione profilo utente per modificare le impostazioni del profilo!</span>
+                        </div>  
+                    </div>
+                </li>
+            </ul>
         </div>
 
     </div>

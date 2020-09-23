@@ -1,5 +1,9 @@
 .main__homepage {
 
+    .card, .card-header, .card-body{
+        background-color: rgba(0,0,0,0)  !important;
+    }
+
     .homepage__maincontainer {
 
         .maincontainer__header {
@@ -8,7 +12,12 @@
         }
 
         .maincontainer__body {
-            height: 100%;
+            height: calc(100vh - 121px);
+            overflow: auto;
+
+            li {
+                box-shadow: 2px 2px 5px rgba(0,0,0,.5);
+            }
         }
 
     }
