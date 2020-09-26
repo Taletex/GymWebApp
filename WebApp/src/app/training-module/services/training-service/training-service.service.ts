@@ -118,7 +118,7 @@ export class TrainingService {
     " \
     <div class='row m-0 px-3 py-1 border border-left-0 border-right-0 border-top-0'> \
         <div class='col-4 px-0'> \
-            <div><span> " + exercise.name + "(" + exercise.variant.name + ")</span></div> \
+            <div><span> " + exercise.name + " (" + exercise.variant.name + ")</span></div> \
             <div><span> " + exercise.description + "</span></div> \
         </div> \
         <div class='col-8 pr-0'> \
