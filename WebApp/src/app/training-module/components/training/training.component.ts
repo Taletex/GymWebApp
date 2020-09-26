@@ -180,6 +180,7 @@ export class TrainingComponent implements OnInit {
 
           // Re init exercise list
           this.getExercises();
+          this.newExercise = new Exercise();
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
