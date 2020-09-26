@@ -89,33 +89,11 @@ export class TrainingComponent implements OnInit {
           console.log(this.training);
 
           // Init exercise list
-          this.httpService.getExercises()
-          .subscribe(
-            (data: Array<Exercise>) => {
-              this.exerciseList = data;
-              console.log(this.exerciseList);
-              this.bLoading = false;
-            },
-            (error: HttpErrorResponse) => {
-              this.bLoading = false;
-              this.toastr.error('An error occurred while loading the exercise list!');
-              console.log(error.error.message);
-            });
+          this.getExercises();
 
-          // Init athleteList
-          this.httpService.getAthletes()
-          .subscribe(
-            (data: Array<User>) => {
-              this.athleteList = data;
-              console.log(this.athleteList);
-              this.bLoading = false;
-            },
-            (error: HttpErrorResponse) => {
-              this.bLoading = false;
-              this.toastr.error('An error occurred while loading the athlete list!');
-              console.log(error.error.message);
-            });
-          
+          // Init athlete list
+          this.getAthletes();
+
           this.activeWeek = 1;
           this.activeSession = [];
           for(let i=0;i<this.training.weeks.length;i++) {
@@ -157,6 +135,40 @@ export class TrainingComponent implements OnInit {
     this.generalService.setPageStatus(mode, PAGES.TRAININGS);
   }
 
+  getAthletes() {
+    this.bLoading = true;
+
+    this.httpService.getAthletes()
+    .subscribe(
+      (data: Array<User>) => {
+        this.athleteList = data;
+        console.log(this.athleteList);
+        this.bLoading = false;
+      },
+      (error: HttpErrorResponse) => {
+        this.bLoading = false;
+        this.toastr.error('An error occurred while loading the athlete list!');
+        console.log(error.error.message);
+      });
+  }
+
+  getExercises() {
+    this.bLoading = true;
+
+    this.httpService.getExercises()
+    .subscribe(
+      (data: Array<Exercise>) => {
+        this.exerciseList = data;
+        console.log(this.exerciseList);
+        this.bLoading = false;
+      },
+      (error: HttpErrorResponse) => {
+        this.bLoading = false;
+        this.toastr.error('An error occurred while loading the exercise list!');
+        console.log(error.error.message);
+      });
+  }
+
   createExercise() {
     this.bLoading = true;
     this.httpService.createExercise(this.newExercise)
@@ -165,6 +177,9 @@ export class TrainingComponent implements OnInit {
           this.bLoading = false;
           this.assignExercise(data, this.currentExerciseList, this.currentExerciseIndex);
           this.toastr.success('Exercise successfully created!');
+
+          // Re init exercise list
+          this.getExercises();
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
