@@ -65,14 +65,15 @@
                 <div class="col-2"><span>{{elem.bodyWeight}} kg</span></div>
                 <div class="col-2"><span>{{elem.yearsOfExperience}}</span></div>
                 <div class="col-2 d-flex">
-                    <a [routerLink]="['/users', elem._id]" routerLinkActive="active" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></a>
-                    <a [routerLink]="['/users', elem._id]" routerLinkActive="active" class="ml-2 image-button" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></a>
-                    <a *ngIf="account.role == Role.Admin" (click)="deleteUser(elem._id, userIndex)" routerLinkActive="active" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></a>
+                    <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.USERS, elem._id)" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
+                    <!-- <div *ngIf="account.role == Role.Admin" (click)="openPageWithMode(PAGEMODE.WRITE, PAGES.USERS, elem._id)" class="ml-2 image-button" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></div>
+                    <div *ngIf="account.role == Role.Admin" (click)="deleteTraining(elem._id, trainingIndex)" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
+                    -->
                 </div>
             </div>
-            <app-user-modal (onClose)="createUser()" [(newUser)] = "newUser" style="position: absolute; right: 15px; bottom: 15px">
+            <!-- <app-user-modal (onClose)="createUser()" [(newUser)] = "newUser" style="position: absolute; right: 15px; bottom: 15px">
                 <div class="image-button cursor-pointer" ngbTooltip="Nuovo" placement="top"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></div>
-            </app-user-modal>
+            </app-user-modal> -->
         </div>
     </div>
 

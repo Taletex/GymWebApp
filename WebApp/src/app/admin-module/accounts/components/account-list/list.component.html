@@ -12,7 +12,7 @@
     </thead>
     <tbody>
         <tr *ngFor="let account of accounts">
-            <td>{{account.title}} {{account.firstName}} {{account.lastName}}</td>
+            <td>{{account.user.name}} {{account.user.surname}}</td>
             <td>{{account.email}}</td>
             <td>{{account.role}}</td>
             <td style="white-space: nowrap">

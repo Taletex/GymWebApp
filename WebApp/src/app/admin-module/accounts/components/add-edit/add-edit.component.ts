@@ -2,6 +2,7 @@
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
+import * as _ from "lodash";
 
 import { AccountService } from '@app/_services/account-service/account-service.service';
 
@@ -29,9 +30,9 @@ export class AddEditComponent implements OnInit {
         this.isAddMode = !this.id;
 
         this.form = this.formBuilder.group({
-            title: ['', Validators.required],
-            firstName: ['', Validators.required],
-            lastName: ['', Validators.required],
+            userType: ['', Validators.required],
+            name: ['', Validators.required],
+            surname: ['', Validators.required],
             email: ['', [Validators.required, Validators.email]],
             role: ['', Validators.required],
             password: ['', [Validators.minLength(6), this.isAddMode ? Validators.required : Validators.nullValidator]],
@@ -83,7 +84,12 @@ export class AddEditComponent implements OnInit {
     }
 
     private updateAccount() {
-        this.accountService.update(this.id, this.form.value)
+        let formValue = _.cloneDeep(this.form.value);
+        delete formValue.userType;
+        delete formValue.name;
+        delete formValue.surname;
+
+        this.accountService.update(this.id, formValue)
             .pipe(first())
             .subscribe({
                 next: () => {

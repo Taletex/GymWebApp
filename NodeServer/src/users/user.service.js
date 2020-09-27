@@ -13,13 +13,13 @@ exports.createUser = (req, res) => {
     
     // Create a User
     const user = new User({
+        bodyWeight: req.body.bodyWeight,
+        userType: req.body.userType,
+        yearsOfExperience: req.body.yearsOfExperience,
         name: req.body.name,
         surname: req.body.surname,
         dateOfBirth: req.body.dateOfBirth,
         sex: req.body.sex,
-        bodyWeight: req.body.bodyWeight,
-        userType: req.body.userType,
-        yearsOfExperience: req.body.yearsOfExperience,
         contacts: req.body.contacts,
         residence: req.body.residence
     });
@@ -52,6 +52,18 @@ exports.findAllAthlete = (req, res) => {
     User.find()
     .then(users => {
         res.send(_.filter(users, function(user) { return user.userType == "athlete"; }));
+    }).catch(err => {
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving users."
+        });
+    });
+};
+
+// Retrieve and return all users from the database.
+exports.findAllCoaches = (req, res) => {
+    User.find()
+    .then(users => {
+        res.send(_.filter(users, function(user) { return user.userType == "coach"; }));
     }).catch(err => {
         res.status(500).send({
             message: err.message || "Some error occurred while retrieving users."
@@ -92,13 +104,13 @@ exports.updateUser = (req, res) => {
 
     // Find user and update it with the request body
     User.findOneAndUpdate({_id: req.params._id}, {
+        bodyWeight: req.body.bodyWeight,
+        userType: req.body.userType,
+        yearsOfExperience: req.body.yearsOfExperience,
         name: req.body.name,
         surname: req.body.surname,
         dateOfBirth: req.body.dateOfBirth,
         sex: req.body.sex,
-        bodyWeight: req.body.bodyWeight,
-        userType: req.body.userType,
-        yearsOfExperience: req.body.yearsOfExperience,
         contacts: req.body.contacts,
         residence: req.body.residence
     }, {new: true})

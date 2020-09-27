@@ -15,8 +15,11 @@ router.post('/', cors(corsOptions), userService.createUser);
 // Retrieve all User
 router.get('/', cors(corsOptions), userService.findAllUser);
 
-// Retrieve all User
+// Retrieve all Athletes
 router.get('/athletes', cors(corsOptions), userService.findAllAthlete);
+
+// Retrieve all Coaches
+router.get('/coaches', cors(corsOptions), userService.findAllCoaches);
 
 // Retrieve a single User with id
 router.get('/:_id', cors(corsOptions), userService.findOneUser);

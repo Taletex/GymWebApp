@@ -23,7 +23,7 @@ module.exports = {
 };
 
 async function authenticate({ email, password, ipAddress }) {
-    const account = await db.Account.findOne({ email });
+    const account = await db.Account.findOne({ email }).populate('user');
 
     if (!account || !account.isVerified || !bcrypt.compareSync(password, account.passwordHash)) {
         throw 'Email or password is incorrect';
@@ -76,14 +76,41 @@ async function revokeToken({ token, ipAddress }) {
     await refreshToken.save();
 }
 
+// When register the account, creates also the associated user
 async function register(params, origin) {
     // validate
-    if (await db.Account.findOne({ email: params.email })) {
+    if (await db.Account.findOne({ email: params.email }).populate('user')) {
         // send already registered error in email to prevent account enumeration
         return await sendAlreadyRegisteredEmail(params.email, origin);
     }
 
+    // create user object to be associated to the account object
+    const user = new db.User({
+        bodyWeight: 0,
+        userType: params.userType,
+        yearsOfExperience: 0,
+        name: params.name,
+        surname: params.surname,
+        dateOfBirth: new Date(),
+        sex: "M",
+        contacts: new db.Contacts({email: params.email, telephone: ''}),
+        residence: new db.Residence({state: '', city: '', address: ''})
+    });
+
+    const data = await user.save()
+
     // create account object
+    delete params.bodyWeight;
+    delete params.userType;
+    delete params.yearsOfExperience;
+    delete params.name;
+    delete params.surname;
+    delete params.dateOfBirth;
+    delete params.sex;
+    delete params.contacts;
+    delete params.residence;
+    params.user = data._id;
+
     const account = new db.Account(params);
 
     // first registered account is an admin
@@ -102,7 +129,7 @@ async function register(params, origin) {
 }
 
 async function verifyEmail({ token }) {
-    const account = await db.Account.findOne({ verificationToken: token });
+    const account = await db.Account.findOne({ verificationToken: token }).populate('user');
 
     if (!account) throw 'Verification failed';
 
@@ -112,7 +139,7 @@ async function verifyEmail({ token }) {
 }
 
 async function forgotPassword({ email }, origin) {
-    const account = await db.Account.findOne({ email });
+    const account = await db.Account.findOne({ email }).populate('user');
 
     // always return ok response to prevent email enumeration
     if (!account) return;
@@ -132,7 +159,7 @@ async function validateResetToken({ token }) {
     const account = await db.Account.findOne({
         'resetToken.token': token,
         'resetToken.expires': { $gt: Date.now() }
-    });
+    }).populate('user');
 
     if (!account) throw 'Invalid token';
 }
@@ -141,7 +168,7 @@ async function resetPassword({ token, password }) {
     const account = await db.Account.findOne({
         'resetToken.token': token,
         'resetToken.expires': { $gt: Date.now() }
-    });
+    }).populate('user');
 
     if (!account) throw 'Invalid token';
 
@@ -153,7 +180,7 @@ async function resetPassword({ token, password }) {
 }
 
 async function getAll() {
-    const accounts = await db.Account.find();
+    const accounts = await db.Account.find().populate('user');
     return accounts.map(x => basicDetails(x));
 }
 
@@ -164,7 +191,7 @@ async function getById(id) {
 
 async function create(params) {
     // validate
-    if (await db.Account.findOne({ email: params.email })) {
+    if (await db.Account.findOne({ email: params.email }).populate('user')) {
         throw 'Email "' + params.email + '" is already registered';
     }
 
@@ -184,7 +211,7 @@ async function update(id, params) {
     const account = await getAccount(id);
 
     // validate
-    if (account.email !== params.email && await db.Account.findOne({ email: params.email })) {
+    if (account.email !== params.email && await db.Account.findOne({ email: params.email }).populate('user')) {
         throw 'Email "' + params.email + '" is already taken';
     }
 
@@ -210,13 +237,13 @@ async function _delete(id) {
 
 async function getAccount(id) {
     if (!db.isValidId(id)) throw 'Account not found';
-    const account = await db.Account.findById(id);
+    const account = await db.Account.findById(id).populate('user');
     if (!account) throw 'Account not found';
     return account;
 }
 
 async function getRefreshToken(token) {
-    const refreshToken = await db.RefreshToken.findOne({ token }).populate('account');
+    const refreshToken = await db.RefreshToken.findOne({ token }).populate({path: 'account', populate: { path: 'user' }});
     if (!refreshToken || !refreshToken.isActive) throw 'Invalid token';
     return refreshToken;
 }
@@ -245,8 +272,8 @@ function randomTokenString() {
 }
 
 function basicDetails(account) {
-    const { id, title, firstName, lastName, email, role, created, updated, isVerified } = account;
-    return { id, title, firstName, lastName, email, role, created, updated, isVerified };
+    const { id, email, role, created, updated, isVerified, user } = account;
+    return { id, email, role, created, updated, isVerified, user };
 }
 
 async function sendVerificationEmail(account, origin) {

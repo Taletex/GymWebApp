@@ -47,13 +47,10 @@ paths:
                   id:
                     type: string
                     example: "5eb12e197e06a76ccdefc121"
-                  title:
-                    type: string
-                    example: "Mr"
-                  firstName:
+                  name:
                     type: string
                     example: "Jason"
-                  lastName:
+                  surname:
                     type: string
                     example: "Watmore"
                   email:
@@ -110,13 +107,10 @@ paths:
                   id:
                     type: string
                     example: "5eb12e197e06a76ccdefc121"
-                  title:
-                    type: string
-                    example: "Mr"
-                  firstName:
+                  name:
                     type: string
                     example: "Jason"
-                  lastName:
+                  surname:
                     type: string
                     example: "Watmore"
                   email:
@@ -202,13 +196,10 @@ paths:
             schema:
               type: object
               properties:
-                title:
-                  type: string
-                  example: "Mr"
-                firstName:
+                name:
                   type: string
                   example: "Jason"
-                lastName:
+                surname:
                   type: string
                   example: "Watmore"
                 email:
@@ -223,9 +214,8 @@ paths:
                 acceptTerms:
                   type: boolean
               required:
-                - title
-                - firstName
-                - lastName
+                - name
+                - surname
                 - email
                 - password
                 - confirmPassword
@@ -407,13 +397,10 @@ paths:
                     id:
                       type: string
                       example: "5eb12e197e06a76ccdefc121"
-                    title:
-                      type: string
-                      example: "Mr"
-                    firstName:
+                    name:
                       type: string
                       example: "Jason"
-                    lastName:
+                    surname:
                       type: string
                       example: "Watmore"
                     email:
@@ -443,13 +430,10 @@ paths:
             schema:
               type: object
               properties:
-                title:
-                  type: string
-                  example: "Mr"
-                firstName:
+                name:
                   type: string
                   example: "Jason"
-                lastName:
+                surname:
                   type: string
                   example: "Watmore"
                 email:
@@ -465,9 +449,8 @@ paths:
                   type: string
                   enum: [Admin, User]
               required:
-                - title
-                - firstName
-                - lastName
+                - name
+                - surname
                 - email
                 - password
                 - confirmPassword
@@ -483,13 +466,10 @@ paths:
                   id:
                     type: string
                     example: "5eb12e197e06a76ccdefc121"
-                  title:
-                    type: string
-                    example: "Mr"
-                  firstName:
+                  name:
                     type: string
                     example: "Jason"
-                  lastName:
+                  surname:
                     type: string
                     example: "Watmore"
                   email:
@@ -539,13 +519,10 @@ paths:
                   id:
                     type: string
                     example: "5eb12e197e06a76ccdefc121"
-                  title:
-                    type: string
-                    example: "Mr"
-                  firstName:
+                  name:
                     type: string
                     example: "Jason"
-                  lastName:
+                  surname:
                     type: string
                     example: "Watmore"
                   email:
@@ -577,13 +554,10 @@ paths:
             schema:
               type: object
               properties:
-                title:
-                  type: string
-                  example: "Mr"
-                firstName:
+                name:
                   type: string
                   example: "Jason"
-                lastName:
+                surname:
                   type: string
                   example: "Watmore"
                 email:
@@ -609,13 +583,10 @@ paths:
                   id:
                     type: string
                     example: "5eb12e197e06a76ccdefc121"
-                  title:
-                    type: string
-                    example: "Mr"
-                  firstName:
+                  name:
                     type: string
                     example: "Jason"
-                  lastName:
+                  surname:
                     type: string
                     example: "Watmore"
                   email:

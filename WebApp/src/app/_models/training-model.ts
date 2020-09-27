@@ -29,7 +29,7 @@ export class User {
     dateOfBirth: Date;
     sex: string;
     bodyWeight: number;
-    userType: string;
+    userType: string;           // athlete, coach, both
     yearsOfExperience: number;
     contacts: Contacts;
     residence: Residence;

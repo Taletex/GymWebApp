@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { Account, Role } from '@app/_models';
 import { AccountService } from '@app/_services/account-service/account-service.service';
+import { GeneralService, PAGEMODE, PAGES } from '@app/_services/general-service/general-service.service';
 
 @Component({
   selector: 'app-users',
@@ -16,21 +17,44 @@ export class UsersComponent implements OnInit {
   public userList: Array<User> = [];
   public filters: any = {};
   public bLoading: boolean = false;
+  public PAGEMODE = PAGEMODE;
+  public PAGES = PAGES;
   public newUser: User = new User();
   public account: Account;
   public Role = Role;
 
-  constructor(private router: Router, private accountService: AccountService, private httpService: HttpService, private toastr: ToastrService) {
+  constructor(private router: Router, private accountService: AccountService, private httpService: HttpService, private toastr: ToastrService, public generalService: GeneralService) {
     this.filters = { name: '', surname: '', dateOfBirth: '', sex: '', bodyWeight: '', yearsOfExperience: ''};
     this.accountService.account.subscribe(x => this.account = x);
     
-    this.getUsers();
+    // TODO: Improvement. Settare una preferenza da salvare nel browser che deifnisce l'attuale ruolo dell'account
+    switch(this.account.user.userType) {
+      case 'coach': {
+        this.getAthletes();
+        break;
+      }
+      case 'athlete': {
+        this.getCoaches();
+        break;
+      }
+      case 'both': {
+        this.getUsers();
+        break;
+      }
+        
+    }
   }
 
   ngOnInit() {}
 
+  // From services
+  openPageWithMode(mode: PAGEMODE, page: PAGES, id: string) {
+    this.generalService.openPageWithMode(mode, page, id);
+  } 
+
   getUsers() {
     this.bLoading = true;
+
     this.httpService.getUsers()
       .subscribe(
         (data: any) => {
@@ -44,8 +68,42 @@ export class UsersComponent implements OnInit {
           console.log(error.error.message);
         });
   }
+
+  getAthletes() {
+    this.bLoading = true;
+
+    this.httpService.getAthletes()
+    .subscribe(
+      (data: Array<User>) => {
+        this.userList = data;
+        console.log(this.userList);
+        this.bLoading = false;
+      },
+      (error: HttpErrorResponse) => {
+        this.bLoading = false;
+        this.toastr.error('An error occurred while loading the athlete list!');
+        console.log(error.error.message);
+      });
+  }
+
+  getCoaches() {
+    this.bLoading = true;
+
+    this.httpService.getCoaches()
+    .subscribe(
+      (data: Array<User>) => {
+        this.userList = data;
+        console.log(this.userList);
+        this.bLoading = false;
+      },
+      (error: HttpErrorResponse) => {
+        this.bLoading = false;
+        this.toastr.error('An error occurred while loading the coach list!');
+        console.log(error.error.message);
+      });
+  }
   
-  createUser() {
+  /* createUser() {
     this.bLoading = true;
     this.httpService.createUser(this.newUser)
       .subscribe(
@@ -59,9 +117,9 @@ export class UsersComponent implements OnInit {
           this.toastr.error('An error occurred while creating the user!');
           console.log(error.error.message);
         });
-  }
+  } */
 
-  deleteUser(id: string, index: number) {
+  /* deleteUser(id: string, index: number) {
     this.bLoading = true;
     this.httpService.deleteUser(id)
       .subscribe(
@@ -75,6 +133,6 @@ export class UsersComponent implements OnInit {
           this.toastr.error('An error occurred while deleting the user!');
           console.log(error.error.message);
         });
-  }
+  } */
 
 }

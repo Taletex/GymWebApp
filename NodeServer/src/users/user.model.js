@@ -12,18 +12,19 @@ const ResidenceSchema = mongoose.Schema({
 }, { _id: false})
 
 const UserSchema = mongoose.Schema({
-    name: String,
-    surname: String,
-    dateOfBirth: Date,
-    sex: String,
+    name: { type: String, required: true },
+    surname: { type: String, required: true },
+    dateOfBirth: { type: Date, required: false },
+    sex: { type: String, required: false },
+    contacts: { type: ContactsSchema, required: false },
+    residence: { type: ResidenceSchema, required: false },
+    userType: { type: String, required: true },             // athlete, coach, both
     bodyWeight: Number,
-    userType: String,
-    yearsOfExperience: Number,
-    contacts: ContactsSchema,
-    residence: ResidenceSchema
-}, {
-    timestamps: true
+    yearsOfExperience: Number
 });
 
 const userSchema =  mongoose.model('User', UserSchema);
-module.exports = {User: userSchema, UserSchema: UserSchema};
+const contactsSchema = mongoose.model('Contacts', ContactsSchema);
+const residenceSchema = mongoose.model('Residence', ResidenceSchema);
+
+module.exports = {User: userSchema, UserSchema: UserSchema, Contacts: contactsSchema, ContactsSchema: ContactsSchema, Residence: residenceSchema, ResidenceSchema: ResidenceSchema};

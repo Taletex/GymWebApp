@@ -6,6 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { Account, Role } from '@app/_models';
+import { GeneralService, PAGEMODE, PAGES, PageStatus } from '@app/_services/general-service/general-service.service';
 
 @Component({
   selector: 'app-user',
@@ -15,11 +16,15 @@ import { Account, Role } from '@app/_models';
 export class UserComponent implements OnInit {
 
   public bLoading: boolean = false;
+  public PAGEMODE = PAGEMODE;
+  public PAGES = PAGES;
+  public pageStatus: PageStatus = new PageStatus();
+
   public user: User = new User();
   public account: Account;
   public Role = Role;
 
-  constructor(private router: Router, private accountService: AccountService, private httpService: HttpService, private toastr: ToastrService) {
+  constructor(private generalService: GeneralService, private router: Router, private accountService: AccountService, private httpService: HttpService, private toastr: ToastrService) {
     let userId = (this.router.url).split('/')[2];
     this.bLoading = true;
     this.accountService.account.subscribe(x => this.account = x);
@@ -30,6 +35,9 @@ export class UserComponent implements OnInit {
           this.user = data;
           this.bLoading = false;
           console.log(this.user);
+
+          this.pageStatus = this.generalService.getPageStatus();
+          console.log(this.pageStatus);
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
@@ -39,6 +47,11 @@ export class UserComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  changeMode(mode: PAGEMODE) {
+    this.pageStatus[PAGES.USERS] = mode;
+    this.generalService.setPageStatus(mode, PAGES.USERS);
   }
 
   saveUser() {

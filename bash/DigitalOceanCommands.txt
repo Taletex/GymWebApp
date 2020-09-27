@@ -1,5 +1,5 @@
 https://cloud.digitalocean.com/droplets/208667120/graphs?i=73e048&period=hour&preserveScrollPosition=true
-tutorial base: https://marketplace.digitalocean.com/apps/nodejs?ipAddress=139.59.153.56#getting-started
+tutorial base: https://marketplace.digitalocean.com/apps/nodejs?ipAddress=localhost#getting-started
 
 Comandi
 - Connessione: ssh root@139.59.153.56
@@ -21,12 +21,12 @@ WebApp (posizionati dentro la webapp)
 
 How to avviare Su Digital Ocean:
 - Connessione da terminale: 
-   + ssh root@139.59.153.56
+   + ssh root@localhost
    + Mettere la password
 - Update repo:
    + cd GymWebApp
    + git pull
-- Cambiare le porte e gli indirizzi nei 3 file di configurazione: configs.json (nella webapp), config.json (nel server), environment.ts (nella webapp, è l'indirizzo del server). Il db lascia "localhost", per gli altri metti tutti 139.59.153.56, porta del server 4000, porta del client 1738.
+- Cambiare le porte e gli indirizzi nei 3 file di configurazione: configs.json (nella webapp), config.json (nel server), environment.ts (nella webapp, è l'indirizzo del server). Il db lascia "localhost", per gli altri metti tutti localhost, porta del server 4000, porta del client 1738.
 - Avviare con pm2:
   + cd root
   + cd GymWebApp
@@ -40,6 +40,10 @@ How to avviare Su Digital Ocean:
 
 Aspettare che viene buildata l'app angular e accedere
 
+
+
+Come buildare e deployare l'app angular sul server digital ocean:
+https://grokonez.com/frontend/angular/angular-deployment/how-to-deploy-angular-on-nginx-remote-server-example-use-vultr-vps-hosting#Build_Angular_Client
 
 
 

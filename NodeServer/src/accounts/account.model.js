@@ -4,11 +4,8 @@ const Schema = mongoose.Schema;
 const schema = new Schema({
     email: { type: String, unique: true, required: true },
     passwordHash: { type: String, required: true },
-    title: { type: String, required: true },
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
-    acceptTerms: Boolean,
     role: { type: String, required: true },
+    acceptTerms: Boolean,
     verificationToken: String,
     verified: Date,
     resetToken: {
@@ -17,7 +14,12 @@ const schema = new Schema({
     },
     passwordReset: Date,
     created: { type: Date, default: Date.now },
-    updated: Date
+    updated: Date,
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }
 });
 
 schema.virtual('isVerified').get(function () {

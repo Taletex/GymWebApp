@@ -13,7 +13,7 @@
       </h4>
       <div class="account-info">
           <div class="input-group-prepend">
-            <span class="input-group-text rounded-left bg-light" id="user-info">{{account.firstName}} {{account.lastName}}</span>
+            <span class="input-group-text rounded-left bg-light" id="user-info">{{account.user.name}} {{account.user.surname}}</span>
           </div>
           <button class="btn btn-sm btn-primary rounded-right" style="border-radius: 0px 3px 3px 0px;" id="logout-button" aria-describedby="user-info" (click)="logout()">Logout <img src="assets/icons/misc/logout.svg" style="height:15px; width:auto;" class="ml-1"></button>
       </div>

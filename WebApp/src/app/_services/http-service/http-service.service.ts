@@ -88,6 +88,10 @@ export class HttpService {
     return this.http.get<any>(this.baseServerUrl + "/users/athletes");
   }
 
+  getCoaches(): Observable<any> {
+    return this.http.get<any>(this.baseServerUrl + "/users/coaches");
+  }
+
   /* USER CRUD */
   createUser(user: User): Observable<any> {
     return this.http.post<any>(this.baseServerUrl + "/users", user);

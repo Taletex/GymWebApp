@@ -32,7 +32,11 @@
                 class="sidebar__element link-button w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
                 [ngClass]="{'active': bActiveList.users}">
                 <img src="assets/icons/sidebar/athlete.svg" style="width:24px; height:auto;" class="ml-1 mr-2">
-                <span [hidden]="!bExpandedSidebar">Utenti</span>
+                <span [hidden]="!bExpandedSidebar">
+                    <span [hidden]="account.user.userType != 'both'">Utenti</span>
+                    <span [hidden]="account.user.userType != 'athlete'">Coach</span>
+                    <span [hidden]="account.user.userType != 'coach'">Atleti</span>
+                </span>
             </a>
             <a routerLink="/userprofile" routerLinkActive="active"
                 class="sidebar__element link-button w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
