@@ -239,16 +239,20 @@
                                                             class="form-control form-control-sm" id="peso_{{exerciseIndex}}_{{seriesIndex}}"
                                                             name="peso_{{exerciseIndex}}_{{seriesIndex}}" placeholder="Peso...">
                                                     </div>
-                                                    <div class="col-2 form-group">
-                                                        <label for="misura_{{exerciseIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
+                                                    <div class="col-2 d-flex">
+                                                        <div class="form-group">
+                                                            <label for="misura_{{exerciseIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
                                                             [hidden]="!seriesFirst">Misura</label>
-                                                        <select [(ngModel)]="elem.measure" class="form-control form-control-sm"
-                                                            id="misuraSelect_{{exerciseIndex}}_{{seriesIndex}}"
-                                                            name="misuraSelect_{{exerciseIndex}}_{{seriesIndex}}">
-                                                            <option [value]="'kg'">kg</option>
-                                                            <option [value]="'lbs'">lbs</option>
-                                                            <option [value]="'%'">% RM</option>
-                                                        </select>
+                                                            <select [(ngModel)]="elem.measure" class="form-control form-control-sm"
+                                                                id="misuraSelect_{{exerciseIndex}}_{{seriesIndex}}"
+                                                                name="misuraSelect_{{exerciseIndex}}_{{seriesIndex}}">
+                                                                <option [value]="'kg'">kg</option>
+                                                                <option [value]="'lbs'">lbs</option>
+                                                                <option [value]="'%'">% RM</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="image-button ml-1" [ngClass]="{'d-flex align-items mt-3': seriesFirst}" ngbTooltip="Applica misura a tutta la sessione" placement="top" (click)="setSessionMeasure(session, elem.measure)"><img src="assets/icons/actions/copy-secondary.svg" style="width:15px; height:auto;"></div>
+                                                        <div class="image-button ml-1" [ngClass]="{'d-flex align-items mt-3': seriesFirst}" ngbTooltip="Applica misura a tutto l'esercizio" placement="top" (click)="setExerciseMeasure(exercise, elem.measure)"><img src="assets/icons/actions/copy-secondary.svg" style="width:15px; height:auto;"></div>
                                                     </div>
                                                     <div class="col-2 form-group">
                                                         <label for="rest_{{exerciseIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"

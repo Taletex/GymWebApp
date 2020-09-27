@@ -451,4 +451,18 @@ export class TrainingComponent implements OnInit {
     
     tinymce.activeEditor.execCommand('mcePrint');
   }
+
+  setSessionMeasure(session: Session, measure: string) {
+    for(let i=0; i<session.exercises.length; i++) {
+      for(let j=0; j<session.exercises[i].series.length; j++) {
+        session.exercises[i].series[j].measure = measure;
+      }
+    }
+  }
+
+  setExerciseMeasure(exercise: Exercise, measure: string) {
+    for(let i=0; i<exercise.series.length; i++) {
+      exercise.series[i].measure = measure;
+    }
+  }
 }
