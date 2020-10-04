@@ -48,7 +48,7 @@ export class UsersComponent implements OnInit {
   ngOnInit() {}
 
   // From services
-  openPageWithMode(mode: PAGEMODE, page: PAGES, id: string) {
+  openPageWithMode(mode: PAGEMODE, page: PAGES, id?: string) {
     this.generalService.openPageWithMode(mode, page, id);
   } 
 

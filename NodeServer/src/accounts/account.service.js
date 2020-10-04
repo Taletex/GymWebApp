@@ -195,6 +195,33 @@ async function create(params) {
         throw 'Email "' + params.email + '" is already registered';
     }
 
+    // create user object to be associated to the account object
+    const user = new db.User({
+        bodyWeight: 0,
+        userType: params.userType,
+        yearsOfExperience: 0,
+        name: params.name,
+        surname: params.surname,
+        dateOfBirth: new Date(),
+        sex: "M",
+        contacts: new db.Contacts({email: params.email, telephone: ''}),
+        residence: new db.Residence({state: '', city: '', address: ''})
+    });
+
+    const data = await user.save()
+
+    // create account object
+    delete params.bodyWeight;
+    delete params.userType;
+    delete params.yearsOfExperience;
+    delete params.name;
+    delete params.surname;
+    delete params.dateOfBirth;
+    delete params.sex;
+    delete params.contacts;
+    delete params.residence;
+    params.user = data._id;
+
     const account = new db.Account(params);
     account.verified = Date.now();
 

@@ -13,7 +13,7 @@
                     <div class="input-group-prepend"><span class="input-group-text">ACTIONS</span></div>
                     <div class="d-flex align-items-center form-control">
                         <div (click)="changeMode(PAGEMODE.READONLY)" class="inverse-image-button" [ngClass]="{'active': pageStatus[PAGES.USERS] == PAGEMODE.READONLY}"  ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
-                        <!-- <div *ngIf="account.role == Role.Admin" (click)="changeMode(PAGEMODE.WRITE)" class="ml-2 inverse-image-button" [ngClass]="{'active': pageStatus[PAGES.TRAININGS] == PAGEMODE.WRITE}"  ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></div> -->
+                        <!-- <div *ngIf="account.role == Role.Admin" (click)="changeMode(PAGEMODE.WRITE)" class="ml-2 inverse-image-button" [ngClass]="{'active': pageStatus[PAGES.USERS] == PAGEMODE.WRITE}"  ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></div> -->
                     </div>
                 </div>
             </div>
@@ -24,68 +24,70 @@
                 <div class="form-row m-0">
                     <div class="col-2 form-group">
                         <label for="userName" class="col-form-label col-form-label-sm text-muted">Nome</label>
-                        <input type="text" required [(ngModel)]="user.name" class="form-control form-control-sm"
-                            id="userName" name="userName" [attr.disabled]="pageStatus[PAGES.USERS] == PAGEMODE.READONLY" >
+                        <input type="text" required [(ngModel)]="user.name" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                            id="userName" name="userName" [attr.disabled]="pageStatus[PAGES.USERS] == PAGEMODE.READONLY">
                     </div>
                     <div class="col-2 form-group">
                         <label for="userSurname" class="col-form-label col-form-label-sm text-muted">Cognome</label>
-                        <input type="text" required [(ngModel)]="user.surname" class="form-control form-control-sm"
-                            id="userSurname" name="userSurname" [attr.disabled]="pageStatus[PAGES.USERS] == PAGEMODE.READONLY" >
+                        <input type="text" required [(ngModel)]="user.surname" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                            id="userSurname" name="userSurname" [attr.disabled]="pageStatus[PAGES.USERS] == PAGEMODE.READONLY">
                     </div>
                     <div class="col-2 form-group">
                         <label for="userDoB" class="col-form-label col-form-label-sm text-muted">DoB</label>
-                        <input type="date" required [(ngModel)]="user.dateOfBirth" class="form-control form-control-sm"
-                            id="userDoB" name="userDoB" [attr.disabled]="pageStatus[PAGES.USERS] == PAGEMODE.READONLY" >
+                        <input type="date" required [(ngModel)]="user.dateOfBirth" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                            id="userDoB" name="userDoB" [attr.disabled]="pageStatus[PAGES.USERS] == PAGEMODE.READONLY">
                     </div>
                     <div class="col-2 form-group">
                         <label for="userSex" class="col-form-label col-form-label-sm text-muted">Sesso</label>
-                        <select [(ngModel)]="user.sex" class="form-control form-control-sm cursor-pointer" id="userSex" name="userSex" [attr.disabled]="pageStatus[PAGES.USERS] == PAGEMODE.READONLY" >
+                        <select [(ngModel)]="user.sex" class="form-control form-control-sm cursor-pointer" id="userSex" name="userSex" [attr.disabled]="pageStatus[PAGES.USERS] == PAGEMODE.READONLY"
+                        [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}">
                             <option [value]="'M'">Uomo</option>
                             <option [value]="'F'">Donna</option>
                         </select>
                     </div>
                     <div class="col-2 form-group">
-                        <label for="userBw" class="col-form-label col-form-label-sm text-muted">Body Weight</label>
-                        <input type="number" min=10 max=500 [(ngModel)]="user.bodyWeight" class="form-control form-control-sm"
-                            id="userBw" name="userBw" [attr.disabled]="pageStatus[PAGES.USERS] == PAGEMODE.READONLY" >
-                    </div>
-                    <div class="col-2 form-group">
                         <label for="userType" class="col-form-label col-form-label-sm text-muted">Tipo</label>
-                        <select [(ngModel)]="user.userType" required class="form-control form-control-sm cursor-pointer" id="userType" name="userType" [attr.disabled]="pageStatus[PAGES.USERS] == PAGEMODE.READONLY" >
+                        <select [(ngModel)]="user.userType" required class="form-control form-control-sm cursor-pointer" id="userType" name="userType" [attr.disabled]="pageStatus[PAGES.USERS] == PAGEMODE.READONLY"
+                        [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}">
                             <option [value]="'athlete'">Atleta</option>
                             <option [value]="'coach'">Coach</option>
                             <option [value]="'both'">Both</option>
                         </select>
                     </div>
                     <div class="col-2 form-group">
+                        <label for="userBw" class="col-form-label col-form-label-sm text-muted">Body Weight</label>
+                        <input type="number" min=10 max=500 [(ngModel)]="user.bodyWeight" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                            id="userBw" name="userBw" [attr.disabled]="pageStatus[PAGES.USERS] == PAGEMODE.READONLY">
+                    </div>
+                    <div class="col-2 form-group">
                         <label for="userYearsOfExperience" class="col-form-label col-form-label-sm text-muted">Esperienza (anni)</label>
-                        <input type="number" min=0 max=100 [(ngModel)]="user.yearsOfExperience" class="form-control form-control-sm"
-                            id="userYearsOfExperience" name="userYearsOfExperience" [attr.disabled]="pageStatus[PAGES.USERS] == PAGEMODE.READONLY" >
+                        <input type="number" min=0 max=100 [(ngModel)]="user.yearsOfExperience" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                            id="userYearsOfExperience" name="userYearsOfExperience" [attr.disabled]="pageStatus[PAGES.USERS] == PAGEMODE.READONLY">
                     </div>
                     <div class="col-2 form-group">
                         <label for="userContactsEmail" class="col-form-label col-form-label-sm text-muted">Email</label>
-                        <input type="email" [(ngModel)]="user.contacts.email" class="form-control form-control-sm"
-                            id="userContactsEmail" name="userContactsEmail" [attr.disabled]="pageStatus[PAGES.USERS] == PAGEMODE.READONLY" >
+                        <input type="email" [(ngModel)]="user.contacts.email" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                            id="userContactsEmail" name="userContactsEmail" [attr.disabled]="pageStatus[PAGES.USERS] == PAGEMODE.READONLY">
                     </div>
                     <div class="col-2 form-group">
                         <label for="userContactsTelephone" class="col-form-label col-form-label-sm text-muted">Telefono</label>
-                        <input type="tel" required [(ngModel)]="user.contacts.telephone" class="form-control form-control-sm"
-                            id="userContactsTelephone" name="userContactsTelephone" [attr.disabled]="pageStatus[PAGES.USERS] == PAGEMODE.READONLY" >
+                        <input type="tel" required [(ngModel)]="user.contacts.telephone" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                            id="userContactsTelephone" name="userContactsTelephone" [attr.disabled]="pageStatus[PAGES.USERS] == PAGEMODE.READONLY">
                     </div>
                     <div class="col-2 form-group">
                         <label for="userResidenceState" class="col-form-label col-form-label-sm text-muted">Stato</label>
-                        <input type="text" [(ngModel)]="user.residence.state" class="form-control form-control-sm"
-                            id="userResidenceState" name="userResidenceState" [attr.disabled]="pageStatus[PAGES.USERS] == PAGEMODE.READONLY" >
+                        <input type="text" [(ngModel)]="user.residence.state" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                            id="userResidenceState" name="userResidenceState" [attr.disabled]="pageStatus[PAGES.USERS] == PAGEMODE.READONLY">
                     </div>
                     <div class="col-2 form-group">
                         <label for="userResidenceCity" class="col-form-label col-form-label-sm text-muted">Città</label>
-                        <input type="text" [(ngModel)]="user.residence.city" class="form-control form-control-sm"
-                            id="userResidenceCity" name="userResidenceCity" [attr.disabled]="pageStatus[PAGES.USERS] == PAGEMODE.READONLY" >
+                        <input type="text" [(ngModel)]="user.residence.city" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                            id="userResidenceCity" name="userResidenceCity" [attr.disabled]="pageStatus[PAGES.USERS] == PAGEMODE.READONLY">
                     </div>
                     <div class="col-2 form-group">
                         <label for="userResidenceAddress" class="col-form-label col-form-label-sm text-muted">Indirizzo</label>
-                        <input type="text" [(ngModel)]="user.residence.address" class="form-control form-control-sm"
-                            id="userResidenceAddress" name="userResidenceAddress" [attr.disabled]="pageStatus[PAGES.USERS] == PAGEMODE.READONLY" >
+                        <input type="text" [(ngModel)]="user.residence.address" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                            id="userResidenceAddress" name="userResidenceAddress" [attr.disabled]="pageStatus[PAGES.USERS] == PAGEMODE.READONLY">
                     </div>
                 </div>
             </form>

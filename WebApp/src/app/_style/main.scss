@@ -307,6 +307,13 @@ $menu-blue: #0f1042e6;
 }
 
 /* BORDER STYLE */
+.border-bottom-only {
+  border-left: 0px !important;
+  border-top: 0px !important;
+  border-right: 0px !important;
+  border-radius: 0px !important;
+}
+
 // Border radius
 @for $i from 0 through 9 {
   .round-#{$i} {

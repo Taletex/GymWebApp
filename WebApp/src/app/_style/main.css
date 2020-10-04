@@ -511,6 +511,13 @@
 }
 
 /* BORDER STYLE */
+.border-bottom-only {
+  border-left: 0px !important;
+  border-top: 0px !important;
+  border-right: 0px !important;
+  border-radius: 0px !important;
+}
+
 .round-0 {
   border-radius: 0px !important;
 }

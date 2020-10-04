@@ -172,6 +172,11 @@ function getById(req, res, next) {
 
 function createSchema(req, res, next) {
     const schema = Joi.object({
+        name: Joi.string().required(),                  // user info
+        surname: Joi.string().required(),               // user info
+        userType: Joi.string().required(),              // user info
+        // dateOfBirth: Joi.date().required(),             // user info
+        // sex: Joi.string(),                              // user info
         email: Joi.string().email().required(),
         password: Joi.string().min(6).required(),
         confirmPassword: Joi.string().valid(Joi.ref('password')).required(),

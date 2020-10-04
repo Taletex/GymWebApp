@@ -3,18 +3,23 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import * as _ from "lodash";
+import * as moment from "moment";
 
 import { AccountService } from '@app/_services/account-service/account-service.service';
 
 import { MustMatch } from '@app/_helpers';
 import { ToastrService } from 'ngx-toastr';
+import { Contacts, Residence, User } from '@app/_models/training-model';
+import { HttpService } from '@app/_services/http-service/http-service.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({ templateUrl: 'add-edit.component.html' })
 export class AddEditComponent implements OnInit {
     form: FormGroup;
     id: string;
+    userId: string;
     isAddMode: boolean;
-    loading = false;
+    bLoading = false;
     submitted = false;
 
     constructor(
@@ -22,7 +27,8 @@ export class AddEditComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private accountService: AccountService,
-        private toastr: ToastrService
+        private toastr: ToastrService,
+        private httpService: HttpService
     ) {}
 
     ngOnInit() {
@@ -30,9 +36,18 @@ export class AddEditComponent implements OnInit {
         this.isAddMode = !this.id;
 
         this.form = this.formBuilder.group({
-            userType: ['', Validators.required],
             name: ['', Validators.required],
             surname: ['', Validators.required],
+            dateOfBirth: [''],
+            sex: [''],
+            userType: ['', Validators.required],
+            bodyWeight: [''],
+            yearsOfExperience: [''],
+            userEmail: ['', Validators.email],
+            telephone: [''],
+            residenceState: [''],
+            residenceCity: [''],
+            residenceAddress: [''],
             email: ['', [Validators.required, Validators.email]],
             role: ['', Validators.required],
             password: ['', [Validators.minLength(6), this.isAddMode ? Validators.required : Validators.nullValidator]],
@@ -44,7 +59,28 @@ export class AddEditComponent implements OnInit {
         if (!this.isAddMode) {
             this.accountService.getById(this.id)
                 .pipe(first())
-                .subscribe(x => this.form.patchValue(x));
+                .subscribe(x => 
+                    {
+                        this.form.patchValue(
+                        {
+                            name: x.user.name,
+                            surname: x.user.surname,
+                            dateOfBirth: moment(x.user.dateOfBirth).format('yyyy-MM-DD'),
+                            sex: x.user.sex,
+                            userType: x.user.userType,
+                            bodyWeight: x.user.bodyWeight,
+                            yearsOfExperience: x.user.yearsOfExperience,
+                            userEmail: x.user.contacts.email,
+                            telephone: x.user.contacts.telephone,
+                            residenceState: x.user.residence.state,
+                            residenceCity: x.user.residence.city,
+                            residenceAddress: x.user.residence.address,
+                            email: x.email,
+                            role: x.role
+                        });
+                        this.userId = x.user._id;
+                    }
+                );
         }
     }
 
@@ -59,7 +95,7 @@ export class AddEditComponent implements OnInit {
             return;
         }
 
-        this.loading = true;
+        this.bLoading = true;
         if (this.isAddMode) {
             this.createAccount();
         } else {
@@ -78,28 +114,43 @@ export class AddEditComponent implements OnInit {
                 },
                 error: error => {
                     this.toastr.error(error);
-                    this.loading = false;
+                    this.bLoading = false;
                 }
             });
     }
 
     private updateAccount() {
-        let formValue = _.cloneDeep(this.form.value);
-        delete formValue.userType;
-        delete formValue.name;
-        delete formValue.surname;
+        // set user value to send to backend
+        let user = new User(this.form.value.name, this.form.value.surname, this.form.value.dateOfBirth, this.form.value.sex, this.form.value.bodyWeight, this.form.value.userType, this.form.value.yearsOfExperience, new Contacts(this.form.value.userEmail, this.form.value.telephone), new Residence(this.form.value.residenceState, this.form.value.residenceCity, this.form.value.residenceAddress));
+        user._id = this.userId;
+       
+        // set account value to send to backend
+        let account = _.omit(this.form.value, ['name', 'surname', 'dateOfBirth', 'sex', 'userType', 'bodyWeight', 'yearsOfExperience', 'userEmail', 'telephone', 'residenceState', 'residenceCity', 'residenceAddress']);
 
-        this.accountService.update(this.id, formValue)
+        // Update account then user
+        this.accountService.update(this.id, account)
             .pipe(first())
             .subscribe({
                 next: () => {
-                    this.router.navigate(['../../'], { relativeTo: this.route }).then(() => {
-                        this.toastr.success('Update successful');
-                    });
+                    this.toastr.success('Account information updated successfully');
+
+                    this.httpService.updateUser(this.userId, user)
+                    .subscribe(
+                        (data: any) => {
+                            this.bLoading = false;
+                            this.router.navigate(['../../'], { relativeTo: this.route }).then(() => {
+                                this.toastr.success('User information updated successfully!');
+                            });
+                        },
+                        (error: HttpErrorResponse) => {
+                            this.bLoading = false;
+                            this.toastr.error('An error occurred while updating the user!');
+                            console.log(error.error.message);
+                        });
                 },
                 error: error => {
                     this.toastr.error(error);
-                    this.loading = false;
+                    this.bLoading = false;
                 }
             });
     }

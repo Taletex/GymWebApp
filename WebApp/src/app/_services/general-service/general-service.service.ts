@@ -1,3 +1,4 @@
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -10,18 +11,21 @@ export enum PAGEMODE{
 export enum PAGES {
   TRAININGS = "trainings",
   EXERCISES = "exercises",
-  USERS = "users"
+  USERS = "users",
+  PROFILES = "userprofile"
 }
 
 export class PageStatus {
   public trainings: string;
   public exercises: string;
   public users: string;
+  public userprofile: string;
 
-  constructor(trainings: string = PAGEMODE.WRITE, exercises: string = PAGEMODE.WRITE, users: string = PAGEMODE.WRITE) {
+  constructor(trainings: string = PAGEMODE.READONLY, exercises: string = PAGEMODE.READONLY, users: string = PAGEMODE.READONLY, userprofile: string = PAGEMODE.READONLY) {
     this.trainings = trainings;
     this.exercises = exercises;
     this.users = users;
+    this.userprofile = userprofile;
   }
 } 
 
@@ -30,17 +34,17 @@ export class PageStatus {
 })
 export class GeneralService {
   
-  public pageStatus: PageStatus; //= { trainings: PAGEMODE.WRITE, exercises: PAGEMODE.WRITE, users: PAGEMODE.WRITE };
+  public pageStatus: PageStatus;
 
   constructor(private router: Router) {
     this.initPageStatus();
     console.log(this.pageStatus);
   }
 
-  openPageWithMode(mode: PAGEMODE, page: PAGES, id: string) {
+  openPageWithMode(mode: PAGEMODE, page: PAGES, id?: string) {
     this.setPageStatus(mode, page);
 
-    if(id != null || id != '')
+    if(id)
       this.router.navigate([page, id]);
     else
       this.router.navigate([page]);

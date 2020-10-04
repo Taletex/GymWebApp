@@ -1,0 +1,13 @@
+.main__profile-details {
+    .profile-details__maincontainer {
+        /* 
+        .maincontainer__header {
+        } 
+        */
+
+        .maincontainer__body {
+            overflow: auto;
+            height: calc(100vh - 164px);
+        }
+    }
+}

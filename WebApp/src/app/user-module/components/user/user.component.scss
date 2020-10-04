@@ -1,5 +1,5 @@
-.main__training {
-    .training__maincontainer {
+.main__user {
+    .user__maincontainer {
         /* 
         .maincontainer__header {
         } 
@@ -8,16 +8,6 @@
         .maincontainer__body {
             overflow: auto;
             height: calc(100vh - 155px);
-
-            .week-tab {
-                .session-tab {
-                    margin: 0px !important;
-                    padding: 0.5rem 1rem;
-                    border: 1px solid #dee2e6;
-                    border-radius: 0rem 0.25rem 0.25rem 0.25rem;
-                    border-top: 0px;
-                }
-            }
 
         }
 

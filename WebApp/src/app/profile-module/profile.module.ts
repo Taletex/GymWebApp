@@ -1,22 +1,23 @@
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 import { ProfileRoutingModule } from './profile-routing.module';
 import { LayoutComponent } from './layout.component';
-import { DetailsComponent } from './components/details/details.component';
-import { UpdateComponent } from './components/update/update.component';
+import { ProfileDetailsComponent } from './components/profile-details/profile-details.component';
 
 @NgModule({
     imports: [
         CommonModule,
+        FormsModule,
+        NgbModule,
         ReactiveFormsModule,
         ProfileRoutingModule
     ],
     declarations: [
         LayoutComponent,
-        DetailsComponent,
-        UpdateComponent
+        ProfileDetailsComponent
     ]
 })
 export class ProfileModule { }

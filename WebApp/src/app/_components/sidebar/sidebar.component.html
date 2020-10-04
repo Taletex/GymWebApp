@@ -38,12 +38,12 @@
                     <span [hidden]="account.user.userType != 'coach'">Atleti</span>
                 </span>
             </a>
-            <a routerLink="/userprofile" routerLinkActive="active"
+            <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.PROFILES)" 
                 class="sidebar__element link-button w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
                 [ngClass]="{'active': bActiveList.userprofile}">
                 <img src="assets/icons/sidebar/user.svg" style="width:24px; height:auto;" class="ml-1 mr-2">
                 <span [hidden]="!bExpandedSidebar">Profilo</span>
-            </a>
+        </div>
             <a routerLink="/admin" routerLinkActive="active" *ngIf="account.role == Role.Admin"
                 class="sidebar__element link-button w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
                 [ngClass]="{'active': bActiveList.admin}">
