@@ -82,23 +82,30 @@ export class Exercise {
     name: string;
     variant: Variant;
     description: string;
-    series: [Series];
 
-    constructor(name: string = "", variant: Variant = new Variant(), description: string = "", series: [Series] = [new Series()]) {
+    constructor(name: string = "", variant: Variant = new Variant(), description: string = "") {
         this.name = name;
         this.variant = variant;
         this.description = description;
-        this.series = series;
     }
 }
 
+export class SessionExercise {
+    exercise: Exercise;
+    series: [Series];
+
+    constructor(exercise: Exercise = new Exercise(), series: [Series] = [new Series()]){
+        this.exercise = exercise;
+        this.series = series;
+    };
+}
 
 export class Session {
     name: string;
     comment: string;
-    exercises: [Exercise];
+    exercises: [SessionExercise];
 
-    constructor(name: string = "", comment: string = "", exercises: [Exercise] = [new Exercise()]) {
+    constructor(name: string = "", comment: string = "", exercises: [SessionExercise] = [new SessionExercise()] ) {
         this.name = name;
         this.comment = comment;
         this.exercises = exercises;

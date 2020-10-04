@@ -5,40 +5,60 @@
         <div class="maincontainer__header card-header">
             <div class="d-flex align-items-baseline mb-2">
                 <h5 class="m-0">ESERCIZIO {{exercise.name}}</h5>
-                <div class="ml-auto">
-                    <div (click)="saveExercise()" class="btn btn-success btn-sm">SALVA</div>
-                    <div *ngIf="account.role == Role.Admin" (click)="deleteExercise()" class="btn btn-danger btn-sm ml-2">ELIMINA</div>
+
+                <div class="d-flex input-group w-auto ml-auto">
+                    <div class="input-group-prepend"><span class="input-group-text">ACTIONS</span></div>
+                    <div class="d-flex align-items-center form-control">
+                        <div (click)="changeMode(PAGEMODE.READONLY)" class="inverse-image-button" [ngClass]="{'active': pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY}"  ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
+                        <div (click)="changeMode(PAGEMODE.WRITE)" class="ml-2 inverse-image-button" [ngClass]="{'active': pageStatus[PAGES.EXERCISES] == PAGEMODE.WRITE}"  ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></div>
+                        <div *ngIf="account.role == Role.Admin" (click)="deleteExercise()" class="ml-2 inverse-image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="maincontainer__body card-body">
             <form>
-                <div class="form-row m-0">
-                    <div class="col-4 form-group">
-                        <label for="exerciseName" class="col-form-label col-form-label-sm text-muted">Nome</label>
-                        <input type="text" [(ngModel)]="exercise.name" class="form-control form-control-sm"
-                            id="exerciseName" name="exerciseName">
+                <fieldset class="form-row m-0" [disabled]="(pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)">
+                    <div class="col-12 form-row m-0 p-0">
+                        <div class="col-4 form-group">
+                            <label for="exerciseName" class="col-form-label col-form-label-sm text-muted">Nome</label>
+                            <input type="text" [(ngModel)]="exercise.name" class="form-control form-control-sm"
+                                [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)}" id="exerciseName" name="exerciseName">
+                        </div>
+                        <div class="col-4 form-group">
+                            <label for="exerciseVariantName" class="col-form-label col-form-label-sm text-muted">Nome Variante</label>
+                            <input type="text" [(ngModel)]="exercise.variant.name" class="form-control form-control-sm"
+                                [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)}" id="exerciseVariantName" name="exerciseVariantName">
+                        </div>
+                        <div class="col-4 form-group">
+                            <label for="exerciseVariantCoefficient" class="col-form-label col-form-label-sm text-muted">Coefficente di intensità</label>
+                            <input type="number" min=0.1 [(ngModel)]="exercise.variant.intensityCoefficient" class="form-control form-control-sm"
+                                [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)}" id="exerciseVariantCoefficient" name="exerciseVariantCoefficient">
+                        </div>
+                        <div class="col-12 form-group">
+                            <label for="exerciseDescription" class="col-form-label col-form-label-sm text-muted">Descrizione</label>
+                            <textarea [(ngModel)]="exercise.description" class="form-control form-control-sm"
+                                [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)}" id="exerciseDescription" name="exerciseDescription"></textarea>
+                        </div>
                     </div>
-                    <div class="col-4 form-group">
-                        <label for="exerciseVariantName" class="col-form-label col-form-label-sm text-muted">Nome Variante</label>
-                        <input type="text" [(ngModel)]="exercise.variant.name" class="form-control form-control-sm"
-                            id="exerciseVariantName" name="exerciseVariantName">
-                    </div>
-                    <div class="col-4 form-group">
-                        <label for="exerciseVariantCoefficient" class="col-form-label col-form-label-sm text-muted">Coefficente di intensità</label>
-                        <input type="number" min=0.1 [(ngModel)]="exercise.variant.intensityCoefficient" class="form-control form-control-sm"
-                            id="exerciseVariantCoefficient" name="exerciseVariantCoefficient">
-                    </div>
-                    <div class="col-12 form-group">
-                        <label for="exerciseDescription" class="col-form-label col-form-label-sm text-muted">Descrizione</label>
-                        <textarea [(ngModel)]="exercise.description" class="form-control form-control-sm"
-                            id="exerciseDescription" name="exerciseDescription"></textarea>
-                    </div>
-                </div>
+                </fieldset>
             </form>
+
+            <div class="bottom-right-absolute" *ngIf="(pageStatus[PAGES.EXERCISES] == PAGEMODE.WRITE)">
+                <div (click)="saveExercise()" class="btn btn-success">SALVA</div>
+            </div>
         </div>
 
+    </div>
+
+    <!-- Loader -->
+    <div class='h-100 w-100' [hidden]="!bLoading">
+        <div style="position:absolute; background-color:black; opacity:50%; right:0; top:0;" class="w-100 h-100">
+            <div class="container d-flex align-items-center justify-content-center w-100 h-100">
+                <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+            </div>
+        </div>
     </div>
 
 </div>

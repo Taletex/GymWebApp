@@ -5,19 +5,10 @@ const VariantSchema = mongoose.Schema({
     intensityCoefficient: Number
 }, { _id: false})
 
-const SeriesSchema = mongoose.Schema({
-    seriesNumber: Number,
-    repNumber: Number,
-    weight: Number,
-    measure: String,
-    rest: Number
-}, { _id: false})
-
 const ExerciseSchema = mongoose.Schema({
     name: String,
     variant: VariantSchema,
-    description: String,
-    series: [SeriesSchema]
+    description: String
 }, {
     timestamps: true
 });

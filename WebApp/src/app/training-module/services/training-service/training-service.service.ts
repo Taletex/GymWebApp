@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Training, Week, Session, Exercise, Series } from '@app/_models/training-model';
+import { Training, Week, Session, Exercise, Series, SessionExercise } from '@app/_models/training-model';
 
 @Injectable({
   providedIn: 'root'
@@ -112,20 +112,20 @@ export class TrainingService {
     return sessionToString;
   }
 
-  exerciseReadViewToString(exercise: Exercise, index: number): string {
+  exerciseReadViewToString(sessionExercise: SessionExercise, index: number): string {
     let exerciseToString = "";
     exerciseToString = exerciseToString +
     " \
     <div class='row m-0 px-3 py-1 border border-left-0 border-right-0 border-top-0'> \
         <div class='col-4 px-0'> \
-            <div><span> " + exercise.name + " (" + exercise.variant.name + ")</span></div> \
-            <div><span> " + exercise.description + "</span></div> \
+            <div><span> " + sessionExercise.exercise.name + " (" + sessionExercise.exercise.variant.name + ")</span></div> \
+            <div><span> " + sessionExercise.exercise.description + "</span></div> \
         </div> \
         <div class='col-8 pr-0'> \
     ";
 
-    for(let i=0; i<exercise.series.length; i++) {
-        exerciseToString = exerciseToString + this.seriesReadViewToString(exercise.series[i], i);
+    for(let i=0; i<sessionExercise.series.length; i++) {
+        exerciseToString = exerciseToString + this.seriesReadViewToString(sessionExercise.series[i], i);
     }
 
     exerciseToString = exerciseToString + 

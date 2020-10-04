@@ -1,5 +1,6 @@
 const config = require('config.json');
 const mongoose = require('mongoose');
+const {Account} = require('src/accounts/account.model');
 const {User} = require('src/users/user.model.js');
 const {Contacts} = require('src/users/user.model.js');
 const {Residence} = require('src/users/user.model.js');
@@ -8,7 +9,7 @@ mongoose.connect(process.env.MONGODB_URI || config.connectionString, connectionO
 mongoose.Promise = global.Promise;
 
 module.exports = {
-    Account: require('src/accounts/account.model'),
+    Account: Account,
     User: User,
     Contacts: Contacts,
     Residence: Residence,

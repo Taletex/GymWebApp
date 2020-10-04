@@ -1,11 +1,26 @@
 const mongoose = require('mongoose');
-const {ExerciseSchema} = require('src/exercises/exercise.model.js');
-const {UserSchema} = require('src/users/user.model.js');
+
+const SeriesSchema = mongoose.Schema({
+    seriesNumber: Number,
+    repNumber: Number,
+    weight: Number,
+    measure: String,
+    rest: Number
+}, { _id: false})
+
+const SessionExerciseSchema = mongoose.Schema({
+    exercise: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Exercise',
+        required: false
+    },
+    series: [SeriesSchema]
+}, { _id: false})
 
 const SessionSchema = mongoose.Schema({
     name: String,
     comment: String,
-    exercises: [ExerciseSchema]
+    exercises: [SessionExerciseSchema]
 }, { _id: false})
 
 const WeekSchema = mongoose.Schema({
@@ -14,8 +29,16 @@ const WeekSchema = mongoose.Schema({
 }, { _id: false})
 
 const TrainingSchema = mongoose.Schema({
-    author: UserSchema,
-    athlete: UserSchema,
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: false
+    },
+    athlete: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: false
+    },
     type: String,
     creationDate: Date,
     startDate: Date,

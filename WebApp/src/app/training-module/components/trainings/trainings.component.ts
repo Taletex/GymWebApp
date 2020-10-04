@@ -4,6 +4,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { Training, User } from '@app/_models/training-model';
 import { GeneralService, PAGEMODE, PAGES } from '@app/_services/general-service/general-service.service';
+import { AccountService } from '@app/_services/account-service/account-service.service';
+import { Role } from '@app/_models';
 
 @Component({
   selector: 'app-trainings',
@@ -17,7 +19,11 @@ export class TrainingsComponent implements OnInit {
   public PAGEMODE = PAGEMODE;
   public PAGES = PAGES;
 
-  constructor(private httpService: HttpService, private toastr: ToastrService, public generalService: GeneralService) {
+  // Account information
+  account = this.accountService.accountValue;
+  public Role = Role;
+
+  constructor(private accountService: AccountService,private httpService: HttpService, private toastr: ToastrService, public generalService: GeneralService) {
     this.filters = { author: { name: '', surname: '' }, creationDate: '', startDate: '', athlete: { name: '', surname: '' }, type: '' };
     this.getTrainings();
   }
@@ -48,7 +54,7 @@ export class TrainingsComponent implements OnInit {
 
   createTraining() {
     this.bLoading = true;
-    this.httpService.createTraining(new Training(new User("Andrea", "Adornetto")))
+    this.httpService.createTraining(new Training(this.account.user, this.account.user))
       .subscribe(
         (data: any) => {
           this.bLoading = false;

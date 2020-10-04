@@ -1,4 +1,5 @@
 const {Training} = require('src/trainings/training.model.js');
+const {Exercise} = require('src/exercises/exercise.model.js');
 const _ = require('lodash');
 
 module.exports = {
@@ -8,6 +9,28 @@ module.exports = {
     updateTraining,
     deleteTraining
 }
+
+// Replaces user and exercise entities with their ids 
+function trainingDecorator(t) {
+    let training = _.cloneDeep(t);
+    training.author = training.author._id;
+    training.athlete = training.athlete._id;
+    for(let i=0; i<training.weeks.length; i++) {
+        for(let j=0; j<training.weeks[i].sessions.length; j++) {
+            for(let k=0; k<training.weeks[i].sessions[j].exercises.length; k++) {
+                if(training.weeks[i].sessions[j].exercises[k].exercise._id)
+                    training.weeks[i].sessions[j].exercises[k].exercise = training.weeks[i].sessions[j].exercises[k].exercise._id;
+                else
+                    training.weeks[i].sessions[j].exercises.splice(k, 1);
+            }
+
+            if(training.weeks[i].sessions[j].exercises.length == 0)
+                training.weeks[i].sessions[j].exercises = []; 
+        }
+    }
+
+    return training;
+};
 
 // Create and Save a new Training
 function createTraining(req, res) {
@@ -19,7 +42,7 @@ function createTraining(req, res) {
     }
     
     // Create a Training
-    const training = new Training({
+    const training = new Training(trainingDecorator({
         author: req.body.author,
         athlete: req.body.athlete,
         type: req.body.type,
@@ -28,12 +51,15 @@ function createTraining(req, res) {
         endDate: req.body.endDate,
         comment: req.body.comment,
         weeks: req.body.weeks
-    });
+    }));
 
     // Save Training in the database
     training.save()
     .then(data => {
-        res.send(data);
+        Training.find({_id: training._id}).populate('author').populate('athlete').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
+        .then(training => {
+            res.send(training[0]);
+        })
     }).catch(err => {
         res.status(500).send({
             message: err.message || "Some error occurred while creating the Training."
@@ -41,9 +67,9 @@ function createTraining(req, res) {
     });
 };
 
-// Retrieve and return all trainings from the database.
+// Retrieve and return all trainings from the database
 function findAllTraining(req, res) {
-    Training.find()
+    Training.find().populate('author').populate('athlete').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
     .then(trainings => {
         res.send(trainings);
     }).catch(err => {
@@ -55,7 +81,7 @@ function findAllTraining(req, res) {
 
 // Find a single training with a id
 function findOneTraining (req, res) {
-    Training.find({_id: req.params._id})
+    Training.find({_id: req.params._id}).populate('author').populate('athlete').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
     .then(training => {
         if(!training) {
             return res.status(404).send({
@@ -84,8 +110,9 @@ function updateTraining (req, res) {
         });
     }
 
+
     // Find training and update it with the request body
-    Training.findOneAndUpdate({_id: req.params._id}, {
+    Training.findOneAndUpdate({_id: req.params._id}, trainingDecorator({
         author: req.body.author,
         athlete: req.body.athlete,
         type: req.body.type,
@@ -94,14 +121,17 @@ function updateTraining (req, res) {
         endDate: req.body.endDate,
         comment: req.body.comment,
         weeks: req.body.weeks
-    }, {new: true})
+    }), {new: true})
     .then(training => {
         if(!training) {
             return res.status(404).send({
                 message: "Training not found with id " + req.params._id
             });
         }
-        res.send(training);
+        Training.find({_id: req.params._id}).populate('author').populate('athlete').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
+        .then(data => {
+            res.send(data[0]);
+        })
     }).catch(err => {
         if(err.kind === 'ObjectId') {
             return res.status(404).send({

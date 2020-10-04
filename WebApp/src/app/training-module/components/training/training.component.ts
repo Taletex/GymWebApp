@@ -8,7 +8,7 @@ import { HttpService } from '@app/_services/http-service/http-service.service';
 import { UtilsService } from '@app/_services/utils-service/utils-service.service';
 import { TrainingService } from '../../services/training-service/training-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Training, Week, Series, Exercise, Session, User, Variant } from '@app/_models/training-model';
+import { Training, Week, Series, Exercise, Session, User, Variant, SessionExercise } from '@app/_models/training-model';
 import * as _ from "lodash";
 import { GeneralService, PAGES, PAGEMODE, PageStatus } from '@app/_services/general-service/general-service.service';
 import * as jsPDF from 'jspdf';
@@ -27,7 +27,7 @@ export class TrainingComponent implements OnInit {
   public copiedWeek: Week = new Week();
   public copiedSession: Session = new Session();
   public activeSession: Array<number>;
-  public copiedExercise: Exercise = new Exercise();
+  public copiedExercise: SessionExercise = new SessionExercise();
   public copiedSeries: Series = new Series();
   public athleteList: Array<User> = [];
   public exerciseList: Array<Exercise> = [];
@@ -44,7 +44,7 @@ export class TrainingComponent implements OnInit {
   // Aux attributes for new exercise handling
   public newExercise: Exercise = new Exercise();
   private currentExerciseIndex: number = 0;
-  private currentExerciseList: Array<Exercise> = [new Exercise()];
+  private currentExerciseList: Array<SessionExercise> = [new SessionExercise()];
 
   // TinyMCE variables
   public editorContent: string = "";
@@ -129,7 +129,9 @@ export class TrainingComponent implements OnInit {
           [new Exercise("Nuovo Esercizio", new Variant("new", -1))] : (this.exerciseList.filter(v => (v.name + " (" + v.variant.name + ")").toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)))
         )
     )
-
+  
+  formatter = (x: {name: string}) => x.name;
+    
   changeMode(mode: PAGEMODE) {
     this.pageStatus[PAGES.TRAININGS] = mode;
     this.generalService.setPageStatus(mode, PAGES.TRAININGS);
@@ -194,7 +196,7 @@ export class TrainingComponent implements OnInit {
   }
   
   /* This function calls a modal if a new exercise need to be created, else calls assignExercise function */
-  selectExercise(event, exerciseList: Array<Exercise>, exerciseIndex: number) {
+  selectExercise(event, exerciseList: Array<SessionExercise>, exerciseIndex: number) {
     if(event.item.variant.intensityCoefficient == -1) {
       this.currentExerciseList = exerciseList;
       this.currentExerciseIndex = exerciseIndex;
@@ -207,10 +209,12 @@ export class TrainingComponent implements OnInit {
   }
 
   /** After selecting an exercise this function performs a copy of all fields of selected exercises in the current exercise (except for series) */
-  assignExercise(newExercise, exerciseList: Array<Exercise>, exerciseIndex: number) {
+  assignExercise(newExercise, exerciseList: Array<SessionExercise>, exerciseIndex: number) {
     let series = _.cloneDeep(exerciseList[exerciseIndex].series);
-    exerciseList[exerciseIndex] = _.cloneDeep(newExercise);
+    exerciseList[exerciseIndex].exercise = _.cloneDeep(newExercise);
     exerciseList[exerciseIndex].series = _.cloneDeep(series);
+
+    console.log(exerciseList[exerciseIndex]);
   }
 
   /* SERIES FUNCTIONS */
@@ -255,41 +259,41 @@ export class TrainingComponent implements OnInit {
 
 
   /* EXERCISES FUNCTIONS */
-  pushExercise(training: any) {
-    if (training && training.exercises != null) {
-      training.exercises.push(_.cloneDeep(new Exercise()));
+  pushExercise(session: Session) {
+    if (session && session.exercises != null) {
+      session.exercises.push(_.cloneDeep(new SessionExercise()));
     } else {
       console.log('Error: "exercises" is not defined');
     }
   }
 
-  resetExercise(training: any, index: number) {
-    if (training && training.exercises != null && index < training.exercises.length) {
-      training.exercises[index] = _.cloneDeep(new Exercise());
+  resetExercise(session: Session, index: number) {
+    if (session && session.exercises != null && index < session.exercises.length) {
+      session.exercises[index] = _.cloneDeep(new SessionExercise());
     } else {
       console.log('ERROR: resetting exercise of index ' + index);
     }
   }
 
-  deleteExercise(training: any, index: number) {
-    if (training && training.exercises != null && index < training.exercises.length) {
-      training.exercises.splice(index, 1);
+  deleteExercise(session: Session, index: number) {
+    if (session && session.exercises != null && index < session.exercises.length) {
+      session.exercises.splice(index, 1);
     } else {
       console.log('ERROR: removing exercise of index ' + index);
     }
   }
 
-  copyExercise(training: any, index: number) {
-    if (training && training.exercises != null && index < training.exercises.length) {
-      this.copiedExercise = _.cloneDeep(training.exercises[index]);
+  copyExercise(session: Session, index: number) {
+    if (session && session.exercises != null && index < session.exercises.length) {
+      this.copiedExercise = _.cloneDeep(session.exercises[index]);
     } else {
       console.log('ERROR: copying exercise of index ' + index);
     }
   }
 
-  pasteExercise(training: any, index: number) {
-    if (training && training.exercises != null && index < training.exercises.length) {
-      training.exercises[index] = _.cloneDeep(this.copiedExercise);
+  pasteExercise(session: Session, index: number) {
+    if (session && session.exercises != null && index < session.exercises.length) {
+      session.exercises[index] = _.cloneDeep(this.copiedExercise);
     } else {
       console.log('ERROR: pasting exercise of index ' + index);
     }
@@ -460,7 +464,7 @@ export class TrainingComponent implements OnInit {
     }
   }
 
-  setExerciseMeasure(exercise: Exercise, measure: string) {
+  setExerciseMeasure(exercise: SessionExercise, measure: string) {
     for(let i=0; i<exercise.series.length; i++) {
       exercise.series[i].measure = measure;
     }

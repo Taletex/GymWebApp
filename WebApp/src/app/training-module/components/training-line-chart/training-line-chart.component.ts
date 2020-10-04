@@ -96,20 +96,20 @@ export class TrainingLineChartComponent implements OnInit {
         sessionIntensity = 0;
         
         // Calculate exercise intensity (stored in exerciseIntensity)
-        for(let exercise of session.exercises) {
+        for(let sessionExercise of session.exercises) {
           exerciseIntensity = 0;
-          for(let series of exercise.series) {
+          for(let series of sessionExercise.series) {
             if(series.measure == "%") {
               // Poichè moltiplico * weight dò per scontato che measure = percentage. Non funziona se la misura è diversa e bisogna usare una formula diversa
               exerciseIntensity = exerciseIntensity + (series.seriesNumber * series.repNumber * series.weight);
             }
           }
-          exerciseIntensity = exerciseIntensity * exercise.variant.intensityCoefficient;
+          exerciseIntensity = exerciseIntensity * sessionExercise.exercise.variant.intensityCoefficient;
           sessionIntensity = sessionIntensity + exerciseIntensity;
 
           
-          this.addIntensityToDataset(exercise.name, exerciseIntensity, sessionGlobalIndex-1, sessionsDataset);  // Add exercise intensity to SESSION dataset
-          this.addIntensityToDataset(exercise.name, exerciseIntensity, weekIndex, weeksDataset);                // Add exercise intensity to WEEK dataset
+          this.addIntensityToDataset(sessionExercise.exercise.name, exerciseIntensity, sessionGlobalIndex-1, sessionsDataset);  // Add sessionExercise intensity to SESSION dataset
+          this.addIntensityToDataset(sessionExercise.exercise.name, exerciseIntensity, weekIndex, weeksDataset);                // Add sessionExercise intensity to WEEK dataset
         }
         weekIntensity = weekIntensity + sessionIntensity;
 

@@ -62,6 +62,9 @@ export class ProfileDetailsComponent {
         }, {
             validator: MustMatch('password', 'confirmPassword')
         });
+
+        this.pageStatus = this.generalService.getPageStatus();
+        console.log(this.pageStatus);
     }
 
     changeMode(mode: PAGEMODE) {
@@ -124,14 +127,14 @@ export class ProfileDetailsComponent {
         this.httpService.updateUser(this.account.user._id, newUser)
         .subscribe(
             (data: any) => {
-            this.bLoading = false;
-            this.account.user = data;
-            this.toastr.success('User information successfully updated!');
+                this.bLoading = false;
+                this.account.user = data;
+                this.toastr.success('User information successfully updated!');
             },
             (error: HttpErrorResponse) => {
-            this.bLoading = false;
-            this.toastr.error('An error occurred while updating the user!');
-            console.log(error.error.message);
+                this.bLoading = false;
+                this.toastr.error('An error occurred while updating the user!');
+                console.log(error.error.message);
             });
     }
 }

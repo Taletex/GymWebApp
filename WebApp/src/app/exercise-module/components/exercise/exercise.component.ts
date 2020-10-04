@@ -6,6 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { Account, Role } from '@app/_models';
 import { AccountService } from '@app/_services/account-service/account-service.service';
+import { GeneralService, PAGEMODE, PAGES, PageStatus } from '@app/_services/general-service/general-service.service';
 
 @Component({
   selector: 'app-exercise',
@@ -15,11 +16,16 @@ import { AccountService } from '@app/_services/account-service/account-service.s
 export class ExerciseComponent implements OnInit {
 
   public bLoading: boolean = false;
+
+  public PAGEMODE = PAGEMODE;
+  public PAGES = PAGES;
+  public pageStatus: PageStatus = new PageStatus();
+
   public exercise: Exercise = new Exercise();
   public account: Account;
   public Role = Role;
 
-  constructor(private router: Router, private httpService: HttpService, private toastr: ToastrService, private accountService: AccountService) {
+  constructor(private generalService: GeneralService, private router: Router, private httpService: HttpService, private toastr: ToastrService, private accountService: AccountService) {
     let exerciseId = (this.router.url).split('/')[2];
     this.accountService.account.subscribe(x => this.account = x);
 
@@ -30,6 +36,9 @@ export class ExerciseComponent implements OnInit {
           this.exercise = data;
           this.bLoading = false;
           console.log(this.exercise);
+
+          this.pageStatus = this.generalService.getPageStatus();
+          console.log(this.pageStatus);
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
@@ -39,6 +48,11 @@ export class ExerciseComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  changeMode(mode: PAGEMODE) {
+    this.pageStatus[PAGES.EXERCISES] = mode;
+    this.generalService.setPageStatus(mode, PAGES.EXERCISES);
   }
 
   saveExercise() {
