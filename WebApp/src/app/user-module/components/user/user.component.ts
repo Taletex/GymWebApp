@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { User } from '@app/_models/training-model';
+import { PersonalRecord, PRSeries, User } from '@app/_models/training-model';
 import { HttpService } from '@app/_services/http-service/http-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
@@ -84,6 +84,23 @@ export class UserComponent implements OnInit {
           this.toastr.error('An error occurred while deleting the user!');
           console.log(error.error.message);
         });
+  }
+
+  areAllPrsHidden(): boolean {
+    for(let i=0; i<this.account.user.personalRecords.length; i++) {
+      if(this.account.user.personalRecords[i].bPublic)
+        return false;
+    }
+
+    return true;
+  }
+
+  filterVisiblePR(): PersonalRecord[] {
+    return this.account.user.personalRecords.filter(pr => pr.bPublic);
+  }
+
+  filterVisiblePRSeries(pr: PersonalRecord): PRSeries[] {
+    return pr.series.filter(series => series.bPublic);
   }
 
 }

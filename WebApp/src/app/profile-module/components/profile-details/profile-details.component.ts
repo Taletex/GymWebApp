@@ -38,7 +38,7 @@ export class ProfileDetailsComponent {
     userForm: FormGroup;
     userFormSubmitted = false;
     today = new Date();
-    personalRecordList: PersonalRecord[] = <PersonalRecord[]>[];
+    personalRecordList: PersonalRecord[] = <PersonalRecord[]>[];    // Aux array to store personal records from form
     exerciseList: Exercise[] = <Exercise[]>[];
     copiedSeries: PRSeries = new PRSeries();
     copiedPR: PersonalRecord = new PersonalRecord();
@@ -50,7 +50,6 @@ export class ProfileDetailsComponent {
     constructor(private generalService: GeneralService, private accountService: AccountService, private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private toastr: ToastrService, private httpService: HttpService) { }
 
     ngOnInit() {
-        this.account.user.personalRecords = [];
         this.personalRecordList = this.account.user.personalRecords;
 
         // Init user form
@@ -109,6 +108,13 @@ export class ProfileDetailsComponent {
         this.httpService.getExercises()
             .subscribe(
                 (data: Array<Exercise>) => {
+                    for(let i=0; i<this.personalRecordList.length; i++) {
+                        let currentPRid = this.personalRecordList[i].exercise._id;
+                        _.remove(data, function(exercise) {
+                            return exercise._id == currentPRid;
+                        })
+                    }
+
                     this.exerciseList = data;
                     console.log(this.exerciseList);
                     this.bLoading = false;
@@ -119,7 +125,6 @@ export class ProfileDetailsComponent {
                     console.log(error.error.message);
                 });
     }
-
 
     createExercise() {
         this.bLoading = true;
@@ -309,7 +314,7 @@ export class ProfileDetailsComponent {
         }
 
         this.bLoading = true;
-        let newUser = new User(this.userForm.value.name, this.userForm.value.surname, this.userForm.value.dateOfBirth, this.userForm.value.sex, this.userForm.value.bodyWeight, this.userForm.value.userType, this.userForm.value.yearsOfExperience, new Contacts(this.userForm.value.userEmail, this.userForm.value.telephone), new Residence(this.userForm.value.residenceState, this.userForm.value.residenceCity, this.userForm.value.residenceAddress, this.personalRecordList));
+        let newUser = new User(this.userForm.value.name, this.userForm.value.surname, this.userForm.value.dateOfBirth, this.userForm.value.sex, this.userForm.value.bodyWeight, this.userForm.value.userType, this.userForm.value.yearsOfExperience, new Contacts(this.userForm.value.userEmail, this.userForm.value.telephone), new Residence(this.userForm.value.residenceState, this.userForm.value.residenceCity, this.userForm.value.residenceAddress), this.personalRecordList);
         newUser._id = this.account.user._id;
         this.httpService.updateUser(this.account.user._id, newUser)
             .subscribe(
@@ -324,4 +329,39 @@ export class ProfileDetailsComponent {
                     console.log(error.error.message);
                 });
     }
+
+    /* PR Form utilities */
+    onSubmitPersonaRecords() {
+
+        if(!this.isPersonalRecordFormValid()) {
+            return;
+        }
+
+        let newUser = _.cloneDeep(this.account.user);
+        newUser.personalRecords = this.personalRecordList;
+
+        this.bLoading = true;
+        this.httpService.updateUser(newUser._id, newUser)
+            .subscribe(
+                (data: any) => {
+                    this.bLoading = false;
+                    this.account.user = data;
+                    this.toastr.success('User information successfully updated!');
+                },
+                (error: HttpErrorResponse) => {
+                    this.bLoading = false;
+                    this.toastr.error('An error occurred while updating the user!');
+                    console.log(error.error.message);
+                });
+    }
+
+    isPersonalRecordFormValid(): boolean {
+        for(let i=0; i<this.personalRecordList.length; i++) {
+            if(!this.personalRecordList[i].exercise.name)
+                return false;
+        }
+
+        return true;
+    }
+
 }

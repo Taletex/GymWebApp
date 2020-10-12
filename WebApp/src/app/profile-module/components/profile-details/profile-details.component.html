@@ -33,7 +33,7 @@
                         <h5 class="m-0">Informazioni Utente</h5>
                     </button>
                 </div>
-                <div class="col-12 form-row p-3 border round-5 m-0 round-top-0 collapse show " id="userInformationContainer">
+                <div class="col-12 form-row py-3 px-0 border round-5 m-0 round-top-0 collapse show " id="userInformationContainer">
                     <form [formGroup]="userForm" (ngSubmit)="onSubmitUser()" class="col-12 row m-0 p-0">
                         <fieldset class="col-12 row form-group m-0 p-0" [disabled]="(pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY)">
                             <div class="row col-12 m-0 p-0">
@@ -186,10 +186,20 @@
                                         <input type="text" [(ngModel)]="pr.exercise.variant.name" class="form-control form-control-sm"
                                             id="tipo_{{prIndex}}" name="tipo_{{prIndex}}" placeholder="Tipo esercizio..." disabled>
                                     </div>
-                                    <div class="col-12 form-group pl-0 pr-0">
+                                    <div class="col-8 form-group pl-0 pr-1">
                                         <label for="description_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">Descrizione</label>
                                         <input type="text" [(ngModel)]="pr.exercise.description" class="form-control form-control-sm"
                                             id="description_{{prIndex}}" name="description_{{prIndex}}" placeholder="Descrizione esercizio..." disabled>
+                                    </div>
+                                    <div class="col-2 form-group px-1">
+                                        <label for="oneRepPR_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">1RM</label>
+                                        <input type="number" min="0" [(ngModel)]="pr.oneRepPR" class="form-control form-control-sm"
+                                            id="oneRepPR_{{prIndex}}" name="oneRepPR_{{prIndex}}">
+                                    </div>
+                                    <div class="col-2 form-group d-flex flex-column justify-content-center align-items-center pl-1 pr-0">
+                                        <label for="public_{{prIndex}}" class="col-form-label col-form-label-sm">Pubblico</label>
+                                        <input type="checkbox" [(ngModel)]="pr.bPublic" class="form-control form-control-sm"
+                                            id="public_{{prIndex}}" name="public_{{prIndex}}">
                                     </div>
                                 </div>
                                 <div class="pl-3 pr-0 d-flex flex-column align-items-center mt-1" *ngIf="(pageStatus[PAGES.PROFILES] == PAGEMODE.WRITE)">
@@ -244,25 +254,32 @@
                                             class="form-control form-control-sm" id="rest_{{prIndex}}_{{seriesIndex}}" 
                                             name="rest_{{prIndex}}_{{seriesIndex}}">
                                     </div>
-                                    <div class="col-1 form-group">
+                                    <div class="col-1 form-group d-flex flex-column justify-content-center align-items-center">
                                         <label for="verified_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm "
-                                            *ngIf="seriesFirst">Verificato</label>
-                                        <input type="checkbox" [(ngModel)]="elem.bVerified" class="form-control form-control-sm d-flex justify-content-center"
+                                        [hidden]="!seriesFirst">Verificato</label>
+                                        <input type="checkbox" [(ngModel)]="elem.bVerified" class="form-control form-control-sm"
                                             id="verified_{{prIndex}}_{{seriesIndex}}" name="verified_{{prIndex}}_{{seriesIndex}}">
                                     </div>
-                                    <div class="col-1 form-group">
-                                        <label for="competition_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm d-flex justify-content-center"
-                                        *ngIf="seriesFirst">Comp.</label>
+                                    <div class="col-1 form-group d-flex flex-column justify-content-center align-items-center">
+                                        <label for="competition_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
+                                        [hidden]="!seriesFirst">Comp.</label>
                                         <input type="checkbox" [(ngModel)]="elem.bCompetition" class="form-control form-control-sm" 
                                             id="competition_{{prIndex}}_{{seriesIndex}}" name="competition_{{prIndex}}_{{seriesIndex}}">
                                     </div>
-                                    <div class="col-1 form-group">
-                                        <label for="public_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm d-flex justify-content-center"
-                                        *ngIf="seriesFirst">Pubblico</label>
+                                    <div class="col-1 form-group d-flex flex-column justify-content-center align-items-center">
+                                        <label for="public_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm "
+                                        [hidden]="!seriesFirst">Pubblico</label>
                                         <input type="checkbox" [(ngModel)]="elem.bPublic" class="form-control form-control-sm" 
                                             id="public_{{prIndex}}_{{seriesIndex}}" name="public_{{prIndex}}_{{seriesIndex}}">
                                     </div>
-                                    <div class="col-3 form-group m-0 p-0 pl-2" *ngIf="(pageStatus[PAGES.PROFILES] == PAGEMODE.WRITE)">
+                                    <div class="col-1 form-group">
+                                        <label for="comment_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
+                                            [hidden]="!seriesFirst">Commento</label>
+                                        <input type="text" [(ngModel)]="elem.comment"
+                                            class="form-control form-control-sm" id="comment_{{prIndex}}_{{seriesIndex}}"
+                                            name="comment_{{prIndex}}_{{seriesIndex}}" placeholder="Commento...">
+                                    </div>
+                                    <div class="col-2 form-group m-0 p-0 pl-2" *ngIf="(pageStatus[PAGES.PROFILES] == PAGEMODE.WRITE)">
                                         <label class="col-form-label col-form-label-sm" [hidden]="!seriesFirst"
                                             [hidden]="!seriesFirst">Azioni</label>
                                         <div class="d-flex">
@@ -277,7 +294,11 @@
                             </div>
                         </div>
                         <div class="form-row m-0 d-flex justify-content-start" *ngIf="(pageStatus[PAGES.PROFILES] == PAGEMODE.WRITE)">
-                            <div class="btn btn-outline-info btn-small mt-2" (click)="pushPR()" >Aggiungi PR +</div>
+                            <div class="btn btn-outline-info btn-small mt-2" (click)="pushPR()">Aggiungi PR +</div>
+                        </div>
+
+                        <div class="form-group col-12 d-flex p-0" *ngIf="(pageStatus[PAGES.PROFILES] == PAGEMODE.WRITE)">
+                            <button type="submit" class="btn btn-primary ml-auto" (click)="onSubmitPersonaRecords()" [disabled]="!isPersonalRecordFormValid()"><span *ngIf="bLoading" class="spinner-border spinner-border-sm mr-1"></span> Aggiorna</button>
                         </div>
                     </fieldset>
                 </div>
@@ -294,7 +315,7 @@
                     <form [formGroup]="accountForm" (ngSubmit)="onSubmitAccount()" class="col-12 row m-0 p-0">
                         <fieldset class="col-12 row m-0 p-0" [disabled]="(pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY)">
                             <div class="row col-12 m-0 p-0">
-                                <div class="form-group col-12">
+                                <div class="form-group col-12 p-0">
                                     <label class="col-form-label col-form-label-sm text-muted">Email</label>
                                     <input type="text" formControlName="email" class="form-control form-control-sm"
                                         [ngClass]="{ 'is-invalid': accountFormSubmitted && fa.email.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY) }"
@@ -304,7 +325,7 @@
                                         <div *ngIf="fa.email.errors.email">Il campo email deve contenere un'email valida</div>
                                     </div>
                                 </div>
-                                <div *ngIf="pageStatus[PAGES.PROFILES] == PAGEMODE.WRITE" class="col-12">
+                                <div *ngIf="pageStatus[PAGES.PROFILES] == PAGEMODE.WRITE" class="col-12 p-0">
                                     <div class="form-row">
                                         <div class="form-group col">
                                             <label class="col-form-label col-form-label-sm text-muted">Password (lasciare vuoto

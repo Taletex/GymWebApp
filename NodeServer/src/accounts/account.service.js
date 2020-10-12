@@ -272,7 +272,7 @@ async function getAccount(id) {
 }
 
 async function getRefreshToken(token) {
-    const refreshToken = await db.RefreshToken.findOne({ token }).populate({path: 'account', populate: { path: 'user' }});
+    const refreshToken = await db.RefreshToken.findOne({ token }).populate({path: 'account', populate: { path: 'user', populate: { path: 'personalRecords', populate: { path: 'exercise'} } }});
     if (!refreshToken || !refreshToken.isActive) throw 'Invalid token';
     return refreshToken;
 }
