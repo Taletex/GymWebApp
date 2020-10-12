@@ -56,6 +56,7 @@ function createTraining(req, res) {
     // Save Training in the database
     training.save()
     .then(data => {
+        // Returns the training created by finding it in the database
         Training.find({_id: training._id}).populate('author').populate('athlete').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
         .then(training => {
             res.send(training[0]);
@@ -128,6 +129,8 @@ function updateTraining (req, res) {
                 message: "Training not found with id " + req.params._id
             });
         }
+
+        // Returns the training updated by finding it in the database
         Training.find({_id: req.params._id}).populate('author').populate('athlete').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
         .then(data => {
             res.send(data[0]);

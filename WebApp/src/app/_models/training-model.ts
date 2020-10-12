@@ -21,6 +21,43 @@ export class Residence {
     }
 }
 
+export class PRSeries {
+    seriesNumber: number;
+    repNumber: number;
+    weight: number;
+    measure: string;
+    rest: number;
+    bCompetition: boolean;
+    bVerified: boolean;
+    bPublic: boolean;
+    comment: string;
+
+    constructor(seriesNumber: number = 1, repNumber: number = 1, weight: number = 50, measure: string = "kg", rest: number = 90, bCompetition: boolean = false, bVerified: boolean = false, bPublic: boolean = false, comment: string = "") {
+        this.seriesNumber = seriesNumber;
+        this.repNumber = repNumber;
+        this.weight = weight;
+        this.measure = measure;
+        this.rest = rest;
+        this.bCompetition = bCompetition;
+        this.bVerified = bVerified;
+        this.bPublic = bPublic;
+        this.comment = comment;
+    }
+}
+
+export class PersonalRecord {
+    exercise: Exercise;
+    series: [PRSeries];
+    oneRepPR: number;
+    bPublic: boolean;
+
+    constructor(exercise: Exercise = new Exercise(), series: [PRSeries] = [new PRSeries()], oneRepPR: number = 0, bPublic: boolean = false) {
+        this.exercise = exercise;
+        this.series = series;
+        this.oneRepPR = oneRepPR;
+        this.bPublic = bPublic;
+    }
+}
 
 export class User {
     _id: string;
@@ -33,9 +70,10 @@ export class User {
     yearsOfExperience: number;
     contacts: Contacts;
     residence: Residence;
+    personalRecords: PersonalRecord[];
 
     constructor(name: string = "", surname: string = "", dateOfBirth: Date = null, sex: string = "M", bodyWeight: number = 80,
-                userType: string = "athlete", yearsOfExperience: number = 0, contacts: Contacts = new Contacts(), residence: Residence = new Residence()) {
+                userType: string = "athlete", yearsOfExperience: number = 0, contacts: Contacts = new Contacts(), residence: Residence = new Residence(), personalRecords: PersonalRecord[] = <PersonalRecord[]>[]) {
         this.name = name;
         this.surname = surname;
         this.dateOfBirth = dateOfBirth;
@@ -45,6 +83,7 @@ export class User {
         this.yearsOfExperience = yearsOfExperience;
         this.contacts = contacts;
         this.residence = residence;
+        this.personalRecords = personalRecords;
     }
 }
 

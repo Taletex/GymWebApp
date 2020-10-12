@@ -21,7 +21,8 @@ exports.createUser = (req, res) => {
         dateOfBirth: req.body.dateOfBirth,
         sex: req.body.sex,
         contacts: req.body.contacts,
-        residence: req.body.residence
+        residence: req.body.residence,
+        personalRecords: []
     });
 
     // Save User in the database
@@ -37,7 +38,7 @@ exports.createUser = (req, res) => {
 
 // Retrieve and return all users from the database.
 exports.findAllUser = (req, res) => {
-    User.find()
+    User.find().populate({ path: 'personalRecords', populate: { path: 'exercise'} })
     .then(users => {
         res.send(users);
     }).catch(err => {
@@ -49,7 +50,7 @@ exports.findAllUser = (req, res) => {
 
 // Retrieve and return all users from the database.
 exports.findAllAthlete = (req, res) => {
-    User.find()
+    User.find().populate({ path: 'personalRecords', populate: { path: 'exercise'} })
     .then(users => {
         res.send(_.filter(users, function(user) { return user.userType == "athlete"; }));
     }).catch(err => {
@@ -61,7 +62,7 @@ exports.findAllAthlete = (req, res) => {
 
 // Retrieve and return all users from the database.
 exports.findAllCoaches = (req, res) => {
-    User.find()
+    User.find().populate({ path: 'personalRecords', populate: { path: 'exercise'} })
     .then(users => {
         res.send(_.filter(users, function(user) { return user.userType == "coach"; }));
     }).catch(err => {
@@ -73,7 +74,7 @@ exports.findAllCoaches = (req, res) => {
 
 // Find a single user with a id
 exports.findOneUser = (req, res) => {
-    User.find({_id: req.params._id})
+    User.find({_id: req.params._id}).populate({ path: 'personalRecords', populate: { path: 'exercise'} })
     .then(user => {
         if(!user) {
             return res.status(404).send({
@@ -112,7 +113,8 @@ exports.updateUser = (req, res) => {
         dateOfBirth: req.body.dateOfBirth,
         sex: req.body.sex,
         contacts: req.body.contacts,
-        residence: req.body.residence
+        residence: req.body.residence,
+        personalRecords: req.body.personalRecords
     }, {new: true})
     .then(user => {
         if(!user) {
@@ -120,7 +122,12 @@ exports.updateUser = (req, res) => {
                 message: "User not found with id " + req.params._id
             });
         }
-        res.send(user);
+
+        // Returns the user update by finding it in the database
+        User.find({_id: user._id}).populate({ path: 'personalRecords', populate: { path: 'exercise'} })
+        .then(users => {
+            res.send(users[0]);
+        })
     }).catch(err => {
         if(err.kind === 'ObjectId') {
             return res.status(404).send({

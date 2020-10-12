@@ -11,8 +11,8 @@ import { ProfileDetailsComponent } from './components/profile-details/profile-de
     imports: [
         CommonModule,
         FormsModule,
-        NgbModule,
         ReactiveFormsModule,
+        NgbModule,
         ProfileRoutingModule
     ],
     declarations: [

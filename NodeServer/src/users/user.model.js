@@ -11,6 +11,29 @@ const ResidenceSchema = mongoose.Schema({
     address: String
 }, { _id: false})
 
+const PRSeriesSchema = mongoose.Schema({
+    seriesNumber: Number,
+    repNumber: Number,
+    weight: Number,
+    measure: String,
+    rest: Number,
+    bCompetition: Boolean,
+    bVerified: Boolean,
+    bPublic: Boolean,
+    comment: String
+}, { _id: false})
+
+const PersonalRecordSchema = mongoose.Schema({
+    exercise: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Exercise',
+        required: false
+    },
+    series: [PRSeriesSchema],
+    oneRepPR: Number,
+    bPublic: Boolean
+}, { _id: false})
+
 const UserSchema = mongoose.Schema({
     name: { type: String, required: true },
     surname: { type: String, required: true },
@@ -20,7 +43,8 @@ const UserSchema = mongoose.Schema({
     residence: { type: ResidenceSchema, required: false },
     userType: { type: String, required: true },             // athlete, coach, both
     bodyWeight: Number,
-    yearsOfExperience: Number
+    yearsOfExperience: Number,
+    personalRecords: { type: [PersonalRecordSchema], required: false }
 });
 
 const userSchema =  mongoose.model('User', UserSchema);

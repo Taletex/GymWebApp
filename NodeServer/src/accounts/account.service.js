@@ -23,7 +23,7 @@ module.exports = {
 };
 
 async function authenticate({ email, password, ipAddress }) {
-    const account = await db.Account.findOne({ email }).populate('user');
+    const account = await db.Account.findOne({ email }).populate('user').populate({ path: 'user', populate: { path: 'personalRecords', populate: { path: 'exercise'} }});
 
     if (!account || !account.isVerified || !bcrypt.compareSync(password, account.passwordHash)) {
         throw 'Email or password is incorrect';
@@ -79,7 +79,7 @@ async function revokeToken({ token, ipAddress }) {
 // When register the account, creates also the associated user
 async function register(params, origin) {
     // validate
-    if (await db.Account.findOne({ email: params.email }).populate('user')) {
+    if (await db.Account.findOne({ email: params.email }).populate({ path: 'user', populate: { path: 'personalRecords', populate: { path: 'exercise'} }})) {
         // send already registered error in email to prevent account enumeration
         return await sendAlreadyRegisteredEmail(params.email, origin);
     }
@@ -94,7 +94,8 @@ async function register(params, origin) {
         dateOfBirth: new Date(),
         sex: "M",
         contacts: new db.Contacts({email: params.email, telephone: ''}),
-        residence: new db.Residence({state: '', city: '', address: ''})
+        residence: new db.Residence({state: '', city: '', address: ''}),
+        personalRecords: []
     });
 
     const data = await user.save()
@@ -129,7 +130,7 @@ async function register(params, origin) {
 }
 
 async function verifyEmail({ token }) {
-    const account = await db.Account.findOne({ verificationToken: token }).populate('user');
+    const account = await db.Account.findOne({ verificationToken: token }).populate({ path: 'user', populate: { path: 'personalRecords', populate: { path: 'exercise'} }});
 
     if (!account) throw 'Verification failed';
 
@@ -139,7 +140,7 @@ async function verifyEmail({ token }) {
 }
 
 async function forgotPassword({ email }, origin) {
-    const account = await db.Account.findOne({ email }).populate('user');
+    const account = await db.Account.findOne({ email }).populate({ path: 'user', populate: { path: 'personalRecords', populate: { path: 'exercise'} }});
 
     // always return ok response to prevent email enumeration
     if (!account) return;
@@ -159,7 +160,7 @@ async function validateResetToken({ token }) {
     const account = await db.Account.findOne({
         'resetToken.token': token,
         'resetToken.expires': { $gt: Date.now() }
-    }).populate('user');
+    }).populate({ path: 'user', populate: { path: 'personalRecords', populate: { path: 'exercise'} }});
 
     if (!account) throw 'Invalid token';
 }
@@ -168,7 +169,7 @@ async function resetPassword({ token, password }) {
     const account = await db.Account.findOne({
         'resetToken.token': token,
         'resetToken.expires': { $gt: Date.now() }
-    }).populate('user');
+    }).populate({ path: 'user', populate: { path: 'personalRecords', populate: { path: 'exercise'} }});
 
     if (!account) throw 'Invalid token';
 
@@ -180,7 +181,7 @@ async function resetPassword({ token, password }) {
 }
 
 async function getAll() {
-    const accounts = await db.Account.find().populate('user');
+    const accounts = await db.Account.find().populate({ path: 'user', populate: { path: 'personalRecords', populate: { path: 'exercise'} }});
     return accounts.map(x => basicDetails(x));
 }
 
@@ -191,7 +192,7 @@ async function getById(id) {
 
 async function create(params) {
     // validate
-    if (await db.Account.findOne({ email: params.email }).populate('user')) {
+    if (await db.Account.findOne({ email: params.email }).populate({ path: 'user', populate: { path: 'personalRecords', populate: { path: 'exercise'} }})) {
         throw 'Email "' + params.email + '" is already registered';
     }
 
@@ -205,7 +206,8 @@ async function create(params) {
         dateOfBirth: new Date(),
         sex: "M",
         contacts: new db.Contacts({email: params.email, telephone: ''}),
-        residence: new db.Residence({state: '', city: '', address: ''})
+        residence: new db.Residence({state: '', city: '', address: ''}),
+        personalRecords: []
     });
 
     const data = await user.save()
@@ -238,7 +240,7 @@ async function update(id, params) {
     const account = await getAccount(id);
 
     // validate
-    if (account.email !== params.email && await db.Account.findOne({ email: params.email }).populate('user')) {
+    if (account.email !== params.email && await db.Account.findOne({ email: params.email }).populate({ path: 'user', populate: { path: 'personalRecords', populate: { path: 'exercise'} }})) {
         throw 'Email "' + params.email + '" is already taken';
     }
 
@@ -264,7 +266,7 @@ async function _delete(id) {
 
 async function getAccount(id) {
     if (!db.isValidId(id)) throw 'Account not found';
-    const account = await db.Account.findById(id).populate('user');
+    const account = await db.Account.findById(id).populate({ path: 'user', populate: { path: 'personalRecords', populate: { path: 'exercise'} }});
     if (!account) throw 'Account not found';
     return account;
 }
