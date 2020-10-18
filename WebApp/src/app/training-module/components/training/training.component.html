@@ -25,20 +25,32 @@
                 <div class="card w-100 border-0" [hidden]="bTinyMCEEditorOpen">
                     <div class="card-header d-flex border bg-dark text-white" style="border-radius: 5px !important;">
                         <div>
-                            <h5>ALLENAMENTO {{training.type}} {{training._id}}</h5>
-                            <h6 class="m-0">Allenamento creato da {{training.author.name}} {{training.author.surname}} il {{training.creationDate | date:'d MMMM yyyy'}}</h6>
+                            <h5>ALLENAMENTO {{readOnlyTraining.type}} {{readOnlyTraining._id}}</h5>
+                            <h6 class="m-0">Allenamento creato da {{readOnlyTraining.author.name}} {{readOnlyTraining.author.surname}} il {{readOnlyTraining.creationDate | date:'d MMMM yyyy'}}</h6>
                             <h6 class="m-0">
-                                <span>Atleta {{training.athlete.name}} {{training.athlete.surname}} ({{training.athlete.dateOfBirth | date:'d MMMM yyyy'}} &bull; {{training.athlete.bodyWeight}} kg)</span>
-                                <span class="m-0">, dal {{training.startDate | date:'d MMMM yyyy'}} al {{training.endDate | date:'d MMMM yyyy'}}</span>
+                                <span>Atleta {{readOnlyTraining.athlete.name}} {{readOnlyTraining.athlete.surname}} ({{readOnlyTraining.athlete.dateOfBirth | date:'d MMMM yyyy'}} &bull; {{readOnlyTraining.athlete.bodyWeight}} kg)</span>
+                                <span class="m-0">, dal {{readOnlyTraining.startDate | date:'d MMMM yyyy'}} al {{readOnlyTraining.endDate | date:'d MMMM yyyy'}}</span>
                             </h6>
-                            <span [hidden]="(training.comment == null || training.comment == '')">Commento: {{training.comment}}</span>
+                            <span [hidden]="(readOnlyTraining.comment == null || readOnlyTraining.comment == '')">Commento: {{readOnlyTraining.comment}}</span>
                         </div>
-                        <div class="ml-auto">
-                            <button class="btn btn-primary" ngbTooltip="Apri in Editor di testo" placement="left" (click)="openTinyMCEEditor()">Apri Editor</button>
+                        <div class="ml-auto d-flex ">
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="actionsDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Azioni
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="actionsDropdownMenuButton">
+                                  <a class="dropdown-item cursor-pointer" (click)="convertPercentage('kg')">Converti % in kg</a>
+                                  <a class="dropdown-item cursor-pointer" (click)="convertPercentage('lbs')">Converti % in lbs</a>
+                                  <a class="dropdown-item cursor-pointer" (click)="convertPercentage()">Ripristina</a>
+                                </div>
+                              </div>
+                            <div> 
+                                <button class="btn btn-primary ml-2" ngbTooltip="Apri in Editor di testo" placement="left" (click)="openTinyMCEEditor()">Apri Editor</button>
+                            </div>
                         </div>
                     </div>
                     <div class="card-body p-0">
-                        <div class="card my-3" *ngFor="let week of training.weeks; index as weekIndex;" style="border-color: rgba(0, 0, 0, 0.6) !important;">
+                        <div class="card my-3" *ngFor="let week of readOnlyTraining.weeks; index as weekIndex;" style="border-color: rgba(0, 0, 0, 0.6) !important;">
                             <div class="card-header border border-dark bg-dark text-white">
                                 <h6 class="m-0">WEEK {{weekIndex+1}}</h6>
                                 <span [hidden]="(week.comment == null || week.comment == '')">Commento: {{week.comment}}</span>

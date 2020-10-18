@@ -125,8 +125,15 @@
                                     </div>
                                     <div class="col-4 form-group px-1">
                                         <label for="oneRepPR_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">1RM</label>
-                                        <input type="number" min="0" [(ngModel)]="pr.oneRepPR" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                        <div class="d-flex">
+                                            <input type="number" min="0" [(ngModel)]="pr.oneRepPR.weight" class="form-control form-control-sm w-100" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
                                             id="oneRepPR_{{prIndex}}" name="oneRepPR_{{prIndex}}">
+                                            <select [(ngModel)]="pr.oneRepPR.measure" class="form-control form-control-sm cursor-pointer" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                id="oneRepPrMeasure_{{prIndex}}" name="oneRepPrMeasure_{{prIndex}}">
+                                                <option [value]="'kg'">kg</option>
+                                                <option [value]="'lbs'">lbs</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <!-- <div class="col-2 form-group d-flex flex-column justify-content-center align-items-center pl-1 pr-0">
                                         <label for="public_{{prIndex}}" class="col-form-label col-form-label-sm">Pubblico</label>

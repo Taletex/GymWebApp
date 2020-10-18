@@ -12,6 +12,8 @@ import { Training, Week, Series, Exercise, Session, User, Variant, SessionExerci
 import * as _ from "lodash";
 import { GeneralService, PAGES, PAGEMODE, PageStatus } from '@app/_services/general-service/general-service.service';
 import * as jsPDF from 'jspdf';
+import { Role } from '@app/_models';
+import { AccountService } from '@app/_services/account-service/account-service.service';
 
 declare const tinymce: any;
 
@@ -23,6 +25,7 @@ declare const tinymce: any;
 export class TrainingComponent implements OnInit {
 
   public training: Training = new Training();
+  public readOnlyTraining: Training = new Training();
   public activeWeek: number;
   public copiedWeek: Week = new Week();
   public copiedSession: Session = new Session();
@@ -34,6 +37,10 @@ export class TrainingComponent implements OnInit {
   public hoveredDate: NgbDate | null = null;
   public fromDate: NgbDate;
   public toDate: NgbDate | null = null;
+
+  // Account information
+  account = this.accountService.accountValue;
+  public Role = Role;
 
   // Visual notifies 
   public bLoading = false;
@@ -77,7 +84,7 @@ export class TrainingComponent implements OnInit {
   };
 
   /* CONSTRUCTOR */
-  constructor(private generalService: GeneralService, private utilsService: UtilsService, private trainingService: TrainingService, public router: Router, private toastr: ToastrService, private calendar: NgbCalendar, public httpService: HttpService) {
+  constructor(private generalService: GeneralService, private accountService: AccountService, private utilsService: UtilsService, private trainingService: TrainingService, public router: Router, private toastr: ToastrService, private calendar: NgbCalendar, public httpService: HttpService) {
 
     // Init training attributes
     let trainingId = (this.router.url).split('/')[2];
@@ -86,6 +93,7 @@ export class TrainingComponent implements OnInit {
       .subscribe(
         (data: any) => {
           this.training = data;
+          this.readOnlyTraining = _.cloneDeep(this.training);
           console.log(this.training);
 
           // Init exercise list
@@ -133,6 +141,10 @@ export class TrainingComponent implements OnInit {
   formatter = (x: {name: string}) => x.name;
     
   changeMode(mode: PAGEMODE) {
+    if(mode == PAGEMODE.READONLY)
+      this.readOnlyTraining = _.cloneDeep(this.training);
+
+    this.closeTinyMCEEditor();
     this.pageStatus[PAGES.TRAININGS] = mode;
     this.generalService.setPageStatus(mode, PAGES.TRAININGS);
   }
@@ -510,7 +522,7 @@ export class TrainingComponent implements OnInit {
 
   // TinyMCE Handling functions
   openTinyMCEEditor() {
-    this.editorContent = this.trainingService.trainingReadViewToString(this.training);
+    this.editorContent = this.trainingService.trainingReadViewToString(this.readOnlyTraining);
     this.bTinyMCEEditorOpen = true;
   }
 
@@ -530,6 +542,13 @@ export class TrainingComponent implements OnInit {
     console.log(this.editorContent); */
     
     tinymce.activeEditor.execCommand('mcePrint');
+  }
+
+  convertPercentage(newMeasure?) {
+    if(newMeasure)
+      this.readOnlyTraining = this.trainingService.convertPercentage(this.training, this.account.user.personalRecords, newMeasure);
+    else
+      this.readOnlyTraining = _.cloneDeep(this.training);
   }
 
   setSessionMeasure(session: Session, measure: string) {

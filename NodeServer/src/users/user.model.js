@@ -30,7 +30,7 @@ const PersonalRecordSchema = mongoose.Schema({
         required: false
     },
     series: [PRSeriesSchema],
-    oneRepPR: Number,
+    oneRepPR: PRSeriesSchema,
     bPublic: Boolean
 }, { _id: false})
 

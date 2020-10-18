@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Training, Week, Session, Exercise, Series, SessionExercise } from '@app/_models/training-model';
+import { Training, Week, Session, Exercise, Series, SessionExercise, PersonalRecord } from '@app/_models/training-model';
 
 @Injectable({
   providedIn: 'root'
@@ -149,4 +149,46 @@ export class TrainingService {
 
     return seriesToString;
   }
+
+  convertPercentage(training: Training, personalRecords: PersonalRecord[], newMeasure: string): Training {
+    let currentTraining = _.cloneDeep(training)
+    for(let week of currentTraining.weeks) {
+        for(let session of week.sessions) {
+            for(let sessionExercise of session.exercises) {
+
+                // Get pr if it exists
+                let currentPr;
+                for(let pr of personalRecords) {
+                    if(pr.exercise._id == sessionExercise.exercise._id)
+                        currentPr = _.cloneDeep(pr);
+                }
+
+                // If the pr exists, then convert %
+                if(currentPr && currentPr.oneRepPR.weight > 0) {
+                    for(let series of sessionExercise.series) {
+                        if(series.measure == '%') {
+                            series.measure = newMeasure;
+
+                            if(newMeasure == currentPr.oneRepPR.measure) {
+                                series.weight = currentPr.oneRepPR.weight * series.weight / 100;
+                            }
+                            else {
+                                if(newMeasure=='lbs') {
+                                    series.weight = currentPr.oneRepPR.weight * 2.2 * series.weight / 100;
+                                }
+                                else if(newMeasure=='kg')
+                                    series.weight = currentPr.oneRepPR.weight / 2.2 * series.weight / 100;
+                            }
+                        }
+                    }
+                }
+                
+            }
+        }
+    }
+
+    return currentTraining;
+  }
+
+
 }

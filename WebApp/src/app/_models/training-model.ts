@@ -48,10 +48,10 @@ export class PRSeries {
 export class PersonalRecord {
     exercise: Exercise;
     series: [PRSeries];
-    oneRepPR: number;
+    oneRepPR: PRSeries;
     bPublic: boolean;
 
-    constructor(exercise: Exercise = new Exercise(), series: [PRSeries] = [new PRSeries()], oneRepPR: number = 0, bPublic: boolean = false) {
+    constructor(exercise: Exercise = new Exercise(), series: [PRSeries] = [new PRSeries()], oneRepPR: PRSeries = new PRSeries(), bPublic: boolean = false) {
         this.exercise = exercise;
         this.series = series;
         this.oneRepPR = oneRepPR;
