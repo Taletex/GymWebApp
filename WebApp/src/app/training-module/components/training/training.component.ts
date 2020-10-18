@@ -257,6 +257,19 @@ export class TrainingComponent implements OnInit {
     }
   }
 
+  shiftSeries(exercise: any, index: number, shift: number) {
+    if (exercise && exercise.series != null && index < exercise.series.length) {
+      if((shift==1 && index==(exercise.series.length-1)) || (shift==-1 && index==0)) {
+        console.log('ERROR: shifting series of index ' + index);
+        return;
+      }
+      
+      let currentSeries = _.cloneDeep(exercise.series[index]);
+      exercise.series[index] = _.cloneDeep(exercise.series[index+shift]);
+      exercise.series[index+shift] = currentSeries;
+    }
+  }
+
 
   /* EXERCISES FUNCTIONS */
   pushExercise(session: Session) {
@@ -296,6 +309,21 @@ export class TrainingComponent implements OnInit {
       session.exercises[index] = _.cloneDeep(this.copiedExercise);
     } else {
       console.log('ERROR: pasting exercise of index ' + index);
+    }
+  }
+
+  shiftExercise(session: Session, index: number, shift: number) {
+    if (session && session.exercises != null && index < session.exercises.length) {
+      if((shift==1 && index==(session.exercises.length-1)) || (shift==-1 && index==0)) {
+        console.log('ERROR: shifting exercise of index ' + index);
+        return;
+      }
+      
+      let currentExercise = _.cloneDeep(session.exercises[index]);
+      session.exercises[index] = _.cloneDeep(session.exercises[index+shift]);
+      session.exercises[index+shift] = currentExercise;
+    } else {
+      console.log('ERROR: shifting exercise of index ' + index);
     }
   }
 
@@ -351,6 +379,24 @@ export class TrainingComponent implements OnInit {
     event.stopImmediatePropagation();
   }
 
+  shiftSession(event: MouseEvent, week: any, index: number, shift: number) {
+    if (week && week.sessions != null && index < week.sessions.length) {
+      if((shift==1 && index==(week.sessions.length-1)) || (shift==-1 && index==0)) {
+        console.log('ERROR: shifting session of index ' + index);
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        return;
+      }
+      
+      let currentSession = _.cloneDeep(week.sessions[index]);
+      week.sessions[index] = _.cloneDeep(week.sessions[index+shift]);
+      week.sessions[index+shift] = currentSession;
+    }
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }
+
 
   /* WEEKS FUNCTIONS */
   pushWeek(event: MouseEvent) {
@@ -399,6 +445,25 @@ export class TrainingComponent implements OnInit {
     event.stopImmediatePropagation();
   }
 
+  shiftWeek(event: MouseEvent,index: number, shift: number) {
+    if (this.training.weeks != null && index < this.training.weeks.length) {
+      if((shift==1 && index==(this.training.weeks.length-1)) || (shift==-1 && index==0)) {
+        console.log('ERROR: shifting week of index ' + index);
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        return;
+      }
+      
+      let currentWeek = _.cloneDeep(this.training.weeks[index]);
+      this.training.weeks[index] = _.cloneDeep(this.training.weeks[index+shift]);
+      this.training.weeks[index+shift] = currentWeek;
+    }
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }
+
+
   /* TRAINING FUNCTIONS */
   saveTraining() {
     this.bLoading = true;
@@ -430,6 +495,17 @@ export class TrainingComponent implements OnInit {
         this.toastr.error('An error occurred while deleting the training!');
         console.log(error.error.message);
       });
+  }
+
+  canTrainingBeSaved() {
+    for(let week of this.training.weeks) 
+      for(let session of week.sessions) 
+        for(let sessionExercise of session.exercises) 
+          if(sessionExercise.exercise.name == undefined || sessionExercise.exercise.name == null || sessionExercise.exercise.name == '') {
+            return false;
+          }
+    
+    return true;
   }
 
   // TinyMCE Handling functions
