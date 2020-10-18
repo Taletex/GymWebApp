@@ -243,13 +243,23 @@
                                                         <div class="form-group">
                                                             <label for="misura_{{exerciseIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
                                                             [hidden]="!seriesFirst">Misura</label>
-                                                            <select [(ngModel)]="elem.measure" class="form-control form-control-sm"
+                                                            <select [(ngModel)]="elem.measure" class="form-control form-control-sm" [hidden]="!(elem.measure=='kg' || elem.measure=='lbs' || elem.measure=='%' || elem.measure=='RPE' || elem.measure=='Low Effort' || elem.measure=='Med Effort' || elem.measure=='Max Effort')"
                                                                 id="misuraSelect_{{exerciseIndex}}_{{seriesIndex}}"
                                                                 name="misuraSelect_{{exerciseIndex}}_{{seriesIndex}}">
                                                                 <option [value]="'kg'">kg</option>
                                                                 <option [value]="'lbs'">lbs</option>
                                                                 <option [value]="'%'">% RM</option>
+                                                                <option [value]="'RPE'">RPE</option>
+                                                                <option [value]="'Low Effort'">Low Effort</option>
+                                                                <option [value]="'Med Effort'">Med Effort</option>
+                                                                <option [value]="'Max Effort'">Max Effort</option>
+                                                                <option [value]="'Custom'">(+)</option>
                                                             </select>
+                                                            <div class="position-relative" [hidden]="(elem.measure=='kg' || elem.measure=='lbs' || elem.measure=='%' || elem.measure=='RPE' || elem.measure=='Low Effort' || elem.measure=='Med Effort' || elem.measure=='Max Effort')">
+                                                                <input type="text" [(ngModel)]="elem.measure" class="form-control form-control-sm"
+                                                                id="misuraText_{{exerciseIndex}}_{{seriesIndex}}" name="misuraText_{{exerciseIndex}}_{{seriesIndex}}">
+                                                                <div (click)="elem.measure='%'" style="position:absolute; right: 3px; top: 0px;">&times;</div>
+                                                            </div>
                                                         </div>
                                                         <div class="image-button ml-1" [ngClass]="{'d-flex align-items mt-3': seriesFirst}" ngbTooltip="Applica misura a tutta la sessione" placement="top" (click)="setSessionMeasure(session, elem.measure)"><img src="assets/icons/actions/copy-secondary.svg" style="width:15px; height:auto;"></div>
                                                         <div class="image-button ml-1" [ngClass]="{'d-flex align-items mt-3': seriesFirst}" ngbTooltip="Applica misura a tutto l'esercizio" placement="top" (click)="setExerciseMeasure(exercise, elem.measure)"><img src="assets/icons/actions/copy-secondary.svg" style="width:15px; height:auto;"></div>

@@ -170,7 +170,7 @@
                                 <div class="row m-0">
                                     <div class="col-6 form-group pl-0 pr-1 m-0">
                                         <label for="pr_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">Esercizio</label>
-                                        <input id="pr_{{prIndex}}" name="pr_{{prIndex}}" type="text" class="form-control form-control-sm"
+                                        <input id="pr_{{prIndex}}" name="pr_{{prIndex}}" type="text" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY)}"
                                             [ngModel]="pr.exercise.name"
                                             [ngbTypeahead]="search"
                                             [resultTemplate]="rt"
@@ -183,22 +183,22 @@
                                     </div>
                                     <div class="col-6 form-group pl-1 pr-0 m-0">
                                         <label for="tipo_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">Tipo</label>
-                                        <input type="text" [(ngModel)]="pr.exercise.variant.name" class="form-control form-control-sm"
+                                        <input type="text" [(ngModel)]="pr.exercise.variant.name" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY)}"
                                             id="tipo_{{prIndex}}" name="tipo_{{prIndex}}" placeholder="Tipo esercizio..." disabled>
                                     </div>
                                     <div class="col-8 form-group pl-0 pr-1">
                                         <label for="description_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">Descrizione</label>
-                                        <input type="text" [(ngModel)]="pr.exercise.description" class="form-control form-control-sm"
+                                        <input type="text" [(ngModel)]="pr.exercise.description" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY)}"
                                             id="description_{{prIndex}}" name="description_{{prIndex}}" placeholder="Descrizione esercizio..." disabled>
                                     </div>
                                     <div class="col-2 form-group px-1">
                                         <label for="oneRepPR_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">1RM</label>
-                                        <input type="number" min="0" [(ngModel)]="pr.oneRepPR" class="form-control form-control-sm"
+                                        <input type="number" min="0" [(ngModel)]="pr.oneRepPR" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY)}"
                                             id="oneRepPR_{{prIndex}}" name="oneRepPR_{{prIndex}}">
                                     </div>
                                     <div class="col-2 form-group d-flex flex-column justify-content-center align-items-center pl-1 pr-0">
                                         <label for="public_{{prIndex}}" class="col-form-label col-form-label-sm">Pubblico</label>
-                                        <input type="checkbox" [(ngModel)]="pr.bPublic" class="form-control form-control-sm"
+                                        <input type="checkbox" [(ngModel)]="pr.bPublic" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY)}"
                                             id="public_{{prIndex}}" name="public_{{prIndex}}">
                                     </div>
                                 </div>
@@ -215,21 +215,21 @@
                                     <div class="col-1 form-group">
                                         <label for="serie_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
                                             [hidden]="!seriesFirst">Serie</label>
-                                        <input type="number" min="1" [(ngModel)]="elem.seriesNumber"
+                                        <input type="number" min="1" [(ngModel)]="elem.seriesNumber" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY)}"
                                             class="form-control form-control-sm" id="serie_{{prIndex}}_{{seriesIndex}}"
                                             name="serie_{{prIndex}}_{{seriesIndex}}" placeholder="Serie...">
                                     </div>
                                     <div class="col-1 form-group">
                                         <label for="rep_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
                                             [hidden]="!seriesFirst">Rep</label>
-                                        <input type="number" min="1" [(ngModel)]="elem.repNumber"
+                                        <input type="number" min="1" [(ngModel)]="elem.repNumber" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY)}"
                                             class="form-control form-control-sm" id="rep_{{prIndex}}_{{seriesIndex}}"
                                             name="rep_{{prIndex}}_{{seriesIndex}}" placeholder="Rep...">
                                     </div>
                                     <div class="col-1 form-group">
                                         <label for="peso_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
                                             [hidden]="!seriesFirst">Peso</label>
-                                        <input type="number" min="0" [(ngModel)]="elem.weight"
+                                        <input type="number" min="0" [(ngModel)]="elem.weight" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY)}"
                                             class="form-control form-control-sm" id="peso_{{prIndex}}_{{seriesIndex}}"
                                             name="peso_{{prIndex}}_{{seriesIndex}}" placeholder="Peso...">
                                     </div>
@@ -237,45 +237,44 @@
                                         <div class="form-group">
                                             <label for="misura_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
                                             [hidden]="!seriesFirst">Misura</label>
-                                            <select [(ngModel)]="elem.measure" class="form-control form-control-sm"
-                                                id="misuraSelect_{{prIndex}}_{{seriesIndex}}"
-                                                name="misuraSelect_{{prIndex}}_{{seriesIndex}}">
+                                            <select [(ngModel)]="elem.measure" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY)}"
+                                                id="misuraSelect_{{prIndex}}_{{seriesIndex}}" name="misuraSelect_{{prIndex}}_{{seriesIndex}}">
                                                 <option [value]="'kg'">kg</option>
                                                 <option [value]="'lbs'">lbs</option>
                                             </select>
                                         </div>
-                                        <div class="image-button ml-1" [ngClass]="{'d-flex align-items mt-3': seriesFirst}" ngbTooltip="Applica misura a tutti i personal record" placement="top" (click)="setPRlistMeasure(elem.measure)"><img src="assets/icons/actions/copy-secondary.svg" style="width:15px; height:auto;"></div>
-                                        <div class="image-button ml-1" [ngClass]="{'d-flex align-items mt-3': seriesFirst}" ngbTooltip="Applica misura a tutto il personal record" placement="top" (click)="setPRMeasure(pr, elem.measure)"><img src="assets/icons/actions/copy-secondary.svg" style="width:15px; height:auto;"></div>
+                                        <div class="image-button ml-1" [ngClass]="{'d-flex align-items mt-3': seriesFirst}" *ngIf="!(pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY)" ngbTooltip="Applica misura a tutti i personal record" placement="top" (click)="setPRlistMeasure(elem.measure)"><img src="assets/icons/actions/copy-secondary.svg" style="width:15px; height:auto;"></div>
+                                        <div class="image-button ml-1" [ngClass]="{'d-flex align-items mt-3': seriesFirst}" *ngIf="!(pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY)" ngbTooltip="Applica misura a tutto il personal record" placement="top" (click)="setPRMeasure(pr, elem.measure)"><img src="assets/icons/actions/copy-secondary.svg" style="width:15px; height:auto;"></div>
                                     </div>
                                     <div class="col-1 form-group">
                                         <label for="rest_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
                                             [hidden]="!seriesFirst">Recupero</label>
-                                        <input type="number" min="0" [(ngModel)]="elem.rest" 
+                                        <input type="number" min="0" [(ngModel)]="elem.rest" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY)}" 
                                             class="form-control form-control-sm" id="rest_{{prIndex}}_{{seriesIndex}}" 
                                             name="rest_{{prIndex}}_{{seriesIndex}}">
                                     </div>
                                     <div class="col-1 form-group d-flex flex-column justify-content-center align-items-center">
-                                        <label for="verified_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm "
+                                        <label for="verified_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
                                         [hidden]="!seriesFirst">Verificato</label>
-                                        <input type="checkbox" [(ngModel)]="elem.bVerified" class="form-control form-control-sm"
+                                        <input type="checkbox" [(ngModel)]="elem.bVerified" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY)}"
                                             id="verified_{{prIndex}}_{{seriesIndex}}" name="verified_{{prIndex}}_{{seriesIndex}}">
                                     </div>
                                     <div class="col-1 form-group d-flex flex-column justify-content-center align-items-center">
                                         <label for="competition_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
                                         [hidden]="!seriesFirst">Comp.</label>
-                                        <input type="checkbox" [(ngModel)]="elem.bCompetition" class="form-control form-control-sm" 
+                                        <input type="checkbox" [(ngModel)]="elem.bCompetition" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY)}" 
                                             id="competition_{{prIndex}}_{{seriesIndex}}" name="competition_{{prIndex}}_{{seriesIndex}}">
                                     </div>
                                     <div class="col-1 form-group d-flex flex-column justify-content-center align-items-center">
-                                        <label for="public_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm "
+                                        <label for="public_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
                                         [hidden]="!seriesFirst">Pubblico</label>
-                                        <input type="checkbox" [(ngModel)]="elem.bPublic" class="form-control form-control-sm" 
+                                        <input type="checkbox" [(ngModel)]="elem.bPublic" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY)}"
                                             id="public_{{prIndex}}_{{seriesIndex}}" name="public_{{prIndex}}_{{seriesIndex}}">
                                     </div>
                                     <div class="col-1 form-group">
-                                        <label for="comment_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
+                                        <label for="comment_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm" 
                                             [hidden]="!seriesFirst">Commento</label>
-                                        <input type="text" [(ngModel)]="elem.comment"
+                                        <input type="text" [(ngModel)]="elem.comment" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY)}"
                                             class="form-control form-control-sm" id="comment_{{prIndex}}_{{seriesIndex}}"
                                             name="comment_{{prIndex}}_{{seriesIndex}}" placeholder="Commento...">
                                     </div>
@@ -318,8 +317,7 @@
                                 <div class="form-group col-12 p-0">
                                     <label class="col-form-label col-form-label-sm text-muted">Email</label>
                                     <input type="text" formControlName="email" class="form-control form-control-sm"
-                                        [ngClass]="{ 'is-invalid': accountFormSubmitted && fa.email.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY) }"
-                                        />
+                                        [ngClass]="{ 'is-invalid': accountFormSubmitted && fa.email.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY) }"/>
                                     <div *ngIf="accountFormSubmitted && fa.email.errors" class="invalid-feedback">
                                         <div *ngIf="fa.email.errors.required">Email obbligatoria</div>
                                         <div *ngIf="fa.email.errors.email">Il campo email deve contenere un'email valida</div>
