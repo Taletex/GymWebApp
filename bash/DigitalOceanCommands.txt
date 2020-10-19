@@ -26,7 +26,7 @@ How to avviare Su Digital Ocean:
 - Update repo:
    + cd GymWebApp
    + git pull
-- Cambiare le porte e gli indirizzi nei 3 file di configurazione: configs.json (nella webapp), config.json (nel server), environment.ts (nella webapp, è l'indirizzo del server). Il db lascia "localhost", per gli altri metti tutti localhost, porta del server 4000, porta del client 1738.
+- Cambiare le porte e gli indirizzi nei 3 file di configurazione: configs.json (nella webapp), config.json (nel server), environment.ts (nella webapp, è l'indirizzo del server). Il db lascia "localhost", per gli altri metti tutti 139.59.153.56, porta del server 4000, porta del client 1738.
 - Avviare con pm2:
   + cd root
   + cd GymWebApp

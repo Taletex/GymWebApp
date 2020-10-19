@@ -6,13 +6,13 @@
         "address": "mongodb://localhost:27017/gymapp"
     },
     "webapp": {
-        "ip": "localhost",
-        "port": "4200",
-        "address": "http://localhost:4200"
+        "ip": "139.59.153.56",
+        "port": "1738",
+        "address": "http://139.59.153.56:1738"
     },
     "nodeserver": {
-        "ip": "localhost",
+        "ip": "139.59.153.56",
         "port": "4000",
-        "address": "http://localhost:4000"
+        "address": "http://139.59.153.56:4000"
     }
 }
