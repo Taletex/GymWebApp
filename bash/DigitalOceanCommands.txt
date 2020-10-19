@@ -42,7 +42,7 @@ Aspettare che viene buildata l'app angular e accedere
 
 
 
-Come buildare e deployare l'app angular sul server digital ocean:
+Come buildare e deployare l'app angular sul server digital ocean (cerca sezione "Build Angular Client"):
 https://grokonez.com/frontend/angular/angular-deployment/how-to-deploy-angular-on-nginx-remote-server-example-use-vultr-vps-hosting#Build_Angular_Client
 
 

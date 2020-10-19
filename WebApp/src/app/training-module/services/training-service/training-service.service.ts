@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Training, Week, Session, Exercise, Series, SessionExercise, PersonalRecord } from '@app/_models/training-model';
+import * as _ from 'lodash';
 
 @Injectable({
   providedIn: 'root'
