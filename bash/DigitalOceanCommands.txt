@@ -5,6 +5,7 @@ Comandi
 - Connessione: ssh root@139.59.153.56
 Nota: se non funziona un comando prova a lanciarlo preceduto da sudo -u nodejs (e.g. sudo -u nodejs pm2 restart hello)
 
+AVVIARE APPLICAZIONI:
 NodeJS Server (posizionati dentro il node server)
 - Start: pm2 start server.js
 - Restart: sudo -u nodejs pm2 restart server
@@ -19,6 +20,8 @@ WebApp (posizionati dentro la webapp)
 - Delete: pm2 delete (id del processo)
 - Sbloccare la porta 1738: sudo ufw allow 1738
 
+
+AVVIARE L'APP COMPLETA:
 How to avviare Su Digital Ocean:
 - Connessione da terminale: 
    + ssh root@localhost
@@ -37,13 +40,21 @@ How to avviare Su Digital Ocean:
   + cd NodeServer
   + pm2 start server.js
   + pm2 save
-
 Aspettare che viene buildata l'app angular e accedere
 
 
-
+AVVIARE LA WEBAPP BUILDATA INVECE CHE IN DEPLOYMENT
 Come buildare e deployare l'app angular sul server digital ocean (cerca sezione "Build Angular Client"):
-https://grokonez.com/frontend/angular/angular-deployment/how-to-deploy-angular-on-nginx-remote-server-example-use-vultr-vps-hosting#Build_Angular_Client
+- https://grokonez.com/frontend/angular/angular-deployment/how-to-deploy-angular-on-nginx-remote-server-example-use-vultr-vps-hosting#Build_Angular_Client
+- Nota: il percorso dove copiare la cartella dist, è: /var/www/html
+
+
+TRASFERIMENTO CON FILE ZILLA
+Indirizzo: sftp://139.59.153.56
+username: root
+psw (la psw)
+
+
 
 
 
