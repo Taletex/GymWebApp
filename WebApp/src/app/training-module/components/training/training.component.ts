@@ -544,11 +544,21 @@ export class TrainingComponent implements OnInit {
     tinymce.activeEditor.execCommand('mcePrint');
   }
 
+
+  /* CONVERSION FUNCTIONS */
   convertPercentage(newMeasure?) {
     if(newMeasure)
       this.readOnlyTraining = this.trainingService.convertPercentage(this.training, this.account.user.personalRecords, newMeasure);
     else
       this.readOnlyTraining = _.cloneDeep(this.training);
+  }
+
+  convertLbsToKg() {
+    this.readOnlyTraining = this.trainingService.convertLbsToKg(this.readOnlyTraining);
+  }
+
+  convertKgToLbs() {
+    this.readOnlyTraining = this.trainingService.convertKgToLbs(this.readOnlyTraining);
   }
 
   setSessionMeasure(session: Session, measure: string) {
