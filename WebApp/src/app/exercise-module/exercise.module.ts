@@ -8,7 +8,7 @@ import { ExerciseRoutingModule } from './exercise-routing.module';
 import { LayoutComponent } from './layout.component';
 import { ExerciseComponent } from './components/exercise/exercise.component';
 import { ExercisesComponent } from './components/exercises/exercises.component';
-import { ExerciseModalComponent, SharedModule } from '@app/shared-module/shared.module';
+import { SharedModule } from '@app/shared-module/shared.module';
 
 @NgModule({
     imports: [

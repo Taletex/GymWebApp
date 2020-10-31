@@ -235,7 +235,7 @@ export class ProfileDetailsComponent {
     selectExercise(event, exerciseIndex: number) {
         if (event.item.variant.intensityCoefficient == -1) {
             this.currentExerciseIndex = exerciseIndex;
-            this.newExercise.name = (document.getElementById("exercise_" + exerciseIndex) as HTMLInputElement).value;
+            this.newExercise.name = (document.getElementById("pr_" + exerciseIndex) as HTMLInputElement).value;
             document.getElementById("exerciseModalButton").click();
         }
         else

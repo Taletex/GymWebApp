@@ -180,6 +180,11 @@
                                             <ng-template #rt let-r="result" let-t="term">
                                                 <ngb-highlight [result]="r.name + ' (' + r.variant.name + ')'" [term]="t"></ngb-highlight>
                                             </ng-template>
+
+                                            <!-- Exercise Modal -->
+                                            <app-exercise-modal [hidden]="true" (onClose)="createExercise()" (onAbort)="abortCreateExercise()" [(newExercise)]="newExercise" style="position: absolute; right: 15px; bottom: 15px">
+                                                <button id="exerciseModalButton" class="image-button cursor-pointer" ngbTooltip="Nuovo" placement="top"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></button>
+                                            </app-exercise-modal>
                                     </div>
                                     <div class="col-6 form-group pl-1 pr-0 m-0">
                                         <label for="tipo_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">Tipo</label>

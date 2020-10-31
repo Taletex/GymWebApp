@@ -353,6 +353,7 @@
         </div>
     </div>
 
+    <!-- Exercise Modal -->
     <app-exercise-modal [hidden]="true" (onClose)="createExercise()" (onAbort)="abortCreateExercise()" [(newExercise)]="newExercise" style="position: absolute; right: 15px; bottom: 15px">
         <button id="exerciseModalButton" class="image-button cursor-pointer" ngbTooltip="Nuovo" placement="top"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></button>
     </app-exercise-modal>
