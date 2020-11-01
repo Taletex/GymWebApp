@@ -32,7 +32,7 @@ export class TrainingService {
             </h6> \
             " + ((training.comment == null || training.comment == '') ? "" : ("<span>Commento: " + training.comment + " </span>")) + "\
         </div> \
-        <div class='card-body p-0 '> \
+        <div class='card-body p-0 row m-0'> \
     ";
         for (let i = 0; i < training.weeks.length; i++) {
             trainingToString = trainingToString + this.weekReadViewToString(training.weeks[i], i);
@@ -54,12 +54,12 @@ export class TrainingService {
         let weekToString = "";
         weekToString = weekToString +
             "\
-    <div class='card my-3' style='border-color: rgba(0, 0, 0, 0.6) !important;'> \
+    <div class='card my-3 col-3 p-0' style='border-color: rgba(0, 0, 0, 0.6) !important;'> \
         <div class='card-header border border-dark bg-dark text-white'> \
             <h6 class='m-0'>WEEK " + (index + 1) + "</h6> \
             " + ((week.comment == null || week.comment == '') ? "" : ("<span>Commento: " + week.comment + " </span>")) + "\
         </div> \
-        <div class='card-body border-0 p-0 '> \
+        <div class='card-body border-0 p-0 row m-0'> \
     ";
 
         for (let i = 0; i < week.sessions.length; i++) {
@@ -79,7 +79,7 @@ export class TrainingService {
         let sessionToString = "";
         sessionToString = sessionToString +
             " \
-    <div class='card border-0' style='box-shadow: 0px 2px 0px rgba(0,0,0,.5); border-radius: 0px !important; border: 0px !important'> \
+    <div class='card border-0 col-12 p-0' style='box-shadow: 0px 2px 0px rgba(0,0,0,.5); border-radius: 0px !important; border: 0px !important'> \
         <div class='card-header m-0 px-0 border-0 text-white' style='background-color: rgba(0, 0, 0, 0.6) !important; border-radius: 0px !important;'> \
             <h6 class='m-0 px-3'>Sessione " + index + " - " + session.name + "</h6> \
             <div class='row m-0 px-3 py-0' style='font-size: small; font-style: italic;'> \

@@ -83,6 +83,10 @@ export class TrainingComponent implements OnInit {
 
   };
 
+  // Read only mode variables
+  public readOptions = {format: {weeksForRow: 1}};
+
+
   /* CONSTRUCTOR */
   constructor(private generalService: GeneralService, private accountService: AccountService, private utilsService: UtilsService, private trainingService: TrainingService, public router: Router, private toastr: ToastrService, private calendar: NgbCalendar, public httpService: HttpService) {
 
@@ -574,4 +578,18 @@ export class TrainingComponent implements OnInit {
       exercise.series[i].measure = measure;
     }
   }
+
+  /* READ OPTIONS FUNCTIONS */
+  setDefaultReadOptions() {
+    this.readOptions = {format: {weeksForRow: 1}};
+  }
+
+  clampWeeksForRowValue() {
+    if(this.readOptions.format.weeksForRow <= 0) 
+      this.readOptions.format.weeksForRow = 1;
+    else
+      if(this.readOptions.format.weeksForRow > 8)
+        this.readOptions.format.weeksForRow = 8;
+  }
+  
 }

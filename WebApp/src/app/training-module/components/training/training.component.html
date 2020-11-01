@@ -35,24 +35,37 @@
                         </div>
                         <div class="ml-auto d-flex ">
                             <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="actionsDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  Azioni
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="conversionDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Conversione
                                 </button>
-                                <div class="dropdown-menu" aria-labelledby="actionsDropdownMenuButton">
+                                <div class="dropdown-menu" aria-labelledby="conversionDropdownMenuButton">
                                   <a class="dropdown-item cursor-pointer" (click)="convertPercentage('kg')">Converti % in kg</a>
                                   <a class="dropdown-item cursor-pointer" (click)="convertPercentage('lbs')">Converti % in lbs</a>
                                   <a class="dropdown-item cursor-pointer" (click)="convertLbsToKg()">Converti lbs in kg</a>
                                   <a class="dropdown-item cursor-pointer" (click)="convertKgToLbs()">Converti kg in lbs</a>
                                   <a class="dropdown-item cursor-pointer" (click)="convertPercentage()">Ripristina originale</a>
                                 </div>
-                              </div>
+                            </div>
+                            <div class="dropdown ml-2">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="formatDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Formattazione
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="formatDropdownMenuButton">
+                                  <a class="dropdown-item cursor-pointer d-flex align-items-center justify-content-center">
+                                    <span>Settimane per riga: </span><input type="number" class="ml-2" [(ngModel)]="readOptions.format.weeksForRow" min="1" max="8" (ngModelChange)="clampWeeksForRowValue()">
+                                  </a>
+                                  <a class="dropdown-item cursor-pointer" (click)="setDefaultReadOptions()">Ripristina originale</a>
+                                </div>
+                            </div>
                             <div> 
                                 <button class="btn btn-primary ml-2" ngbTooltip="Apri in Editor di testo" placement="left" (click)="openTinyMCEEditor()">Apri Editor</button>
                             </div>
                         </div>
                     </div>
-                    <div class="card-body p-0">
-                        <div class="card my-3" *ngFor="let week of readOnlyTraining.weeks; index as weekIndex;" style="border-color: rgba(0, 0, 0, 0.6) !important;">
+
+                    <div class="card-body p-0 d-flex m-0" style="flex-wrap: wrap;">
+                        <div class="card my-3 p-0" *ngFor="let week of readOnlyTraining.weeks; index as weekIndex; last as bLastWeek" style="border-color: rgba(0, 0, 0, 0.6) !important;"
+                            [ngClass]="{'margin-right-1': index==0 || ((weekIndex+1)%readOptions.format.weeksForRow!=0),'flex-1': readOptions.format.weeksForRow == 1 || readOptions.format.weeksForRow == 0 || readOptions.format.weeksForRow == null, 'flex-2': readOptions.format.weeksForRow == 2, 'flex-3': readOptions.format.weeksForRow == 3, 'flex-4': readOptions.format.weeksForRow == 4, 'flex-5': readOptions.format.weeksForRow == 5, 'flex-6': readOptions.format.weeksForRow == 6, 'flex-7': readOptions.format.weeksForRow == 7, 'flex-8': readOptions.format.weeksForRow == 8}">
                             <div class="card-header border border-dark bg-dark text-white">
                                 <h6 class="m-0">WEEK {{weekIndex+1}}</h6>
                                 <span [hidden]="(week.comment == null || week.comment == '')">Commento: {{week.comment}}</span>

@@ -81,6 +81,42 @@
   display: block !important;
 }
 
+.margin-right-1 {
+  margin-right: 0.1%;
+}
+
+.flex-1 {
+  flex: 0 0 100%;
+}
+
+.flex-2 {
+  flex: 0 0 49.95%;
+}
+
+.flex-3 {
+  flex: 0 0 33.2666666667%;
+}
+
+.flex-4 {
+  flex: 0 0 24.925%;
+}
+
+.flex-5 {
+  flex: 0 0 19.92%;
+}
+
+.flex-6 {
+  flex: 0 0 16.5833333333%;
+}
+
+.flex-7 {
+  flex: 0 0 14.2%;
+}
+
+.flex-8 {
+  flex: 0 0 12.4125%;
+}
+
 .w-auto {
   width: auto !important;
 }
