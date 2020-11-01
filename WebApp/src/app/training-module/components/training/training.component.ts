@@ -83,9 +83,9 @@ export class TrainingComponent implements OnInit {
 
   };
 
-  // Read only mode variables
-  public readOptions = {format: {weeksForRow: 1}};
-
+  // Options
+  public options = {format: {weeksForRow: 1, seriesFormat: "seriesxrep"}};
+  
 
   /* CONSTRUCTOR */
   constructor(private generalService: GeneralService, private accountService: AccountService, private utilsService: UtilsService, private trainingService: TrainingService, public router: Router, private toastr: ToastrService, private calendar: NgbCalendar, public httpService: HttpService) {
@@ -115,7 +115,7 @@ export class TrainingComponent implements OnInit {
           this.fromDate = calendar.getToday();
           this.toDate = calendar.getNext(calendar.getToday(), 'd', 28);
 
-          this.editorContent = this.trainingService.trainingReadViewToString(this.training);
+          this.editorContent = this.trainingService.trainingReadViewToString(this.training, this.options);
 
           this.pageStatus = this.generalService.getPageStatus();
           console.log(this.pageStatus);
@@ -526,7 +526,7 @@ export class TrainingComponent implements OnInit {
 
   // TinyMCE Handling functions
   openTinyMCEEditor() {
-    this.editorContent = this.trainingService.trainingReadViewToString(this.readOnlyTraining);
+    this.editorContent = this.trainingService.trainingReadViewToString(this.readOnlyTraining, this.options);
     this.bTinyMCEEditorOpen = true;
   }
 
@@ -580,16 +580,16 @@ export class TrainingComponent implements OnInit {
   }
 
   /* READ OPTIONS FUNCTIONS */
-  setDefaultReadOptions() {
-    this.readOptions = {format: {weeksForRow: 1}};
+  setDefaultoptions() {
+    this.options = {format: {weeksForRow: 1, seriesFormat: "seriesxrep"}};
   }
 
   clampWeeksForRowValue() {
-    if(this.readOptions.format.weeksForRow <= 0) 
-      this.readOptions.format.weeksForRow = 1;
+    if(this.options.format.weeksForRow <= 0) 
+      this.options.format.weeksForRow = 1;
     else
-      if(this.readOptions.format.weeksForRow > 8)
-        this.readOptions.format.weeksForRow = 8;
+      if(this.options.format.weeksForRow > 8)
+        this.options.format.weeksForRow = 8;
   }
-  
+
 }

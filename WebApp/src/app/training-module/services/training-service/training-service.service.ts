@@ -18,7 +18,7 @@ export class TrainingService {
         return (date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear());
     }
 
-    trainingReadViewToString(training: Training): string {
+    trainingReadViewToString(training: Training, options: any): string {
         let trainingToString = "";
         trainingToString = trainingToString +
             "\
@@ -32,10 +32,10 @@ export class TrainingService {
             </h6> \
             " + ((training.comment == null || training.comment == '') ? "" : ("<span>Commento: " + training.comment + " </span>")) + "\
         </div> \
-        <div class='card-body p-0 row m-0'> \
+        <div class='card-body p-0 d-flex' style='flex-wrap: wrap;'> \
     ";
         for (let i = 0; i < training.weeks.length; i++) {
-            trainingToString = trainingToString + this.weekReadViewToString(training.weeks[i], i);
+            trainingToString = trainingToString + this.weekReadViewToString(training.weeks[i], i, options);
         }
 
         trainingToString = trainingToString +
@@ -50,11 +50,21 @@ export class TrainingService {
         return trainingToString;
     }
 
-    weekReadViewToString(week: Week, index: number): string {
+    weekReadViewToString(week: Week, index: number, options: any): string {
         let weekToString = "";
         weekToString = weekToString +
             "\
-    <div class='card my-3 col-3 p-0' style='border-color: rgba(0, 0, 0, 0.6) !important;'> \
+    <div class='card my-3 mx-0 p-0' style='border-color: rgba(0, 0, 0, 0.6) !important; " 
+                                + ((index==0 || ((index+1)%options.format.weeksForRow!=0)) ? "margin-right: 0.1% !important; " : "") 
+                                + ((options.format.weeksForRow == 1 || options.format.weeksForRow == 0 || options.format.weeksForRow == null) ? "flex: 0 0 100% !important;" : "")
+                                + ((options.format.weeksForRow == 2) ? "flex: 0 0 49.95% !important" : "")
+                                + ((options.format.weeksForRow == 3) ? "flex: 0 0 33.2666666667% !important" : "")
+                                + ((options.format.weeksForRow == 4) ? "flex: 0 0 24.925% !important" : "")
+                                + ((options.format.weeksForRow == 5) ? "flex: 0 0 19.92% !important" : "")
+                                + ((options.format.weeksForRow == 6) ? "flex: 0 0 16.5833333333% !important" : "")
+                                + ((options.format.weeksForRow == 7) ? "flex: 0 0 14.2% !important" : "")
+                                + ((options.format.weeksForRow == 8) ? "flex: 0 0 12.4125% !important" : "")
+        + "'> \
         <div class='card-header border border-dark bg-dark text-white'> \
             <h6 class='m-0'>WEEK " + (index + 1) + "</h6> \
             " + ((week.comment == null || week.comment == '') ? "" : ("<span>Commento: " + week.comment + " </span>")) + "\
@@ -63,7 +73,7 @@ export class TrainingService {
     ";
 
         for (let i = 0; i < week.sessions.length; i++) {
-            weekToString = weekToString + this.sessionReadViewToString(week.sessions[i], i);
+            weekToString = weekToString + this.sessionReadViewToString(week.sessions[i], i, options);
         }
 
         weekToString = weekToString +
@@ -75,7 +85,7 @@ export class TrainingService {
         return weekToString;
     }
 
-    sessionReadViewToString(session: Session, index: number): string {
+    sessionReadViewToString(session: Session, index: number, options: any): string {
         let sessionToString = "";
         sessionToString = sessionToString +
             " \
@@ -87,9 +97,9 @@ export class TrainingService {
                     <span>Esercizio (variante)</span> \
                 </div> \
                 <div class='col-8 pr-0'> \
-                    <div class='row m-0 d-flex'> \
-                        <span>Serie × Ripetizioni</span> \
-                        <span class='ml-auto'>Riposo</span> \
+                    <div class='row m-0 d-flex'>" +
+                        ((options.format.seriesFormat == 'seriesxrep') ? "<span>Serie × Ripetizioni</span>" : "<span>Ripetizioni × Serie</span>") +
+                        "<span class='ml-auto'>Riposo</span> \
                     </div> \
                 </div> \
             </div> \
@@ -98,7 +108,7 @@ export class TrainingService {
     ";
 
         for (let i = 0; i < session.exercises.length; i++) {
-            sessionToString = sessionToString + this.exerciseReadViewToString(session.exercises[i], i);
+            sessionToString = sessionToString + this.exerciseReadViewToString(session.exercises[i], i, options);
         }
 
         sessionToString = sessionToString +
@@ -113,7 +123,7 @@ export class TrainingService {
         return sessionToString;
     }
 
-    exerciseReadViewToString(sessionExercise: SessionExercise, index: number): string {
+    exerciseReadViewToString(sessionExercise: SessionExercise, index: number, options: any): string {
         let exerciseToString = "";
         exerciseToString = exerciseToString +
             " \
@@ -126,7 +136,7 @@ export class TrainingService {
     ";
 
         for (let i = 0; i < sessionExercise.series.length; i++) {
-            exerciseToString = exerciseToString + this.seriesReadViewToString(sessionExercise.series[i], i);
+            exerciseToString = exerciseToString + this.seriesReadViewToString(sessionExercise.series[i], i, options);
         }
 
         exerciseToString = exerciseToString +
@@ -138,12 +148,12 @@ export class TrainingService {
         return exerciseToString;
     }
 
-    seriesReadViewToString(series: Series, index: number): string {
+    seriesReadViewToString(series: Series, index: number, options: any): string {
         let seriesToString = "";
         seriesToString = seriesToString +
             " \
     <div class='row m-0 d-flex'> \
-        <span>" + series.seriesNumber + " × " + series.repNumber + " @ " + series.weight + series.measure + "</span> \
+        <span>" + ((options.format.seriesFormat == 'seriesxrep') ? (series.seriesNumber + " × " + series.repNumber) : (series.repNumber + " × " + series.seriesNumber)) + " @ " + series.weight + series.measure + "</span> \
         <span class='ml-auto'>" + series.rest + "s</span> \
     </div> \
     ";
