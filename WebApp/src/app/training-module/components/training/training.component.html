@@ -1,6 +1,6 @@
 <div class="main__training row m-3">
     <div class="training__maincontainer card col-12 p-0">
-        <div class="maincontainer__header card-header py-2">
+        <div class="maincontainer__header card-header py-2 pr-2">
             <div class="d-flex align-items-baseline mb-2">
                 <h5 class="m-0">ALLENAMENTO {{training.type}}</h5>
                 <div class="d-flex input-group w-auto ml-auto">
@@ -10,6 +10,15 @@
                         <div (click)="changeMode(PAGEMODE.WRITE)" class="ml-2 inverse-image-button" [ngClass]="{'active': pageStatus[PAGES.TRAININGS] == PAGEMODE.WRITE}"  ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></div>
                         <div (click)="changeMode(PAGEMODE.STATS)" class="ml-2 inverse-image-button" [ngClass]="{'active': pageStatus[PAGES.TRAININGS] == PAGEMODE.STATS}"  ngbTooltip="Statistiche" placement="left"><img src="assets/icons/actions/graph.svg" style="width:20px; height:auto;"></div>
                         <div (click)="deleteTraining()" class="ml-2 inverse-image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
+                    </div>
+                </div>
+                <div class="d-flex input-group w-auto ml-2">
+                    <div class="d-flex align-items-center form-control">
+                        <div (click)="exportTraining()" class="image-button" ngbTooltip="Esporta Allenamento" placement="left"><img src="assets/icons/actions/export.svg" style="width:20px; height:auto;"></div>
+                        <div class="image-button ml-2" ngbTooltip="Importa Allenamento" placement="left">
+                            <label for="importTraining" class="m-0 p-0 cursor-pointer"><img src="assets/icons/actions/import.svg" style="width:20px; height:auto;"></label>
+                            <input type="file" [(ngModel)]="importedTraining" id="importTraining" name="importTraining" accept="application/json" style="opacity:0;" [hidden]="true" (change)="importTraining($event)">
+                        </div>
                     </div>
                 </div>
             </div>

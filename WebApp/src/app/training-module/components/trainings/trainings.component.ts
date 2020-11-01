@@ -6,6 +6,7 @@ import { Training, User } from '@app/_models/training-model';
 import { GeneralService, PAGEMODE, PAGES } from '@app/_services/general-service/general-service.service';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { Role } from '@app/_models';
+import { TrainingService } from '@app/training-module/services/training-service/training-service.service';
 
 @Component({
   selector: 'app-trainings',
@@ -23,7 +24,7 @@ export class TrainingsComponent implements OnInit {
   account = this.accountService.accountValue;
   public Role = Role;
 
-  constructor(private accountService: AccountService,private httpService: HttpService, private toastr: ToastrService, public generalService: GeneralService) {
+  constructor(private accountService: AccountService, private httpService: HttpService, private toastr: ToastrService, public generalService: GeneralService, private trainingService: TrainingService) {
     this.filters = { author: { name: '', surname: '' }, creationDate: '', startDate: '', athlete: { name: '', surname: '' }, type: '' };
     this.getTrainings();
   }
@@ -47,7 +48,7 @@ export class TrainingsComponent implements OnInit {
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
-          this.toastr.error('An error occurred while loading the training list!');
+          this.toastr.error('An error occurred while loading the training list.');
           console.log(error.error.message);
         });
   }
@@ -59,11 +60,11 @@ export class TrainingsComponent implements OnInit {
         (data: any) => {
           this.bLoading = false;
           this.trainingList.push(data);
-          this.toastr.success('Training successfully created!');
+          this.toastr.success('Training successfully created.');
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
-          this.toastr.error('An error occurred while creating the training!');
+          this.toastr.error('An error occurred while creating the training.');
           console.log(error.error.message);
         });
   }
@@ -75,13 +76,26 @@ export class TrainingsComponent implements OnInit {
         (data: any) => {
           this.bLoading = false;
           this.trainingList.splice(index, 1);
-          this.toastr.success('Training successfully deleted!');
+          this.toastr.success('Training successfully deleted.');
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
-          this.toastr.error('An error occurred while deleting the training!');
+          this.toastr.error('An error occurred while deleting the training.');
           console.log(error.error.message);
         });
+  }
+
+  /* IMPORT/EXPORT FUNCTIONS */
+  exportTraining(training: Training) {
+    this.trainingService.exportTraining(training);
+    this.toastr.success("Training successfully exported.");
+  }
+
+  exportAllTrainings() {
+    for(let i=0; i<this.trainingList.length; i++) {
+      this.trainingService.exportTraining(this.trainingList[i]);
+    }
+    this.toastr.success("Trainings successfully exported.");
   }
 
 }

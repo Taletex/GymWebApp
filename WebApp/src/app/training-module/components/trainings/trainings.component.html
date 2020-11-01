@@ -76,10 +76,15 @@
                     <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.TRAININGS, elem._id)" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
                     <div (click)="openPageWithMode(PAGEMODE.WRITE, PAGES.TRAININGS, elem._id)" class="ml-2 image-button" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></div>
                     <div (click)="openPageWithMode(PAGEMODE.STATS, PAGES.TRAININGS, elem._id)" class="ml-2 image-button" ngbTooltip="Statistiche" placement="left"><img src="assets/icons/actions/graph.svg" style="width:20px; height:auto;"></div>
+                    <div (click)="exportTraining(elem)" class="ml-2 image-button" ngbTooltip="Esporta Allenamento" placement="left"><img src="assets/icons/actions/export.svg" style="width:20px; height:auto;"></div>
                     <div (click)="deleteTraining(elem._id, trainingIndex)" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
                 </div>
             </div>
-            <div (click)="createTraining()" class="image-button bottom-right-absolute" ngbTooltip="Nuovo" placement="top"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></div>
+            <div class="bottom-right-absolute d-flex">
+                <div (click)="exportAllTrainings()" class="image-button" ngbTooltip="Esporta tutti gli allenamenti" placement="top"><img src="assets/icons/actions/export.svg" style="width:40px; height:auto;"></div>    
+                <div (click)="createTraining()" class="image-button ml-2" ngbTooltip="Nuovo" placement="top"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></div>    
+            </div>
+            
         </div>
     </div>
 

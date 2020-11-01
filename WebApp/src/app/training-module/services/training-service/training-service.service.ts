@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Training, Week, Session, Exercise, Series, SessionExercise, PersonalRecord } from '@app/_models/training-model';
 import * as _ from 'lodash';
+import { saveAs } from 'file-saver';
 
 @Injectable({
     providedIn: 'root'
@@ -245,4 +246,12 @@ export class TrainingService {
         return currentTraining;
     }
 
+    exportTraining(training: Training) {
+        let blob = new Blob([JSON.stringify(training)], { type: " application/json;charset=utf-8" });
+        saveAs(blob, "training_" + training._id + ".json");
+    }
+
+    /** Unused */
+    importTraining(jsonTraining: Blob) {
+    }
 }

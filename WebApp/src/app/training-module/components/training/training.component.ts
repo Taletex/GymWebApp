@@ -86,6 +86,8 @@ export class TrainingComponent implements OnInit {
   // Options
   public options = {format: {weeksForRow: 1, seriesFormat: "seriesxrep"}};
   
+  // Others
+  public importedTraining: any;
 
   /* CONSTRUCTOR */
   constructor(private generalService: GeneralService, private accountService: AccountService, private utilsService: UtilsService, private trainingService: TrainingService, public router: Router, private toastr: ToastrService, private calendar: NgbCalendar, public httpService: HttpService) {
@@ -592,4 +594,25 @@ export class TrainingComponent implements OnInit {
         this.options.format.weeksForRow = 8;
   }
 
+
+  /* IMPORT/EXPORT FUNCTIONS */
+  exportTraining() {
+    this.trainingService.exportTraining(this.training);
+    this.toastr.success("Training successfully exported.");
+  }
+
+  importTraining(event: any) {
+    event.srcElement.files[0].text().then((data) => {
+      let _id = this.training._id;
+      this.training = _.cloneDeep(JSON.parse(data));
+      this.training._id = _id;
+      this.readOnlyTraining = _.cloneDeep(this.training);
+      this.bTinyMCEEditorOpen = false;
+      this.changeMode(PAGEMODE.WRITE);
+
+      this.toastr.success("Training successfully imported. Save it to keep the changes.");
+    }).error((err) => {
+      this.toastr.error("An error occurs during import process");
+    })
+  }
 }
