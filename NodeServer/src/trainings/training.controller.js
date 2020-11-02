@@ -15,6 +15,9 @@ router.post('/', cors(corsOptions), trainingService.createTraining);
 // Retrieve all Training
 router.get('/', cors(corsOptions), trainingService.findAllTraining);
 
+// Retrieve all Training by user id
+router.get('/user/:_id', cors(corsOptions), trainingService.findAllTrainingByUserId);
+
 // Retrieve a single Training with id
 router.get('/:_id', cors(corsOptions), trainingService.findOneTraining);
 

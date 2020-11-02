@@ -1,10 +1,12 @@
 const {Training} = require('src/trainings/training.model.js');
+const {User} = require('src/users/user.model.js')
 const {Exercise} = require('src/exercises/exercise.model.js');
 const _ = require('lodash');
 
 module.exports = {
     createTraining,
     findAllTraining,
+    findAllTrainingByUserId,
     findOneTraining,
     updateTraining,
     deleteTraining
@@ -70,12 +72,59 @@ function createTraining(req, res) {
 
 // Retrieve and return all trainings from the database
 function findAllTraining(req, res) {
-    Training.find().populate('author').populate('athlete').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
+    Training.find({}).populate('author').populate('athlete').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
     .then(trainings => {
         res.send(trainings);
     }).catch(err => {
         res.status(500).send({
             message: err.message || "Some error occurred while retrieving trainings."
+        });
+    });
+};
+
+/**
+ * Retrieve and return all trainings related to an user (by user id) from the database. 
+ * If the user is a coach it retrieves all the trainings where the user is the creator. If the user is an athlete it retrieves all the trainings where the user is the receiver
+ * @param {*} req 
+ * @param {*} res 
+ */
+function findAllTrainingByUserId(req, res) {
+    User.find({_id: req.params._id}).then(data => {
+
+        let trainingList = [];
+        let user = data[0];
+
+        Training.find().populate('author').populate('athlete').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
+        .then(trainings => {
+            switch(user.userType) {
+                case 'athlete':
+                    trainingList = _.filter(trainings, function(t) { return t.toObject().athlete._id.toString() == user._id; });
+                    break;
+                case 'coach':
+                    trainingList = _.filter(trainings, function(t) { return t.toObject().author._id.toString() == user._id; });
+                    break;
+                case 'both':
+                    trainingList = _.filter(trainings, function(t) { return t.toObject().author._id.toString() == user._id || t.toObject().athlete._id.toString()  == user._id; });
+                    break;
+                default:
+                    trainingList = [];
+                    break;
+            }
+            res.send(trainingList);
+        }).catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving trainings."
+            });
+        });
+
+    }).catch(err => {
+        if(err.kind === 'ObjectId') {
+            return res.status(404).send({
+                message: "User not found with id " + req.params._id
+            });                
+        }
+        return res.status(500).send({
+            message: "Error retrieving user with id " + req.params._id
         });
     });
 };
