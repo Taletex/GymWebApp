@@ -608,7 +608,7 @@ export class TrainingComponent implements OnInit {
       this.training._id = _id;
       this.readOnlyTraining = _.cloneDeep(this.training);
       this.bTinyMCEEditorOpen = false;
-      this.changeMode(PAGEMODE.WRITE);
+      this.changeMode(PAGEMODE.READONLY);
 
       this.toastr.success("Training successfully imported. Save it to keep the changes.");
     }).error((err) => {

@@ -39,7 +39,7 @@ export class TrainingsComponent implements OnInit {
 
   getTrainings() {
     this.bLoading = true;
-    this.httpService.getTrainings()
+    this.httpService.getTrainingsByUserId(this.account.user._id)
       .subscribe(
         (data: any) => {
           this.trainingList = data;

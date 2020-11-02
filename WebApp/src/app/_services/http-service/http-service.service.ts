@@ -27,6 +27,10 @@ export class HttpService {
   getTrainings(): Observable<any> {
     return this.http.get<any>(this.baseServerUrl + "/trainings");
   }
+  
+  getTrainingsByUserId(id: string): Observable<any> {
+    return this.http.get<any>(this.baseServerUrl + "/trainings/user/" + id);
+  }
 
   /* deleteTrainings(): Observable<any> {
     return this.http.delete<any>(this.baseServerUrl + "/trainings");
