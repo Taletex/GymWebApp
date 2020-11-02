@@ -5,29 +5,28 @@ const corsOptions = {origin: '*', optionsSuccessStatus: 200};
 
 
 const userService = require('src/users/user.service.js');
-router.options('*', cors(corsOptions)) // enable pre-flight request for all requests
 
 /* ROUTES */
 
 // Create a new User
-router.post('/', cors(corsOptions), userService.createUser);
+router.post('/', userService.createUser);
 
 // Retrieve all User
-router.get('/', cors(corsOptions), userService.findAllUser);
+router.get('/', userService.findAllUser);
 
 // Retrieve all Athletes
-router.get('/athletes', cors(corsOptions), userService.findAllAthlete);
+router.get('/athletes', userService.findAllAthlete);
 
 // Retrieve all Coaches
-router.get('/coaches', cors(corsOptions), userService.findAllCoaches);
+router.get('/coaches', userService.findAllCoaches);
 
 // Retrieve a single User with id
-router.get('/:_id', cors(corsOptions), userService.findOneUser);
+router.get('/:_id', userService.findOneUser);
 
 // Update a User with id
-router.put('/:_id', cors(corsOptions), cors(corsOptions), userService.updateUser);
+router.put('/:_id', userService.updateUser);
 
 // Delete a User with id
-router.delete('/:_id', cors(corsOptions), userService.deleteUser);
+router.delete('/:_id', userService.deleteUser);
 
 module.exports = router;

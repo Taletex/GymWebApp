@@ -9,13 +9,12 @@ const errorHandler = require('src/_middleware/error-handler');
 const app = express();  
 
 // parse application/x-www-form-urlencoded, application/json, cookie
-app.use(bodyParser.urlencoded({ extended: false })) 
-app.use(bodyParser.json())                          
+app.use(bodyParser.json({limit: '100mb'}))                          
+app.use(bodyParser.urlencoded({limit: '100mb', extended: true})) 
 app.use(cookieParser());
 
 // allow cors requests from any origin and with credentials
 app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
-
 
 // api routes
 app.get('/', (req, res) => { res.json({"message": "Welcome to GymWebApp database application."}); });
