@@ -28,6 +28,11 @@ $media-screen-max-1000px: "screen and (max-width: 1000px)";
         }
 
         .container__body {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: visible;
+
             .sidebar__element {
                 height: 40px;
                 padding: 0.2rem 0.5rem 0.2rem 0.5rem;
@@ -51,6 +56,7 @@ $media-screen-max-1000px: "screen and (max-width: 1000px)";
                 }
                 
             }
+
         }
     }
 }

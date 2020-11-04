@@ -12,7 +12,10 @@
         <span [hidden]="((router.url).split('/')[2]) == null || ((router.url).split('/')[2]) == ''"><span class="fa fa-arrow-right mx-2"></span> <em>{{(router.url).split('/')[2] | uppercase}}</em></span>
       </h4>
       <div class="account-info">
-          <div class="input-group-prepend">
+          <!-- <button class="btn btn-sm btn-outline-secondary" ngbTooltip="Notepad" placement="bottom">
+            <img src="assets/icons/misc/note-dark.svg" style="width:20px; height:auto;">
+          </button> -->
+          <div class="input-group-prepend ml-2">
             <span class="input-group-text rounded-left bg-light" id="user-info">{{account.user.name}} {{account.user.surname}}</span>
           </div>
           <button class="btn btn-sm btn-primary rounded-right" style="border-radius: 0px 3px 3px 0px;" id="logout-button" aria-describedby="user-info" (click)="logout()">Logout <img src="assets/icons/misc/logout.svg" style="height:15px; width:auto;" class="ml-1"></button>
