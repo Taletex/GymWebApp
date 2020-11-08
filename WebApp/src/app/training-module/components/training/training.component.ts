@@ -108,7 +108,7 @@ export class TrainingComponent implements OnInit {
         (data: any) => {
           this.bLoading = false;
 
-          this.bUserAuthorized = this.trainingService.isUserAuthorOrAthleteOfTraining(this.account.user._id, data);
+          this.bUserAuthorized = this.trainingService.isUserAuthorOrAthleteOfTraining(this.account.user._id, data) || this.account.role == Role.Admin;
           console.log("User authorized: " + this.bUserAuthorized);
           if(this.bUserAuthorized) {
 
