@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { Training, Exercise, User } from '@app/_models/training-model';
-import * as configs from 'configs.json';
+import { environment } from '@environments/environment';
 
 // Usato per iniettare il service nell'app. Nota che 'root' serve per indicare che viene fornito al root level (AppModule). Nota che cosi facendo si rende il service un singleton!
 @Injectable({
@@ -16,7 +16,7 @@ export class HttpService {
   public baseServerUrl;
 
   constructor(private http: HttpClient) {
-    this.baseServerUrl = ((configs as any).default).nodeserver.address;
+    this.baseServerUrl = `${environment.apiUrl}`;
   }
 
   getDefaultOptions() {
