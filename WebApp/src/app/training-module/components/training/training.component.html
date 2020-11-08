@@ -12,7 +12,7 @@
                         <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="deleteTraining()" class="ml-2 inverse-image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
                     </div>
                 </div>
-                <div class="d-flex input-group w-auto ml-2">
+                <div class="d-flex input-group w-auto ml-2" *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)">
                     <div class="d-flex align-items-center form-control">
                         <div (click)="exportTraining()" class="image-button" ngbTooltip="Esporta Allenamento" placement="left"><img src="assets/icons/actions/export.svg" style="width:20px; height:auto;"></div>
                         <div class="image-button ml-2" ngbTooltip="Importa Allenamento" placement="left">
@@ -21,7 +21,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="d-flex input-group w-auto ml-2 overflow-visible">
+                <div class="d-flex input-group w-auto ml-2 overflow-visible" *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)">
                     <div class="d-flex align-items-center form-control dropdown">
                         <div class="opacity-3" *ngIf="training.oldVersions.length==0 && !bDraft">
                             <img src="assets/icons/actions/history.svg" style="width:20px; height:auto;">
