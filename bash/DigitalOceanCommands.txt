@@ -29,24 +29,16 @@ How to avviare Su Digital Ocean:
 - Update repo:
    + cd GymWebApp
    + git pull
-- Cambiare le porte e gli indirizzi nei 3 file di configurazione (in realtà è sufficiente solo in configs.json, nel resto non serve): configs.json (nella webapp), config.json (nel server), environment.ts (nella webapp, è l'indirizzo del server). Il db lascia "localhost", per gli altri metti tutti 139.59.153.56, porta del server 4000, porta del client 1738.
-- Avviare con pm2:
+- Cambiare le porte e gli indirizzi nel file "environment.prod.ts" ('http://www.mytrainingplatform.it:4000'). Nota: è sufficiente solo questo file perchè la web app è avviata in produzione sul server, altrimenti dovresti cambiare il valore anche  nel file environment.ts.
+- Avviare NodeServer:
   + cd root
   + cd GymWebApp
-  + cd WebApp
-  + pm2 start "ng serve --host 0.0.0.0 --port 1738"
-  + pm2 save
-  + cd ..
   + cd NodeServer
   + pm2 start server.js
   + pm2 save
-Aspettare che viene buildata l'app angular e accedere
-
-
-AVVIARE LA WEBAPP BUILDATA INVECE CHE IN DEPLOYMENT
-Come buildare e deployare l'app angular sul server digital ocean (cerca sezione "Build Angular Client"):
-- https://grokonez.com/frontend/angular/angular-deployment/how-to-deploy-angular-on-nginx-remote-server-example-use-vultr-vps-hosting#Build_Angular_Client
-- Nota: il percorso dove copiare la cartella dist, è: /var/www/html
+- Avviare WebApp (in produzione)
+  + Come buildare e deployare l'app angular sul server digital ocean (cerca sezione "Build Angular Client"): https://grokonez.com/frontend/angular/angular-deployment/how-to-deploy-angular-on-nginx-remote-server-example-use-vultr-vps-hosting#Build_Angular_Client
+  + Nota: il percorso dove copiare la cartella dist, è: /var/www/html
 
 
 TRASFERIMENTO CON FILE ZILLA

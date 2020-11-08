@@ -1,4 +1,4 @@
-<div class="main__training row m-3" >
+<div class="main__training row m-3" [ngClass]="{'w-100 h-100': !bUserAuthorized}">
     <div class="training__maincontainer card col-12 p-0" *ngIf="bUserAuthorized">
         <div class="maincontainer__header card-header py-2 pr-2">
             <div class="d-flex align-items-baseline mb-2">

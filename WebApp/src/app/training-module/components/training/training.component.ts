@@ -24,7 +24,7 @@ declare const tinymce: any;
 })
 export class TrainingComponent implements OnInit {
 
-  public bUserAuthorized: boolean = false;
+  public bUserAuthorized: boolean = true;
   public training: Training = new Training();
   public draftTraining: Training = new Training();
   public originalTraining: Training = new Training();
