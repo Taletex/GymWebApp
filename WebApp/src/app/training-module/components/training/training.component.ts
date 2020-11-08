@@ -24,6 +24,7 @@ declare const tinymce: any;
 })
 export class TrainingComponent implements OnInit {
 
+  public bUserAuthorized: boolean = false;
   public training: Training = new Training();
   public draftTraining: Training = new Training();
   public originalTraining: Training = new Training();
@@ -105,31 +106,38 @@ export class TrainingComponent implements OnInit {
     this.httpService.getTraining(trainingId)
       .subscribe(
         (data: any) => {
+          this.bLoading = false;
 
-          // Init trainings structure with backend data
-          this.initTrainingsStructures(data);
+          this.bUserAuthorized = this.trainingService.isUserAuthorOrAthleteOfTraining(this.account.user._id, data);
+          console.log("User authorized: " + this.bUserAuthorized);
+          if(this.bUserAuthorized) {
 
-          // Init exercise list
-          this.getExercises();
+            // Init trainings structure with backend data
+            this.initTrainingsStructures(data);
 
-          // Init athlete list
-          this.getAthletes();
+            // Init exercise list
+            this.getExercises();
 
-          this.activeWeek = 1;
-          this.activeSession = [];
-          for(let i=0;i<this.training.weeks.length;i++) {
-            this.activeSession.push(1);
+            // Init athlete list
+            this.getAthletes();
+
+            this.activeWeek = 1;
+            this.activeSession = [];
+            for(let i=0;i<this.training.weeks.length;i++) {
+              this.activeSession.push(1);
+            }
+
+            this.fromDate = calendar.getToday();
+            this.toDate = calendar.getNext(calendar.getToday(), 'd', 28);
+
+            this.editorContent = this.trainingService.trainingReadViewToString(this.training, this.options);
+
+            this.pageStatus = this.generalService.getPageStatus();
+            console.log(this.pageStatus);
+
+            this.initDraftTraining();
+
           }
-
-          this.fromDate = calendar.getToday();
-          this.toDate = calendar.getNext(calendar.getToday(), 'd', 28);
-
-          this.editorContent = this.trainingService.trainingReadViewToString(this.training, this.options);
-
-          this.pageStatus = this.generalService.getPageStatus();
-          console.log(this.pageStatus);
-
-          this.initDraftTraining();
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;

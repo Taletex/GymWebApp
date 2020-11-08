@@ -1,5 +1,5 @@
-<div class="main__training row m-3">
-    <div class="training__maincontainer card col-12 p-0">
+<div class="main__training row m-3" >
+    <div class="training__maincontainer card col-12 p-0" *ngIf="bUserAuthorized">
         <div class="maincontainer__header card-header py-2 pr-2">
             <div class="d-flex align-items-baseline mb-2">
                 <h5 class="m-0 d-flex align-items-center">ALLENAMENTO {{training.type}} <img [hidden]="!bDirty" src="assets/icons/misc/alert.svg" style="width:24px; height:auto;" class="ml-2" ngbTooltip="Modifiche non salvate" placement="top"></h5>
@@ -442,4 +442,6 @@
     <app-confirmation-modal [hidden]="true" (onClose)="updateTrainingWithOldVersion(selectedOldTraining)" (onAbort)="selectedOldTraining = null;" [(message)]="replaceTrainingMessage">
         <button id="confirmationModalButton" class="image-button cursor-pointer"></button>
     </app-confirmation-modal>
+
+    <page-not-authorized class="w-100 h-100" *ngIf="!bUserAuthorized"></page-not-authorized>
 </div>

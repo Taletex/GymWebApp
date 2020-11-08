@@ -318,4 +318,13 @@ export class TrainingService {
         }
             
     }
+
+    /**
+     * Returns true if an user is the author or the athlete of a certain training
+     * @param userId the id of the user to check
+     * @param training the training where we need to check the user
+     */
+    isUserAuthorOrAthleteOfTraining(userId: string, training: Training): boolean {
+        return (training.author._id == userId || training.athlete._id == userId);
+    }
 }

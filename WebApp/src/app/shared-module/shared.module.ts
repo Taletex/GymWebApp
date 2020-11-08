@@ -6,11 +6,13 @@ import { TrainingModalComponent } from './components/training-modal/training-mod
 import { ExerciseModalComponent } from './components/exercise-modal/exercise-modal.component';
 import { UserModalComponent } from './components/user-modal/user-modal.component';
 import { ConfirmationModalComponent } from './components/confirmation-modal/confirmation-modal.component';
+import { PageNotAuthorizedComponent } from './components/page-not-authorized/page-not-authorized.component';
 
 export { TrainingModalComponent } from './components/training-modal/training-modal.component';
 export { ExerciseModalComponent } from './components/exercise-modal/exercise-modal.component';
 export { UserModalComponent } from './components/user-modal/user-modal.component';
 export { ConfirmationModalComponent } from './components/confirmation-modal/confirmation-modal.component';
+export { PageNotAuthorizedComponent } from './components/page-not-authorized/page-not-authorized.component';
 
 @NgModule({
     imports: [
@@ -22,13 +24,15 @@ export { ConfirmationModalComponent } from './components/confirmation-modal/conf
         TrainingModalComponent,
         ExerciseModalComponent,
         UserModalComponent,
-        ConfirmationModalComponent
+        ConfirmationModalComponent,
+        PageNotAuthorizedComponent
     ],
     exports: [
         TrainingModalComponent,
         ExerciseModalComponent,
         UserModalComponent, 
-        ConfirmationModalComponent
+        ConfirmationModalComponent,
+        PageNotAuthorizedComponent
     ]
 })
 export class SharedModule { }
