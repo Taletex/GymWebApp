@@ -1,0 +1,24 @@
+<ng-template #confirmationModal let-modal>
+    <div class="confirmationmodal__container">
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Attenzione</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="card-body h-100">
+                <span>{{message}}</span>
+            </div>
+        </div>
+        <div class="modal-footer" style="overflow:visible">
+            <button class="btn btn-primary" ngbAutofocus (click)="modal.close()">Conferma</button>
+            <button class="btn btn-secondary" (click)="modal.dismiss()">Annulla</button>
+        </div>
+    </div>
+</ng-template>
+
+<div (click)="openConfirmationModal(confirmationModal)">
+    <ng-content></ng-content>
+</div>
+

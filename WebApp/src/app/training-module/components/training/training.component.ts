@@ -25,6 +25,8 @@ declare const tinymce: any;
 export class TrainingComponent implements OnInit {
 
   public training: Training = new Training();
+  public draftTraining: Training = new Training();
+  public originalTraining: Training = new Training();
   public readOnlyTraining: Training = new Training();
   public activeWeek: number;
   public copiedWeek: Week = new Week();
@@ -88,6 +90,11 @@ export class TrainingComponent implements OnInit {
   
   // Others
   public importedTraining: any;
+  public replaceTrainingMessage: string = "L'allenamento attuale sarà sovrascritto con la versione precedente selezionata. Sei sicuro di voler procedere?"
+  public selectedOldTraining: Training;
+  public bDraft: boolean = false;
+  public bDirty: boolean = false;
+
 
   /* CONSTRUCTOR */
   constructor(private generalService: GeneralService, private accountService: AccountService, private utilsService: UtilsService, private trainingService: TrainingService, public router: Router, private toastr: ToastrService, private calendar: NgbCalendar, public httpService: HttpService) {
@@ -98,9 +105,9 @@ export class TrainingComponent implements OnInit {
     this.httpService.getTraining(trainingId)
       .subscribe(
         (data: any) => {
-          this.training = data;
-          this.readOnlyTraining = _.cloneDeep(this.training);
-          console.log(this.training);
+
+          // Init trainings structure with backend data
+          this.initTrainingsStructures(data);
 
           // Init exercise list
           this.getExercises();
@@ -121,6 +128,8 @@ export class TrainingComponent implements OnInit {
 
           this.pageStatus = this.generalService.getPageStatus();
           console.log(this.pageStatus);
+
+          this.initDraftTraining();
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
@@ -130,6 +139,44 @@ export class TrainingComponent implements OnInit {
   }
 
   ngOnInit() {}
+
+  initTrainingsStructures(data: any) {
+    this.training = _.cloneDeep(data);
+    this.trainingService.trainingDecorator(this.training);
+    this.originalTraining = _.cloneDeep(this.training);
+    this.readOnlyTraining = _.cloneDeep(this.training);
+    console.log(this.training);
+  }
+
+  initDraftTraining() {
+    let t = localStorage.getItem("training_" + this.training._id);
+    if(t != undefined && t != null && t != "") {
+      this.bDraft = true;
+      this.draftTraining = JSON.parse(t);
+      this.draftTraining.oldVersions = _.cloneDeep(this.training.oldVersions);
+    } else {
+      this.bDraft = false;
+      this.draftTraining = null;
+    }
+
+    this.bDirty = this.isTrainingDirty(); 
+
+    // If current training has been modify, than each minute a copy is saved in browser cache
+    setInterval((scope) => {
+      if(scope.isTrainingDirty()) {
+        scope.bDraft = true;
+        scope.bDirty = true;
+        scope.draftTraining = _.cloneDeep(scope.training);
+  
+        let t = _.cloneDeep(scope.training);
+        delete t.oldVersions;
+        localStorage.setItem("training_" + t._id, JSON.stringify(t));
+      } else {
+        scope.bDirty = false;
+      }
+    }, 5 * 1000, this);          // 60 * 1000 milsec
+
+  }
 
   // From services
   compareObjects = this.utilsService.compareObjects;
@@ -485,11 +532,14 @@ export class TrainingComponent implements OnInit {
   /* TRAINING FUNCTIONS */
   saveTraining() {
     this.bLoading = true;
-    this.httpService.updateTraining(this.training._id, this.training)
+
+    let data = this.trainingService.prepareTrainingData(this.training, this.originalTraining)
+    this.httpService.updateTraining(this.training._id, data)
     .subscribe(
       (data: any) => {
         this.bLoading = false;
-        this.training = data;
+        this.initTrainingsStructures(data);
+        this.resetDraft();
         this.toastr.success('Training successfully updated!');
       },
       (error: HttpErrorResponse) => {
@@ -524,6 +574,28 @@ export class TrainingComponent implements OnInit {
           }
     
     return true;
+  }
+
+  isTrainingDirty() {
+    return !(_.isEqual(this.training, this.originalTraining));
+  }
+
+  resetDraft() {
+    localStorage.setItem("training_" + this.training._id, "");
+    this.draftTraining = null;
+    this.bDraft = false;
+  }
+
+  openReplaceTrainingConfirmationModal(oldTraining: Training) {
+    this.selectedOldTraining = oldTraining;
+    document.getElementById("confirmationModalButton").click();
+  }
+
+  updateTrainingWithOldVersion(oldTraining: Training) {
+    oldTraining.oldVersions = _.cloneDeep(this.training.oldVersions);     // updates oldTraining oldVersions with the current training one
+    this.originalTraining = _.cloneDeep(this.training);                   // original training is now the current training
+    this.training = _.cloneDeep(oldTraining);                             // current training is now the old trianing choosen from the UI
+    this.saveTraining();                                                  // save the current training
   }
 
   // TinyMCE Handling functions
@@ -603,10 +675,8 @@ export class TrainingComponent implements OnInit {
 
   importTraining(event: any) {
     event.srcElement.files[0].text().then((data) => {
-      let _id = this.training._id;
-      this.training = _.cloneDeep(JSON.parse(data));
-      this.training._id = _id;
-      this.readOnlyTraining = _.cloneDeep(this.training);
+      data._id = this.training._id;
+      this.initTrainingsStructures(JSON.parse(data));
       this.bTinyMCEEditorOpen = false;
       this.changeMode(PAGEMODE.READONLY);
 

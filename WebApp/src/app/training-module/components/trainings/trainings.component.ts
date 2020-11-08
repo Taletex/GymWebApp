@@ -55,7 +55,8 @@ export class TrainingsComponent implements OnInit {
 
   createTraining() {
     this.bLoading = true;
-    this.httpService.createTraining(new Training(this.account.user, this.account.user))
+    let t = this.trainingService.replaceTrainingEntitiesWithIds(new Training(this.account.user, this.account.user));
+    this.httpService.createTraining(t)
       .subscribe(
         (data: any) => {
           this.bLoading = false;

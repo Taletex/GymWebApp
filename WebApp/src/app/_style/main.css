@@ -133,6 +133,14 @@
   overflow: auto !important;
 }
 
+.overflow-visible {
+  overflow: visible !important;
+}
+
+.overflow-hidden {
+  overflow: hidden !important;
+}
+
 /* LINK STYLE */
 .link-text {
   text-decoration: none;

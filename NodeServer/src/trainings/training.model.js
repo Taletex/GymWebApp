@@ -44,7 +44,8 @@ const TrainingSchema = mongoose.Schema({
     startDate: Date,
     endDate: Date,
     comment: String,
-    weeks: [WeekSchema]
+    weeks: [WeekSchema],
+    oldVersions: [String]
 }, {
     timestamps: true
 });

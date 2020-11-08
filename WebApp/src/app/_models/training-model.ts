@@ -169,21 +169,25 @@ export class Training {
     athlete: User;
     type: string;
     creationDate: Date;
+    updatedAt: Date;
     startDate: Date;
     endDate: Date;
     comment: string;
     weeks: [Week];
+    oldVersions: string[];
 
-    constructor(author: User = new User(), athlete: User = new User(), type: string = "POWERLIFTING", creationDate: Date = new Date(), 
-                startDate: Date = new Date(), endDate: Date = new Date(), comment: string = "", weeks: [Week] = [new Week()]) {
+    constructor(author: User = new User(), athlete: User = new User(), type: string = "POWERLIFTING", creationDate: Date = new Date(), updatedAt: Date = new Date(),
+                startDate: Date = new Date(), endDate: Date = new Date(), comment: string = "", weeks: [Week] = [new Week()], oldVersions: string[] = []) {
         this.author = author;
         this.athlete = athlete;
         this.type = type;
         this.creationDate = creationDate;
+        this.updatedAt = updatedAt;
         this.startDate = startDate;
         this.endDate = endDate;
         this.comment = comment;
         this.weeks = weeks;
+        this.oldVersions = oldVersions;
     }
 
     public trainingToString() {

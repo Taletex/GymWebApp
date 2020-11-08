@@ -15,15 +15,21 @@ module.exports = {
 // Replaces user and exercise entities with their ids 
 function trainingDecorator(t) {
     let training = _.cloneDeep(t);
-    training.author = training.author._id;
-    training.athlete = training.athlete._id;
+    
+    if(training.author._id != undefined && training.author._id != null && training.author._id != "") 
+        training.author = training.author._id;
+    if(training.athlete._id != undefined && training.athlete._id != null && training.athlete._id != "") 
+        training.athlete = training.athlete._id;
+
     for(let i=0; i<training.weeks.length; i++) {
         for(let j=0; j<training.weeks[i].sessions.length; j++) {
             for(let k=0; k<training.weeks[i].sessions[j].exercises.length; k++) {
-                if(training.weeks[i].sessions[j].exercises[k].exercise._id)
+                if(training.weeks[i].sessions[j].exercises[k].exercise._id != undefined && training.weeks[i].sessions[j].exercises[k].exercise._id != null)
                     training.weeks[i].sessions[j].exercises[k].exercise = training.weeks[i].sessions[j].exercises[k].exercise._id;
-                else
-                    training.weeks[i].sessions[j].exercises.splice(k, 1);
+                else 
+                    if((training.weeks[i].sessions[j].exercises[k].exercise == undefined || training.weeks[i].sessions[j].exercises[k].exercise == null || training.weeks[i].sessions[j].exercises[k].exercise == "") || 
+                        (training.weeks[i].sessions[j].exercises[k].exercise.name != undefined && training.weeks[i].sessions[j].exercises[k].exercise.name != null && training.weeks[i].sessions[j].exercises[k].exercise.name == ""))
+                        training.weeks[i].sessions[j].exercises.splice(k, 1);
             }
 
             if(training.weeks[i].sessions[j].exercises.length == 0)
@@ -52,7 +58,8 @@ function createTraining(req, res) {
         startDate: req.body.startDate,
         endDate: req.body.endDate,
         comment: req.body.comment,
-        weeks: req.body.weeks
+        weeks: req.body.weeks, 
+        oldVersions: req.body.oldVersions
     }));
 
     // Save Training in the database
@@ -170,7 +177,8 @@ function updateTraining (req, res) {
         startDate: req.body.startDate,
         endDate: req.body.endDate,
         comment: req.body.comment,
-        weeks: req.body.weeks
+        weeks: req.body.weeks,
+        oldVersions: req.body.oldVersions
     }), {new: true})
     .then(training => {
         if(!training) {

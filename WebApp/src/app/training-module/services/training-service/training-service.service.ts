@@ -11,7 +11,54 @@ export class TrainingService {
     constructor() { }
 
     public trainingDecorator(training: Training) {
-        return;
+        for(let i=0; i<training.oldVersions.length; i++) {
+             if(typeof training.oldVersions[i] == "string") 
+                training.oldVersions[i] = JSON.parse(training.oldVersions[i]);
+        }
+    }
+
+    public trainingAntiDecorator(training: Training) {
+        for(let i=0; i<training.oldVersions.length; i++) {
+            if(typeof training.oldVersions[i] != "string") 
+                training.oldVersions[i] = JSON.stringify(training.oldVersions[i]);
+        }
+    }
+
+    /**
+     * This function return a new training in which all the entities are replaced with their ids. Useful to send slim data to the backend.
+     * @param fullTraining the training which entities need to be replaced with their ids
+     */
+    public replaceTrainingEntitiesWithIds(fullTraining: Training): any {
+        let training = _.cloneDeep(fullTraining);
+
+        if(training.author._id != undefined && training.author._id != null && training.author._id != "") 
+            training.author = training.author._id;
+        if(training.athlete._id != undefined && training.athlete._id != null && training.athlete._id != "") 
+            training.athlete = training.athlete._id;
+
+        for(let i=0; i<training.weeks.length; i++) {
+            for(let j=0; j<training.weeks[i].sessions.length; j++) {
+                for(let k=0; k<training.weeks[i].sessions[j].exercises.length; k++) {
+                    if(training.weeks[i].sessions[j].exercises[k].exercise._id != undefined && training.weeks[i].sessions[j].exercises[k].exercise._id != null)
+                        training.weeks[i].sessions[j].exercises[k].exercise = training.weeks[i].sessions[j].exercises[k].exercise._id;
+                    else 
+                        if((training.weeks[i].sessions[j].exercises[k].exercise == undefined || training.weeks[i].sessions[j].exercises[k].exercise == null || training.weeks[i].sessions[j].exercises[k].exercise == "") || 
+                           (training.weeks[i].sessions[j].exercises[k].exercise.name == undefined || training.weeks[i].sessions[j].exercises[k].exercise.name == null || training.weeks[i].sessions[j].exercises[k].exercise.name == ""))
+                            training.weeks[i].sessions[j].exercises.splice(k, 1);
+                }
+
+                if(training.weeks[i].sessions[j].exercises.length == 0)
+                    training.weeks[i].sessions[j].exercises = []; 
+            }
+        }
+
+        return training;
+    }
+
+    public prepareTrainingData(currentTraining: Training, originalTraining: Training): any {
+        this.pushOldVersion(currentTraining, originalTraining);
+        this.trainingAntiDecorator(currentTraining);
+        return this.replaceTrainingEntitiesWithIds(currentTraining);
     }
 
     dateToString(date: Date): string {
@@ -253,5 +300,22 @@ export class TrainingService {
 
     /** Unused */
     importTraining(jsonTraining: Blob) {
+    }
+
+    /**
+     * Push a training in string value in the oldVersion field of a training
+     * @param training 
+     * @param oldTraining 
+     */
+    pushOldVersion(training: Training, oldTraining: Training) {
+        let trainingToPush = JSON.stringify(this.replaceTrainingEntitiesWithIds(oldTraining));
+
+        if(training.oldVersions.length < 2)
+            training.oldVersions.push(trainingToPush)
+        else {
+            training.oldVersions.splice(0, 1);
+            training.oldVersions.push(trainingToPush);
+        }
+            
     }
 }

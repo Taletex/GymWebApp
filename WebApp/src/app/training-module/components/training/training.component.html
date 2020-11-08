@@ -2,7 +2,7 @@
     <div class="training__maincontainer card col-12 p-0">
         <div class="maincontainer__header card-header py-2 pr-2">
             <div class="d-flex align-items-baseline mb-2">
-                <h5 class="m-0">ALLENAMENTO {{training.type}}</h5>
+                <h5 class="m-0 d-flex align-items-center">ALLENAMENTO {{training.type}} <img [hidden]="!bDirty" src="assets/icons/misc/alert.svg" style="width:24px; height:auto;" class="ml-2" ngbTooltip="Modifiche non salvate" placement="top"></h5>
                 <div class="d-flex input-group w-auto ml-auto">
                     <div class="input-group-prepend"><span class="input-group-text">ACTIONS</span></div>
                     <div class="d-flex align-items-center form-control">
@@ -18,6 +18,26 @@
                         <div class="image-button ml-2" ngbTooltip="Importa Allenamento" placement="left">
                             <label for="importTraining" class="m-0 p-0 cursor-pointer"><img src="assets/icons/actions/import.svg" style="width:20px; height:auto;"></label>
                             <input type="file" [(ngModel)]="importedTraining" id="importTraining" name="importTraining" accept="application/json" style="opacity:0;" [hidden]="true" (change)="importTraining($event)">
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex input-group w-auto ml-2 overflow-visible">
+                    <div class="d-flex align-items-center form-control dropdown">
+                        <div class="opacity-3" *ngIf="training.oldVersions.length==0 && !bDraft">
+                            <img src="assets/icons/actions/history.svg" style="width:20px; height:auto;">
+                        </div>
+                        
+                        <div class="dropdown-toggle image-button" type="button" id="versioningDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" 
+                             aria-expanded="false" ngbTooltip="Ripristina versione precedente" placement="left" *ngIf="training.oldVersions.length > 0 || bDraft">
+                            <img src="assets/icons/actions/history.svg" style="width:20px; height:auto;">
+                        </div>
+                        <div class="dropdown-menu history-dropdownmenu-botton" aria-labelledby="versioningDropdownMenuButton">
+                            <a class="dropdown-item cursor-pointer" *ngFor="let oldVer of training.oldVersions; index as oldVerIndex" (click)="openReplaceTrainingConfirmationModal(oldVer)">{{oldVerIndex+1}}) {{oldVer.updatedAt | date:'HH:mm:ss - d/MM/yyyy'}}</a>
+                            <hr class="my-2" [hidden]="!bDraft || training.oldVersions.length == 0">
+                            <a class="dropdown-item cursor-pointer" *ngIf="bDraft" (click)="openReplaceTrainingConfirmationModal(draftTraining)">
+                                <span class="d-block">Ultima bozza non salvata</span>
+                                <span>{{draftTraining.updatedAt | date:'HH:mm:ss - d/MM/yyyy'}}</span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -414,7 +434,12 @@
     </div>
 
     <!-- Exercise Modal -->
-    <app-exercise-modal [hidden]="true" (onClose)="createExercise()" (onAbort)="abortCreateExercise()" [(newExercise)]="newExercise" style="position: absolute; right: 15px; bottom: 15px">
-        <button id="exerciseModalButton" class="image-button cursor-pointer" ngbTooltip="Nuovo" placement="top"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></button>
+    <app-exercise-modal [hidden]="true" (onClose)="createExercise()" (onAbort)="abortCreateExercise()" [(newExercise)]="newExercise">
+        <button id="exerciseModalButton" class="image-button cursor-pointer"></button>
     </app-exercise-modal>
+
+    <!-- Confirmation Modal -->
+    <app-confirmation-modal [hidden]="true" (onClose)="updateTrainingWithOldVersion(selectedOldTraining)" (onAbort)="selectedOldTraining = null;" [(message)]="replaceTrainingMessage">
+        <button id="confirmationModalButton" class="image-button cursor-pointer"></button>
+    </app-confirmation-modal>
 </div>
