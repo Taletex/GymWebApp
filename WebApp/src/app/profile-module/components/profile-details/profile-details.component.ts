@@ -281,6 +281,7 @@ export class ProfileDetailsComponent {
             .pipe(first())
             .subscribe({
                 next: () => {
+                    this.bLoading = false;
                     this.toastr.success('Update successful');
                 },
                 error: error => {
