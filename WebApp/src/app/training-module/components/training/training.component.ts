@@ -233,7 +233,7 @@ export class TrainingComponent implements OnInit {
       }
     }
 
-    maxHeight = maxHeight + 20;
+    maxHeight = maxHeight + 50;
 
     for(let i=0; i<this.readOnlyTraining.weeks.length; i++) {
       for(let j=0; j<this.readOnlyTraining.weeks[i].sessions.length; j++) {

@@ -115,15 +115,19 @@ export class TrainingService {
         + "'> \
         <div class='card-header border border-dark bg-dark text-white'> \
             <h6 class='m-0'>WEEK " + (index + 1) + "</h6> \
-            " + ((week.comment == null || week.comment == '') ? "" : ("<span>Commento: " + week.comment + " </span>")) + "\
         </div> \
-        <div class='card-body border-0 p-0 row m-0'> \
+        <div class='card-body border-0 p-0 m-0 bg-dark'> \
     ";
 
         for (let i = 0; i < week.sessions.length; i++) {
             weekToString = weekToString + this.sessionReadViewToString(week.sessions[i], i, options);
         }
 
+        weekToString = weekToString +
+            " \
+        </div> \
+        <div class='card-footer text-white bg-dark border-0'>";
+        weekToString = weekToString + ((week.comment != null && week.comment != '') ? ("<span>Commento: " + week.comment + "</span>") : "");
         weekToString = weekToString +
             " \
         </div> \
