@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -12,6 +12,7 @@ import { Training, Week, Series, Exercise, Session, User, Variant, SessionExerci
 import * as _ from "lodash";
 import { GeneralService, PAGES, PAGEMODE, PageStatus } from '@app/_services/general-service/general-service.service';
 import * as jsPDF from 'jspdf';
+import * as $ from 'jquery';
 import { Role } from '@app/_models';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 
@@ -87,7 +88,7 @@ export class TrainingComponent implements OnInit {
   };
 
   // Options
-  public options = {format: {weeksForRow: 1, seriesFormat: "seriesxrep"}};
+  public options = {format: {weeksForRow: 1, seriesFormat: "seriesxrep", maxSessionContainerHeight: "auto"}};
   
   // Others
   public importedTraining: any;
@@ -133,6 +134,8 @@ export class TrainingComponent implements OnInit {
             this.editorContent = this.trainingService.trainingReadViewToString(this.training, this.options);
 
             this.pageStatus = this.generalService.getPageStatus();
+            if(this.pageStatus[PAGES.TRAININGS] == PAGEMODE.READONLY)
+              this.initReadOnlyPage();
             console.log(this.pageStatus);
 
             this.initDraftTraining();
@@ -182,7 +185,7 @@ export class TrainingComponent implements OnInit {
       } else {
         scope.bDirty = false;
       }
-    }, 5 * 1000, this);          // 60 * 1000 milsec
+    }, 5 * 1000, this);          // 5 * 1000 milsec
 
   }
 
@@ -202,12 +205,44 @@ export class TrainingComponent implements OnInit {
   formatter = (x: {name: string}) => x.name;
     
   changeMode(mode: PAGEMODE) {
-    if(mode == PAGEMODE.READONLY)
-      this.readOnlyTraining = _.cloneDeep(this.training);
-
+    if(mode == PAGEMODE.READONLY) 
+      this.initReadOnlyPage();
     this.closeTinyMCEEditor();
     this.pageStatus[PAGES.TRAININGS] = mode;
     this.generalService.setPageStatus(mode, PAGES.TRAININGS);
+  }
+  
+  initReadOnlyPage() {
+    this.readOnlyTraining = _.cloneDeep(this.training);
+
+    setTimeout((scope) => {
+      this.setReadOnlySessionContainerHeight();
+    }, 1 * 1000, this);         
+  }
+
+  setReadOnlySessionContainerHeight() {
+    let maxHeight = 0;
+    let height = 0;
+
+    for(let i=0; i<this.readOnlyTraining.weeks.length; i++) {
+      for(let j=0; j<this.readOnlyTraining.weeks[i].sessions.length; j++) {
+        height = $("#sessionContainer_" + i.toString() + "_" + j.toString()).height();
+        if(height > maxHeight) {
+          maxHeight = height;
+        }
+      }
+    }
+
+    maxHeight = maxHeight + 20;
+
+    for(let i=0; i<this.readOnlyTraining.weeks.length; i++) {
+      for(let j=0; j<this.readOnlyTraining.weeks[i].sessions.length; j++) {
+        $("#sessionContainer_" + i + "_" + j).height(maxHeight);
+      }
+    }
+
+    if(maxHeight) 
+      this.options.format.maxSessionContainerHeight = maxHeight + "px";
   }
 
   getAthletes() {
@@ -663,7 +698,7 @@ export class TrainingComponent implements OnInit {
 
   /* READ OPTIONS FUNCTIONS */
   setDefaultoptions() {
-    this.options = {format: {weeksForRow: 1, seriesFormat: "seriesxrep"}};
+    this.options = {format: {weeksForRow: 1, seriesFormat: "seriesxrep", maxSessionContainerHeight: "auto"}};
   }
 
   clampWeeksForRowValue() {

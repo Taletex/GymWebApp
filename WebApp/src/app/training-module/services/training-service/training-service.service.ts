@@ -137,7 +137,7 @@ export class TrainingService {
         let sessionToString = "";
         sessionToString = sessionToString +
             " \
-    <div class='card border-0 col-12 p-0' style='box-shadow: 0px 2px 0px rgba(0,0,0,.5); border-radius: 0px !important; border: 0px !important'> \
+    <div class='card border-0 col-12 p-0' style='box-shadow: 0px 2px 0px rgba(0,0,0,.5); border-radius: 0px !important; border: 0px !important; height: " + options.format.maxSessionContainerHeight + "'> \
         <div class='card-header m-0 px-0 border-0 text-white' style='background-color: rgba(0, 0, 0, 0.6) !important; border-radius: 0px !important;'> \
             <h6 class='m-0 px-3'>Sessione " + index + " - " + session.name + "</h6> \
             <div class='row m-0 px-3 py-0' style='font-size: small; font-style: italic;'> \

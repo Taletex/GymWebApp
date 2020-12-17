@@ -29,7 +29,8 @@ How to avviare Su Digital Ocean:
 - Update repo:
    + cd GymWebApp
    + git pull
-- Cambiare le porte e gli indirizzi nel file "environment.prod.ts" ('http://www.mytrainingplatform.it:4000'). Nota: è sufficiente solo questo file perchè la web app è avviata in produzione sul server, altrimenti dovresti cambiare il valore anche  nel file environment.ts.
+- [Superfluo] Cambiare le porte e gli indirizzi nel file "environment.prod.ts" ('http://www.mytrainingplatform.it:4000'). Nota: è sufficiente solo questo file perchè la web app è avviata in produzione sul server, altrimenti dovresti cambiare il valore anche  nel file environment.ts.
+- Inserire username e psw per il servizio di mailing smtp in config.json del server
 - Avviare NodeServer:
   + cd root
   + cd GymWebApp
