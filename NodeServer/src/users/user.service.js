@@ -52,7 +52,7 @@ exports.findAllUser = (req, res) => {
 exports.findAllAthlete = (req, res) => {
     User.find().populate({ path: 'personalRecords', populate: { path: 'exercise'} })
     .then(users => {
-        res.send(_.filter(users, function(user) { return user.userType == "athlete"; }));
+        res.send(_.filter(users, function(user) { return (user.userType == "athlete" || user.userType == "both"); }));
     }).catch(err => {
         res.status(500).send({
             message: err.message || "Some error occurred while retrieving users."
@@ -64,7 +64,7 @@ exports.findAllAthlete = (req, res) => {
 exports.findAllCoaches = (req, res) => {
     User.find().populate({ path: 'personalRecords', populate: { path: 'exercise'} })
     .then(users => {
-        res.send(_.filter(users, function(user) { return user.userType == "coach"; }));
+        res.send(_.filter(users, function(user) { return (user.userType == "coach" || user.userType == "both"); }));
     }).catch(err => {
         res.status(500).send({
             message: err.message || "Some error occurred while retrieving users."
