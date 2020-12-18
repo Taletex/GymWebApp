@@ -1,7 +1,7 @@
 <ng-template #trainingModal let-modal>
     <div class="trainingmodal__container">
         <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">Crea Esercizio</h4>
+            <h4 class="modal-title" id="modal-basic-title">Crea Allenamento</h4>
             <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -9,37 +9,53 @@
         <div class="modal-body">
             <div class="card h-100">
                 <div class="card-body h-100">
-                    <form>
-                        <div class="form-row m-0">
-                            <div class="col-4 form-group">
-                                <label for="trainingName" class="col-form-label col-form-label-sm text-muted">Nome</label>
-                                <input type="text" required [(ngModel)]="newTraining.name" class="form-control form-control-sm"
-                                    id="trainingName" name="trainingName">
+                    <form class="form-row m-0">
+                        <div class="col-12 form-group">Allenamento creato da {{newTraining.author.name}} {{newTraining.author.surname}} il {{newTraining.creationDate | date:'d MMMM yyyy'}}</div>
+                        <div class="col-4 form-group">
+                            <label for="Type" class="col-form-label col-form-label-sm text-muted">Disciplina</label>
+                            <select [(ngModel)]="newTraining.type" class="form-control form-control-sm cursor-pointer" id="newTrainingType" name="newTrainingType"
+                                *ngIf="(newTraining.type=='POWERLIFTING' || newTraining.type=='WEIGHTLIFTING' || newTraining.type=='CROSSFIT' || newTraining.type=='BODYBUILDING' || newTraining.type=='SALA ATTREZZI')">
+                                <option [value]="'POWERLIFTING'">POWERLIFTING</option>
+                                <option [value]="'WEIGHTLIFTING'">WEIGHTLIFTING</option>
+                                <option [value]="'CROSSFIT'">CROSSFIT</option>
+                                <option [value]="'BODYBUILDING'">BODYBUILDING</option>
+                                <option [value]="'SALA ATTREZZI'">SALA ATTREZZI</option>
+                                <option [value]="'Custom'">(+)</option>
+                            </select>
+                            <div class="position-relative" *ngIf="!(newTraining.type=='POWERLIFTING' || newTraining.type=='WEIGHTLIFTING' || newTraining.type=='CROSSFIT' || newTraining.type=='BODYBUILDING' || newTraining.type=='SALA ATTREZZI')">
+                                <input type="text" [(ngModel)]="newTraining.type" class="form-control form-control-sm">
+                                <div (click)="newTraining.type='POWERLIFTING'" style="position:absolute; right: 3px; top: 0px;">&times;</div>
                             </div>
-                            <div class="col-4 form-group">
-                                <label for="trainingVariantName" class="col-form-label col-form-label-sm text-muted">Nome Variante</label>
-                                <input type="text" [(ngModel)]="newTraining.variant.name" class="form-control form-control-sm"
-                                    id="trainingVariantName" name="trainingVariantName">
-                            </div>
-                            <div class="col-4 form-group">
-                                <label for="trainingVariantCoefficient" class="col-form-label col-form-label-sm text-muted">Coefficente di intensità</label>
-                                <input type="number" min=0.1 [(ngModel)]="newTraining.variant.intensityCoefficient" class="form-control form-control-sm"
-                                    id="trainingVariantCoefficient" name="trainingVariantCoefficient">
-                            </div>
-                            <div class="col-12 form-group">
-                                <label for="trainingDescription" class="col-form-label col-form-label-sm text-muted">Descrizione</label>
-                                <textarea [(ngModel)]="newTraining.description" class="form-control form-control-sm"
-                                    id="trainingDescription" name="trainingDescription"></textarea>
-                            </div>
+                        </div>
+                        <div class="col-4 form-group">
+                            <label for="newTrainingAthlete" class="col-form-label col-form-label-sm text-muted">Atleta</label>
+                            <select [(ngModel)]="newTraining.athlete" class="form-control form-control-sm cursor-pointer" id="newTrainingAthlete" name="newTrainingAthlete" [compareWith]="compareObjects">
+                                <option [ngValue]="athlete" *ngFor="let athlete of athleteList; index as athleteIndex">{{athlete.name}} {{athlete.surname}}</option>
+                            </select>
+                        </div>
+                        <div class="col-2 form-group">
+                            <label for="newTrainingStartDate" class="col-form-label col-form-label-sm text-muted">Data inizio</label>
+                            <input type="date"  [ngModel] ="newTraining.startDate | date:'yyyy-MM-dd'" (ngModelChange)="newTraining.startDate = $event" class="form-control form-control-sm"
+                                id="newTrainingStartDate" name="newTrainingStartDate">
+                        </div>
+                        <div class="col-2 form-group">
+                            <label for="newTrainingEndDate" class="col-form-label col-form-label-sm text-muted">Data fine</label>
+                            <input type="date" [ngModel] ="newTraining.endDate | date:'yyyy-MM-dd'" (ngModelChange)="newTraining.endDate = $event" class="form-control form-control-sm"
+                                id="newTrainingEndDate" name="newTrainingEndDate">
+                        </div>
+                        <div class="col-12 form-group">
+                            <label for="newTrainingcomment" class="col-form-label col-form-label-sm text-muted">Commento</label>
+                            <textarea [(ngModel)]="newTraining.comment" class="form-control form-control-sm"
+                                id="newTrainingcomment" name="newTrainingcomment" placeholder="Commento..."></textarea>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
         <div class="modal-footer" style="overflow:visible">
-            <button class="btn btn-success" ngbAutofocus [disabled]="newTraining.name == ''" style="position:relative;" (click)="modal.close(newTraining)">
+            <button class="btn btn-success" ngbAutofocus [disabled]="false" style="position:relative;" (click)="modal.close(newTraining)">
                 <span>Crea</span> 
-                <div style="position: absolute; right: 0px; bottom: 0px; width:100%; height:100%;" ngbTooltip="Campo 'nome' vuoto" placement="top" [hidden]="newTraining.name != ''"></div>
+                <div style="position: absolute; right: 0px; bottom: 0px; width:100%; height:100%;" ngbTooltip="Campo 'nome' vuoto" placement="top" [hidden]="true"></div>
             </button>
         </div>
     </div>

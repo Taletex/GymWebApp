@@ -82,9 +82,12 @@
             </div>
             <div class="bottom-right-absolute d-flex">
                 <div *ngIf="trainingList.length > 0 && (account.user.userType=='both' || account.user.userType=='coach')" (click)="exportAllTrainings()" class="image-button" ngbTooltip="Esporta tutti gli allenamenti" placement="top"><img src="assets/icons/actions/export.svg" style="width:40px; height:auto;"></div>    
-                <div *ngIf="(account.user.userType=='both' || account.user.userType == 'coach')" (click)="createTraining()" class="image-button ml-2" ngbTooltip="Nuovo" placement="top"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></div>    
+                <div *ngIf="(account.user.userType=='both' || account.user.userType == 'coach')" class="ml-2">
+                    <app-training-modal (onClose)="createTraining()" [(newTraining)] = "newTraining" [(athleteList)] = "athleteList">
+                        <div class="image-button cursor-pointer" ngbTooltip="Nuovo Allenamento" placement="top"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></div>
+                    </app-training-modal>
+                </div>    
             </div>
-            
         </div>
     </div>
 
