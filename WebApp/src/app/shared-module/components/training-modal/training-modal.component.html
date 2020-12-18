@@ -30,6 +30,7 @@
                         <div class="col-4 form-group">
                             <label for="newTrainingAthlete" class="col-form-label col-form-label-sm text-muted">Atleta</label>
                             <select [(ngModel)]="newTraining.athlete" class="form-control form-control-sm cursor-pointer" id="newTrainingAthlete" name="newTrainingAthlete" [compareWith]="compareObjects">
+                                <option [ngValue]="newTraining.author">{{newTraining.author.name}} {{newTraining.author.surname}}</option>
                                 <option [ngValue]="athlete" *ngFor="let athlete of athleteList; index as athleteIndex">{{athlete.name}} {{athlete.surname}}</option>
                             </select>
                         </div>

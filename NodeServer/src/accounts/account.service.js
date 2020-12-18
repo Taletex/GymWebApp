@@ -259,7 +259,10 @@ async function update(id, params) {
 
 async function _delete(id) {
     const account = await getAccount(id);
+    const user = await getUser(account.user._id);
+
     await account.remove();
+    await user.remove();
 }
 
 // helper functions
@@ -269,6 +272,13 @@ async function getAccount(id) {
     const account = await db.Account.findById(id).populate({ path: 'user', populate: { path: 'personalRecords', populate: { path: 'exercise'} }});
     if (!account) throw 'Account not found';
     return account;
+}
+
+async function getUser(id) {
+    if (!db.isValidId(id)) throw 'Account not found';
+    const user = await db.User.findById(id);
+    if (!user) throw 'User not found';
+    return user;
 }
 
 async function getRefreshToken(token) {

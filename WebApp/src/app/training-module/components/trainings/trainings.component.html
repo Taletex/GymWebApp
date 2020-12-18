@@ -53,7 +53,7 @@
             </div>
         </div>
         <div class="maincontainer__body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2" [hidden]="bLoading">
-            <div class="h-100 w-100 d-flex flex-column align-items-center justify-content-center badge badge-light" *ngIf="trainingList.length == 0">
+            <div class="h-100 w-100 d-flex flex-column align-items-center justify-content-center badge badge-light" *ngIf="trainingList.length == 0 && !bLoading">
                 <img src="assets/icons/misc/alert.svg" style="width:40px; height:auto;">
                 <span>Nessun allenamento presente nella piattaforma</span>
             </div>

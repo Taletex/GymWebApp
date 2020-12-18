@@ -3,10 +3,48 @@ $black-custom: #141414;
 
 .main__account {
     height: 100%;
-    background-color: rgba(0,0,0,0.8);
+    background-color: rgba(0,0,0,0.1);
+
+        /* ===== Scrollbar ===== */
+        /* Customize website's scrollbar like Mac OS
+        Not supports in Firefox and IE */
+
+        /* total width */
+        ::-webkit-scrollbar {
+            background-color: transparent !important;
+            width: 15px;
+        }
+
+        /* background of the scrollbar except button or resizer */
+        ::-webkit-scrollbar-track {
+            background-color: transparent !important;
+        }
+        ::-webkit-scrollbar-track:hover {
+            background-color: #f4f4f4;
+        }
+
+        /* scrollbar itself */
+        ::-webkit-scrollbar-thumb {
+            background-color: #babac0;
+            border-radius: 16px;            
+            border: 0px !important;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #a0a0a5;
+            border: 0px !important;
+        }
+
+        /* set button(top and bottom of the scrollbar) */
+        ::-webkit-scrollbar-button {
+            display: none;
+        }
+        /* ===== END SCROLLBAR ===== */
 
     .account__maincontainer {
         height: 100%;
+        overflow: auto;
+
+        
 
         .nav-container {
             position:fixed; 

@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Training, User } from '@app/_models/training-model';
+import { UtilsService } from '@app/_services/utils-service/utils-service.service';
 
 @Component({
   selector: 'app-training-modal',
@@ -15,10 +16,13 @@ export class TrainingModalComponent implements OnInit {
   @Output() onClose: EventEmitter<any> = new EventEmitter();
   @Output() onAbort: EventEmitter<any> = new EventEmitter();
 
-  constructor(private modalService: NgbModal) { }
+  constructor(private modalService: NgbModal, private utilsService: UtilsService) { }
 
   ngOnInit(): void {
   }
+
+  // From services
+  compareObjects = this.utilsService.compareObjects;
 
   public openTrainingModal(content) {
     this.modalService.open(content, { size: "lg", centered: true, scrollable: true, backdrop: "static" }).result.then((result) => {
