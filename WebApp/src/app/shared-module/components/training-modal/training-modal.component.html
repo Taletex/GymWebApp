@@ -53,9 +53,9 @@
             </div>
         </div>
         <div class="modal-footer" style="overflow:visible">
-            <button class="btn btn-success" ngbAutofocus [disabled]="false" style="position:relative;" (click)="modal.close(newTraining)">
+            <button class="btn btn-success" ngbAutofocus [disabled]="(newTraining.athlete._id == newTraining.author._id && newTraining.author.userType == 'coach')" style="position:relative;" (click)="modal.close(newTraining)">
                 <span>Crea</span> 
-                <div style="position: absolute; right: 0px; bottom: 0px; width:100%; height:100%;" ngbTooltip="Campo 'nome' vuoto" placement="top" [hidden]="true"></div>
+                <div style="position: absolute; right: 0px; bottom: 0px; width:100%; height:100%;" ngbTooltip="Campo 'atleta' vuoto" placement="top" [hidden]="!(newTraining.athlete._id == newTraining.author._id && newTraining.author.userType == 'coach')"></div>
             </button>
         </div>
     </div>
