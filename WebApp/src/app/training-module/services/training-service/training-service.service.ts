@@ -226,7 +226,15 @@ export class TrainingService {
                             currentPr = _.cloneDeep(pr);
                     }
 
-                    // If the pr exists, then convert %
+                    // If the exact pr does not exists, take the pr with the same name, if it exists
+                    if(currentPr == null) {
+                        for (let pr of personalRecords) {
+                            if (pr.exercise.name == sessionExercise.exercise.name)
+                                currentPr = _.cloneDeep(pr);
+                        } 
+                    }
+
+                    // If the exact pr or a pr with the same exercise name exists, then convert %
                     if (currentPr && currentPr.oneRepPR.weight > 0) {
                         for (let series of sessionExercise.series) {
                             if (series.measure == '%') {
