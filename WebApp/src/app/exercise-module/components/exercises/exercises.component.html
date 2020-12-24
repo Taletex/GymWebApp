@@ -8,28 +8,28 @@
         <div class="col-3 form-group pl-2 pr-1 m-0">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Nome</label>
             <div class="input-group">
-                <input type="text" [(ngModel)]="filters.name" class="form-control form-control-sm"
+                <input type="text" [(ngModel)]="filters.name" class="form-control form-control-sm" (keyup)="filterExercises($event)"
                     id="filterName" name="filterName" placeholder="Nome...">
             </div>
         </div>
         <div class="col-3 form-group pl-2 pr-1 m-0">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Variante (nome)</label>
             <div class="input-group">
-                <input type="text" [(ngModel)]="filters.variant.name" class="form-control form-control-sm"
+                <input type="text" [(ngModel)]="filters.variant.name" class="form-control form-control-sm" (keyup)="filterExercises($event)"
                     id="filterVariantName" name="filterVariantName" placeholder="Nome variante...">
             </div>
         </div>
         <div class="col-2 form-group pl-2 pr-1 m-0">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Variante (coefficiente)</label>
             <div class="input-group">
-                <input type="number" min=0.1 [(ngModel)]="filters.variant.intensityCoefficient" class="form-control form-control-sm"
+                <input type="number" min=0.1 [(ngModel)]="filters.variant.intensityCoefficient" class="form-control form-control-sm" (keyup)="filterExercises($event)" (change)="filterExercises($event)"
                     id="filterVariantCoefficient" name="filterVariantCoefficient" placeholder="Coefficiente...">
             </div>
         </div>
         <div class="col-3 form-group pl-2 pr-1 m-0">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Descrizione</label>
             <div class="input-group">
-                <input type="text" [(ngModel)]="filters.description" class="form-control form-control-sm"
+                <input type="text" [(ngModel)]="filters.description" class="form-control form-control-sm" (keyup)="filterExercises($event)"
                     id="filterDescription" name="filterDescription" placeholder="Descrizione...">
             </div>
         </div>
@@ -65,7 +65,7 @@
                 </div>
             </div>
             <app-exercise-modal (onClose)="createExercise()" [(newExercise)] = "newExercise" style="position: absolute; right: 15px; bottom: 15px">
-                <div class="image-button cursor-pointer" ngbTooltip="Nuovo" placement="top"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></div>
+                <div class="image-button-big cursor-pointer" ngbTooltip="Nuovo" placement="top"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></div>
             </app-exercise-modal>
         </div>
     </div>

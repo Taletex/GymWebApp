@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Exercise } from '@app/_models/training-model';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { Account, Role } from '@app/_models';
+import * as _ from "lodash";
 
 @Component({
   selector: 'app-exercises',
@@ -12,6 +13,7 @@ import { Account, Role } from '@app/_models';
   styleUrls: ['./exercises.component.scss']
 })
 export class ExercisesComponent implements OnInit {
+  public originalExerciseList: Array<Exercise> = [];
   public exerciseList: Array<Exercise> = [];
   public filters: any = {};
   public bLoading: boolean = false;
@@ -22,7 +24,7 @@ export class ExercisesComponent implements OnInit {
 
   constructor(private httpService: HttpService, private toastr: ToastrService, private accountService: AccountService) { 
     this.accountService.account.subscribe(x => this.account = x);
-    this.filters = { name: '', variant: {name: '', intensityCoefficient: 1}, description: ''};
+    this.resetFilters();
     this.getExercises();
   }
 
@@ -34,7 +36,10 @@ export class ExercisesComponent implements OnInit {
     this.httpService.getExercises()
       .subscribe(
         (data: any) => {
-          this.exerciseList = data;
+          this.originalExerciseList = data;
+          this.exerciseList = _.cloneDeep(this.originalExerciseList);
+          this.resetFilters();
+
           this.bLoading = false;
           console.log(this.exerciseList);
         },
@@ -51,7 +56,10 @@ export class ExercisesComponent implements OnInit {
       .subscribe(
         (data: any) => {
           this.bLoading = false;
-          this.exerciseList.push(data);
+          this.originalExerciseList.push(data);
+          this.exerciseList = _.cloneDeep(this.originalExerciseList);
+          this.resetFilters();
+
           this.toastr.success('Exercise successfully created!');
         },
         (error: HttpErrorResponse) => {
@@ -67,7 +75,10 @@ export class ExercisesComponent implements OnInit {
       .subscribe(
         (data: any) => {
           this.bLoading = false;
-          this.exerciseList.splice(index, 1);
+          this.originalExerciseList.splice(index, 1);
+          this.exerciseList = _.cloneDeep(this.originalExerciseList);
+          this.filterExercises(null);
+
           this.toastr.success('Exercise successfully deleted!');
         },
         (error: HttpErrorResponse) => {
@@ -76,4 +87,22 @@ export class ExercisesComponent implements OnInit {
           console.log(error.error.message);
         });
   }
+
+  /* FILTER FUNCTIONS */
+  filterExercises(event: any) {
+    let filters = _.cloneDeep(this.filters);
+    this.exerciseList = _.filter(this.originalExerciseList, function(e) {
+      return (
+        (filters.name != '' ? e.name.toLowerCase().includes(filters.name.toLowerCase()) : true) &&
+        (filters.variant.name != '' ? e.variant.name.toLowerCase().includes(filters.variant.name.toLowerCase()) : true) &&
+        (filters.variant.intensityCoefficient != null ? (e.variant.intensityCoefficient == filters.variant.intensityCoefficient) : true) &&
+        (filters.description != '' ? e.description.toLowerCase().includes(filters.description.toLowerCase()) : true)
+      );
+    });
+  }
+
+  resetFilters() {
+    this.filters = { name: '', variant: {name: '', intensityCoefficient: null}, description: ''};
+  }
+
 }

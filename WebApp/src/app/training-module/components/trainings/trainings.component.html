@@ -8,35 +8,35 @@
         <div class="col-3 form-group pl-2 pr-1 m-0">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Autore</label>
             <div class="input-group">
-                <input type="text" [(ngModel)]="filters.author.name" class="form-control form-control-sm"
+                <input type="text" [(ngModel)]="filters.author.name" class="form-control form-control-sm" (keyup)="filterTrainings($event)"
                     id="filterAuthorName" name="filterAuthorName" placeholder="Nome...">
-                <input type="text" [(ngModel)]="filters.author.surname" class="form-control form-control-sm"
+                <input type="text" [(ngModel)]="filters.author.surname" class="form-control form-control-sm" (keyup)="filterTrainings($event)"
                     id="filterAuthorSurname" name="filterAuthorSurname" placeholder="Cognome...">
             </div>
-        </div>
-        <div class="col-2 form-group px-1 m-0">
-            <label for="filterCreationDate" class="col-form-label col-form-label-sm p-0 text-muted">Creazione</label>
-            <input type="date" [(ngModel)]="filters.creationDate" class="form-control form-control-sm"
-                id="filterCreationDate" name="filterCreationDate">
-        </div>
-        <div class="col-2 form-group px-1 m-0">
-            <label for="filterStartDate" class="col-form-label col-form-label-sm p-0 text-muted">Inizio</label>
-            <input type="date" [(ngModel)]="filters.startDate" class="form-control form-control-sm"
-                id="filterStartDate" name="filterStartDate">
         </div>
         <div class="col-3 form-group px-1 m-0">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Atleta</label>
             <div class="input-group">
-                <input type="text" [(ngModel)]="filters.athlete.name" class="form-control form-control-sm"
+                <input type="text" [(ngModel)]="filters.athlete.name" class="form-control form-control-sm" (keyup)="filterTrainings($event)"
                     id="filterAtleteName" name="filterAtleteName" placeholder="Nome...">
-                <input type="text" [(ngModel)]="filters.athlete.surname" class="form-control form-control-sm"
+                <input type="text" [(ngModel)]="filters.athlete.surname" class="form-control form-control-sm" (keyup)="filterTrainings($event)"
                     id="filterAtleteSurname" name="filterAtleteSurname" placeholder="Cognome...">
             </div>
         </div>
         <div class="col-1 form-group px-1 m-0">
             <label for="filterType" class="col-form-label col-form-label-sm p-0 text-muted">Tipo</label>
-            <input type="text" [(ngModel)]="filters.type" class="form-control form-control-sm" id="filterType"
+            <input type="text" [(ngModel)]="filters.type" class="form-control form-control-sm" id="filterType" (keyup)="filterTrainings($event)"
                 name="filterType" placeholder="Tipo...">
+        </div>
+        <div class="col-2 form-group px-1 m-0">
+            <label for="filterCreationDate" class="col-form-label col-form-label-sm p-0 text-muted">Creazione</label>
+            <input type="date" [(ngModel)]="filters.creationDate" class="form-control form-control-sm" (keyup)="filterTrainings($event)" (change)="filterTrainings($event)"
+                id="filterCreationDate" name="filterCreationDate">
+        </div>
+        <div class="col-2 form-group px-1 m-0">
+            <label for="filterStartDate" class="col-form-label col-form-label-sm p-0 text-muted">Inizio</label>
+            <input type="date" [(ngModel)]="filters.startDate" class="form-control form-control-sm" (keyup)="filterTrainings($event)" (change)="filterTrainings($event)"
+                id="filterStartDate" name="filterStartDate">
         </div>
     </div>
 
@@ -81,10 +81,10 @@
                 </div>
             </div>
             <div class="bottom-right-absolute d-flex">
-                <div *ngIf="trainingList.length > 0 && (account.user.userType=='both' || account.user.userType=='coach')" (click)="exportAllTrainings()" class="image-button" ngbTooltip="Esporta tutti gli allenamenti" placement="top"><img src="assets/icons/actions/export.svg" style="width:40px; height:auto;"></div>    
+                <div *ngIf="trainingList.length > 0 && (account.user.userType=='both' || account.user.userType=='coach')" (click)="exportAllTrainings()" class="image-button-big" ngbTooltip="Esporta tutti gli allenamenti" placement="top"><img src="assets/icons/actions/export.svg" style="width:40px; height:auto;"></div>    
                 <div *ngIf="(account.user.userType=='both' || account.user.userType == 'coach')" class="ml-2">
                     <app-training-modal (onClose)="createTraining()" [(newTraining)] = "newTraining" [(athleteList)] = "athleteList">
-                        <div class="image-button cursor-pointer" ngbTooltip="Nuovo Allenamento" placement="top"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></div>
+                        <div class="image-button-big cursor-pointer" ngbTooltip="Nuovo Allenamento" placement="top"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></div>
                     </app-training-modal>
                 </div>    
             </div>

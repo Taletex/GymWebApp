@@ -8,33 +8,43 @@
         <div class="col-3 form-group pl-2 pr-1 m-0">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Utente</label>
             <div class="input-group">
-                <input type="text" [(ngModel)]="filters.name" class="form-control form-control-sm"
+                <input type="text" [(ngModel)]="filters.name" class="form-control form-control-sm" (keyup)="filterUsers($event)"
                     id="filterAuthorName" name="filterAuthorName" placeholder="Nome...">
-                <input type="text" [(ngModel)]="filters.surname" class="form-control form-control-sm"
+                <input type="text" [(ngModel)]="filters.surname" class="form-control form-control-sm" (keyup)="filterUsers($event)"
                     id="filterAuthorSurname" name="filterAuthorSurname" placeholder="Cognome...">
             </div>
         </div>
+        <div class="col-2 form-group px-1 m-0" *ngIf="account.user.userType=='both'">
+            <label for="filterType" class="col-form-label col-form-label-sm p-0 text-muted">Tipo</label>
+            <select [(ngModel)]="filters.userType" class="form-control form-control-sm cursor-pointer" placeholder="Tipo utente..." id="filterType" name="filterType" (change)="filterUsers($event)">
+                <option value="" disabled selected>Tipo...</option>
+                <option [value]="'athlete'">Atleta</option>
+                <option [value]="'coach'">Coach</option>
+                <option [value]="'both'">Entrambi</option>
+            </select>
+        </div>
         <div class="col-2 form-group px-1 m-0">
             <label for="filterDoB" class="col-form-label col-form-label-sm p-0 text-muted">DoB</label>
-            <input type="text" [(ngModel)]="filters.dateOfBirth" class="form-control form-control-sm"
-                    id="filterDoB" name="filterDoB" placeholder="Data nascita...">
+            <input type="date" [(ngModel)]="filters.dateOfBirth" class="form-control form-control-sm" (keyup)="filterUsers($event)" (change)="filterUsers($event)"
+                    id="filterDoB" name="filterDoB">
         </div>
         <div class="col-1 form-group px-1 m-0">
             <label for="filterSex" class="col-form-label col-form-label-sm p-0 text-muted">Sesso</label>
-            <select [(ngModel)]="filters.sex" class="form-control form-control-sm cursor-pointer" id="filterSex" name="filterSex">
+            <select [(ngModel)]="filters.sex" class="form-control form-control-sm cursor-pointer" placeholder="Sesso..." id="filterSex" name="filterSex" (change)="filterUsers($event)">
+                <option value="" disabled selected>Sesso...</option>
                 <option [value]="'M'">Uomo</option>
                 <option [value]="'F'">Donna</option>
             </select>
         </div>
         <div class="col-2 form-group px-1 m-0">
             <label for="filterBw" class="col-form-label col-form-label-sm p-0 text-muted">BodyWeight</label>
-            <input type="text" [(ngModel)]="filters.BodyWeight" class="form-control form-control-sm"
+            <input type="number" [(ngModel)]="filters.bodyWeight" min=0 class="form-control form-control-sm" (keyup)="filterUsers($event)"
                     id="filterBw" name="filterBw" placeholder="Peso corporeo...">
         </div>
-        <div class="col-2 form-group px-1 m-0">
+        <div class="col-1 form-group px-1 m-0">
             <label for="filterExperience" class="col-form-label col-form-label-sm p-0 text-muted">Esperienza (anni)</label>
-            <input type="text" [(ngModel)]="filters.yearsOfExperience" class="form-control form-control-sm"
-                    id="filterExperience" name="filterExperience" placeholder="Esperienza (anni)...">
+            <input type="number" [(ngModel)]="filters.yearsOfExperience" min=0 class="form-control form-control-sm" (keyup)="filterUsers($event)" (change)="filterUsers($event)"
+                    id="filterExperience" name="filterExperience" placeholder="Esperienza...">
         </div>
         
     </div>
@@ -44,7 +54,7 @@
 
         <div class="maincontainer__header card-header pl-2 pr-3 border border-secondary border-top-0 border-left-0 border-right-0 d-flex flex-column bg-dark text-white">
             <div class="col-12 row m-0 p-0 d-flex align-items-center justify-content-center">
-                <div class="col-3"><b>Name and Surname</b></div>
+                <div class="col-3"><b>User</b></div>
                 <div class="col-2"><b>Type</b></div>
                 <div class="col-2"><b>DoB</b></div>
                 <div class="col-1"><b>Sex</b></div>

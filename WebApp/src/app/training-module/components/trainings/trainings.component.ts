@@ -8,6 +8,7 @@ import { AccountService } from '@app/_services/account-service/account-service.s
 import { Role } from '@app/_models';
 import { TrainingService } from '@app/training-module/services/training-service/training-service.service';
 import { forkJoin } from 'rxjs';
+import * as _ from "lodash";
 
 @Component({
   selector: 'app-trainings',
@@ -15,6 +16,7 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./trainings.component.scss']
 })
 export class TrainingsComponent implements OnInit {
+  public originalTrainingList: Array<Training> = [];
   public trainingList: Array<Training> = [];
   public athleteList: Array<User> = [];
   public newTraining: Training;
@@ -29,13 +31,14 @@ export class TrainingsComponent implements OnInit {
 
 
   constructor(private accountService: AccountService, private httpService: HttpService, private toastr: ToastrService, public generalService: GeneralService, private trainingService: TrainingService) {
-    this.filters = { author: { name: '', surname: '' }, creationDate: '', startDate: '', athlete: { name: '', surname: '' }, type: '' };
-    
     // Init training list and athlete list
     this.getViewElements();
 
     // Init new training
     this.initNewTraining();
+
+    // Init filters
+    this.resetFilters();
   }
 
   ngOnInit() {
@@ -55,8 +58,11 @@ export class TrainingsComponent implements OnInit {
     forkJoin({trainings: this.httpService.getTrainingsByUserId(this.account.user._id), athletes: this.httpService.getAthletes()})
       .subscribe(
         (data: any) => {
-          this.trainingList = data.trainings;
+          this.originalTrainingList = data.trainings;
+          this.trainingList = _.cloneDeep(this.originalTrainingList);
           console.log(this.trainingList);
+          
+          this.resetFilters();
 
           this.athleteList = data.athletes;
           console.log(this.athleteList);
@@ -77,7 +83,10 @@ export class TrainingsComponent implements OnInit {
       .subscribe(
         (data: any) => {
           this.bLoading = false;
-          this.trainingList.push(data);
+          this.originalTrainingList.push(data) 
+          this.trainingList = _.cloneDeep(this.originalTrainingList);
+          this.resetFilters();
+
           this.initNewTraining();
           this.toastr.success('Training successfully created.');
         },
@@ -94,7 +103,9 @@ export class TrainingsComponent implements OnInit {
       .subscribe(
         (data: any) => {
           this.bLoading = false;
-          this.trainingList.splice(index, 1);
+          this.originalTrainingList.splice(index, 1);
+          this.trainingList = _.cloneDeep(this.originalTrainingList);
+          this.filterTrainings(null);
           this.toastr.success('Training successfully deleted.');
         },
         (error: HttpErrorResponse) => {
@@ -111,10 +122,31 @@ export class TrainingsComponent implements OnInit {
   }
 
   exportAllTrainings() {
-    for(let i=0; i<this.trainingList.length; i++) {
-      this.trainingService.exportTraining(this.trainingList[i]);
+    for(let i=0; i<this.originalTrainingList.length; i++) {
+      this.trainingService.exportTraining(this.originalTrainingList[i]);
     }
     this.toastr.success("Trainings successfully exported.");
+  }
+
+
+  /* FILTER FUNCTIONS */
+  filterTrainings(event: any) {
+    let filters = _.cloneDeep(this.filters);
+    this.trainingList = _.filter(this.originalTrainingList, function(t) {
+      return (
+        (filters.author.name != '' ? t.author.name.toLowerCase().includes(filters.author.name.toLowerCase()) : true) &&
+        (filters.author.surname != '' ? t.author.surname.toLowerCase().includes(filters.author.surname.toLowerCase()) : true) &&
+        (filters.athlete.name != '' ? t.athlete.name.toLowerCase().includes(filters.athlete.name.toLowerCase()) : true) &&
+        (filters.athlete.surname != '' ? t.athlete.surname.toLowerCase().includes(filters.athlete.surname.toLowerCase()) : true) &&
+        (filters.type != '' ? t.type.toLowerCase().includes(filters.type.toLowerCase()) : true) &&
+        ((filters.creationDate != null && filters.creationDate != '') ? t.creationDate.includes(filters.creationDate) : true) &&
+        ((filters.startDate != null && filters.startDate != '') ? t.startDate.includes(filters.startDate) : true)
+      );
+    });
+  }
+
+  resetFilters() {
+    this.filters = { author: { name: '', surname: '' }, creationDate: '', startDate: '', athlete: { name: '', surname: '' }, type: '' };
   }
 
 }

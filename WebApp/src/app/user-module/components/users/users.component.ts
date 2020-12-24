@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { Account, Role } from '@app/_models';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { GeneralService, PAGEMODE, PAGES } from '@app/_services/general-service/general-service.service';
+import * as _ from "lodash";
 
 @Component({
   selector: 'app-users',
@@ -14,6 +15,7 @@ import { GeneralService, PAGEMODE, PAGES } from '@app/_services/general-service/
   styleUrls: ['./users.component.scss']
 })
 export class UsersComponent implements OnInit {
+  public originalUserList: Array<User> = [];
   public userList: Array<User> = [];
   public filters: any = {};
   public bLoading: boolean = false;
@@ -24,7 +26,7 @@ export class UsersComponent implements OnInit {
   public Role = Role;
 
   constructor(private router: Router, private accountService: AccountService, private httpService: HttpService, private toastr: ToastrService, public generalService: GeneralService) {
-    this.filters = { name: '', surname: '', dateOfBirth: '', sex: '', bodyWeight: '', yearsOfExperience: ''};
+    this.resetFilters();
     this.accountService.account.subscribe(x => this.account = x);
     
     // TODO: Improvement. Settare una preferenza da salvare nel browser che deifnisce l'attuale ruolo dell'account
@@ -58,7 +60,10 @@ export class UsersComponent implements OnInit {
     this.httpService.getUsers()
       .subscribe(
         (data: any) => {
-          this.userList = data;
+          this.originalUserList = data;
+          this.userList = _.cloneDeep(this.originalUserList);
+          this.resetFilters();
+
           this.bLoading = false;
           console.log(this.userList);
         },
@@ -75,7 +80,10 @@ export class UsersComponent implements OnInit {
     this.httpService.getAthletes()
     .subscribe(
       (data: Array<User>) => {
-        this.userList = data;
+        this.originalUserList = data;
+        this.userList = _.cloneDeep(this.originalUserList);
+        this.resetFilters();
+
         console.log(this.userList);
         this.bLoading = false;
       },
@@ -92,7 +100,10 @@ export class UsersComponent implements OnInit {
     this.httpService.getCoaches()
     .subscribe(
       (data: Array<User>) => {
-        this.userList = data;
+        this.originalUserList = data;
+        this.userList = _.cloneDeep(this.originalUserList);
+        this.resetFilters();
+
         console.log(this.userList);
         this.bLoading = false;
       },
@@ -134,5 +145,25 @@ export class UsersComponent implements OnInit {
           console.log(error.error.message);
         });
   } */
+
+  /* FILTER FUNCTIONS */
+  filterUsers(event: any) {
+    let filters = _.cloneDeep(this.filters);
+    this.userList = _.filter(this.originalUserList, function(u) {
+      return (
+        (filters.name != '' ? u.name.toLowerCase().includes(filters.name.toLowerCase()) : true) &&
+        (filters.surname != '' ? u.surname.toLowerCase().includes(filters.surname.toLowerCase()) : true) &&
+        (filters.userType != '' ? u.userType.toLowerCase().includes(filters.userType.toLowerCase()) : true) &&
+        ((filters.dateOfBirth != null && filters.dateOfBirth != '') ? u.dateOfBirth.includes(filters.dateOfBirth) : true) &&
+        (filters.sex != '' ? u.sex.toLowerCase().includes(filters.sex.toLowerCase()) : true) &&
+        (filters.bodyWeight != null ? u.bodyWeight == filters.bodyWeight : true) &&
+        (filters.yearsOfExperience != null ? u.yearsOfExperience == filters.yearsOfExperience : true)
+      );
+    });
+  }
+
+  resetFilters() {
+    this.filters = { name: '', surname: '', userType: '', dateOfBirth: '', sex: '', bodyWeight: null, yearsOfExperience: null};
+  }
 
 }
