@@ -34,6 +34,17 @@ const PersonalRecordSchema = mongoose.Schema({
     bPublic: Boolean
 }, { _id: false})
 
+const NotificationSchema = mongoose.Schema({
+    type: { type: String, required: true },
+    from: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: false
+    },
+    message: { type: String, required: true }
+
+})
+
 const UserSchema = mongoose.Schema({
     name: { type: String, required: true },
     surname: { type: String, required: true },
@@ -44,7 +55,18 @@ const UserSchema = mongoose.Schema({
     userType: { type: String, required: true },             // athlete, coach, both
     bodyWeight: Number,
     yearsOfExperience: Number,
-    personalRecords: { type: [PersonalRecordSchema], required: false }
+    personalRecords: { type: [PersonalRecordSchema], required: false },
+    notifications: { type: [NotificationSchema], required: false },
+    coaches: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: false
+    }],
+    athletes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: false
+    }]
 });
 
 const userSchema =  mongoose.model('User', UserSchema);

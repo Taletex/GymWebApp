@@ -8,7 +8,12 @@ const VariantSchema = mongoose.Schema({
 const ExerciseSchema = mongoose.Schema({
     name: String,
     variant: VariantSchema,
-    description: String
+    description: String,
+    creator: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: false
+    }
 }, {
     timestamps: true
 });

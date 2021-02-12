@@ -18,8 +18,12 @@ function trainingDecorator(t) {
     
     if(training.author._id != undefined && training.author._id != null && training.author._id != "") 
         training.author = training.author._id;
-    if(training.athlete._id != undefined && training.athlete._id != null && training.athlete._id != "") 
-        training.athlete = training.athlete._id;
+    if(training.athletes != null && training.athletes.length > 0) {
+        for(let i=0; i<training.athletes.length; i++) {
+            if(training.athletes[i]._id != undefined && training.athletes[i]._id != null && training.athletes[i]._id != "") 
+            training.athletes[i] = training.athletes[i]._id;
+        }
+    }
 
     for(let i=0; i<training.weeks.length; i++) {
         for(let j=0; j<training.weeks[i].sessions.length; j++) {
@@ -52,7 +56,7 @@ function createTraining(req, res) {
     // Create a Training
     const training = new Training(trainingDecorator({
         author: req.body.author,
-        athlete: req.body.athlete,
+        athletes: req.body.athletes,
         type: req.body.type,
         creationDate: req.body.creationDate,
         startDate: req.body.startDate,
@@ -66,7 +70,7 @@ function createTraining(req, res) {
     training.save()
     .then(data => {
         // Returns the training created by finding it in the database
-        Training.find({_id: training._id}).populate('author').populate('athlete').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
+        Training.find({_id: training._id}).populate('author').populate('athletes').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
         .then(training => {
             res.send(training[0]);
         })
@@ -79,7 +83,7 @@ function createTraining(req, res) {
 
 // Retrieve and return all trainings from the database
 function findAllTraining(req, res) {
-    Training.find({}).populate('author').populate('athlete').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
+    Training.find({}).populate('author').populate('athletes').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
     .then(trainings => {
         res.send(trainings);
     }).catch(err => {
@@ -101,7 +105,7 @@ function findAllTrainingByUserId(req, res) {
         let trainingList = [];
         let user = data[0];
 
-        Training.find().populate('author').populate('athlete').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
+        Training.find().populate('author').populate('athletes').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
         .then(trainings => {
             switch(user.userType) {
                 case 'athlete':
@@ -138,7 +142,7 @@ function findAllTrainingByUserId(req, res) {
 
 // Find a single training with a id
 function findOneTraining (req, res) {
-    Training.find({_id: req.params._id}).populate('author').populate('athlete').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
+    Training.find({_id: req.params._id}).populate('author').populate('athletes').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
     .then(training => {
         if(!training) {
             return res.status(404).send({
@@ -171,7 +175,7 @@ function updateTraining (req, res) {
     // Find training and update it with the request body
     Training.findOneAndUpdate({_id: req.params._id}, trainingDecorator({
         author: req.body.author,
-        athlete: req.body.athlete,
+        athletes: req.body.athletes,
         type: req.body.type,
         creationDate: req.body.creationDate,
         startDate: req.body.startDate,
@@ -188,7 +192,7 @@ function updateTraining (req, res) {
         }
 
         // Returns the training updated by finding it in the database
-        Training.find({_id: req.params._id}).populate('author').populate('athlete').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
+        Training.find({_id: req.params._id}).populate('author').populate('athletes').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
         .then(data => {
             res.send(data[0]);
         })

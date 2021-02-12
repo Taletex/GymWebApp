@@ -63,8 +63,10 @@
                     <small>{{elem.creationDate | date:'d MMMM yyyy'}}</small>
                 </div>
                 <div class="col-2">
-                    <span class="d-block">{{elem.athlete.name}} {{elem.athlete.surname}}</span>
-                    <small>{{elem.athlete.dateOfBirth | date:'d MMMM yyyy'}} &bull; {{elem.athlete.bodyWeight}} kg</small>
+                    <div *ngFor="let athlete of elem.athletes">
+                        <span class="d-block">{{athlete.name}} {{athlete.surname}}</span>
+                        <small>{{athlete.dateOfBirth | date:'d MMMM yyyy'}} &bull; {{athlete.bodyWeight}} kg</small>
+                    </div>
                 </div>
                 <div class="col-2"><span>{{elem.type}}</span></div>
                 <div class="col-2">

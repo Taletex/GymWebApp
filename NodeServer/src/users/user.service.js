@@ -22,7 +22,10 @@ exports.createUser = (req, res) => {
         sex: req.body.sex,
         contacts: req.body.contacts,
         residence: req.body.residence,
-        personalRecords: []
+        personalRecords: [],
+        notifications: [],
+        coaches: [],
+        athletes: []
     });
 
     // Save User in the database
@@ -114,7 +117,10 @@ exports.updateUser = (req, res) => {
         sex: req.body.sex,
         contacts: req.body.contacts,
         residence: req.body.residence,
-        personalRecords: req.body.personalRecords
+        personalRecords: req.body.personalRecords,
+        notifications: req.body.notifications,
+        coaches: req.body.coaches,
+        athletes: req.body.athletes
     }, {new: true})
     .then(user => {
         if(!user) {

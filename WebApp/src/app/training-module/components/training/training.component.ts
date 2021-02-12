@@ -88,7 +88,7 @@ export class TrainingComponent implements OnInit {
   };
 
   // Options
-  public options = {format: {weeksForRow: 1, seriesFormat: "seriesxrep", maxSessionContainerHeight: "auto"}};
+  public options: any;
   
   // Others
   public importedTraining: any;
@@ -147,6 +147,9 @@ export class TrainingComponent implements OnInit {
           this.toastr.error('An error occurred while loading the training!');
           console.log(error.error.message);
         });
+
+    // Init other attributes
+    this.options = this.setDefaultoptions();
   }
 
   ngOnInit() {}
@@ -700,7 +703,7 @@ export class TrainingComponent implements OnInit {
 
   /* READ OPTIONS FUNCTIONS */
   setDefaultoptions() {
-    this.options = {format: {weeksForRow: 1, seriesFormat: "seriesxrep", maxSessionContainerHeight: "auto"}};
+    this.options = {format: {weeksForRow: 1, seriesFormat: "seriesxrep", maxSessionContainerHeight: "auto"}, currentUser: this.account.user};
   }
 
   clampWeeksForRowValue() {

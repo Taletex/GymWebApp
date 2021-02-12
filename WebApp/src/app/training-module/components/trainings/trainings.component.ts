@@ -50,7 +50,7 @@ export class TrainingsComponent implements OnInit {
   } 
 
   initNewTraining() {
-    this.newTraining = new Training(this.account.user, this.account.user);
+    this.newTraining = new Training(this.account.user, [this.account.user]);
   }
 
   getViewElements() {
@@ -136,8 +136,8 @@ export class TrainingsComponent implements OnInit {
       return (
         (filters.author.name != '' ? t.author.name.toLowerCase().includes(filters.author.name.toLowerCase()) : true) &&
         (filters.author.surname != '' ? t.author.surname.toLowerCase().includes(filters.author.surname.toLowerCase()) : true) &&
-        (filters.athlete.name != '' ? t.athlete.name.toLowerCase().includes(filters.athlete.name.toLowerCase()) : true) &&
-        (filters.athlete.surname != '' ? t.athlete.surname.toLowerCase().includes(filters.athlete.surname.toLowerCase()) : true) &&
+        (filters.athlete.name != '' ? (_.find(t.athletes, function(a) { return a.name.toLowerCase().includes(filters.athlete.name.toLowerCase()) }) != undefined) : true) &&
+        (filters.athlete.surname != '' ? (_.find(t.athletes, function(a) { return a.surname.toLowerCase().includes(filters.athlete.surname.toLowerCase()) }) != undefined) : true) &&
         (filters.type != '' ? t.type.toLowerCase().includes(filters.type.toLowerCase()) : true) &&
         ((filters.creationDate != null && filters.creationDate != '') ? t.creationDate.includes(filters.creationDate) : true) &&
         ((filters.startDate != null && filters.startDate != '') ? t.startDate.includes(filters.startDate) : true)

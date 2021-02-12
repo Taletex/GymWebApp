@@ -34,11 +34,11 @@ const TrainingSchema = mongoose.Schema({
         ref: 'User',
         required: false
     },
-    athlete: {
+    athletes: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: false
-    },
+    }],
     type: String,
     creationDate: Date,
     startDate: Date,

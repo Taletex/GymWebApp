@@ -15,7 +15,8 @@ exports.createExercise = (req, res) => {
     const exercise = new Exercise({
         name: req.body.name,
         variant: req.body.variant,
-        description: req.body.description
+        description: req.body.description,
+        creator: req.body.creator
     });
 
     // Save Exercise in the database
@@ -76,7 +77,8 @@ exports.updateExercise = (req, res) => {
     Exercise.findOneAndUpdate({_id: req.params._id}, {
         name: req.body.name,
         variant: req.body.variant,
-        description: req.body.description
+        description: req.body.description,
+        creator: req.body.creator
     }, {new: true})
     .then(exercise => {
         if(!exercise) {

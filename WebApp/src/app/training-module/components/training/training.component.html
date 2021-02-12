@@ -43,7 +43,7 @@
                 </div>
             </div>
             <h6 class="m-0">
-                <span>Atleta {{training.athlete.name}} {{training.athlete.surname}} ({{training.athlete.dateOfBirth | date:'d MMMM yyyy'}} &bull; {{training.athlete.bodyWeight}} kg)</span>
+                <!-- <span>Atleta {{training.athlete.name}} {{training.athlete.surname}} ({{training.athlete.dateOfBirth | date:'d MMMM yyyy'}} &bull; {{training.athlete.bodyWeight}} kg)</span> -->
                 <span class="m-0">, dal {{training.startDate | date:'d MMMM yyyy'}} al {{training.endDate | date:'d MMMM yyyy'}}</span>
             </h6>
         </div>
@@ -57,7 +57,12 @@
                             <h5>ALLENAMENTO {{readOnlyTraining.type}} {{readOnlyTraining._id}}</h5>
                             <h6 class="m-0">Allenamento creato da {{readOnlyTraining.author.name}} {{readOnlyTraining.author.surname}} il {{readOnlyTraining.creationDate | date:'d MMMM yyyy'}}</h6>
                             <h6 class="m-0">
-                                <span>Atleta {{readOnlyTraining.athlete.name}} {{readOnlyTraining.athlete.surname}} ({{readOnlyTraining.athlete.dateOfBirth | date:'d MMMM yyyy'}} &bull; {{readOnlyTraining.athlete.bodyWeight}} kg)</span>
+                                <span *ngIf="account.user._id == training.author._id">Atleti 
+                                    <span *ngFor="let athlete of readOnlyTraining.athletes; last as lastAthlete">
+                                        {{athlete.name}} {{athlete.surname}} ({{athlete.dateOfBirth | date:'d MMMM yyyy'}} &bull; {{athlete.bodyWeight}} kg) <span [hidden]="lastAthlete">,</span>
+                                    </span>
+                                </span>
+                                <span *ngIf="account.user._id != training.author._id">Atleta {{account.user.name}} {{account.user.surname}} ({{account.user.dateOfBirth | date:'d MMMM yyyy'}} &bull; {{account.user.bodyWeight}} kg)</span>
                                 <span class="m-0">, dal {{readOnlyTraining.startDate | date:'d MMMM yyyy'}} al {{readOnlyTraining.endDate | date:'d MMMM yyyy'}}</span>
                             </h6>
                             <span [hidden]="(readOnlyTraining.comment == null || readOnlyTraining.comment == '')">Commento: {{readOnlyTraining.comment}}</span>
@@ -194,11 +199,15 @@
                                         <div (click)="training.type='POWERLIFTING'" style="position:absolute; right: 3px; top: 0px;">&times;</div>
                                     </div>
                                 </div>
-                                <div class="col-4 form-group">
-                                    <label for="trainingAthlete" class="col-form-label col-form-label-sm text-muted">Atleta</label>
-                                    <select [(ngModel)]="training.athlete" class="form-control form-control-sm cursor-pointer" id="trainingAthlete" name="trainingAthlete" [compareWith]="compareObjects">
-                                        <option [ngValue]="athlete" *ngFor="let athlete of athleteList; index as athleteIndex">{{athlete.name}} {{athlete.surname}}</option>
-                                    </select>
+                                <div class="col-4">
+                                    <div *ngFor="athlete in training.athletes; index as athleteIndex; last as lastAthleteIndex" class="form-group">
+                                        <label for="trainingAthlete_{{athleteIndex}}" class="col-form-label col-form-label-sm text-muted">Atleta</label>
+                                        <select [(ngModel)]="training.athletes[athleteIndex]" class="form-control form-control-sm cursor-pointer" id="trainingAthlete_{{athleteIndex}}" name="trainingAthlete_{{athleteIndex}}" [compareWith]="compareObjects">
+                                            <option [ngValue]="athlete" *ngFor="let athlete of athleteList; index as athleteIndex">{{athlete.name}} {{athlete.surname}}</option>
+                                        </select>
+                                        <div class="ml-1 image-button" ngbTooltip="Aggiungi" placement="top" (click)="pushAthlete()" [hidden]="!lastAthleteIndex"><img src="assets/icons/actions/plus2.svg" style="width:15px; height:auto;"></div>
+                                        <div class="ml-1 image-button" ngbTooltip="Aggiungi" placement="top" (click)="removeAthlete()" [hidden]="training.athletes.length == 1"><img src="assets/icons/actions/garbage-can.svg" style="width:15px; height:auto;"></div>
+                                    </div>
                                 </div>
                                 <div class="col-2 form-group">
                                     <label for="trainingStartDate" class="col-form-label col-form-label-sm text-muted">Data inizio</label>

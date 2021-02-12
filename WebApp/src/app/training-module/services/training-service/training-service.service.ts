@@ -33,9 +33,13 @@ export class TrainingService {
 
         if(training.author._id != undefined && training.author._id != null && training.author._id != "") 
             training.author = training.author._id;
-        if(training.athlete._id != undefined && training.athlete._id != null && training.athlete._id != "") 
-            training.athlete = training.athlete._id;
-
+        if(training.athletes != null && training.athletes.length > 0) {
+            for(let i=0; i<training.athletes.length; i++) {
+                if(training.athletes[i]._id != undefined && training.athletes[i]._id != null && training.athletes[i]._id != "") 
+                training.athletes[i] = training.athletes[i]._id;
+            }
+        }
+        
         for(let i=0; i<training.weeks.length; i++) {
             for(let j=0; j<training.weeks[i].sessions.length; j++) {
                 for(let k=0; k<training.weeks[i].sessions[j].exercises.length; k++) {
@@ -70,30 +74,44 @@ export class TrainingService {
         let trainingToString = "";
         trainingToString = trainingToString +
             "\
-    <div class='card w-100 border-0'> \
-        <div class='card-header border bg-dark text-white' style='border-radius: 5px !important;'> \
-            <h5>ALLENAMENTO " + training.type + " " + training._id + " </h5> \
-            <h6 class='m-0'>Allenamento creato da " + training.author.name + " " + training.author.surname + " il " + this.dateToString(training.creationDate) + " </h6> \
-            <h6 class='m-0'> \
-                <span>Atleta " + training.athlete.name + " " + training.athlete.surname + " (" + this.dateToString(training.athlete.dateOfBirth) + " • " + training.athlete.bodyWeight + "kg)</span> \
-                <span class='m-0'>, dal " + this.dateToString(training.startDate) + " al " + this.dateToString(training.endDate) + "</span> \
-            </h6> \
-            " + ((training.comment == null || training.comment == '') ? "" : ("<span>Commento: " + training.comment + " </span>")) + "\
-        </div> \
-        <div class='card-body p-0 d-flex' style='flex-wrap: wrap;'> \
-    ";
-        for (let i = 0; i < training.weeks.length; i++) {
-            trainingToString = trainingToString + this.weekReadViewToString(training.weeks[i], i, options);
+        <div class='card w-100 border-0'> \
+            <div class='card-header border bg-dark text-white' style='border-radius: 5px !important;'> \
+                <h5>ALLENAMENTO " + training.type + " " + training._id + " </h5> \
+                <h6 class='m-0'>Allenamento creato da " + training.author.name + " " + training.author.surname + " il " + this.dateToString(training.creationDate) + " </h6> \
+                <h6 class='m-0'>";
+        if(options.currentUser._id == training.author._id) {
+            trainingToString = trainingToString +
+            "<span>Atleti ";
+            for(let athlete of training.athletes) {
+                trainingToString = trainingToString + 
+                "<span>" + athlete.name + " " + athlete.surname + " (" + this.dateToString(athlete.dateOfBirth) + " • " + athlete.bodyWeight + "kg)</span>";
+            }
+            trainingToString = trainingToString +
+            "</span>";
+        }else {
+            trainingToString = trainingToString +
+            "<span>Atleta " + options.currentUser.name + " " + options.currentUser.surname + " (" + this.dateToString(options.currentUser.dateOfBirth) + " • " + options.currentUser.bodyWeight + "kg)</span>";
         }
+        trainingToString = trainingToString + 
+        "\
+                    <span class='m-0'>, dal " + this.dateToString(training.startDate) + " al " + this.dateToString(training.endDate) + "</span> \
+                </h6> \
+                " + ((training.comment == null || training.comment == '') ? "" : ("<span>Commento: " + training.comment + " </span>")) + "\
+            </div> \
+            <div class='card-body p-0 d-flex' style='flex-wrap: wrap;'> \
+        ";
+            for (let i = 0; i < training.weeks.length; i++) {
+                trainingToString = trainingToString + this.weekReadViewToString(training.weeks[i], i, options);
+            }
 
-        trainingToString = trainingToString +
-            " \
+            trainingToString = trainingToString +
+                " \
+            </div> \
+            <div class='mceNonEditable'> \
+                <span>Allenamento creato sulla piattaforma <em>MyTrainingPlatform</em></span> \
+            </div> \
         </div> \
-        <div class='mceNonEditable'> \
-            <span>Allenamento creato sulla piattaforma <em>MyTrainingPlatform</em></span> \
-        </div> \
-    </div> \
-    ";
+        ";
 
         return trainingToString;
     }
@@ -337,6 +355,6 @@ export class TrainingService {
      * @param training the training where we need to check the user
      */
     isUserAuthorOrAthleteOfTraining(userId: string, training: Training): boolean {
-        return (training.author._id == userId || training.athlete._id == userId);
+        return (training.author._id == userId || (_.find(training.athletes, function(a) { return a._id == userId }) != undefined));
     }
 }
