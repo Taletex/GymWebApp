@@ -14,6 +14,9 @@ router.post('/', exerciseService.createExercise);
 // Retrieve all Exercise
 router.get('/', exerciseService.findAllExercise);
 
+// Retrieve all Exercise
+router.get('/user/:_id', exerciseService.findAllExerciseForUser);
+
 // Retrieve a single Exercise with id
 router.get('/:_id', exerciseService.findOneExercise);
 

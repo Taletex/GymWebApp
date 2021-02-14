@@ -58,6 +58,10 @@ export class HttpService {
     return this.http.get<any>(this.baseServerUrl + "/exercises");
   }
 
+  getExercisesForUser(userId: string): Observable<any> {
+    return this.http.get<any>(this.baseServerUrl + "/exercises/user/" + userId);
+  }
+
   /* deleteExercises(): Observable<any> {
     return this.http.delete<any>(this.baseServerUrl + "/exercises");
   } */

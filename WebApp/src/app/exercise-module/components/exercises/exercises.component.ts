@@ -26,6 +26,7 @@ export class ExercisesComponent implements OnInit {
     this.accountService.account.subscribe(x => this.account = x);
     this.resetFilters();
     this.getExercises();
+    this.initNewExercise();
   }
 
   ngOnInit(): void {
@@ -33,7 +34,7 @@ export class ExercisesComponent implements OnInit {
 
   getExercises() {
     this.bLoading = true;
-    this.httpService.getExercises()
+    this.httpService.getExercisesForUser(this.account.user._id)
       .subscribe(
         (data: any) => {
           this.originalExerciseList = data;
@@ -56,9 +57,11 @@ export class ExercisesComponent implements OnInit {
       .subscribe(
         (data: any) => {
           this.bLoading = false;
+          
           this.originalExerciseList.push(data);
           this.exerciseList = _.cloneDeep(this.originalExerciseList);
           this.resetFilters();
+          this.initNewExercise();
 
           this.toastr.success('Exercise successfully created!');
         },
@@ -75,6 +78,7 @@ export class ExercisesComponent implements OnInit {
       .subscribe(
         (data: any) => {
           this.bLoading = false;
+
           this.originalExerciseList.splice(index, 1);
           this.exerciseList = _.cloneDeep(this.originalExerciseList);
           this.filterExercises(null);
@@ -86,6 +90,11 @@ export class ExercisesComponent implements OnInit {
           this.toastr.error('An error occurred while deleting the exercise!');
           console.log(error.error.message);
         });
+  }
+
+  initNewExercise() {
+    this.newExercise = new Exercise();
+    this.newExercise.creator = this.account.user._id;
   }
 
   /* FILTER FUNCTIONS */

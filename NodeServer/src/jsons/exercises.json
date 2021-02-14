@@ -1,0 +1,188 @@
+[
+    {
+        "name": "Squat",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Squat",
+        "creator": null
+    },
+    {
+        "name": "Bench Press",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Bench Press",
+        "creator": null
+    },
+    {
+        "name": "Deadlift",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Deadlift",
+        "creator": null
+    },
+    {
+        "name": "Clean&Jerk",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Clean and Jerk",
+        "creator": null
+    },
+    {
+        "name": "Snatch",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Snatch",
+        "creator": null
+    },
+    {
+        "name": "Pull Ups",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Pull Ups",
+        "creator": null
+    },
+    {
+        "name": "Dips",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Dips",
+        "creator": null
+    },
+    {
+        "name": "Leg Curl",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Leg Curl",
+        "creator": null
+    },
+    {
+        "name": "Leg Extension",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Leg Extension",
+        "creator": null
+    },
+    {
+        "name": "Bulgarian Squat",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Bulgarian Squat",
+        "creator": null
+    },
+    {
+        "name": "Leg Press",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Leg Press",
+        "creator": null
+    },
+    {
+        "name": "Calf Raise",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Calf Raise",
+        "creator": null
+    },
+    {
+        "name": "Lats",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Lats",
+        "creator": null
+    },
+    {
+        "name": "Barbell Curl",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Barbell Curl",
+        "creator": null
+    },
+    {
+        "name": "Dumbbell Curl",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Dumbbell Curl",
+        "creator": null
+    },
+    {
+        "name": "French Press",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard French Press",
+        "creator": null
+    },
+    {
+        "name": "Military Press",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Military Press",
+        "creator": null
+    },
+    {
+        "name": "Push Press",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Push Press",
+        "creator": null
+    },
+    {
+        "name": "Jerk",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Jerk",
+        "creator": null
+    },
+    {
+        "name": "Plank",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Plank",
+        "creator": null
+    },
+    {
+        "name": "Roll ABS",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Roll ABS",
+        "creator": null
+    },
+    {
+        "name": "Barbell Row",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Barbell Row",
+        "creator": null
+    },
+    {
+        "name": "Dumbbell Row",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Dumbbell Row",
+        "creator": null
+    },
+    {
+        "name": "Front Squat",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Front Squat",
+        "creator": null
+    },
+    {
+        "name": "Overhead Squat",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Overhead Squat",
+        "creator": null
+    },
+    {
+        "name": "Landmine",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Landmine",
+        "creator": null
+    },
+    {
+        "name": "Log Lift",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Log Lift",
+        "creator": null
+    },
+    {
+        "name": "Push Up",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Push Up",
+        "creator": null
+    },
+    {
+        "name": "T-bar Row",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard T-Bar Row",
+        "creator": null
+    },
+    {
+        "name": "Lunges",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Lunges",
+        "creator": null
+    },
+    {
+        "name": "Hyperextension",
+        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "description": "Standard Hyperextension",
+        "creator": null
+    }
+]

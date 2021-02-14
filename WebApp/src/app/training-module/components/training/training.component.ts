@@ -268,7 +268,7 @@ export class TrainingComponent implements OnInit {
   getExercises() {
     this.bLoading = true;
 
-    this.httpService.getExercises()
+    this.httpService.getExercisesForUser(this.account.user._id)
     .subscribe(
       (data: Array<Exercise>) => {
         this.exerciseList = data;
@@ -293,13 +293,18 @@ export class TrainingComponent implements OnInit {
 
           // Re init exercise list
           this.getExercises();
-          this.newExercise = new Exercise();
+          this.initNewExercise();
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
           this.toastr.error('An error occurred while creating the exercise!');
           console.log(error.error.message);
         });
+  }
+
+  initNewExercise() {
+    this.newExercise = new Exercise();
+    this.newExercise.creator = this.account.user._id;
   }
 
   abortCreateExercise() {

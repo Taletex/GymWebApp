@@ -1,4 +1,5 @@
 const {Exercise} = require('src/exercises/exercise.model.js');
+const {User} = require('src/users/user.model.js')
 const _ = require('lodash');
 
 
@@ -16,7 +17,7 @@ exports.createExercise = (req, res) => {
         name: req.body.name,
         variant: req.body.variant,
         description: req.body.description,
-        creator: req.body.creator
+        creator: (req.body.creator != "") ? req.body.creator : null
     });
 
     // Save Exercise in the database
@@ -38,6 +39,72 @@ exports.findAllExercise = (req, res) => {
     }).catch(err => {
         res.status(500).send({
             message: err.message || "Some error occurred while retrieving exercises."
+        });
+    });
+};
+
+/**
+ * Retrieve and return all exercises for a given user from the database.
+ * If the user is a coach, this function returns all default exercises plus all exercises the coach has created.
+ * If the user is an athlete, this function returns all default exericses plus all the exercises created by his coaches. 
+ * */ 
+exports.findAllExerciseForUser = (req, res) => {
+
+    User.find({_id: req.params._id}).then(users => {
+        if(!users) {
+            return res.status(404).send({
+                message: "User not found with id " + req.params._id
+            });            
+        }
+        
+        switch(users[0].userType) {
+            case 'coach': {
+                Exercise.find({ $or: [{creator: null}, {creator: users[0]._id}] })
+                .then(exercises => {
+                    res.send(exercises);
+                }).catch(err => {
+                    res.status(500).send({
+                        message: err.message || "Some error occurred while retrieving exercises."
+                    });
+                });
+                break;
+            }
+    
+            case 'athlete': {
+                let coachesIds = _.map(users[0].coaches, function(coach) { return coach._id; });
+                Exercise.find({ $or: [{creator: null}, {creator: coachesIds}] })
+                .then(exercises => {
+                    res.send(exercises);
+                }).catch(err => {
+                    res.status(500).send({
+                        message: err.message || "Some error occurred while retrieving exercises."
+                    });
+                });
+                break;
+            }
+    
+            case 'both': {
+                let coachesIds = _.map(users[0].coaches, function(coach) { return coach._id; });
+                Exercise.find({ $or: [{creator: null}, {creator: users[0]._id}, {creator: coachesIds}] })
+                .then(exercises => {
+                    res.send(exercises);
+                }).catch(err => {
+                    res.status(500).send({
+                        message: err.message || "Some error occurred while retrieving exercises."
+                    });
+                });
+                break;
+            }
+        }
+
+    }).catch(err => {
+        if(err.kind === 'ObjectId') {
+            return res.status(404).send({
+                message: "User not found with id " + req.params._id
+            });                
+        }
+        return res.status(500).send({
+            message: "Error retrieving user with id " + req.params._id
         });
     });
 };
@@ -78,7 +145,7 @@ exports.updateExercise = (req, res) => {
         name: req.body.name,
         variant: req.body.variant,
         description: req.body.description,
-        creator: req.body.creator
+        creator: (req.body.creator != "") ? req.body.creator : null
     }, {new: true})
     .then(exercise => {
         if(!exercise) {
