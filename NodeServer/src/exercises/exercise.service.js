@@ -35,7 +35,7 @@ exports.createExercise = (req, res) => {
 exports.findAllExercise = (req, res) => {
     Exercise.find()
     .then(exercises => {
-        res.send(exercises);
+        res.send( _.sortBy(exercises, ['name', 'variant.name']) );
     }).catch(err => {
         res.status(500).send({
             message: err.message || "Some error occurred while retrieving exercises."
@@ -61,7 +61,7 @@ exports.findAllExerciseForUser = (req, res) => {
             case 'coach': {
                 Exercise.find({ $or: [{creator: null}, {creator: users[0]._id}] })
                 .then(exercises => {
-                    res.send(exercises);
+                    res.send( _.sortBy(exercises, ['name', 'variant.name']) );
                 }).catch(err => {
                     res.status(500).send({
                         message: err.message || "Some error occurred while retrieving exercises."
@@ -74,7 +74,7 @@ exports.findAllExerciseForUser = (req, res) => {
                 let coachesIds = _.map(users[0].coaches, function(coach) { return coach._id; });
                 Exercise.find({ $or: [{creator: null}, {creator: coachesIds}] })
                 .then(exercises => {
-                    res.send(exercises);
+                    res.send( _.sortBy(exercises, ['name', 'variant.name']) );
                 }).catch(err => {
                     res.status(500).send({
                         message: err.message || "Some error occurred while retrieving exercises."
@@ -87,7 +87,7 @@ exports.findAllExerciseForUser = (req, res) => {
                 let coachesIds = _.map(users[0].coaches, function(coach) { return coach._id; });
                 Exercise.find({ $or: [{creator: null}, {creator: users[0]._id}, {creator: coachesIds}] })
                 .then(exercises => {
-                    res.send(exercises);
+                    res.send( _.sortBy(exercises, ['name', 'variant.name']) );
                 }).catch(err => {
                     res.status(500).send({
                         message: err.message || "Some error occurred while retrieving exercises."

@@ -60,11 +60,11 @@
                 <div class="col-4"><span>{{elem.description}}</span></div>
                 <div class="col-2 d-flex">
                     <a [routerLink]="['/exercises', elem._id]" routerLinkActive="active" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></a>
-                    <a [routerLink]="['/exercises', elem._id]" routerLinkActive="active" class="ml-2 image-button" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></a>
+                    <a *ngIf="(account.user.userType=='both' || account.user.userType == 'coach')" [routerLink]="['/exercises', elem._id]" routerLinkActive="active" class="ml-2 image-button" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></a>
                     <a *ngIf="account.role == Role.Admin"(click)="deleteExercise(elem._id, exerciseIndex)" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></a>
                 </div>
             </div>
-            <app-exercise-modal (onClose)="createExercise()" [(newExercise)] = "newExercise" style="position: absolute; right: 15px; bottom: 15px">
+            <app-exercise-modal (onClose)="createExercise()" *ngIf="(account.user.userType=='both' || account.user.userType == 'coach')"  [(newExercise)] = "newExercise" style="position: absolute; right: 15px; bottom: 15px">
                 <div class="image-button-big cursor-pointer" ngbTooltip="Nuovo" placement="top"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></div>
             </app-exercise-modal>
         </div>

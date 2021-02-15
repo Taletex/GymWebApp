@@ -200,13 +200,13 @@
                                     </div>
                                 </div>
                                 <div class="col-4">
-                                    <div *ngFor="athlete in training.athletes; index as athleteIndex; last as lastAthleteIndex" class="form-group">
+                                    <div *ngFor="let athlete in training.athletes; index as athleteIndex; last as lastAthleteIndex" class="form-group">
                                         <label for="trainingAthlete_{{athleteIndex}}" class="col-form-label col-form-label-sm text-muted">Atleta</label>
                                         <select [(ngModel)]="training.athletes[athleteIndex]" class="form-control form-control-sm cursor-pointer" id="trainingAthlete_{{athleteIndex}}" name="trainingAthlete_{{athleteIndex}}" [compareWith]="compareObjects">
                                             <option [ngValue]="athlete" *ngFor="let athlete of athleteList; index as athleteIndex">{{athlete.name}} {{athlete.surname}}</option>
                                         </select>
                                         <div class="ml-1 image-button" ngbTooltip="Aggiungi" placement="top" (click)="pushAthlete()" [hidden]="!lastAthleteIndex"><img src="assets/icons/actions/plus2.svg" style="width:15px; height:auto;"></div>
-                                        <div class="ml-1 image-button" ngbTooltip="Aggiungi" placement="top" (click)="removeAthlete()" [hidden]="training.athletes.length == 1"><img src="assets/icons/actions/garbage-can.svg" style="width:15px; height:auto;"></div>
+                                        <div class="ml-1 image-button" ngbTooltip="Rimuovi" placement="top" (click)="removeAthlete()" [hidden]="training.athletes.length == 1"><img src="assets/icons/actions/garbage-can.svg" style="width:15px; height:auto;"></div>
                                     </div>
                                 </div>
                                 <div class="col-2 form-group">

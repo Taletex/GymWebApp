@@ -36,7 +36,7 @@ function isValidId(id) {
 
 function initExercisesCollection() {
     let Exercise = mongoose.model('Exercise');
-    let exerciseJson = require("src/jsons/exercises.json")
+    let exerciseJson = require("src/_jsons/exercises.json")
 
     Exercise.find({creator: null}).remove();                               // Reset the exercise collection
 

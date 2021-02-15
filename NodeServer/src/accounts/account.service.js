@@ -182,7 +182,7 @@ async function resetPassword({ token, password }) {
 
 async function getAll() {
     const accounts = await db.Account.find().populate({ path: 'user', populate: { path: 'personalRecords', populate: { path: 'exercise'} }});
-    return accounts.map(x => basicDetails(x));
+    return _.sortBy(accounts.map(x => basicDetails(x)), ['user.name', 'usern.surname', 'email']);
 }
 
 async function getById(id) {

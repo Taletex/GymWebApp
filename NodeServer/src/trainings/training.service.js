@@ -85,7 +85,7 @@ function createTraining(req, res) {
 function findAllTraining(req, res) {
     Training.find({}).populate('author').populate('athletes').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
     .then(trainings => {
-        res.send(trainings);
+        res.send( _.sortBy(trainings, ['creationDate', 'author.name', 'author.surname']) );
     }).catch(err => {
         res.status(500).send({
             message: err.message || "Some error occurred while retrieving trainings."
@@ -121,7 +121,7 @@ function findAllTrainingByUserId(req, res) {
                     trainingList = [];
                     break;
             }
-            res.send(trainingList);
+            res.send(  _.sortBy(trainingList, ['creationDate', 'author.name', 'author.surname']) );
         }).catch(err => {
             res.status(500).send({
                 message: err.message || "Some error occurred while retrieving trainings."

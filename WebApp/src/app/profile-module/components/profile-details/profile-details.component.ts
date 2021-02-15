@@ -96,9 +96,12 @@ export class ProfileDetailsComponent {
     search = (text$: Observable<string>) =>
         text$.pipe(
             debounceTime(200),
-            map(term => term === '' ? this.exerciseList
-                : ((this.exerciseList.filter(v => (v.name + " (" + v.variant.name + ")").toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)).length == 0 ?
-                    [new Exercise("Nuovo Esercizio", new Variant("new", -1))] : (this.exerciseList.filter(v => (v.name + " (" + v.variant.name + ")").toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)))
+            map(term => 
+                term === '' 
+                    ? this.exerciseList
+                    : ( (this.exerciseList.filter(v => (v.name + " (" + v.variant.name + ")").toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)).length == 0 
+                        ? ((this.account.user.userType != 'athlete') ? [new Exercise("Nuovo Esercizio", new Variant("new", -1))] : []) 
+                        : (this.exerciseList.filter(v => (v.name + " (" + v.variant.name + ")").toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)))
             )
         )
 

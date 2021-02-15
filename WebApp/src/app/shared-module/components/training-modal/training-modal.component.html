@@ -28,10 +28,16 @@
                             </div>
                         </div>
                         <div class="col-4 form-group">
-                            <label for="newTrainingAthlete" class="col-form-label col-form-label-sm text-muted">Atleta</label>
-                            <select [(ngModel)]="newTraining.athlete" class="form-control form-control-sm cursor-pointer" id="newTrainingAthlete" name="newTrainingAthlete" [compareWith]="compareObjects">
-                                <option [ngValue]="athlete" *ngFor="let athlete of athleteList; index as athleteIndex">{{athlete.name}} {{athlete.surname}}</option>
-                            </select>
+                            <div *ngFor="let athlete of newTraining.athletes; index as athleteIndex; last as lastAthleteIndex" class="d-flex align-items-center">
+                                <div class="form-group w-100">
+                                    <label for="trainingAthlete_{{athleteIndex}}" class="col-form-label col-form-label-sm text-muted">Atleta</label>
+                                    <select [(ngModel)]="newTraining.athletes[athleteIndex]" class="form-control form-control-sm cursor-pointer" id="trainingAthlete_{{athleteIndex}}" name="trainingAthlete_{{athleteIndex}}" [compareWith]="compareObjects">
+                                        <option [ngValue]="ath" *ngFor="let ath of athleteList; index as athIndex">{{ath.name}} {{ath.surname}}</option>
+                                    </select>
+                                </div>
+                                <div class="ml-1 mt-2 image-button" ngbTooltip="Aggiungi" placement="top" (click)="pushAthlete()" [hidden]="!lastAthleteIndex"><img src="assets/icons/actions/plus2.svg" style="width:15px; height:auto;"></div>
+                                <div class="ml-1 mt-2 image-button" ngbTooltip="Rimuovi" placement="top" (click)="removeAthlete(athleteIndex)" [hidden]="newTraining.athletes.length == 1"><img src="assets/icons/actions/garbage-can.svg" style="width:15px; height:auto;"></div>
+                            </div>
                         </div>
                         <div class="col-2 form-group">
                             <label for="newTrainingStartDate" class="col-form-label col-form-label-sm text-muted">Data inizio</label>
@@ -53,9 +59,12 @@
             </div>
         </div>
         <div class="modal-footer" style="overflow:visible">
-            <button class="btn btn-success" ngbAutofocus [disabled]="(newTraining.athlete._id == newTraining.author._id && newTraining.author.userType == 'coach')" style="position:relative;" (click)="modal.close(newTraining)">
+            <button class="btn btn-danger" style="position:relative;" (click)="resetTraining()">
+                <span>Reset</span> 
+            </button>
+            <button class="btn btn-success" ngbAutofocus [disabled]="(newTraining.athletes != null && newTraining.athletes.length > 0 && newTraining.athletes[0]._id == newTraining.author._id && newTraining.author.userType == 'coach')" style="position:relative;" (click)="modal.close(newTraining)">
                 <span>Crea</span> 
-                <div style="position: absolute; right: 0px; bottom: 0px; width:100%; height:100%;" ngbTooltip="Campo 'atleta' vuoto" placement="top" [hidden]="!(newTraining.athlete._id == newTraining.author._id && newTraining.author.userType == 'coach')"></div>
+                <div style="position: absolute; right: 0px; bottom: 0px; width:100%; height:100%;" ngbTooltip="Campo 'atleta' vuoto" placement="top" [hidden]="!(newTraining.athletes != null && newTraining.athletes.length > 0 && newTraining.athletes[0]._id == newTraining.author._id && newTraining.author.userType == 'coach')"></div>
             </button>
         </div>
     </div>

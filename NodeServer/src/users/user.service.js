@@ -43,7 +43,7 @@ exports.createUser = (req, res) => {
 exports.findAllUser = (req, res) => {
     User.find().populate({ path: 'personalRecords', populate: { path: 'exercise'} })
     .then(users => {
-        res.send(users);
+        res.send( _.sortBy(users, ['name', 'surname']) );
     }).catch(err => {
         res.status(500).send({
             message: err.message || "Some error occurred while retrieving users."
@@ -55,7 +55,7 @@ exports.findAllUser = (req, res) => {
 exports.findAllAthlete = (req, res) => {
     User.find().populate({ path: 'personalRecords', populate: { path: 'exercise'} })
     .then(users => {
-        res.send(_.filter(users, function(user) { return (user.userType == "athlete" || user.userType == "both"); }));
+        res.send( _.sortBy( _.filter(users, function(user) { return (user.userType == "athlete" || user.userType == "both"); }) , ['name', 'surname']) );
     }).catch(err => {
         res.status(500).send({
             message: err.message || "Some error occurred while retrieving users."
@@ -67,7 +67,7 @@ exports.findAllAthlete = (req, res) => {
 exports.findAllCoaches = (req, res) => {
     User.find().populate({ path: 'personalRecords', populate: { path: 'exercise'} })
     .then(users => {
-        res.send(_.filter(users, function(user) { return (user.userType == "coach" || user.userType == "both"); }));
+        res.send(  _.sortBy(_.filter(users, function(user) { return (user.userType == "coach" || user.userType == "both"); }) , ['name', 'surname']) );
     }).catch(err => {
         res.status(500).send({
             message: err.message || "Some error occurred while retrieving users."
