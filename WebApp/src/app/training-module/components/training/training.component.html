@@ -199,15 +199,31 @@
                                         <div (click)="training.type='POWERLIFTING'" style="position:absolute; right: 3px; top: 0px;">&times;</div>
                                     </div>
                                 </div>
-                                <div class="col-4">
-                                    <div *ngFor="let athlete in training.athletes; index as athleteIndex; last as lastAthleteIndex" class="form-group">
-                                        <label for="trainingAthlete_{{athleteIndex}}" class="col-form-label col-form-label-sm text-muted">Atleta</label>
-                                        <select [(ngModel)]="training.athletes[athleteIndex]" class="form-control form-control-sm cursor-pointer" id="trainingAthlete_{{athleteIndex}}" name="trainingAthlete_{{athleteIndex}}" [compareWith]="compareObjects">
-                                            <option [ngValue]="athlete" *ngFor="let athlete of athleteList; index as athleteIndex">{{athlete.name}} {{athlete.surname}}</option>
-                                        </select>
-                                        <div class="ml-1 image-button" ngbTooltip="Aggiungi" placement="top" (click)="pushAthlete()" [hidden]="!lastAthleteIndex"><img src="assets/icons/actions/plus2.svg" style="width:15px; height:auto;"></div>
-                                        <div class="ml-1 image-button" ngbTooltip="Rimuovi" placement="top" (click)="removeAthlete()" [hidden]="training.athletes.length == 1"><img src="assets/icons/actions/garbage-can.svg" style="width:15px; height:auto;"></div>
-                                    </div>
+                                <div class="col-4 form-group">
+                                    <label for="newTrainingAthletes"
+                                        class="col-form-label col-form-label-sm text-muted">Atleti</label>
+                                    <ng-multiselect-dropdown 
+                                        class="w-100 small" 
+                                        name="newTrainingAthletes" 
+                                        ngDefaultControl
+                                        [placeholder]="'Atleti'" 
+                                        [settings]="dropdownSettings" 
+                                        [data]="athleteList"
+                                        [(ngModel)]="training.athletes" 
+                                        (onSelect)="onItemSelect($event)"
+                                        (onSelectAll)="onSelectAll($event)">
+                                        <ng-template #optionsTemplate let-item let-option="option" let-id="id" let-isSelected="isSelected">
+                                            <div>
+                                                <label style="color: #333; min-width: 130px; font-weight: normal;" class="m-0"
+                                                    [ngStyle]="{ 'font-weight': isSelected? 'bold':' normal','color': getItems[id].isDisabled? 'lightgrey': ''}">{{getItems[id].name}} {{getItems[id].surname}} ({{getItems[id].dateOfBirth | date:'d/MM/yyyy'}})</label>
+                                            </div>
+                                        </ng-template>
+                                        <ng-template #optionSelectedTemplate let-option="option" let-id="id">
+                                            <div>
+                                                {{getItems[id].name}} {{getItems[id].surname}} ({{getItems[id].dateOfBirth | date:'d/MM/yyyy'}})
+                                            </div>
+                                        </ng-template>
+                                    </ng-multiselect-dropdown>
                                 </div>
                                 <div class="col-2 form-group">
                                     <label for="trainingStartDate" class="col-form-label col-form-label-sm text-muted">Data inizio</label>

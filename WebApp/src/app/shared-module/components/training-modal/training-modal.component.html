@@ -3,17 +3,20 @@
         <div class="modal-header">
             <h4 class="modal-title" id="modal-basic-title">Crea Allenamento</h4>
             <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
+                <span aria-hidden="true">&times;</span>
             </button>
         </div>
         <div class="modal-body">
             <div class="card h-100">
                 <div class="card-body h-100">
                     <form class="form-row m-0">
-                        <div class="col-12 form-group">Allenamento creato da {{newTraining.author.name}} {{newTraining.author.surname}} il {{newTraining.creationDate | date:'d MMMM yyyy'}}</div>
+                        <div class="col-12 form-group">Allenamento creato da {{newTraining.author.name}}
+                            {{newTraining.author.surname}} il {{newTraining.creationDate | date:'d MMMM yyyy'}}</div>
                         <div class="col-4 form-group">
-                            <label for="Type" class="col-form-label col-form-label-sm text-muted">Disciplina</label>
-                            <select [(ngModel)]="newTraining.type" class="form-control form-control-sm cursor-pointer" id="newTrainingType" name="newTrainingType"
+                            <label for="newTrainingType"
+                                class="col-form-label col-form-label-sm text-muted">Disciplina</label>
+                            <select [(ngModel)]="newTraining.type" class="form-control form-control-sm cursor-pointer"
+                                id="newTrainingType" name="newTrainingType"
                                 *ngIf="(newTraining.type=='POWERLIFTING' || newTraining.type=='WEIGHTLIFTING' || newTraining.type=='CROSSFIT' || newTraining.type=='BODYBUILDING' || newTraining.type=='SALA ATTREZZI')">
                                 <option [value]="'POWERLIFTING'">POWERLIFTING</option>
                                 <option [value]="'WEIGHTLIFTING'">WEIGHTLIFTING</option>
@@ -22,35 +25,56 @@
                                 <option [value]="'SALA ATTREZZI'">SALA ATTREZZI</option>
                                 <option [value]="'Custom'">(+)</option>
                             </select>
-                            <div class="position-relative" *ngIf="!(newTraining.type=='POWERLIFTING' || newTraining.type=='WEIGHTLIFTING' || newTraining.type=='CROSSFIT' || newTraining.type=='BODYBUILDING' || newTraining.type=='SALA ATTREZZI')">
+                            <div class="position-relative"
+                                *ngIf="!(newTraining.type=='POWERLIFTING' || newTraining.type=='WEIGHTLIFTING' || newTraining.type=='CROSSFIT' || newTraining.type=='BODYBUILDING' || newTraining.type=='SALA ATTREZZI')">
                                 <input type="text" [(ngModel)]="newTraining.type" class="form-control form-control-sm">
-                                <div (click)="newTraining.type='POWERLIFTING'" style="position:absolute; right: 3px; top: 0px;">&times;</div>
+                                <div (click)="newTraining.type='POWERLIFTING'"
+                                    style="position:absolute; right: 3px; top: 0px;">&times;</div>
                             </div>
                         </div>
                         <div class="col-4 form-group">
-                            <div *ngFor="let athlete of newTraining.athletes; index as athleteIndex; last as lastAthleteIndex" class="d-flex align-items-center">
-                                <div class="form-group w-100">
-                                    <label for="trainingAthlete_{{athleteIndex}}" class="col-form-label col-form-label-sm text-muted">Atleta</label>
-                                    <select [(ngModel)]="newTraining.athletes[athleteIndex]" class="form-control form-control-sm cursor-pointer" id="trainingAthlete_{{athleteIndex}}" name="trainingAthlete_{{athleteIndex}}" [compareWith]="compareObjects">
-                                        <option [ngValue]="ath" *ngFor="let ath of athleteList; index as athIndex">{{ath.name}} {{ath.surname}}</option>
-                                    </select>
-                                </div>
-                                <div class="ml-1 mt-2 image-button" ngbTooltip="Aggiungi" placement="top" (click)="pushAthlete()" [hidden]="!lastAthleteIndex"><img src="assets/icons/actions/plus2.svg" style="width:15px; height:auto;"></div>
-                                <div class="ml-1 mt-2 image-button" ngbTooltip="Rimuovi" placement="top" (click)="removeAthlete(athleteIndex)" [hidden]="newTraining.athletes.length == 1"><img src="assets/icons/actions/garbage-can.svg" style="width:15px; height:auto;"></div>
-                            </div>
+                            <label for="newTrainingAthletes"
+                                class="col-form-label col-form-label-sm text-muted">Atleti</label>
+                            <ng-multiselect-dropdown 
+                                class="w-100 small" 
+                                name="newTrainingAthletes" 
+                                ngDefaultControl
+                                [placeholder]="'Atleti'" 
+                                [settings]="dropdownSettings" 
+                                [data]="athleteList"
+                                [(ngModel)]="newTraining.athletes" 
+                                (onSelect)="onItemSelect($event)"
+                                (onSelectAll)="onSelectAll($event)">
+                                <ng-template #optionsTemplate let-item let-option="option" let-id="id" let-isSelected="isSelected">
+                                    <div>
+                                        <label style="color: #333; min-width: 130px; font-weight: normal;" class="m-0"
+                                            [ngStyle]="{ 'font-weight': isSelected? 'bold':' normal','color': getItems[id].isDisabled? 'lightgrey': ''}">{{getItems[id].name}} {{getItems[id].surname}} ({{getItems[id].dateOfBirth | date:'d/MM/yyyy'}})</label>
+                                    </div>
+                                </ng-template>
+                                <ng-template #optionSelectedTemplate let-option="option" let-id="id">
+                                    <div>
+                                        {{getItems[id].name}} {{getItems[id].surname}} ({{getItems[id].dateOfBirth | date:'d/MM/yyyy'}})
+                                    </div>
+                                </ng-template>
+                            </ng-multiselect-dropdown>
                         </div>
                         <div class="col-2 form-group">
-                            <label for="newTrainingStartDate" class="col-form-label col-form-label-sm text-muted">Data inizio</label>
-                            <input type="date"  [ngModel] ="newTraining.startDate | date:'yyyy-MM-dd'" (ngModelChange)="newTraining.startDate = $event" class="form-control form-control-sm"
+                            <label for="newTrainingStartDate" class="col-form-label col-form-label-sm text-muted">Data
+                                inizio</label>
+                            <input type="date" [ngModel]="newTraining.startDate | date:'yyyy-MM-dd'"
+                                (ngModelChange)="newTraining.startDate = $event" class="form-control form-control-sm"
                                 id="newTrainingStartDate" name="newTrainingStartDate">
                         </div>
                         <div class="col-2 form-group">
-                            <label for="newTrainingEndDate" class="col-form-label col-form-label-sm text-muted">Data fine</label>
-                            <input type="date" [ngModel] ="newTraining.endDate | date:'yyyy-MM-dd'" (ngModelChange)="newTraining.endDate = $event" class="form-control form-control-sm"
+                            <label for="newTrainingEndDate" class="col-form-label col-form-label-sm text-muted">Data
+                                fine</label>
+                            <input type="date" [ngModel]="newTraining.endDate | date:'yyyy-MM-dd'"
+                                (ngModelChange)="newTraining.endDate = $event" class="form-control form-control-sm"
                                 id="newTrainingEndDate" name="newTrainingEndDate">
                         </div>
                         <div class="col-12 form-group">
-                            <label for="newTrainingcomment" class="col-form-label col-form-label-sm text-muted">Commento</label>
+                            <label for="newTrainingcomment"
+                                class="col-form-label col-form-label-sm text-muted">Commento</label>
                             <textarea [(ngModel)]="newTraining.comment" class="form-control form-control-sm"
                                 id="newTrainingcomment" name="newTrainingcomment" placeholder="Commento..."></textarea>
                         </div>
@@ -58,14 +82,16 @@
                 </div>
             </div>
         </div>
-        <div class="modal-footer" style="overflow:visible">
-            <button class="btn btn-danger" style="position:relative;" (click)="resetTraining()">
-                <span>Reset</span> 
-            </button>
-            <button class="btn btn-success" ngbAutofocus [disabled]="(newTraining.athletes != null && newTraining.athletes.length > 0 && newTraining.athletes[0]._id == newTraining.author._id && newTraining.author.userType == 'coach')" style="position:relative;" (click)="modal.close(newTraining)">
-                <span>Crea</span> 
-                <div style="position: absolute; right: 0px; bottom: 0px; width:100%; height:100%;" ngbTooltip="Campo 'atleta' vuoto" placement="top" [hidden]="!(newTraining.athletes != null && newTraining.athletes.length > 0 && newTraining.athletes[0]._id == newTraining.author._id && newTraining.author.userType == 'coach')"></div>
-            </button>
+        <div class="modal-footer">
+            <div class="position-relative">
+                <button class="btn btn-success" ngbAutofocus 
+                    [disabled]="(newTraining.athletes == null || newTraining.athletes.length == 0)"
+                    (click)="modal.close(newTraining)">
+                    Crea
+                </button>
+                <div class="button-tooltip" ngbTooltip="Campo atleti vuoto" placement="top" [hidden]="!(newTraining.athletes == null || newTraining.athletes.length == 0)">
+                </div>
+            </div>
         </div>
     </div>
 </ng-template>
@@ -73,4 +99,3 @@
 <div (click)="openTrainingModal(trainingModal)">
     <ng-content></ng-content>
 </div>
-

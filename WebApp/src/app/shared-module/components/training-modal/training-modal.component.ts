@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Training, User } from '@app/_models/training-model';
 import { UtilsService } from '@app/_services/utils-service/utils-service.service';
-import * as _ from 'lodash';
+import { IDropdownSettings } from 'ng-multiselect-dropdown';
 
 @Component({
   selector: 'app-training-modal',
@@ -11,8 +11,9 @@ import * as _ from 'lodash';
 })
 export class TrainingModalComponent implements OnInit {
 
-  private originalAthleteList: Array<User>;
+  private dropdownSettings = {};
   public closeResult: string;
+
   @Input() newTraining: Training;
   @Input() athleteList: Array<User>;
   @Output() onClose: EventEmitter<any> = new EventEmitter();
@@ -20,8 +21,31 @@ export class TrainingModalComponent implements OnInit {
 
   constructor(private modalService: NgbModal, private utilsService: UtilsService) { 
   }
+  
+  ngOnInit() {
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: '_id',
+      textField: 'name',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 3,
+      allowSearchFilter: true
+    };
+  }
 
-  ngOnInit(): void {
+  get getItems() {
+    return this.athleteList.reduce((acc, curr) => {
+      acc[curr._id] = curr;
+      return acc;
+    }, {});
+  }
+
+  onItemSelect(item: any) {
+    console.log(item);
+  }
+  onSelectAll(items: any) {
+    console.log(items);
   }
 
   // From services
@@ -34,27 +58,6 @@ export class TrainingModalComponent implements OnInit {
       this.onAbort.emit(null);
     });
 
-    this.originalAthleteList = _.cloneDeep(this.athleteList);
-    this.athleteList = _.remove(this.athleteList, function(a) { return a._id == this.newTraining.author._id });
-  }
-
-  public pushAthlete() {
-    if(this.athleteList.length > 0) {
-      this.newTraining.athletes.push(this.athleteList[0]);
-      this.athleteList.splice(0,1);
-    }
-  }
-
-  public removeAthlete(index: number) {
-    if(this.newTraining.athletes.length > 0) {
-      this.athleteList.push(this.newTraining.athletes[index]);
-      this.newTraining.athletes.splice(index, 1);
-    }
-  }
-
-  public resetTraining() {
-    this.newTraining = new Training(this.newTraining.author, [this.newTraining.author]);
-    this.athleteList = _.cloneDeep(this.originalAthleteList);
   }
 
 }

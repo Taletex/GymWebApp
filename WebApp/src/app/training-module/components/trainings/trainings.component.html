@@ -41,7 +41,7 @@
     </div>
 
     <!-- MAIN CONTAINER -->
-    <div class="trainings__maincontainer card col-12 p-0 border border-secondary border">
+    <div class="trainings__maincontainer card col-12 p-0 border border-secondary border main-list-table">
         <div class="maincontainer__header card-header pl-2 pr-3 border border-secondary border-top-0 border-left-0 border-right-0 d-flex flex-column bg-dark text-white">
             <div class="col-12 row m-0 p-0 d-flex align-items-center justify-content-center">
                 <div class="col-2"><b class="d-block">Autore</b><small class="d-block">Data creazione</small></div>
@@ -52,7 +52,7 @@
                 <div class="col-2"><b>Azioni</b></div>
             </div>
         </div>
-        <div class="maincontainer__body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2" [hidden]="bLoading">
+        <div class="maincontainer__body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2 table-body " [hidden]="bLoading">
             <div class="h-100 w-100 d-flex flex-column align-items-center justify-content-center badge badge-light" *ngIf="trainingList.length == 0 && !bLoading">
                 <img src="assets/icons/misc/alert.svg" style="width:40px; height:auto;">
                 <span>Nessun allenamento presente nella piattaforma</span>
@@ -64,8 +64,7 @@
                 </div>
                 <div class="col-2">
                     <div *ngFor="let athlete of elem.athletes">
-                        <span class="d-block">{{athlete.name}} {{athlete.surname}}</span>
-                        <small>{{athlete.dateOfBirth | date:'d MMMM yyyy'}} &bull; {{athlete.bodyWeight}} kg</small>
+                        <span class="truncate-fullwidth">{{athlete.name}} {{athlete.surname}} ({{athlete.dateOfBirth | date:'d/MM/yyyy'}})</span>
                     </div>
                 </div>
                 <div class="col-2"><span>{{elem.type}}</span></div>

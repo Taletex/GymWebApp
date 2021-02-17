@@ -12,6 +12,7 @@ import { TrainingLineChartComponent } from './components/training-line-chart/tra
 import { SharedModule } from '@app/shared-module/shared.module';
 import { ChartsModule } from 'ng2-charts';
 import { EditorModule } from '@tinymce/tinymce-angular';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 @NgModule({
     imports: [
@@ -22,7 +23,8 @@ import { EditorModule } from '@tinymce/tinymce-angular';
         TrainingRoutingModule,
         SharedModule,
         ChartsModule,
-        EditorModule
+        EditorModule,
+        NgMultiSelectDropDownModule.forRoot()
     ],
     declarations: [
         LayoutComponent,

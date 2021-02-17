@@ -11,6 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { ChartsModule } from 'ng2-charts';
 import { EditorModule } from '@tinymce/tinymce-angular';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 /* app components */
 import { AppComponent } from './app.component';
@@ -34,6 +35,7 @@ import { AccountService } from '@app/_services/account-service/account-service.s
     EditorModule, 
     BrowserAnimationsModule, 
     ToastrModule.forRoot(), 
+    NgMultiSelectDropDownModule.forRoot()
   ],
   declarations: [
     AppComponent,

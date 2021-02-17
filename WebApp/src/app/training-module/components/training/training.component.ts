@@ -15,6 +15,7 @@ import * as jsPDF from 'jspdf';
 import * as $ from 'jquery';
 import { Role } from '@app/_models';
 import { AccountService } from '@app/_services/account-service/account-service.service';
+import { IDropdownSettings } from 'ng-multiselect-dropdown';
 
 declare const tinymce: any;
 
@@ -90,6 +91,9 @@ export class TrainingComponent implements OnInit {
   // Options
   public options: any;
   
+  // Multiselect dropdown
+  public dropdownSettings:IDropdownSettings = {};
+
   // Others
   public importedTraining: any;
   public replaceTrainingMessage: string = "L'allenamento attuale sarà sovrascritto con la versione precedente selezionata. Sei sicuro di voler procedere?"
@@ -152,7 +156,32 @@ export class TrainingComponent implements OnInit {
     this.options = this.setDefaultoptions();
   }
 
-  ngOnInit() {}
+  
+  ngOnInit() {
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: '_id',
+      textField: 'name',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 3,
+      allowSearchFilter: true
+    };
+  }
+
+  get getItems() {
+    return this.athleteList.reduce((acc, curr) => {
+      acc[curr._id] = curr;
+      return acc;
+    }, {});
+  }
+  
+  onItemSelect(item: any) {
+    console.log(item);
+  }
+  onSelectAll(items: any) {
+    console.log(items);
+  }
 
   initTrainingsStructures(data: any) {
     this.training = _.cloneDeep(data);
@@ -617,6 +646,9 @@ export class TrainingComponent implements OnInit {
   }
 
   canTrainingBeSaved() {
+    if(this.training.athletes == null || this.training.athletes.length == 0)
+      return false;
+
     for(let week of this.training.weeks) 
       for(let session of week.sessions) 
         for(let sessionExercise of session.exercises) 

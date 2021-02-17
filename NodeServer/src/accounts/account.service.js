@@ -5,6 +5,7 @@ const crypto = require("crypto");
 const sendEmail = require('src/_helpers/send-email');
 const db = require('src/_helpers/db');
 const Role = require('src/_helpers/role');
+const _ = require('lodash');
 
 module.exports = {
     authenticate,
