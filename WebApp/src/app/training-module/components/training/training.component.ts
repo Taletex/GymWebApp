@@ -105,6 +105,9 @@ export class TrainingComponent implements OnInit {
   /* CONSTRUCTOR */
   constructor(private generalService: GeneralService, private accountService: AccountService, private utilsService: UtilsService, private trainingService: TrainingService, public router: Router, private toastr: ToastrService, private calendar: NgbCalendar, public httpService: HttpService) {
 
+    // Init attributes
+    this.setDefaultoptions();
+
     // Init training attributes
     let trainingId = (this.router.url).split('/')[2];
     this.bLoading = true;
@@ -152,8 +155,7 @@ export class TrainingComponent implements OnInit {
           console.log(error.error.message);
         });
 
-    // Init other attributes
-    this.options = this.setDefaultoptions();
+    
   }
 
   
