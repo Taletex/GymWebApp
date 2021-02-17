@@ -109,13 +109,13 @@ function findAllTrainingByUserId(req, res) {
         .then(trainings => {
             switch(user.userType) {
                 case 'athlete':
-                    trainingList = _.filter(trainings, function(t) { return t.toObject().athlete._id.toString() == user._id; });
+                    trainingList = _.filter(trainings, function(t) { return (_.find(t.athletes, function(athlete) { return athlete._id.toString() == user._id.toString() }) != undefined); });
                     break;
                 case 'coach':
-                    trainingList = _.filter(trainings, function(t) { return t.toObject().author._id.toString() == user._id; });
+                    trainingList = _.filter(trainings, function(t) { return t.toObject().author._id.toString() == user._id.toString(); });
                     break;
                 case 'both':
-                    trainingList = _.filter(trainings, function(t) { return t.toObject().author._id.toString() == user._id || t.toObject().athlete._id.toString()  == user._id; });
+                    trainingList = _.filter(trainings, function(t) { return t.toObject().author._id.toString() == user._id.toString() || (_.find(t.athletes, function(athlete) { return athlete._id.toString() == user._id.toString() }) != undefined); });
                     break;
                 default:
                     trainingList = [];

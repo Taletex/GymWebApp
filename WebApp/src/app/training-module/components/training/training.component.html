@@ -2,7 +2,7 @@
     <div class="training__maincontainer card col-12 p-0" *ngIf="bUserAuthorized">
         <div class="maincontainer__header card-header py-2 pr-2">
             <div class="d-flex align-items-baseline mb-2">
-                <h5 class="m-0 d-flex align-items-center">ALLENAMENTO {{training.type}} <img [hidden]="!bDirty" src="assets/icons/misc/alert.svg" style="width:24px; height:auto;" class="ml-2" ngbTooltip="Modifiche non salvate" placement="top"></h5>
+                <h5 class="m-0 d-flex align-items-center">ALLENAMENTO {{training.type}} ({{training.startDate | date:'dd/MM/yyyy'}} - {{training.endDate | date:'dd/MM/yyyy'}})<img [hidden]="!bDirty" src="assets/icons/misc/alert.svg" style="width:24px; height:auto;" class="ml-2" ngbTooltip="Modifiche non salvate" placement="top"></h5>
                 <div class="d-flex input-group w-auto ml-auto">
                     <div class="input-group-prepend"><span class="input-group-text">ACTIONS</span></div>
                     <div class="d-flex align-items-center form-control">
@@ -32,19 +32,23 @@
                             <img src="assets/icons/actions/history.svg" style="width:20px; height:auto;">
                         </div>
                         <div class="dropdown-menu history-dropdownmenu-botton" aria-labelledby="versioningDropdownMenuButton">
-                            <a class="dropdown-item cursor-pointer" *ngFor="let oldVer of training.oldVersions; index as oldVerIndex" (click)="openReplaceTrainingConfirmationModal(oldVer)">{{oldVerIndex+1}}) {{oldVer.updatedAt | date:'HH:mm:ss - d/MM/yyyy'}}</a>
+                            <a class="dropdown-item cursor-pointer" *ngFor="let oldVer of training.oldVersions; index as oldVerIndex" (click)="openReplaceTrainingConfirmationModal(oldVer)">{{oldVerIndex+1}}) {{oldVer.updatedAt | date:'HH:mm:ss - dd/MM/yyyy'}}</a>
                             <hr class="my-2" [hidden]="!bDraft || training.oldVersions.length == 0">
                             <a class="dropdown-item cursor-pointer" *ngIf="bDraft" (click)="openReplaceTrainingConfirmationModal(draftTraining)">
                                 <span class="d-block">Ultima bozza non salvata</span>
-                                <span>{{draftTraining.updatedAt | date:'HH:mm:ss - d/MM/yyyy'}}</span>
+                                <span>{{draftTraining.updatedAt | date:'HH:mm:ss - dd/MM/yyyy'}}</span>
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
-            <h6 class="m-0">
-                <!-- <span>Atleta {{training.athlete.name}} {{training.athlete.surname}} ({{training.athlete.dateOfBirth | date:'d MMMM yyyy'}} &bull; {{training.athlete.bodyWeight}} kg)</span> -->
-                <span class="m-0">, dal {{training.startDate | date:'d MMMM yyyy'}} al {{training.endDate | date:'d MMMM yyyy'}}</span>
+            <h6 class="m-0 truncate-fullwidth">
+                <span *ngIf="account.user._id == training.author._id">Atleti 
+                    <span *ngFor="let athlete of training.athletes; last as lastAthlete">
+                        {{athlete.name}} {{athlete.surname}} ({{athlete.dateOfBirth | date:'dd/MM/yyyy'}} &bull; {{athlete.bodyWeight}} kg)<span [hidden]="lastAthlete">,</span>
+                    </span>
+                </span>
+                <span *ngIf="account.user._id != training.author._id">Atleta {{account.user.name}} {{account.user.surname}} ({{account.user.dateOfBirth | date:'dd/MM/yyyy'}} &bull; {{account.user.bodyWeight}} kg)</span>
             </h6>
         </div>
         <div class="maincontainer__body card-body p-2">
@@ -55,15 +59,14 @@
                     <div class="card-header d-flex border bg-dark text-white" style="border-radius: 5px !important;">
                         <div>
                             <h5>ALLENAMENTO {{readOnlyTraining.type}} {{readOnlyTraining._id}}</h5>
-                            <h6 class="m-0">Allenamento creato da {{readOnlyTraining.author.name}} {{readOnlyTraining.author.surname}} il {{readOnlyTraining.creationDate | date:'d MMMM yyyy'}}</h6>
+                            <h6 class="m-0">Allenamento creato da {{readOnlyTraining.author.name}} {{readOnlyTraining.author.surname}} il {{readOnlyTraining.creationDate | date:'dd/MM/yyyy'}}, durata dal {{readOnlyTraining.startDate | date:'dd/MM/yyyy'}} al {{readOnlyTraining.endDate | date:'dd/MM/yyyy'}}</h6>
                             <h6 class="m-0">
                                 <span *ngIf="account.user._id == training.author._id">Atleti 
                                     <span *ngFor="let athlete of readOnlyTraining.athletes; last as lastAthlete">
-                                        {{athlete.name}} {{athlete.surname}} ({{athlete.dateOfBirth | date:'d MMMM yyyy'}} &bull; {{athlete.bodyWeight}} kg) <span [hidden]="lastAthlete">,</span>
+                                        {{athlete.name}} {{athlete.surname}} ({{athlete.dateOfBirth | date:'dd/MM/yyyy'}} &bull; {{athlete.bodyWeight}} kg)<span [hidden]="lastAthlete">,</span>
                                     </span>
                                 </span>
-                                <span *ngIf="account.user._id != training.author._id">Atleta {{account.user.name}} {{account.user.surname}} ({{account.user.dateOfBirth | date:'d MMMM yyyy'}} &bull; {{account.user.bodyWeight}} kg)</span>
-                                <span class="m-0">, dal {{readOnlyTraining.startDate | date:'d MMMM yyyy'}} al {{readOnlyTraining.endDate | date:'d MMMM yyyy'}}</span>
+                                <span *ngIf="account.user._id != training.author._id">Atleta {{account.user.name}} {{account.user.surname}} ({{account.user.dateOfBirth | date:'dd/MM/yyyy'}} &bull; {{account.user.bodyWeight}} kg)</span>
                             </h6>
                             <span [hidden]="(readOnlyTraining.comment == null || readOnlyTraining.comment == '')">Commento: {{readOnlyTraining.comment}}</span>
                         </div>
@@ -128,7 +131,7 @@
                                         <div *ngFor="let exercise of session.exercises; index as exerciseIndex" class="row m-0 px-3 py-1 border border-left-0 border-right-0 border-top-0">
                                             <div class="col-4 px-0">
                                                 <div><span>{{exercise.exercise.name}} ({{exercise.exercise.variant.name}})</span></div>
-                                                <div><span>{{exercise.exercise.description}}</span></div>
+                                                <div><small>({{exercise.exercise.description}})</small></div>
                                             </div>
                                             <div class="col-8 pr-0">
                                                 <div *ngFor="let series of exercise.series; index as seriesIndex" class="row m-0 d-flex">
@@ -182,7 +185,7 @@
                         <a ngbNavLink class="d-flex">INFO&nbsp;<img [hidden]="activeWeek != 0" src="assets/icons/actions/info-light.svg" style="width:15px; height:auto;"><img [hidden]="activeWeek == 0" src="assets/icons/actions/info-dark.svg" style="width:15px; height:auto;"></a>
                         <ng-template ngbNavContent class="w-100">
                             <div class="form-row m-0">
-                                <div class="col-12 form-group">Allenamento creato da {{training.author.name}} {{training.author.surname}} il {{training.creationDate | date:'d MMMM yyyy'}}</div>
+                                <div class="col-12 form-group">Allenamento creato da {{training.author.name}} {{training.author.surname}} il {{training.creationDate | date:'dd/MM/yyyy'}}</div>
                                 <div class="col-4 form-group">
                                     <label for="trainingType" class="col-form-label col-form-label-sm text-muted">Disciplina</label>
                                     <select [(ngModel)]="training.type" class="form-control form-control-sm cursor-pointer" id="trainingType" name="trainingType"
@@ -215,12 +218,12 @@
                                         <ng-template #optionsTemplate let-item let-option="option" let-id="id" let-isSelected="isSelected">
                                             <div>
                                                 <label style="color: #333; min-width: 130px; font-weight: normal;" class="m-0"
-                                                    [ngStyle]="{ 'font-weight': isSelected? 'bold':' normal','color': getItems[id].isDisabled? 'lightgrey': ''}">{{getItems[id].name}} {{getItems[id].surname}} ({{getItems[id].dateOfBirth | date:'d/MM/yyyy'}})</label>
+                                                    [ngStyle]="{ 'font-weight': isSelected? 'bold':' normal','color': getItems[id].isDisabled? 'lightgrey': ''}">{{getItems[id].name}} {{getItems[id].surname}} ({{getItems[id].dateOfBirth | date:'dd/MM/yyyy'}})</label>
                                             </div>
                                         </ng-template>
                                         <ng-template #optionSelectedTemplate let-option="option" let-id="id">
                                             <div>
-                                                {{getItems[id].name}} {{getItems[id].surname}} ({{getItems[id].dateOfBirth | date:'d/MM/yyyy'}})
+                                                {{getItems[id].name}} {{getItems[id].surname}} ({{getItems[id].dateOfBirth | date:'dd/MM/yyyy'}})
                                             </div>
                                         </ng-template>
                                     </ng-multiselect-dropdown>

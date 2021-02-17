@@ -77,14 +77,14 @@ export class TrainingService {
         <div class='card w-100 border-0'> \
             <div class='card-header border bg-dark text-white' style='border-radius: 5px !important;'> \
                 <h5>ALLENAMENTO " + training.type + " " + training._id + " </h5> \
-                <h6 class='m-0'>Allenamento creato da " + training.author.name + " " + training.author.surname + " il " + this.dateToString(training.creationDate) + " </h6> \
+                <h6 class='m-0'>Allenamento creato da " + training.author.name + " " + training.author.surname + " il " + this.dateToString(training.creationDate) + ", durata dal " + this.dateToString(training.startDate) + " al " + this.dateToString(training.endDate) + "</h6> \
                 <h6 class='m-0'>";
         if(options.currentUser._id == training.author._id) {
             trainingToString = trainingToString +
             "<span>Atleti ";
-            for(let athlete of training.athletes) {
+            for(const [idx, athlete] of training.athletes.entries()) {
                 trainingToString = trainingToString + 
-                "<span>" + athlete.name + " " + athlete.surname + " (" + this.dateToString(athlete.dateOfBirth) + " • " + athlete.bodyWeight + "kg)</span>";
+                "<span>" + athlete.name + " " + athlete.surname + " (" + this.dateToString(athlete.dateOfBirth) + " • " + athlete.bodyWeight + "kg)" + (idx != training.athletes.length-1 ? ", " : "") + "</span>";
             }
             trainingToString = trainingToString +
             "</span>";
@@ -94,7 +94,6 @@ export class TrainingService {
         }
         trainingToString = trainingToString + 
         "\
-                    <span class='m-0'>, dal " + this.dateToString(training.startDate) + " al " + this.dateToString(training.endDate) + "</span> \
                 </h6> \
                 " + ((training.comment == null || training.comment == '') ? "" : ("<span>Commento: " + training.comment + " </span>")) + "\
             </div> \
@@ -200,7 +199,7 @@ export class TrainingService {
     <div class='row m-0 px-3 py-1 border border-left-0 border-right-0 border-top-0'> \
         <div class='col-4 px-0'> \
             <div><span> " + sessionExercise.exercise.name + " (" + sessionExercise.exercise.variant.name + ")</span></div> \
-            <div><span> " + sessionExercise.exercise.description + "</span></div> \
+            <div><small>(" + sessionExercise.exercise.description + ")</small></div> \
         </div> \
         <div class='col-8 pr-0'> \
     ";

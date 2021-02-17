@@ -55,30 +55,33 @@
         <div class="maincontainer__body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2 table-body " [hidden]="bLoading">
             <div class="h-100 w-100 d-flex flex-column align-items-center justify-content-center badge badge-light" *ngIf="trainingList.length == 0 && !bLoading">
                 <img src="assets/icons/misc/alert.svg" style="width:40px; height:auto;">
-                <span>Nessun allenamento presente nella piattaforma</span>
+                <h4>Nessun allenamento presente nella piattaforma</h4>
             </div>
-            <div class="body__element list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1" *ngFor="let elem of trainingList; index as trainingIndex">
+            <div class="body__element list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1" *ngFor="let training of trainingList; index as trainingIndex">
                 <div class="col-2">
-                    <span class="d-block">{{elem.author.name}} {{elem.author.surname}}</span>
-                    <small>{{elem.creationDate | date:'d MMMM yyyy'}}</small>
+                    <span class="d-block">{{training.author.name}} {{training.author.surname}}</span>
+                    <small>{{training.creationDate | date:'dd/MM/yyyy'}}</small>
                 </div>
                 <div class="col-2">
-                    <div *ngFor="let athlete of elem.athletes">
-                        <span class="truncate-fullwidth">{{athlete.name}} {{athlete.surname}} ({{athlete.dateOfBirth | date:'d/MM/yyyy'}})</span>
+                    <div *ngIf="account.user._id == training.author._id"> 
+                        <div *ngFor="let athlete of training.athletes">
+                            <span class="truncate-fullwidth">{{athlete.name}} {{athlete.surname}} ({{athlete.dateOfBirth | date:'dd/MM/yyyy'}})</span>
+                        </div>
                     </div>
+                    <div *ngIf="account.user._id != training.author._id">{{account.user.name}} {{account.user.surname}} ({{account.user.dateOfBirth | date:'dd/MM/yyyy'}})</div>
                 </div>
-                <div class="col-2"><span>{{elem.type}}</span></div>
+                <div class="col-2"><span>{{training.type}}</span></div>
                 <div class="col-2">
-                    <span class="d-block">{{elem.startDate | date:'d MMMM yyyy'}}</span>
-                    <small>{{elem.endDate | date:'d MMMM yyyy'}}</small>
+                    <span class="d-block">{{training.startDate | date:'dd/MM/yyyy'}}</span>
+                    <small>{{training.endDate | date:'dd/MM/yyyy'}}</small>
                 </div>
-                <div class="col-2"><span>{{elem.comment}}</span></div>
+                <div class="col-2"><span>{{training.comment}}</span></div>
                 <div class="col-2 d-flex">
-                    <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.TRAININGS, elem._id)" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
-                    <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && elem.author._id == account.user._id)" (click)="openPageWithMode(PAGEMODE.WRITE, PAGES.TRAININGS, elem._id)" class="ml-2 image-button" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></div>
-                    <div (click)="openPageWithMode(PAGEMODE.STATS, PAGES.TRAININGS, elem._id)" class="ml-2 image-button" ngbTooltip="Statistiche" placement="left"><img src="assets/icons/actions/graph.svg" style="width:20px; height:auto;"></div>
-                    <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && elem.author._id == account.user._id)" (click)="exportTraining(elem)" class="ml-2 image-button" ngbTooltip="Esporta Allenamento" placement="left"><img src="assets/icons/actions/export.svg" style="width:20px; height:auto;"></div>
-                    <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && elem.author._id == account.user._id)" (click)="deleteTraining(elem._id, trainingIndex)" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
+                    <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.TRAININGS, training._id)" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
+                    <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="openPageWithMode(PAGEMODE.WRITE, PAGES.TRAININGS, training._id)" class="ml-2 image-button" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></div>
+                    <div (click)="openPageWithMode(PAGEMODE.STATS, PAGES.TRAININGS, training._id)" class="ml-2 image-button" ngbTooltip="Statistiche" placement="left"><img src="assets/icons/actions/graph.svg" style="width:20px; height:auto;"></div>
+                    <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="exportTraining(elem)" class="ml-2 image-button" ngbTooltip="Esporta Allenamento" placement="left"><img src="assets/icons/actions/export.svg" style="width:20px; height:auto;"></div>
+                    <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="deleteTraining(training._id, trainingIndex)" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
                 </div>
             </div>
             <div class="bottom-right-absolute d-flex">

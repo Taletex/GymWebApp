@@ -11,7 +11,7 @@
                 <div class="card-body h-100">
                     <form class="form-row m-0">
                         <div class="col-12 form-group">Allenamento creato da {{newTraining.author.name}}
-                            {{newTraining.author.surname}} il {{newTraining.creationDate | date:'d MMMM yyyy'}}</div>
+                            {{newTraining.author.surname}} il {{newTraining.creationDate | date:'dd/MM/yyyy'}}</div>
                         <div class="col-4 form-group">
                             <label for="newTrainingType"
                                 class="col-form-label col-form-label-sm text-muted">Disciplina</label>
@@ -48,12 +48,12 @@
                                 <ng-template #optionsTemplate let-item let-option="option" let-id="id" let-isSelected="isSelected">
                                     <div>
                                         <label style="color: #333; min-width: 130px; font-weight: normal;" class="m-0"
-                                            [ngStyle]="{ 'font-weight': isSelected? 'bold':' normal','color': getItems[id].isDisabled? 'lightgrey': ''}">{{getItems[id].name}} {{getItems[id].surname}} ({{getItems[id].dateOfBirth | date:'d/MM/yyyy'}})</label>
+                                            [ngStyle]="{ 'font-weight': isSelected? 'bold':' normal','color': getItems[id].isDisabled? 'lightgrey': ''}">{{getItems[id].name}} {{getItems[id].surname}} ({{getItems[id].dateOfBirth | date:'dd/MM/yyyy'}})</label>
                                     </div>
                                 </ng-template>
                                 <ng-template #optionSelectedTemplate let-option="option" let-id="id">
                                     <div>
-                                        {{getItems[id].name}} {{getItems[id].surname}} ({{getItems[id].dateOfBirth | date:'d/MM/yyyy'}})
+                                        {{getItems[id].name}} {{getItems[id].surname}} ({{getItems[id].dateOfBirth | date:'dd/MM/yyyy'}})
                                     </div>
                                 </ng-template>
                             </ng-multiselect-dropdown>

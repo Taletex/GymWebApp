@@ -712,7 +712,7 @@ export class TrainingComponent implements OnInit {
   convertPercentage(newMeasure?) {
     if(newMeasure) {
       this.readOnlyTraining = this.trainingService.convertPercentage(this.training, this.account.user.personalRecords, newMeasure);
-      this.toastr.warning("Note: exercises percentage value conversion has been done using the 1RM exercise with the best matching (in terms of exercise name and variant)");
+      this.toastr.warning("Note: exercises percentage value conversion has been done using the current user 1RM exercise with the best matching (in terms of exercise name and variant)");
     }
     else
       this.readOnlyTraining = _.cloneDeep(this.training);

@@ -72,7 +72,7 @@
             <div class="body__element list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1" *ngFor="let elem of userList; index as userIndex">
                 <div class="col-3"><span class="text-capitalize">{{elem.name}} {{elem.surname}}</span></div>
                 <div class="col-2"><span class="text-capitalize">{{elem.userType}}</span></div>
-                <div class="col-2"><span>{{elem.dateOfBirth | date:'d MMMM yyyy' }}</span></div>
+                <div class="col-2"><span>{{elem.dateOfBirth | date:'dd/MM/yyyy' }}</span></div>
                 <div class="col-1"><span class="text-capitalize">{{elem.sex}}</span></div>
                 <div class="col-1"><span>{{elem.bodyWeight}} kg</span></div>
                 <div class="col-1"><span>{{elem.yearsOfExperience}}</span></div>
