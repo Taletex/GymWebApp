@@ -44,12 +44,29 @@
     <div class="trainings__maincontainer card col-12 p-0 border border-secondary border main-list-table">
         <div class="maincontainer__header card-header pl-2 pr-3 border border-secondary border-top-0 border-left-0 border-right-0 d-flex flex-column bg-dark text-white">
             <div class="col-12 row m-0 p-0 d-flex align-items-center justify-content-center">
-                <div class="col-2"><b class="d-block">Autore</b><small class="d-block">Data creazione</small></div>
-                <div class="col-2"><b class="d-block">Atleta</b><small class="d-block">DoB &bull; bw</small></div>
-                <div class="col-2"><b>Tipo</b></div>
-                <div class="col-2"><b class="d-block">Data inizio</b><small class="d-block">Data fine</small></div>
-                <div class="col-2"><b>Commento</b></div>
-                <div class="col-2"><b>Azioni</b></div>
+                <div class="col-2 d-flex align-items-center cursor-pointer" (click)="sortListByField('author')">
+                    <div><b class="d-block">Autore</b><small class="d-block">Data creazione</small></div>
+                    <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['author']==null, 'fa fa-long-arrow-down': sortListStatus['author']==false, 'fa fa-long-arrow-up': sortListStatus['author']==true}"></span></div>
+                </div>
+                <div class="col-2 d-flex align-items-center cursor-pointer" (click)="sortListByField('athletes')">
+                    <div><b class="d-block">Atleta</b><small class="d-block">DoB &bull; bw</small></div>
+                    <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['athletes']==null, 'fa fa-long-arrow-down': sortListStatus['athletes']==false, 'fa fa-long-arrow-up': sortListStatus['athletes']==true}"></span></div>
+                </div>
+                <div class="col-2 d-flex align-items-center cursor-pointer" (click)="sortListByField('type')">
+                    <div><b>Tipo</b></div>
+                    <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['type']==null, 'fa fa-long-arrow-down': sortListStatus['type']==false, 'fa fa-long-arrow-up': sortListStatus['type']==true}"></span></div>
+                </div>
+                <div class="col-2 d-flex align-items-center cursor-pointer" (click)="sortListByField('startDate')">
+                    <div><b class="d-block">Data inizio</b><small class="d-block">Data fine</small></div>
+                    <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['startDate']==null, 'fa fa-long-arrow-down': sortListStatus['startDate']==false, 'fa fa-long-arrow-up': sortListStatus['startDate']==true}"></span></div>
+                </div>
+                <div class="col-2 d-flex align-items-center cursor-pointer" (click)="sortListByField('comment')">
+                    <div><b>Commento</b></div>
+                    <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['comment']==null, 'fa fa-long-arrow-down': sortListStatus['comment']==false, 'fa fa-long-arrow-up': sortListStatus['comment']==true}"></span></div>
+                </div>
+                <div class="col-2">
+                    <b>Azioni</b>
+                </div>
             </div>
         </div>
         <div class="maincontainer__body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2 table-body " [hidden]="bLoading">

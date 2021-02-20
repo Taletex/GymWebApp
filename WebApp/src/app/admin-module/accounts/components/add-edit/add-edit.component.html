@@ -4,7 +4,7 @@
         <h1 *ngIf="!isAddMode">Edit Account</h1>
     </div>
 
-    <div class="col-12">
+    <div class="col-12" style="max-height: calc(100vh - 186px); overflow: auto;">
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
             <!-- USER INFORMATIONS -->

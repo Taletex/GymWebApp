@@ -24,9 +24,10 @@ export class TrainingsComponent implements OnInit {
   public bLoading: boolean = false;
   public PAGEMODE = PAGEMODE;
   public PAGES = PAGES;
+  private sortListStatus: any;
   
   // Account information
-  account = this.accountService.accountValue;
+  public account = this.accountService.accountValue;
   public Role = Role;
 
 
@@ -37,8 +38,9 @@ export class TrainingsComponent implements OnInit {
     // Init new training
     this.initNewTraining();
 
-    // Init filters
+    // Init filters and sort status
     this.resetFilters();
+    this.resetSortStatus();
   }
 
   ngOnInit() {
@@ -147,6 +149,18 @@ export class TrainingsComponent implements OnInit {
 
   resetFilters() {
     this.filters = { author: { name: '', surname: '' }, creationDate: '', startDate: '', athlete: { name: '', surname: '' }, type: '' };
+  }
+
+  resetSortStatus() {
+    this.sortListStatus = {author: null, athletes: null, type: null, startDate: null, comment: null};
+  }
+
+  sortListByField(field: string) {
+    let currentFieldStatus = this.sortListStatus[field];
+    this.resetSortStatus();
+    this.sortListStatus[field] = currentFieldStatus == null ? true : !currentFieldStatus;
+
+    this.trainingList = _.orderBy(this.trainingList, field, this.sortListStatus[field] ? 'asc' : 'desc');
   }
 
 }
