@@ -1,27 +1,67 @@
-# WebApp
+# My Training Platform
+My Training Platform is a web application for Gym Management (coaches and athletes)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.0.2.
+## Table of Contents
+- [References](#References)
+- [Screenshots](#screenshots)
+- [Requirements](#Requirements)
+- [Dependencies](#Dependencies)
+- [Running for test](#Running-for-test)
+- [Future developments](#Future-developments)
 
-## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## References
+References available (italian only) at:
+- docs
 
-## Code scaffolding
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
+## Screenshots
+- **Web Application**
+![screenshot](screenshots/webapp1.png)
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
-## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Requirements
+The application has the following requirements (needed to run the project)
+Note: this app was successfully tested on Windows 10. The following links refer to Windows 10. If using a different Operative System, it is necessary to search and download the proper software. 
+- **Node Server**:
+	1. NodeJS (https://nodejs.org/it/)
+	2. Package-json. Open a terminal and write:
+		```
+		cd NodeServer
+		npm install
+		```
+  3. MongoDB (https://www.mongodb.com/download-center/community)
+- **Web Application**:
+	1. Nodejs.
+	2. Package-json. Open a terminal and write:
+		```
+		cd WebApp
+		npm install
+		```
 
-## Running end-to-end tests
+## Dependencies
+The application has the following dependencies (libraries and packages)
+- **Node Server**:
+  TODO
+- **Web Application**:
+	TODO
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
-## Further help
+## Running for test
+After having installed all the requirements it is possible to clone this project and run it by following the next steps. 
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+#### 1. Clone the project from master branch
+- Open a terminal and write:
+	```
+	git clone https://github.com/Taletex/GymWebApp
+	```
+
+#### 2. Run the project from bat file
+- Go in to the bash folder and exec the 'StartProgrammingWebApp.bat' file 
+- Open a new browser tab and navigate to localhost:4200
+
+
+## Future developments
+TODO
