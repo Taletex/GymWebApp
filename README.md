@@ -40,6 +40,14 @@ Note: this app was successfully tested on Windows 10. The following links refer 
 		cd WebApp
 		npm install
 		```
+	3. Angular Cli. Open a terminal and write:
+		```
+		npm install -g @angular/cli
+		```
+	4. Sass. Open a terminal and write:
+		```
+		npm install -g sass
+		```
 
 ## Dependencies
 The application has the following dependencies (libraries and packages)
