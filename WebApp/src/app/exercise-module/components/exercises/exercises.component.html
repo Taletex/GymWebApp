@@ -39,10 +39,21 @@
     <div class="exercises__maincontainer card col-12 p-0 border border-secondary border">
         <div class="maincontainer__header card-header pl-2 pr-3 border border-secondary border-top-0 border-left-0 border-right-0 d-flex flex-column bg-dark text-white">
             <div class="col-12 row m-0 p-0 d-flex align-items-center justify-content-center">
-                <div class="col-2"><b>Nome</b></div>
-                <div class="col-4"><b class="d-block">Variante</b><small class="d-block">Nome &bull; Coefficiente</small></div>
-                <div class="col-4"><b>Descrizione</b></div>
-                <div class="col-2"><b>Azioni</b></div>
+                <div class="col-2 d-flex align-items-center cursor-pointer" (click)="sortListByField('name')">
+                    <div><b class="d-block">Nome</b></div>
+                    <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['name']==null, 'fa fa-long-arrow-down': sortListStatus['name']==false, 'fa fa-long-arrow-up': sortListStatus['name']==true}"></span></div>
+                </div>
+                <div class="col-4 d-flex align-items-center cursor-pointer" (click)="sortListByField('variant')">
+                    <div><b class="d-block">Variante</b><small class="d-block">Nome &bull; Coefficiente</small></div>
+                    <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['variant']==null, 'fa fa-long-arrow-down': sortListStatus['variant']==false, 'fa fa-long-arrow-up': sortListStatus['variant']==true}"></span></div>
+                </div>
+                <div class="col-4 d-flex align-items-center cursor-pointer" (click)="sortListByField('description')">
+                    <div><b class="d-block">Descrizione</b></div>
+                    <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['description']==null, 'fa fa-long-arrow-down': sortListStatus['description']==false, 'fa fa-long-arrow-up': sortListStatus['description']==true}"></span></div>
+                </div>
+                <div class="col-2">
+                    <b>Azioni</b>
+                </div>
             </div>
         </div>
         <div class="maincontainer__body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2" [hidden]="bLoading">

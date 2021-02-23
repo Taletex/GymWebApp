@@ -24,12 +24,14 @@ export class UsersComponent implements OnInit {
   public newUser: User = new User();
   public account: Account;
   public Role = Role;
+  public sortListStatus: any;
 
   constructor(private router: Router, private accountService: AccountService, private httpService: HttpService, private toastr: ToastrService, public generalService: GeneralService) {
     this.resetFilters();
     this.accountService.account.subscribe(x => this.account = x);
     
-    // TODO: Improvement. Settare una preferenza da salvare nel browser che deifnisce l'attuale ruolo dell'account
+    // Init user list
+    // TODO: Improvement. Settare una preferenza da salvare nel browser che definisce l'attuale ruolo dell'account
     switch(this.account.user.userType) {
       case 'coach': {
         this.getAthletes();
@@ -43,8 +45,11 @@ export class UsersComponent implements OnInit {
         this.getUsers();
         break;
       }
-        
     }
+
+    // Init filters and sort status
+    this.resetFilters();
+    this.resetSortStatus();
   }
 
   ngOnInit() {}
@@ -153,7 +158,7 @@ export class UsersComponent implements OnInit {
       return (
         (filters.name != '' ? u.name.toLowerCase().includes(filters.name.toLowerCase()) : true) &&
         (filters.surname != '' ? u.surname.toLowerCase().includes(filters.surname.toLowerCase()) : true) &&
-        (filters.userType != '' ? u.userType.toLowerCase().includes(filters.userType.toLowerCase()) : true) &&
+        (filters.userType != '' ? (u.userType.toLowerCase() == 'both' ? true : u.userType.toLowerCase().includes(filters.userType.toLowerCase())) : true) &&
         ((filters.dateOfBirth != null && filters.dateOfBirth != '') ? u.dateOfBirth.includes(filters.dateOfBirth) : true) &&
         (filters.sex != '' ? u.sex.toLowerCase().includes(filters.sex.toLowerCase()) : true) &&
         (filters.bodyWeight != null ? u.bodyWeight == filters.bodyWeight : true) &&
@@ -164,6 +169,21 @@ export class UsersComponent implements OnInit {
 
   resetFilters() {
     this.filters = { name: '', surname: '', userType: '', dateOfBirth: '', sex: '', bodyWeight: null, yearsOfExperience: null};
+  }
+ 
+  resetSortStatus() {
+    this.sortListStatus = {name: null, variant: null, description: null};
+  }
+
+  sortListByField(field: string) {
+    let currentFieldStatus = this.sortListStatus[field];
+    this.resetSortStatus();
+    this.sortListStatus[field] = currentFieldStatus == null ? true : !currentFieldStatus;
+
+    if(field=='user')
+      this.userList = _.orderBy(this.userList, ['name', 'surname'], this.sortListStatus[field] ? 'asc' : 'desc');
+    else
+      this.userList = _.orderBy(this.userList, field, this.sortListStatus[field] ? 'asc' : 'desc');
   }
 
 }

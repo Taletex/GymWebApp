@@ -20,13 +20,21 @@ export class ExercisesComponent implements OnInit {
   public newExercise: Exercise = new Exercise();
   public account: Account;
   public Role = Role;
+  public sortListStatus: any;
 
 
   constructor(private httpService: HttpService, private toastr: ToastrService, private accountService: AccountService) { 
     this.accountService.account.subscribe(x => this.account = x);
-    this.resetFilters();
+    
+    // Init exercise list 
     this.getExercises();
+
+    // Init new exercise
     this.initNewExercise();
+
+    // Init filters and sort status
+    this.resetFilters();
+    this.resetSortStatus();
   }
 
   ngOnInit(): void {
@@ -112,6 +120,22 @@ export class ExercisesComponent implements OnInit {
 
   resetFilters() {
     this.filters = { name: '', variant: {name: '', intensityCoefficient: null}, description: ''};
+  }
+
+  
+  resetSortStatus() {
+    this.sortListStatus = {name: null, variant: null, description: null};
+  }
+
+  sortListByField(field: string) {
+    let currentFieldStatus = this.sortListStatus[field];
+    this.resetSortStatus();
+    this.sortListStatus[field] = currentFieldStatus == null ? true : !currentFieldStatus;
+
+    if(field=='variant')
+      this.exerciseList = _.orderBy(this.exerciseList, ['variant.name', 'variant.intensityCoefficient'], this.sortListStatus[field] ? 'asc' : 'desc');
+    else
+      this.exerciseList = _.orderBy(this.exerciseList, field, this.sortListStatus[field] ? 'asc' : 'desc');
   }
 
 }
