@@ -24,7 +24,7 @@ export class TrainingsComponent implements OnInit {
   public bLoading: boolean = false;
   public PAGEMODE = PAGEMODE;
   public PAGES = PAGES;
-  private sortListStatus: any;
+  public sortListStatus: any;
   
   // Account information
   public account = this.accountService.accountValue;
