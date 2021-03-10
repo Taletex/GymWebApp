@@ -120,21 +120,21 @@ export class HttpService {
 
   /* NOTIFICATION CRUD */
   sendNotification(destinationUserId: string, notification: Notification) {
-    return this.http.post<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications", notification);
+    return this.http.put<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications", notification);
   }
 
   acceptRequest(destinationUserId: string, notification: Notification) {
     let notificationId = notification.type + "_" + notification.from;
-    return this.http.get<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications/" + notificationId + "/accept");
+    return this.http.put<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications/" + notificationId + "/accept", notification);
   }
 
   refuseRequest(destinationUserId: string, notification: Notification) {
     let notificationId = notification.type + "_" + notification.from;
-    return this.http.get<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications/" + notificationId + "/refuse");
+    return this.http.put<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications/" + notificationId + "/refuse", notification);
   }
 
   dismissRequest(destinationUserId: string, notification: Notification) {
     let notificationId = notification.type + "_" + notification.from;
-    return this.http.get<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications/" + notificationId + "/dismiss");
+    return this.http.put<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications/" + notificationId + "/dismiss", notification);
   }
 }

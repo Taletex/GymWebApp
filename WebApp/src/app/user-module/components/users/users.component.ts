@@ -197,7 +197,8 @@ export class UsersComponent implements OnInit {
   }
 
   isRequestYetSent(user: User) {
-    return (_.find(user.notifications, function(n) { return n.from == this.account.user._id; }) != undefined);
+    let userId = this.account.user._id;
+    return (_.find(user.notifications, function(n) { return n.from == userId; }) != undefined);
   }
 
   sendNotification(notificationType: NOTIFICATION_TYPE, destinationUser: User) {

@@ -80,7 +80,7 @@ export class NotificationsComponent implements OnInit {
       (error: HttpErrorResponse) => {
         this.bLoading = false;
         this.toastr.error("Si è verificato un errore durante l'invio di accettazione richiesta");
-        console.log(error.error.message);
+        console.log(error);
       });
   }
 
@@ -97,7 +97,7 @@ export class NotificationsComponent implements OnInit {
       (error: HttpErrorResponse) => {
         this.bLoading = false;
         this.toastr.error("Si è verificato un errore durante l'invio di rifiuto richiesta");
-        console.log(error.error.message);
+        console.log(error);
       });
   }
 

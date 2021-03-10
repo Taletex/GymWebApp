@@ -196,19 +196,18 @@ exports.sendNotification = (req, res) => {
 exports.acceptNotification = (req, res) => {
     let destinationUser;
     let fromUser;
-    let notification;
+    let notification = req.body;
 
     // Find destination and from users
     Promise.all([
-        User.find({_id: req.params._id}),
-        User.find({_id: notification.from})
+        User.findOne({_id: req.params._id}),
+        User.findOne({_id: notification.from})
     ])
     .then( ([dUser, fUser]) => {
         if(!dUser || !fUser) { return res.status(404).send({message: "User not found"});}
 
         destinationUser = dUser;
         fromUser = fUser;
-        notification = _.find(destinationUser.notifications, function(n) { return (n.type+"_"+n.from == req.params._notId); });
         
         // 1. delete the notification from the destination user
         destinationUser.notifications = _.filter(destinationUser.notifications, function(n) { return (n.type+"_"+n.from != req.params._notId); });
@@ -244,7 +243,7 @@ exports.acceptNotification = (req, res) => {
             if(!destinationUser || !fromUser) { return res.status(404).send({message: "User not found"});}
 
             // Returns the destinationUser updated by finding it in the database
-            User.find({_id: user.destinationUser._id}).populate({ path: 'personalRecords', populate: { path: 'exercise'}, path: 'notifications' })
+            User.find({_id: destinationUser._id}).populate({ path: 'personalRecords', populate: { path: 'exercise'}, path: 'notifications' })
             .then(users => {
                 res.send(users[0]);
             })
@@ -259,3 +258,104 @@ exports.acceptNotification = (req, res) => {
         return res.status(500).send({ message: "Error updating user in accept notification"});
     });
 };
+
+exports.refuseNotification = (req, res) => {
+    let destinationUser;
+    let fromUser;
+    let notification = req.body;
+
+    // Find destination and from users
+    Promise.all([
+        User.findOne({_id: req.params._id}),
+        User.findOne({_id: notification.from})
+    ])
+    .then( ([dUser, fUser]) => {
+        if(!dUser || !fUser) { return res.status(404).send({message: "User not found"});}
+
+        destinationUser = dUser;
+        fromUser = fUser;
+        
+        // 1. delete the notification from the destination user
+        destinationUser.notifications = _.filter(destinationUser.notifications, function(n) { return (n.type+"_"+n.from != req.params._notId); });
+
+        // 2. add a notification to the from user (to inform about the refused request)
+        let message = "L'utente " + destinationUser.name + " " + destinationUser.surname + " ha RIFIUTATO la richiesta di " + (notification.type == 'coach_request' ? "seguirti come coach" : (notification.type == 'athlete_request' ? 'essere seguito come atleta' : ''));
+        fromUser.notifications.push(new Notification({type: 'request_refused', from: destinationUser._id, message: message}));
+
+        // 3. update from and destination users
+        Promise.all([
+            User.findOneAndUpdate({_id: destinationUser._id}, {
+                notifications: destinationUser.notifications,
+                coaches: destinationUser.coaches,
+                athletes: destinationUser.athletes
+            }, {new: true}),
+            User.findOneAndUpdate({_id: fromUser._id}, {
+                notifications: fromUser.notifications,
+                coaches: fromUser.coaches,
+                athletes: fromUser.athletes
+            }, {new: true})
+        ])
+        .then( ([destinationUser, fromUser]) => {
+            if(!destinationUser || !fromUser) { return res.status(404).send({message: "User not found"});}
+
+            // Returns the destinationUser updated by finding it in the database
+            User.find({_id: destinationUser._id}).populate({ path: 'personalRecords', populate: { path: 'exercise'}, path: 'notifications' })
+            .then(users => {
+                res.send(users[0]);
+            })
+        }).catch(err => {
+            if(err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found"}); }
+            return res.status(500).send({ message: "Error updating user in accept notification"});
+        });
+
+
+    }).catch(err => {
+        if(err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found"}); }
+        return res.status(500).send({ message: "Error updating user in accept notification"});
+    });
+ };
+
+exports.dismissNotification = (req, res) => {
+    let destinationUser;
+    let fromUser;
+    let notification = req.body;
+
+    // Find destination user
+    Promise.all([
+        User.findOne({_id: req.params._id})
+    ])
+    .then( ([dUser]) => {
+        if(!dUser) { return res.status(404).send({message: "User not found"});}
+
+        destinationUser = dUser;
+        
+        // 1. delete the notification from the destination user
+        destinationUser.notifications = _.filter(destinationUser.notifications, function(n) { return (n.type+"_"+n.from != req.params._notId); });
+
+        // 2. update destination user
+        Promise.all([
+            User.findOneAndUpdate({_id: destinationUser._id}, {
+                notifications: destinationUser.notifications,
+                coaches: destinationUser.coaches,
+                athletes: destinationUser.athletes
+            }, {new: true})
+        ])
+        .then( ([destinationUser]) => {
+            if(!destinationUser) { return res.status(404).send({message: "User not found"});}
+
+            // Returns the destinationUser updated by finding it in the database
+            User.find({_id: destinationUser._id}).populate({ path: 'personalRecords', populate: { path: 'exercise'}, path: 'notifications' })
+            .then(users => {
+                res.send(users[0]);
+            })
+        }).catch(err => {
+            if(err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found"}); }
+            return res.status(500).send({ message: "Error updating user in accept notification"});
+        });
+
+
+    }).catch(err => {
+        if(err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found"}); }
+        return res.status(500).send({ message: "Error updating user in accept notification"});
+    });
+ };

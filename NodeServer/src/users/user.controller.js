@@ -30,16 +30,16 @@ router.put('/:_id', userService.updateUser);
 router.delete('/:_id', userService.deleteUser);
 
 // Add a notification to a given User
-router.post('/:_id/notifications', userService.sendNotification);
+router.put('/:_id/notifications', userService.sendNotification);
 
 // Accept a notification for a given User
-router.get('/:_id/notifications/:_notId/accept', userService.acceptNotification);
+router.put('/:_id/notifications/:_notId/accept', userService.acceptNotification);
 
 // Refuse a notification for a given User
-router.get('/:_id/notifications/:_notId/refuse', userService.refuseNotification);
+router.put('/:_id/notifications/:_notId/refuse', userService.refuseNotification);
 
 // Dismiss a notification for a given User
-router.get('/:_id/notifications/:_notId/dismiss', userService.dismissNotification);
+router.put('/:_id/notifications/:_notId/dismiss', userService.dismissNotification);
 
 
 
