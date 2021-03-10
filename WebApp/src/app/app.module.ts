@@ -21,6 +21,7 @@ import { SidebarComponent } from './_components/sidebar/sidebar.component';
 
 import { JwtInterceptor, ErrorInterceptor, appInitializer } from './_helpers';
 import { AccountService } from '@app/_services/account-service/account-service.service';
+import { NotificationsComponent } from './_components/notifications/notifications.component';
 
 @NgModule({
   imports: [
@@ -41,7 +42,8 @@ import { AccountService } from '@app/_services/account-service/account-service.s
     AppComponent,
     HomepageComponent,
     PageNotFoundComponent,
-    SidebarComponent
+    SidebarComponent,
+    NotificationsComponent
   ],
   providers: [
     { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AccountService] },

@@ -72,5 +72,10 @@ const UserSchema = mongoose.Schema({
 const userSchema =  mongoose.model('User', UserSchema);
 const contactsSchema = mongoose.model('Contacts', ContactsSchema);
 const residenceSchema = mongoose.model('Residence', ResidenceSchema);
+const notificationSchema = mongoose.model('Notification', NotificationSchema);
 
-module.exports = {User: userSchema, UserSchema: UserSchema, Contacts: contactsSchema, ContactsSchema: ContactsSchema, Residence: residenceSchema, ResidenceSchema: ResidenceSchema};
+module.exports = {User: userSchema, UserSchema: UserSchema, 
+                  Contacts: contactsSchema, ContactsSchema: ContactsSchema, 
+                  Residence: residenceSchema, ResidenceSchema: ResidenceSchema,
+                  Notification: notificationSchema, NotificationSchema: NotificationSchema
+                };

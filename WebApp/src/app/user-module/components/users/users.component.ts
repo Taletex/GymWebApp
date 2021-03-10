@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '@app/_models/training-model';
+import { Notification, User } from '@app/_models/training-model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HttpService } from '@app/_services/http-service/http-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { Account, Role } from '@app/_models';
 import { AccountService } from '@app/_services/account-service/account-service.service';
-import { GeneralService, PAGEMODE, PAGES } from '@app/_services/general-service/general-service.service';
+import { GeneralService, PAGEMODE, PAGES, NOTIFICATION_TYPE } from '@app/_services/general-service/general-service.service';
 import * as _ from "lodash";
 
 @Component({
@@ -25,6 +25,7 @@ export class UsersComponent implements OnInit {
   public account: Account;
   public Role = Role;
   public sortListStatus: any;
+  public NOTIFICATION_TYPE = NOTIFICATION_TYPE;
 
   constructor(private router: Router, private accountService: AccountService, private httpService: HttpService, private toastr: ToastrService, public generalService: GeneralService) {
     this.resetFilters();
@@ -184,6 +185,51 @@ export class UsersComponent implements OnInit {
       this.userList = _.orderBy(this.userList, ['name', 'surname'], this.sortListStatus[field] ? 'asc' : 'desc');
     else
       this.userList = _.orderBy(this.userList, field, this.sortListStatus[field] ? 'asc' : 'desc');
+  }
+
+
+  isCoachInUser(coach: User) {
+    return (_.find(this.account.user.coaches, function(c) { return c._id == coach._id; }) != undefined);
+  }
+
+  isAthleteInUser(athlete: User) {
+    return (_.find(this.account.user.athletes, function(a) { return a._id == athlete._id; }) != undefined);
+  }
+
+  isRequestYetSent(user: User) {
+    return (_.find(user.notifications, function(n) { return n.from == this.account.user._id; }) != undefined);
+  }
+
+  sendNotification(notificationType: NOTIFICATION_TYPE, destinationUser: User) {
+    let notificationMessage;
+    let newNotification;
+
+    switch(notificationType) {
+      case NOTIFICATION_TYPE.ATHLETE_REQUEST:
+        notificationMessage = "Richiesta Follow da Coach";
+        break;
+      case NOTIFICATION_TYPE.COACH_REQUEST:
+        notificationMessage = "Richiesta Follow da Atleta";
+        break;
+    }
+
+    newNotification = new Notification(notificationType, this.account.user._id, notificationMessage);
+    
+
+    this.bLoading = true;
+    this.httpService.sendNotification(destinationUser._id, newNotification)
+    .subscribe(
+      (data: any) => {
+        console.log(data);
+        destinationUser.notifications.push(newNotification);      // This is done to avoid retrieving again the list of user updated with the new notification (used to show/hide action buttons on the UI)
+        this.bLoading = false;
+        this.toastr.success('Richiesta correttamente inviata!');
+      },
+      (error: HttpErrorResponse) => {
+        this.bLoading = false;
+        this.toastr.error("Si è verificato un errore durante l'invio della richiesta");
+        console.log(error.error.message);
+      });
   }
 
 }

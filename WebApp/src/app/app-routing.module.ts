@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 /* Components import */
 import { HomepageComponent } from '@app/_components/homepage/homepage.component';
+import { NotificationsComponent } from '@app/_components/notifications/notifications.component';
 import { PageNotFoundComponent } from '@app/_components/page-not-found/page-not-found.component';
 import { AuthGuard } from './_helpers';
 import { Role } from './_models';
@@ -25,6 +26,7 @@ const routes: Routes = [
   { path: 'exercises', loadChildren: exerciseModule, canActivate: [AuthGuard]},
   { path: 'users', loadChildren: userModule, canActivate: [AuthGuard]},
   { path: 'userprofile', loadChildren: profileModule, canActivate: [AuthGuard]},
+  { path: 'notifications', component: NotificationsComponent, canActivate: [AuthGuard]},
   
   { path: 'account', loadChildren: accountModule },
   { path: 'profile', loadChildren: profileModule, canActivate: [AuthGuard] },

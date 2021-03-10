@@ -29,6 +29,14 @@ export class PageStatus {
   }
 } 
 
+export enum NOTIFICATION_TYPE {
+  COACH_REQUEST = "coach_request",
+  ATHLETE_REQUEST = "athlete_request",
+  REQUEST_SUCCESS = "request_success",
+  REQUEST_REFUSE = "request_refuse",
+  DISMISS = "dismiss"
+}
+
 @Injectable({
   providedIn: 'root'
 })

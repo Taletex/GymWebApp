@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
-import { Training, Exercise, User } from '@app/_models/training-model';
+import { Training, Exercise, User, Notification } from '@app/_models/training-model';
 import { environment } from '@environments/environment';
 
 // Usato per iniettare il service nell'app. Nota che 'root' serve per indicare che viene fornito al root level (AppModule). Nota che cosi facendo si rende il service un singleton!
@@ -115,5 +115,26 @@ export class HttpService {
 
   deleteUser(id: string): Observable<any> {
     return this.http.delete<any>(this.baseServerUrl + "/users/" + id);
+  }
+
+
+  /* NOTIFICATION CRUD */
+  sendNotification(destinationUserId: string, notification: Notification) {
+    return this.http.post<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications", notification);
+  }
+
+  acceptRequest(destinationUserId: string, notification: Notification) {
+    let notificationId = notification.type + "_" + notification.from;
+    return this.http.get<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications/" + notificationId + "/accept");
+  }
+
+  refuseRequest(destinationUserId: string, notification: Notification) {
+    let notificationId = notification.type + "_" + notification.from;
+    return this.http.get<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications/" + notificationId + "/refuse");
+  }
+
+  dismissRequest(destinationUserId: string, notification: Notification) {
+    let notificationId = notification.type + "_" + notification.from;
+    return this.http.get<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications/" + notificationId + "/dismiss");
   }
 }

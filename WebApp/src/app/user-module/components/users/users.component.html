@@ -63,7 +63,7 @@
                     <div><b class="d-block">Tipo</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['userType']==null, 'fa fa-long-arrow-down': sortListStatus['userType']==false, 'fa fa-long-arrow-up': sortListStatus['userType']==true}"></span></div>
                 </div>
-                <div class="col-2 d-flex align-items-center cursor-pointer" (click)="sortListByField('dateOfBirth')">
+                <div class="col-2 d-flex align-items-center cursor-pointer" (click)="sortListByField('dateOf Birth')">
                     <div><b class="d-block">DoB</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['dateOfBirth']==null, 'fa fa-long-arrow-down': sortListStatus['dateOfBirth']==false, 'fa fa-long-arrow-up': sortListStatus['dateOfBirth']==true}"></span></div>
                 </div>
@@ -99,6 +99,8 @@
                 <div class="col-2"><span>{{elem.yearsOfExperience}}</span></div>
                 <div class="col-1 d-flex">
                     <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.USERS, elem._id)" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
+                    <div (click)="sendNotification(NOTIFICATION_TYPE.COACH_REQUEST, elem._id)" *ngIf="(elem.userType == 'coach' || elem.userType == 'both') && (account.user.userType=='athlete' || account.user.userType == 'both') && !isCoachInUser(elem) && !isRequestYetSent(elem)" class="image-button ml-2" ngbTooltip="Richiesta segui coach" placement="left"><img src="assets/icons/actions/add-friend.svg" style="width:20px; height:auto;" ></div>
+                    <div (click)="sendNotification(NOTIFICATION_TYPE.ATHLETE_REQUEST, elem._id)" *ngIf="(elem.userType == 'athlete' || elem.userType == 'both') && (account.user.userType=='coach' || account.user.userType == 'both') && !isAthleteInUser(elem) && !isRequestYetSent(elem)" class="image-button ml-2" ngbTooltip="Richiesta segui atleta" placement="left"><img src="assets/icons/actions/add-friend-secondary.svg" style="width:20px; height:auto;"></div>
                     <!-- <div *ngIf="account.role == Role.Admin" (click)="openPageWithMode(PAGEMODE.WRITE, PAGES.USERS, elem._id)" class="ml-2 image-button" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></div>
                     <div *ngIf="account.role == Role.Admin" (click)="deleteTraining(elem._id, trainingIndex)" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
                     -->
