@@ -98,7 +98,8 @@
                 <div class="col-2"><span>{{elem.bodyWeight}} kg</span></div>
                 <div class="col-2"><span>{{elem.yearsOfExperience}}</span></div>
                 <div class="col-1 d-flex">
-                    <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.USERS, elem._id)" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
+                    <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.USERS, elem._id)" *ngIf="elem._id != account.user._id" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
+                    <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.PROFILES)" *ngIf="elem._id == account.user._id" class="image-button" ngbTooltip="Profilo" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
 
                     <!-- Athlete-Coach Link Requests -->
                     <div (click)="sendNotification(NOTIFICATION_TYPE.COACH_REQUEST, elem)" *ngIf="canCoachRequestBeSent(elem)" class="image-button ml-2" ngbTooltip="Richiesta segui coach" placement="left"><img src="assets/icons/actions/add-friend.svg" style="width:20px; height:auto;" ></div>

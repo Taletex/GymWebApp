@@ -38,12 +38,12 @@
                     <span [hidden]="account.user.userType != 'coach'">Atleti</span>
                 </span>
             </a>
-            <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.PROFILES)" 
+            <a (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.PROFILES)"  routerLinkActive="active" routerLink="/userprofile"
                 class="sidebar__element link-button w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
                 [ngClass]="{'active': bActiveList.userprofile}">
                 <img src="assets/icons/sidebar/user.svg" style="width:24px; height:auto;" class="ml-1 mr-2">
                 <span [hidden]="!bExpandedSidebar">Profilo</span>
-            </div>
+            </a>
             <a routerLink="/notifications" routerLinkActive="active"
                 class="sidebar__element link-button position-relative w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
                 [ngClass]="{'active': bActiveList.notifications}">

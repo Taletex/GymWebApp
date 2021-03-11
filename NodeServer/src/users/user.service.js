@@ -5,15 +5,15 @@ const { concat } = require('lodash');
 const MAX_NOTIFICATION_LIST_LENGTH = 100;
 
 const NOTIFICATION_TYPE = {
-    COACH_REQUEST = "coach_request",
-    ATHLETE_REQUEST = "athlete_request",
-    REQUEST_SUCCESS = "request_success",
-    REQUEST_REFUSE = "request_refuse",
-    CANCEL_ATHLETE_TO_COACH_LINK = "cancel_athlete_to_coach_link",
-    CANCEL_COACH_TO_ATHLETE_LINK = "cancel_coach_to_athlete_link",
-    CANCEL_ATHLETE_TO_COACH_LINK_REQUEST = "cancel_athlete_to_coach_link_request",
-    CANCEL_COACH_TO_ATHLETE_LINK_REQUEST = "cancel_coach_to_athlete_link_request",
-    DISMISS = "dismiss"
+    COACH_REQUEST: "coach_request",
+    ATHLETE_REQUEST: "athlete_request",
+    REQUEST_SUCCESS: "request_success",
+    REQUEST_REFUSE: "request_refuse",
+    CANCEL_ATHLETE_TO_COACH_LINK: "cancel_athlete_to_coach_link",
+    CANCEL_COACH_TO_ATHLETE_LINK: "cancel_coach_to_athlete_link",
+    CANCEL_ATHLETE_TO_COACH_LINK_REQUEST: "cancel_athlete_to_coach_link_request",
+    CANCEL_COACH_TO_ATHLETE_LINK_REQUEST: "cancel_coach_to_athlete_link_request",
+    DISMISS: "dismiss"
 }
 
 /** REST CALLBACKS **/
