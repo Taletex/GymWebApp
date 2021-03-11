@@ -41,8 +41,14 @@ const NotificationSchema = mongoose.Schema({
         ref: 'User',
         required: false
     },
-    message: { type: String, required: true }
-
+    destination: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: false
+    },
+    message: { type: String, required: true },
+    bConsumed: { type: Boolean, required: false },
+    creationDate: { type: Date, required: true }
 })
 
 const UserSchema = mongoose.Schema({

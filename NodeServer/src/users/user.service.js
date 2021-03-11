@@ -1,7 +1,8 @@
 const {User, Notification} = require('src/users/user.model.js');
 const _ = require('lodash');
 const { NotificationSchema } = require('./user.model');
-
+const { concat } = require('lodash');
+const MAX_NOTIFICATION_LIST_LENGTH = 100; 
 
 // Create and Save a new User
 exports.createUser = (req, res) => {
@@ -78,7 +79,7 @@ exports.findAllCoaches = (req, res) => {
 
 // Find a single user with a id
 exports.findOneUser = (req, res) => {
-    User.find({_id: req.params._id}).populate({ path: 'personalRecords', populate: { path: 'exercise'}, path: 'notifications' })
+    User.find({_id: req.params._id}).populate({ path: 'personalRecords', populate: { path: 'exercise'}}).populate({ path: 'notifications', populate: { path: 'from'}, populate: {path: 'destination'}})
     .then(user => {
         if(!user) {
             return res.status(404).send({
@@ -119,7 +120,7 @@ exports.updateUser = (req, res) => {
         contacts: req.body.contacts,
         residence: req.body.residence,
         personalRecords: req.body.personalRecords,
-        notifications: req.body.notifications,
+        notifications: _.sortBy(req.body.notifications, ['bConsumed', 'creationDate']),
         coaches: req.body.coaches,
         athletes: req.body.athletes
     }, {new: true})
@@ -131,7 +132,7 @@ exports.updateUser = (req, res) => {
         }
 
         // Returns the user update by finding it in the database
-        User.find({_id: user._id}).populate({ path: 'personalRecords', populate: { path: 'exercise'}, path: 'notifications' })
+        User.find({_id: user._id}).populate({ path: 'personalRecords', populate: { path: 'exercise'}}).populate({ path: 'notifications', populate: { path: 'from'}, populate: {path: 'destination'}})
         .then(users => {
             res.send(users[0]);
         })
@@ -174,21 +175,34 @@ exports.sendNotification = (req, res) => {
     // Validate request
     if(!req.body) { return res.status(400).send({message: "Notification content can not be empty"}); }
     
-    // Find user and update it with the request body
-    User.findOneAndUpdate({_id: req.params._id}, {
-        notifications: req.body,
-    }, {new: true})
-    .then(user => {
-        if(!user) { return res.status(404).send({message: "User not found with id " + req.params._id});}
+    Promise.all([
+        User.findOne({_id: req.params._id})
+    ])
+    .then( ([dUser]) => {
+        if(!dUser) { return res.status(404).send({message: "User not found"});}
 
-        // Returns the user update by finding it in the database
-        User.find({_id: user._id}).populate({ path: 'personalRecords', populate: { path: 'exercise'}, path: 'notifications' })
-        .then(users => {
-            res.send(users[0]);
-        })
+        destinationUser = dUser;
+        destinationUser.notifications.push(req.body);
+        
+       // Find user and update it with the request body
+        User.findOneAndUpdate({_id: req.params._id}, {
+            notifications: _.sortBy(destinationUser.notifications, ['bConsumed', 'creationDate'])
+        }, {new: true})
+        .then(user => {
+            if(!user) { return res.status(404).send({message: "User not found with id " + req.params._id});}
+
+            // Returns the user update by finding it in the database
+            User.find({_id: user._id}).populate({ path: 'personalRecords', populate: { path: 'exercise'}}).populate({ path: 'notifications', populate: { path: 'from'}, populate: {path: 'destination'}})
+            .then(users => {
+                res.send(users[0]);
+            })
+        }).catch(err => {
+            if(err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found with id " + req.params._id }); }
+            return res.status(500).send({ message: "Error updating user with id " + req.params._id });
+        });
     }).catch(err => {
-        if(err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found with id " + req.params._id }); }
-        return res.status(500).send({ message: "Error updating user with id " + req.params._id });
+        if(err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found"}); }
+        return res.status(500).send({ message: "Error updating user in accept notification"});
     });
 };
 
@@ -209,8 +223,8 @@ exports.acceptNotification = (req, res) => {
         destinationUser = dUser;
         fromUser = fUser;
         
-        // 1. delete the notification from the destination user
-        destinationUser.notifications = _.filter(destinationUser.notifications, function(n) { return (n.type+"_"+n.from != req.params._notId); });
+        // 1. in destination user set the notification as consumed and pop exceeded elements in the notifications list
+        consumeAndCleanNotifications(destinationUser, req.params._notId);
 
         // 2. update destiantion and from coaches and athletes lists
         if(notification.type == 'coach_request') {
@@ -224,17 +238,17 @@ exports.acceptNotification = (req, res) => {
 
         // 3. add a notification to the from user (to inform about the request success)
         let message = "L'utente " + destinationUser.name + " " + destinationUser.surname + " ha accettato la richiesta di " + (notification.type == 'coach_request' ? "coaching (è ora un tuo coach)" : (notification.type == 'athlete_request' ? 'coaching (è ora un tuo atleta)' : ''));
-        fromUser.notifications.push(new Notification({type: 'request_success', from: destinationUser._id, message: message}));
+        fromUser.notifications.push(new Notification({type: 'request_success', from: destinationUser._id, destination: fromUser._id, message: message, bConsumed: false, creationDate: new Date()}));
 
         // 4. update from and destination users
         Promise.all([
             User.findOneAndUpdate({_id: destinationUser._id}, {
-                notifications: destinationUser.notifications,
+                notifications: _.sortBy(destinationUser.notifications, ['bConsumed', 'creationDate']),
                 coaches: destinationUser.coaches,
                 athletes: destinationUser.athletes
             }, {new: true}),
             User.findOneAndUpdate({_id: fromUser._id}, {
-                notifications: fromUser.notifications,
+                notifications: _.sortBy(fromUser.notifications, ['bConsumed', 'creationDate']),
                 coaches: fromUser.coaches,
                 athletes: fromUser.athletes
             }, {new: true})
@@ -243,7 +257,7 @@ exports.acceptNotification = (req, res) => {
             if(!destinationUser || !fromUser) { return res.status(404).send({message: "User not found"});}
 
             // Returns the destinationUser updated by finding it in the database
-            User.find({_id: destinationUser._id}).populate({ path: 'personalRecords', populate: { path: 'exercise'}, path: 'notifications' })
+            User.find({_id: destinationUser._id}).populate({ path: 'personalRecords', populate: { path: 'exercise'}}).populate({ path: 'notifications', populate: { path: 'from'}, populate: {path: 'destination'}})
             .then(users => {
                 res.send(users[0]);
             })
@@ -275,22 +289,22 @@ exports.refuseNotification = (req, res) => {
         destinationUser = dUser;
         fromUser = fUser;
         
-        // 1. delete the notification from the destination user
-        destinationUser.notifications = _.filter(destinationUser.notifications, function(n) { return (n.type+"_"+n.from != req.params._notId); });
+        // 1. in destination user set the notification as consumed and pop exceeded elements in the notifications list
+        consumeAndCleanNotifications(destinationUser, req.params._notId);
 
         // 2. add a notification to the from user (to inform about the refused request)
         let message = "L'utente " + destinationUser.name + " " + destinationUser.surname + " ha RIFIUTATO la richiesta di " + (notification.type == 'coach_request' ? "seguirti come coach" : (notification.type == 'athlete_request' ? 'essere seguito come atleta' : ''));
-        fromUser.notifications.push(new Notification({type: 'request_refused', from: destinationUser._id, message: message}));
+        fromUser.notifications.push(new Notification({type: 'request_refused', from: destinationUser._id, destination: fromUser._id, message: message, bConsumed: false, creationDate: new Date()}));
 
         // 3. update from and destination users
         Promise.all([
             User.findOneAndUpdate({_id: destinationUser._id}, {
-                notifications: destinationUser.notifications,
+                notifications: _.sortBy(destinationUser.notifications, ['bConsumed', 'creationDate']),
                 coaches: destinationUser.coaches,
                 athletes: destinationUser.athletes
             }, {new: true}),
             User.findOneAndUpdate({_id: fromUser._id}, {
-                notifications: fromUser.notifications,
+                notifications: _.sortBy(fromUser.notifications, ['bConsumed', 'creationDate']),
                 coaches: fromUser.coaches,
                 athletes: fromUser.athletes
             }, {new: true})
@@ -299,7 +313,7 @@ exports.refuseNotification = (req, res) => {
             if(!destinationUser || !fromUser) { return res.status(404).send({message: "User not found"});}
 
             // Returns the destinationUser updated by finding it in the database
-            User.find({_id: destinationUser._id}).populate({ path: 'personalRecords', populate: { path: 'exercise'}, path: 'notifications' })
+            User.find({_id: destinationUser._id}).populate({ path: 'personalRecords', populate: { path: 'exercise'}}).populate({ path: 'notifications', populate: { path: 'from'}, populate: {path: 'destination'}})
             .then(users => {
                 res.send(users[0]);
             })
@@ -317,8 +331,6 @@ exports.refuseNotification = (req, res) => {
 
 exports.dismissNotification = (req, res) => {
     let destinationUser;
-    let fromUser;
-    let notification = req.body;
 
     // Find destination user
     Promise.all([
@@ -329,13 +341,13 @@ exports.dismissNotification = (req, res) => {
 
         destinationUser = dUser;
         
-        // 1. delete the notification from the destination user
-        destinationUser.notifications = _.filter(destinationUser.notifications, function(n) { return (n.type+"_"+n.from != req.params._notId); });
+       // 1. in destination user set the notification as consumed and pop exceeded elements in the notifications list
+       consumeAndCleanNotifications(destinationUser, req.params._notId);
 
         // 2. update destination user
         Promise.all([
             User.findOneAndUpdate({_id: destinationUser._id}, {
-                notifications: destinationUser.notifications,
+                notifications: _.sortBy(destinationUser.notifications, ['bConsumed', 'creationDate']),
                 coaches: destinationUser.coaches,
                 athletes: destinationUser.athletes
             }, {new: true})
@@ -344,7 +356,7 @@ exports.dismissNotification = (req, res) => {
             if(!destinationUser) { return res.status(404).send({message: "User not found"});}
 
             // Returns the destinationUser updated by finding it in the database
-            User.find({_id: destinationUser._id}).populate({ path: 'personalRecords', populate: { path: 'exercise'}, path: 'notifications' })
+            User.find({_id: destinationUser._id}).populate({ path: 'personalRecords', populate: { path: 'exercise'}}).populate({ path: 'notifications', populate: { path: 'from'}, populate: {path: 'destination'}})
             .then(users => {
                 res.send(users[0]);
             })
@@ -353,9 +365,40 @@ exports.dismissNotification = (req, res) => {
             return res.status(500).send({ message: "Error updating user in accept notification"});
         });
 
-
     }).catch(err => {
         if(err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found"}); }
         return res.status(500).send({ message: "Error updating user in accept notification"});
     });
  };
+
+
+
+
+ 
+ /* Utils */
+
+ /**
+  * consumeAndCleanNotifications
+  * This function is used whenever a notifications has to become consumed. 
+  * This function set the notification to consumed and pop the notifications list in the user in order to mantain only MAX_NOTIFICATION_LIST_LENGTH consumed notifications
+  */
+ function consumeAndCleanNotifications(user, consumedNotId) {
+    // Set the notification to consumed
+    (_.find(user.notifications, function(n) { return (n.type+"_"+n.from != consumedNotId); })).bConsumed = true;
+
+    // Split the notifications list in two arrays: one with consumed notifications, one with unconsumed notifications.
+    let notConsumedNotifications = _.filter(user.notifications, function(n) { return !n.bConsumed });
+    let consumedNotifications = _.filter(user.notifications, function(n) { return n.bConsumed });
+
+    // Removes oldest consumed notifications in order to save only the MAX_NOTIFICATION_LIST_LENGTH recent ones
+    if(consumedNotifications.lenght > MAX_NOTIFICATION_LIST_LENGTH) {
+        let outBuffer = consumedNotifications.lenght - MAX_NOTIFICATION_LIST_LENGTH;
+        _.sortBy(consumedNotifications, ['bConsumed', 'creationDate']);
+
+        for(let i=0; i<outBuffer; i++) {
+            consumedNotifications.pop();
+        }
+
+        user.notifications = _.sortBy(notConsumedNotifications.concat(consumedNotifications), ['bConsumed', 'creationDate']);
+    }      
+}

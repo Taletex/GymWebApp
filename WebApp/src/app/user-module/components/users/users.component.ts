@@ -196,10 +196,87 @@ export class UsersComponent implements OnInit {
     return (_.find(this.account.user.athletes, function(a) { return a._id == athlete._id; }) != undefined);
   }
 
-  isRequestYetSent(user: User) {
+  isCoachRequestYetSent(user: User) {
     let userId = this.account.user._id;
-    return (_.find(user.notifications, function(n) { return n.from == userId; }) != undefined);
+    return (
+      (_.find(user.notifications, function(n) { return ((n.type == NOTIFICATION_TYPE.COACH_REQUEST && n.from == userId) ); }) != undefined) ||              // FROM CHECK: check user per user, if in its notification there is one COACH request from the current user 
+      (_.find(this.account.user.notifications, function(n) { return (n.type == NOTIFICATION_TYPE.ATHLETE_REQUEST && n.from == user._id); }) != undefined)   // DESTINATION CHECK: check in the current user if in its notification there is an ATHLETE request from user per user
+    );
+
   }
+
+  isAthleteRequestYetSent(user: User) {
+    let userId = this.account.user._id;
+    return (
+      (_.find(user.notifications, function(n) { return (n.type == NOTIFICATION_TYPE.ATHLETE_REQUEST && n.from == userId); }) != undefined) ||               // FROM CHECK: check user per user, if in its notification there is one ATHLETE request from the current user 
+      (_.find(this.account.user.notifications, function(n) { return (n.type == NOTIFICATION_TYPE.COACH_REQUEST && n.from == user._id); }) != undefined)     // DESTINATION CHECK: check in the current user if in its notification there is a COACH request from user per user
+      );
+  }
+
+  canCoachRequestBeSent(user: User) {
+    return (
+      (user._id != this.account.user._id) && 
+      (user.userType == 'coach' || user.userType == 'both') && 
+      (this.account.user.userType=='athlete' || this.account.user.userType == 'both') && 
+      !this.isCoachInUser(user) && 
+      !this.isCoachRequestYetSent(user)
+    );
+  }
+
+  /** 
+   * Used to check if a cancel athlete to coach link can be sent (used to broke an existing link between athlete and coach, from athlete to coach). 
+   * This kind of request can be sent to an user only if the user checked figures out in the coaches list of the current user  
+   */
+  canCancelAthleteToCoachLinkBeSent(user: User) {
+    return (
+      (user._id != this.account.user._id) &&
+      (_.find(this.account.user.coaches, function(c) { return c._id == user._id; }) != undefined) 
+    );
+  }
+
+  /** 
+   * Used to check if a cancel coach to athlete link can be sent (used to broke an existing link between coach and athlete, from coach to athlete). 
+   * This kind of request can be sent to an user only if the user checked figures out in the athlete list of the current user  
+   */
+  canCancelCoachToAthleteLinkBeSent(user: User) {
+    return (
+      (user._id != this.account.user._id) &&
+      (_.find(this.account.user.athletes, function(a) { return a._id == user._id }) != undefined) 
+    );
+  }
+
+  /** 
+   * Used to check if a cancel athlete to coach link request can be sent (used to cancel a request to create a link between athlete and coach, from athlete to coach). 
+   * This kind of request can be sent to an user only if the user checked figures out in a notification as destination and that notification is a coach_request  
+   */
+  canCancelAthleteToCoachLinkRequestBeSent(user: User) {
+    return (
+      (user._id != this.account.user._id) &&
+      (_.find(user.notifications, function(n) { n.type == NOTIFICATION_TYPE.COACH_REQUEST && n.destination == user._id }) != undefined) 
+    )
+  }
+
+  /** 
+   * Used to check if a cancel coach to athlete link request can be sent (used to cancel a request to create a link between coach and athlete, from coach to athlete). 
+   * This kind of request can be sent to an user only if the user checked figures out in a notification as destination and that notification is an athlete_request  
+   */
+  canCancelCoachToAthleteLinkRequestBeSent(user: User) {
+    return (
+      (user._id != this.account.user._id) &&
+      (_.find(user.notifications, function(n) { n.type == NOTIFICATION_TYPE.ATHLETE_REQUEST && n.destination == user._id }) != undefined)  
+    )
+  }
+
+  canAthleteRequestBeSent(user: User) {
+    return (
+      (user._id != this.account.user._id) && 
+      (user.userType == 'athlete' || user.userType == 'both') && 
+      (this.account.user.userType=='coach' || this.account.user.userType == 'both') && 
+      !this.isAthleteInUser(user) && 
+      !this.isAthleteRequestYetSent(user)
+    );
+  }
+
 
   sendNotification(notificationType: NOTIFICATION_TYPE, destinationUser: User) {
     let notificationMessage;
@@ -214,9 +291,8 @@ export class UsersComponent implements OnInit {
         break;
     }
 
-    newNotification = new Notification(notificationType, this.account.user._id, notificationMessage);
+    newNotification = new Notification(notificationType, this.account.user._id, destinationUser._id, notificationMessage, false, new Date());
     
-
     this.bLoading = true;
     this.httpService.sendNotification(destinationUser._id, newNotification)
     .subscribe(
@@ -232,5 +308,66 @@ export class UsersComponent implements OnInit {
         console.log(error.error.message);
       });
   }
+  
 
+  cancelAthleteCoachLink(notificationType: NOTIFICATION_TYPE, destinationUser: User) {
+    let notificationMessage;
+    let newNotification;
+
+    switch(notificationType) {
+      case NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK:
+        notificationMessage = "Legame atleta-coach eliminato da parte dell'atleta " + this.account.user.name + " " + this.account.user.surname;
+        break;
+      case NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK:
+        notificationMessage = "Legame coach-atleta eliminato da parte del coach " + this.account.user.name + " " + this.account.user.surname;
+    }
+
+    newNotification = new Notification(notificationType, this.account.user._id, destinationUser._id, notificationMessage, false, new Date());
+    
+    this.bLoading = true;
+    this.httpService.sendNotification(destinationUser._id, newNotification)
+    .subscribe(
+      (data: any) => {
+        console.log(data);
+        destinationUser.notifications.push(newNotification);      // This is done to avoid retrieving again the list of user updated with the new notification (used to show/hide action buttons on the UI)
+        this.bLoading = false;
+        this.toastr.success('Richiesta correttamente inviata!');
+      },
+      (error: HttpErrorResponse) => {
+        this.bLoading = false;
+        this.toastr.error("Si è verificato un errore durante l'invio della richiesta");
+        console.log(error.error.message);
+      });
+  }
+  
+
+  cancelAthleteCoachLinkRequest(notificationType: NOTIFICATION_TYPE, destinationUser: User) {
+    let notification;
+
+    // Find the notification which need to be canceled
+    switch(notificationType) {
+      case NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK_REQUEST:
+        notification = _.find(destinationUser.notifications, function(n) { n.type == NOTIFICATION_TYPE.COACH_REQUEST && n.destination == destinationUser._id })
+        break;
+      case NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK_REQUEST:
+        notification =  _.find(destinationUser.notifications, function(n) { n.type == NOTIFICATION_TYPE.ATHLETE_REQUEST && n.destination == destinationUser._id });
+        break
+    }
+
+    // Send the dismiss request
+    this.bLoading = true;
+    this.httpService.dismissNotification(destinationUser._id, notification)
+    .subscribe(
+      (data: any) => {
+        console.log(data);
+        // this.account.user.notifications.splice(notificationIndex, 1);      // This is done to avoid retrieving again the list of user updated with the new notification (used to show/hide action buttons on the UI)
+        this.bLoading = false;
+        this.toastr.success('Richiesta di collegamento correttamente eliminata!');
+      },
+      (error: HttpErrorResponse) => {
+        this.bLoading = false;
+        this.toastr.error("Si è verificato un errore durante l'eliminazione della richiesta di collegamento!");
+        console.log(error.error.message);
+      });
+  }
 }

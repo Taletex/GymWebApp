@@ -133,8 +133,12 @@ export class HttpService {
     return this.http.put<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications/" + notificationId + "/refuse", notification);
   }
 
-  dismissRequest(destinationUserId: string, notification: Notification) {
+  dismissNotification(destinationUserId: string, notification: Notification) {
     let notificationId = notification.type + "_" + notification.from;
     return this.http.put<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications/" + notificationId + "/dismiss", notification);
+  }
+
+  cancelAthleteCoachLink(destinationUserId: string, notification: Notification) {
+    return this.http.put<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/cancelLink", notification);
   }
 }

@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Notification } from '@app/_models/training-model';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { Account, Role } from '@app/_models';
+import { NOTIFICATION_TYPE } from '@app/_services/general-service/general-service.service';
 import * as _ from "lodash";
 
 @Component({
@@ -20,6 +21,7 @@ export class NotificationsComponent implements OnInit {
   public account: Account;
   public Role = Role;
   public sortListStatus: any;
+  public NOTIFICATION_TYPE = NOTIFICATION_TYPE;
 
 
   constructor(private httpService: HttpService, private toastr: ToastrService, private accountService: AccountService) { 
@@ -102,9 +104,9 @@ export class NotificationsComponent implements OnInit {
   }
 
   
-  dismissRequest(notification: Notification, notificationIndex: number) {
+  dismissNotification(notification: Notification, notificationIndex: number) {
     this.bLoading = true;
-    this.httpService.dismissRequest(this.account.user._id, notification)
+    this.httpService.dismissNotification(this.account.user._id, notification)
     .subscribe(
       (data: any) => {
         console.log(data);
