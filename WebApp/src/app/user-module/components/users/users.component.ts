@@ -325,7 +325,7 @@ export class UsersComponent implements OnInit {
     newNotification = new Notification(notificationType, this.account.user._id, destinationUser._id, notificationMessage, false, new Date());
     
     this.bLoading = true;
-    this.httpService.sendNotification(destinationUser._id, newNotification)
+    this.httpService.cancelAthleteCoachLink(destinationUser._id, newNotification)
     .subscribe(
       (data: any) => {
         console.log(data);

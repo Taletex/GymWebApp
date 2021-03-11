@@ -38,6 +38,9 @@ router.put('/:_id/notifications/:_notId/accept', userService.acceptNotification)
 // Refuse a notification for a given User
 router.put('/:_id/notifications/:_notId/refuse', userService.refuseNotification);
 
+// Cancel a link beteen coach and athlete
+router.put('/:_id/notifications/cancelLink', userService.cancelAthleteCoachLink);
+
 // Dismiss a notification for a given User
 router.put('/:_id/notifications/:_notId/dismiss', userService.dismissNotification);
 
