@@ -5,6 +5,14 @@
         <div class="col-1 d-flex align-items-center border border-left-0 border-top-0 border-bottom-0">
             <h6 class="m-0">Filtri</h6><span class="fa fa-filter ml-2" style="font-size: 20px;"></span>
         </div>
+        <div class="col-2 form-group pl-2 pr-1 m-0">
+            <label for="filterNotListType" class="col-form-label col-form-label-sm p-0 text-muted">Mostra notifiche</label>
+            <select [(ngModel)]="filters.filterNotListType" class="form-control form-control-sm cursor-pointer" id="filterNotListType" name="filterNotListType" (change)="filterNotifications($event)">
+                <option [value]="''">Tutte</option>
+                <option [value]="'consumed'">Non Lette</option>
+                <option [value]="'notConsumed'">Lette</option>
+            </select>
+        </div>
         <div class="col-3 form-group pl-2 pr-1 m-0">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Tipo</label>
             <div class="input-group">

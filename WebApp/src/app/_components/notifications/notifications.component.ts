@@ -25,9 +25,11 @@ export class NotificationsComponent implements OnInit {
 
 
   constructor(private httpService: HttpService, private toastr: ToastrService, private accountService: AccountService) { 
+
+    // Init account and notification list
     this.accountService.account.subscribe(x => {
       this.account = x
-      this.notificationList = _.cloneDeep(this.account.user.notifications);
+      this.notificationList = _.cloneDeep(_.sortBy(this.account.user.notifications, ['bConsumed', 'creationDate']));
     });
     
     // Init filters and sort status
@@ -44,6 +46,7 @@ export class NotificationsComponent implements OnInit {
     let filters = _.cloneDeep(this.filters);
     this.notificationList = _.filter(this.account.user.notifications, function(e) {
       return (
+        (filters.filterNotListType == 'consumed' ? e.bConsumed : (filters.filterNotListType == 'notConsumed' ? !e.bConsumed : true))
         (filters.type != '' ? e.type.toLowerCase().includes(filters.type.toLowerCase()) : true) &&
         (filters.from != '' ? e.from.toLowerCase().includes(filters.from.toLowerCase()) : true) &&
         (filters.message != '' ? e.message.toLowerCase().includes(filters.message.toLowerCase()) : true)
@@ -52,7 +55,7 @@ export class NotificationsComponent implements OnInit {
   }
 
   resetFilters() {
-    this.filters = { type: '', from: '', message: ''};
+    this.filters = { filterNotListType: '', type: '', from: '', message: ''};
   }
 
   
