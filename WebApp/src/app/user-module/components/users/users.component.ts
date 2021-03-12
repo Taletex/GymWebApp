@@ -15,8 +15,8 @@ import * as _ from "lodash";
   styleUrls: ['./users.component.scss']
 })
 export class UsersComponent implements OnInit {
-  public originalUserList: Array<User> = [];
-  public userList: Array<User> = [];
+  public originalUserList: Array<any> = [];
+  public userList: Array<any> = [];
   public filters: any = {};
   public bLoading: boolean = false;
   public PAGEMODE = PAGEMODE;
@@ -31,8 +31,21 @@ export class UsersComponent implements OnInit {
     this.resetFilters();
     this.accountService.account.subscribe(x => this.account = x);
     
-    // Init user list
-    // TODO: Improvement. Settare una preferenza da salvare nel browser che definisce l'attuale ruolo dell'account
+    this.setUserList(null);
+
+    // Init filters and sort status
+    this.resetFilters();
+    this.resetSortStatus();
+  }
+
+  ngOnInit() {}
+
+  // From services
+  openPageWithMode(mode: PAGEMODE, page: PAGES, id?: string) {
+    this.generalService.openPageWithMode(mode, page, id);
+  } 
+
+  initFullUserList() {
     switch(this.account.user.userType) {
       case 'coach': {
         this.getAthletes();
@@ -47,18 +60,7 @@ export class UsersComponent implements OnInit {
         break;
       }
     }
-
-    // Init filters and sort status
-    this.resetFilters();
-    this.resetSortStatus();
   }
-
-  ngOnInit() {}
-
-  // From services
-  openPageWithMode(mode: PAGEMODE, page: PAGES, id?: string) {
-    this.generalService.openPageWithMode(mode, page, id);
-  } 
 
   getUsers() {
     this.bLoading = true;
@@ -168,8 +170,22 @@ export class UsersComponent implements OnInit {
     });
   }
 
+  setUserList(event: any) {
+    if(this.filters.filterUserListType == 'links') {
+      this.bLoading = true;
+      this.originalUserList = _.sortBy(this.account.user.athletes.concat(this.account.user.coaches), ['name', 'surname']);
+      this.userList = _.cloneDeep(this.originalUserList);
+      this.resetFilters();
+      console.log(this.userList);
+      this.bLoading = false;
+    } else if(this.filters.filterUserListType == 'all') {
+      this.initFullUserList();
+    }
+  }
+
   resetFilters() {
-    this.filters = { name: '', surname: '', userType: '', dateOfBirth: '', sex: '', bodyWeight: null, yearsOfExperience: null};
+    let filterUserListType = (this.filters == null || this.filters.filterUserListType == null) ? 'links' : this.filters.filterUserListType;
+    this.filters = { filterUserListType: filterUserListType, name: '', surname: '', userType: '', dateOfBirth: '', sex: '', bodyWeight: null, yearsOfExperience: null};
   }
  
   resetSortStatus() {
@@ -298,7 +314,7 @@ export class UsersComponent implements OnInit {
     .subscribe(
       (data: any) => {
         console.log(data);
-        destinationUser.notifications.push(newNotification);      // This is done to avoid retrieving again the list of user updated with the new notification (used to show/hide action buttons on the UI)
+        this.account.user = data;
         this.bLoading = false;
         this.toastr.success('Richiesta correttamente inviata!');
       },
@@ -329,7 +345,7 @@ export class UsersComponent implements OnInit {
     .subscribe(
       (data: any) => {
         console.log(data);
-        destinationUser.notifications.push(newNotification);      // This is done to avoid retrieving again the list of user updated with the new notification (used to show/hide action buttons on the UI)
+        this.account.user = data;
         this.bLoading = false;
         this.toastr.success('Richiesta correttamente inviata!');
       },
@@ -360,7 +376,7 @@ export class UsersComponent implements OnInit {
     .subscribe(
       (data: any) => {
         console.log(data);
-        // this.account.user.notifications.splice(notificationIndex, 1);      // This is done to avoid retrieving again the list of user updated with the new notification (used to show/hide action buttons on the UI)
+        this.account.user = data;
         this.bLoading = false;
         this.toastr.success('Richiesta di collegamento correttamente eliminata!');
       },

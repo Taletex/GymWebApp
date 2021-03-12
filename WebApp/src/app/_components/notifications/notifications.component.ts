@@ -75,7 +75,7 @@ export class NotificationsComponent implements OnInit {
     .subscribe(
       (data: any) => {
         console.log(data);
-        this.account.user.notifications.splice(notificationIndex, 1);      // This is done to avoid retrieving again the list of user updated with the new notification (used to show/hide action buttons on the UI)
+        this.account.user = data;
         this.bLoading = false;
         this.toastr.success('Richiesta correttamente accettata!');
       },
@@ -92,7 +92,7 @@ export class NotificationsComponent implements OnInit {
     .subscribe(
       (data: any) => {
         console.log(data);
-        this.account.user.notifications.splice(notificationIndex, 1);      // This is done to avoid retrieving again the list of user updated with the new notification (used to show/hide action buttons on the UI)
+        this.account.user = data;
         this.bLoading = false;
         this.toastr.success('Richiesta correttamente rifiutata!');
       },
@@ -110,7 +110,7 @@ export class NotificationsComponent implements OnInit {
     .subscribe(
       (data: any) => {
         console.log(data);
-        this.account.user.notifications.splice(notificationIndex, 1);      // This is done to avoid retrieving again the list of user updated with the new notification (used to show/hide action buttons on the UI)
+        this.account.user = data;
         this.bLoading = false;
         this.toastr.success('Richiesta visualizzata!');
       },
