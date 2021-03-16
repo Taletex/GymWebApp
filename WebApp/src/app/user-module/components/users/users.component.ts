@@ -126,6 +126,15 @@ export class UsersComponent implements OnInit {
     this.originalUserList[_.findIndex(this.originalUserList, function(u) { return u._id == user._id })] = _.cloneDeep(user);
     this.userList[_.findIndex(this.userList, function(u) { return u._id == user._id })] = _.cloneDeep(user);
   }
+
+  updateUserInUserListsAfterLinkCancellation(user: User) {
+    this.originalUserList[_.findIndex(this.originalUserList, function(u) { return u._id == user._id })] = _.cloneDeep(user);
+
+    if(this.filters.filterUserListType == 'links')
+      this.userList.splice(_.findIndex(this.userList, function(u) { return u._id == user._id }), 1);
+    else
+      this.userList[_.findIndex(this.userList, function(u) { return u._id == user._id })] = _.cloneDeep(user);
+  }
   
   /* createUser() {
     this.bLoading = true;
@@ -312,7 +321,7 @@ export class UsersComponent implements OnInit {
         break;
     }
 
-    newNotification = new Notification("", notificationType, this.account.user._id, destinationUser._id, notificationMessage, false, new Date());
+    newNotification = new Notification("", notificationType, this.account.user._id, destinationUser._id, notificationMessage, false, new Date()); // Note: id is empty because it is assigned from the back-end
     
     this.bLoading = true;
     this.httpService.sendNotification(destinationUser._id, newNotification)
@@ -343,7 +352,7 @@ export class UsersComponent implements OnInit {
         notificationMessage = "Legame coach-atleta eliminato da parte del coach " + this.account.user.name + " " + this.account.user.surname;
     }
 
-    newNotification = new Notification("", notificationType, this.account.user._id, destinationUser._id, notificationMessage, false, new Date());
+    newNotification = new Notification("", notificationType, this.account.user._id, destinationUser._id, notificationMessage, false, new Date()); // Note: id is empty because it is assigned from the back-end
     
     this.bLoading = true;
     this.httpService.cancelAthleteCoachLink(destinationUser._id, newNotification)
@@ -355,7 +364,7 @@ export class UsersComponent implements OnInit {
         if(data.fromUser != null)
           this.account.user = data.fromUser;
         if(data.destUser != null)
-          this.updateUserInUserLists(data.destUser);
+          this.updateUserInUserListsAfterLinkCancellation(data.destUser);
 
         this.bLoading = false;
         this.toastr.success('Richiesta correttamente inviata!');

@@ -9,7 +9,7 @@
             <label for="filterNotListType" class="col-form-label col-form-label-sm p-0 text-muted">Mostra notifiche</label>
             <select [(ngModel)]="filters.filterNotListType" class="form-control form-control-sm cursor-pointer" id="filterNotListType" name="filterNotListType" (change)="filterNotifications($event)">
                 <option [value]="''">Tutte</option>
-                <option [value]="'notConsumed'">Non Lette</option>
+                <option [value]="'notConsumed'">Nuove</option>
                 <option [value]="'consumed'">Lette</option>
             </select>
         </div>
@@ -43,7 +43,7 @@
         <div class="maincontainer__header card-header pl-2 pr-3 border border-secondary border-top-0 border-left-0 border-right-0 d-flex flex-column bg-dark text-white">
             <div class="col-12 row m-0 p-0 d-flex align-items-center justify-content-center">
                 <div class="col-1 d-flex align-items-center cursor-pointer" (click)="sortListByField('bConsumed')">
-                    <div><b class="d-block">Letta</b></div>
+                    <div><b class="d-block">Nuova</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['bConsumed']==null, 'fa fa-long-arrow-down': sortListStatus['bConsumed']==false, 'fa fa-long-arrow-up': sortListStatus['bConsumed']==true}"></span></div>
                 </div>
                 <div class="col-3 d-flex align-items-center cursor-pointer" (click)="sortListByField('type')">
@@ -70,10 +70,9 @@
                 <div [hidden]="filters.filterNotListType == 'notConsumed'" class="badge badge-light mt-2"><h6>Non ci sono notifiche!</h6></div>
             </div>
             <div class="body__element list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1" 
-                 *ngFor="let elem of notificationList; index as notificationIndex" [ngClass]="{'disabled': elem.bConsumed, 'bg-cyan': !elem.bConsumed}">
+                 *ngFor="let elem of notificationList; index as notificationIndex" [ngClass]="{'disabled': elem.bConsumed, 'list-group-item-cyan': !elem.bConsumed, 'bg-custom-lightgray': elem.bConsumed}">
                 <div class="col-1">
-                    <img [hidden]="elem.bConsumed" src="assets/icons/misc/checkbox-unchecked.svg" style="width:30px; height:auto;">
-                    <img [hidden]="!elem.bConsumed" src="assets/icons/misc/checkbox-checked.svg" style="width:30px; height:auto;">
+                    <img [hidden]="elem.bConsumed" src="assets/icons/misc/dot.svg" style="width:30px; height:auto;">
                 </div>
                 <div class="col-3">
                     <span>{{elem.type}}</span>
