@@ -4,6 +4,7 @@ import { AccountService } from '@app/_services/account-service/account-service.s
 
 import { Account, Role } from '@app/_models';
 import { GeneralService, PAGEMODE, PAGES } from '@app/_services/general-service/general-service.service';
+import * as _ from "lodash";
 
 @Component({
   selector: 'app-sidebar',
@@ -15,6 +16,7 @@ export class SidebarComponent implements OnInit {
   public bActiveList = {homepage: false, trainings: false, exercises: false, users: false, notifications: false, userprofile: false, admin: false};
   public bExpandedSidebar;
   public account: Account;
+  public unreadNotificationLength: number;
   public Role = Role;
 
   public PAGEMODE = PAGEMODE;
@@ -23,7 +25,10 @@ export class SidebarComponent implements OnInit {
   constructor(public router: Router, private accountService: AccountService, private generalService: GeneralService) {
     this.bExpandedSidebar = true;
     this.bActiveList[(this.router.url).split('/')[1]] = true;
-    this.accountService.account.subscribe(x => this.account = x);
+    this.accountService.account.subscribe(x => {
+      this.account = x
+      this.unreadNotificationLength = (_.filter(this.account.user.notifications, function(n) { return !n.bConsumed; })).length;
+    });
   }
 
   ngOnInit() {

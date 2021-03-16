@@ -47,7 +47,7 @@
             <a routerLink="/notifications" routerLinkActive="active"
                 class="sidebar__element link-button position-relative w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
                 [ngClass]="{'active': bActiveList.notifications}">
-                <img src="assets/icons/sidebar/bell.svg" style="width:24px; height:auto;" class="ml-1 mr-2"><small class="position-absolute" style="left: 32px; top: 0px; z-index:2;">{{account.user.notifications.length}}</small>
+                <img src="assets/icons/sidebar/bell.svg" style="width:24px; height:auto;" class="ml-1 mr-2"><small class="position-absolute" style="left: 32px; top: 0px; z-index:2;">{{unreadNotificationLength}}</small>
                 <span [hidden]="!bExpandedSidebar">Notifiche </span>
             </a>
             <a routerLink="/admin" routerLinkActive="active" *ngIf="account.role == Role.Admin"

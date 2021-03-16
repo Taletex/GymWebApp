@@ -78,7 +78,7 @@ export class UsersComponent implements OnInit {
         (error: HttpErrorResponse) => {
           this.bLoading = false;
           this.toastr.error('An error occurred while loading the user list!');
-          console.log(error.error.message);
+          console.log(error);
         });
   }
 
@@ -98,7 +98,7 @@ export class UsersComponent implements OnInit {
       (error: HttpErrorResponse) => {
         this.bLoading = false;
         this.toastr.error('An error occurred while loading the athlete list!');
-        console.log(error.error.message);
+        console.log(error);
       });
   }
 
@@ -118,8 +118,13 @@ export class UsersComponent implements OnInit {
       (error: HttpErrorResponse) => {
         this.bLoading = false;
         this.toastr.error('An error occurred while loading the coach list!');
-        console.log(error.error.message);
+        console.log(error);
       });
+  }
+
+  updateUserInUserLists(user: User) {
+    this.originalUserList[_.findIndex(this.originalUserList, function(u) { return u._id == user._id })] = _.cloneDeep(user);
+    this.userList[_.findIndex(this.userList, function(u) { return u._id == user._id })] = _.cloneDeep(user);
   }
   
   /* createUser() {
@@ -134,7 +139,7 @@ export class UsersComponent implements OnInit {
         (error: HttpErrorResponse) => {
           this.bLoading = false;
           this.toastr.error('An error occurred while creating the user!');
-          console.log(error.error.message);
+          console.log(error);
         });
   } */
 
@@ -150,7 +155,7 @@ export class UsersComponent implements OnInit {
         (error: HttpErrorResponse) => {
           this.bLoading = false;
           this.toastr.error('An error occurred while deleting the user!');
-          console.log(error.error.message);
+          console.log(error);
         });
   } */
 
@@ -215,8 +220,8 @@ export class UsersComponent implements OnInit {
   isCoachRequestYetSent(user: User) {
     let userId = this.account.user._id;
     return (
-      (_.find(user.notifications, function(n) { return ((n.type == NOTIFICATION_TYPE.COACH_REQUEST && n.from == userId) ); }) != undefined) ||              // FROM CHECK: check user per user, if in its notification there is one COACH request from the current user 
-      (_.find(this.account.user.notifications, function(n) { return (n.type == NOTIFICATION_TYPE.ATHLETE_REQUEST && n.from == user._id); }) != undefined)   // DESTINATION CHECK: check in the current user if in its notification there is an ATHLETE request from user per user
+      (_.find(user.notifications, function(n) { return (!n.bConsumed && n.type == NOTIFICATION_TYPE.COACH_REQUEST && n.from._id == userId); }) != undefined) ||                   // FROM CHECK: check user per user, if in its notification there is one COACH request from the current user 
+      (_.find(this.account.user.notifications, function(n) { return (!n.bConsumed && n.type == NOTIFICATION_TYPE.ATHLETE_REQUEST && n.from._id == user._id); }) != undefined)     // DESTINATION CHECK: check in the current user if in its notification there is an ATHLETE request from user per user
     );
 
   }
@@ -224,8 +229,8 @@ export class UsersComponent implements OnInit {
   isAthleteRequestYetSent(user: User) {
     let userId = this.account.user._id;
     return (
-      (_.find(user.notifications, function(n) { return (n.type == NOTIFICATION_TYPE.ATHLETE_REQUEST && n.from == userId); }) != undefined) ||               // FROM CHECK: check user per user, if in its notification there is one ATHLETE request from the current user 
-      (_.find(this.account.user.notifications, function(n) { return (n.type == NOTIFICATION_TYPE.COACH_REQUEST && n.from == user._id); }) != undefined)     // DESTINATION CHECK: check in the current user if in its notification there is a COACH request from user per user
+      (_.find(user.notifications, function(n) { return (!n.bConsumed &&  n.type == NOTIFICATION_TYPE.ATHLETE_REQUEST && n.from._id == userId); }) != undefined) ||               // FROM CHECK: check user per user, if in its notification there is one ATHLETE request from the current user 
+      (_.find(this.account.user.notifications, function(n) { return (!n.bConsumed &&  n.type == NOTIFICATION_TYPE.COACH_REQUEST && n.from._id == user._id); }) != undefined)     // DESTINATION CHECK: check in the current user if in its notification there is a COACH request from user per user
       );
   }
 
@@ -236,6 +241,16 @@ export class UsersComponent implements OnInit {
       (this.account.user.userType=='athlete' || this.account.user.userType == 'both') && 
       !this.isCoachInUser(user) && 
       !this.isCoachRequestYetSent(user)
+    );
+  }
+
+  canAthleteRequestBeSent(user: User) {
+    return (
+      (user._id != this.account.user._id) && 
+      (user.userType == 'athlete' || user.userType == 'both') && 
+      (this.account.user.userType=='coach' || this.account.user.userType == 'both') && 
+      !this.isAthleteInUser(user) && 
+      !this.isAthleteRequestYetSent(user)
     );
   }
 
@@ -268,7 +283,7 @@ export class UsersComponent implements OnInit {
   canCancelAthleteToCoachLinkRequestBeSent(user: User) {
     return (
       (user._id != this.account.user._id) &&
-      (_.find(user.notifications, function(n) { n.type == NOTIFICATION_TYPE.COACH_REQUEST && n.destination == user._id }) != undefined) 
+      (_.find(user.notifications, function(n) { !n.bConsumed && n.type == NOTIFICATION_TYPE.COACH_REQUEST && n.destination._id == user._id }) != undefined) 
     )
   }
 
@@ -279,18 +294,8 @@ export class UsersComponent implements OnInit {
   canCancelCoachToAthleteLinkRequestBeSent(user: User) {
     return (
       (user._id != this.account.user._id) &&
-      (_.find(user.notifications, function(n) { n.type == NOTIFICATION_TYPE.ATHLETE_REQUEST && n.destination == user._id }) != undefined)  
+      (_.find(user.notifications, function(n) { !n.bConsumed && n.type == NOTIFICATION_TYPE.ATHLETE_REQUEST && n.destination._id == user._id }) != undefined)  
     )
-  }
-
-  canAthleteRequestBeSent(user: User) {
-    return (
-      (user._id != this.account.user._id) && 
-      (user.userType == 'athlete' || user.userType == 'both') && 
-      (this.account.user.userType=='coach' || this.account.user.userType == 'both') && 
-      !this.isAthleteInUser(user) && 
-      !this.isAthleteRequestYetSent(user)
-    );
   }
 
 
@@ -307,21 +312,21 @@ export class UsersComponent implements OnInit {
         break;
     }
 
-    newNotification = new Notification(notificationType, this.account.user._id, destinationUser._id, notificationMessage, false, new Date());
+    newNotification = new Notification("", notificationType, this.account.user._id, destinationUser._id, notificationMessage, false, new Date());
     
     this.bLoading = true;
     this.httpService.sendNotification(destinationUser._id, newNotification)
     .subscribe(
       (data: any) => {
-        console.log(data);
-        this.account.user = data;
+        console.log("Send Notification destination User: " + data);
+        this.updateUserInUserLists(data);
         this.bLoading = false;
         this.toastr.success('Richiesta correttamente inviata!');
       },
       (error: HttpErrorResponse) => {
         this.bLoading = false;
         this.toastr.error("Si è verificato un errore durante l'invio della richiesta");
-        console.log(error.error.message);
+        console.log(error);
       });
   }
   
@@ -338,21 +343,27 @@ export class UsersComponent implements OnInit {
         notificationMessage = "Legame coach-atleta eliminato da parte del coach " + this.account.user.name + " " + this.account.user.surname;
     }
 
-    newNotification = new Notification(notificationType, this.account.user._id, destinationUser._id, notificationMessage, false, new Date());
+    newNotification = new Notification("", notificationType, this.account.user._id, destinationUser._id, notificationMessage, false, new Date());
     
     this.bLoading = true;
     this.httpService.cancelAthleteCoachLink(destinationUser._id, newNotification)
     .subscribe(
       (data: any) => {
-        console.log(data);
-        this.account.user = data;
+        console.log("cancelAthleteCoachLink result data: " + data);
+
+        // Update from user (current user) and dest user
+        if(data.fromUser != null)
+          this.account.user = data.fromUser;
+        if(data.destUser != null)
+          this.updateUserInUserLists(data.destUser);
+
         this.bLoading = false;
         this.toastr.success('Richiesta correttamente inviata!');
       },
       (error: HttpErrorResponse) => {
         this.bLoading = false;
         this.toastr.error("Si è verificato un errore durante l'invio della richiesta");
-        console.log(error.error.message);
+        console.log(error);
       });
   }
   
@@ -363,10 +374,10 @@ export class UsersComponent implements OnInit {
     // Find the notification which need to be canceled
     switch(notificationType) {
       case NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK_REQUEST:
-        notification = _.find(destinationUser.notifications, function(n) { n.type == NOTIFICATION_TYPE.COACH_REQUEST && n.destination == destinationUser._id })
+        notification = _.find(destinationUser.notifications, function(n) { n.type == NOTIFICATION_TYPE.COACH_REQUEST && n.destination._id == destinationUser._id })
         break;
       case NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK_REQUEST:
-        notification =  _.find(destinationUser.notifications, function(n) { n.type == NOTIFICATION_TYPE.ATHLETE_REQUEST && n.destination == destinationUser._id });
+        notification =  _.find(destinationUser.notifications, function(n) { n.type == NOTIFICATION_TYPE.ATHLETE_REQUEST && n.destination._id == destinationUser._id });
         break
     }
 
@@ -375,15 +386,18 @@ export class UsersComponent implements OnInit {
     this.httpService.dismissNotification(destinationUser._id, notification)
     .subscribe(
       (data: any) => {
-        console.log(data);
-        this.account.user = data;
+        console.log("dismissNotification result data: " + data);
+
+        // Update destination user (not the current user)
+        this.updateUserInUserLists(data);
+
         this.bLoading = false;
         this.toastr.success('Richiesta di collegamento correttamente eliminata!');
       },
       (error: HttpErrorResponse) => {
         this.bLoading = false;
         this.toastr.error("Si è verificato un errore durante l'eliminazione della richiesta di collegamento!");
-        console.log(error.error.message);
+        console.log(error);
       });
   }
 }

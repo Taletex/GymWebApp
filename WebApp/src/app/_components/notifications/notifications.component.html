@@ -70,9 +70,10 @@
                 <div [hidden]="filters.filterNotListType == 'notConsumed'" class="badge badge-light mt-2"><h6>Non ci sono notifiche!</h6></div>
             </div>
             <div class="body__element list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1" 
-                 *ngFor="let elem of notificationList; index as notificationIndex" [ngClass]="{'disabled': elem.bConsumed}">
+                 *ngFor="let elem of notificationList; index as notificationIndex" [ngClass]="{'disabled': elem.bConsumed, 'bg-cyan': !elem.bConsumed}">
                 <div class="col-1">
-                    <span>{{elem.bConsumed ? "Si" : "No"}}</span>
+                    <img [hidden]="elem.bConsumed" src="assets/icons/misc/checkbox-unchecked.svg" style="width:30px; height:auto;">
+                    <img [hidden]="!elem.bConsumed" src="assets/icons/misc/checkbox-checked.svg" style="width:30px; height:auto;">
                 </div>
                 <div class="col-3">
                     <span>{{elem.type}}</span>

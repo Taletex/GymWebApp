@@ -211,7 +211,7 @@ exports.sendNotification = (req, res) => {
             if (!dUser) { return res.status(404).send({ message: "User not found" }); }
 
             destinationUser = dUser;
-            destinationUser.notifications.push(req.body);
+            destinationUser.notifications.push(new Notification({ type: req.body.type, from: req.body.from, destination: req.body.destination, message: req.body.message, bConsumed: req.body.bConsumed, creationDate: req.body.creationDate }));
 
             // Find user and update it with the request body
             User.findOneAndUpdate({ _id: req.params._id }, {
@@ -329,7 +329,7 @@ exports.refuseNotification = (req, res) => {
 
             // 2. add a notification to the from user (to inform about the refused request)
             let message = "L'utente " + destinationUser.name + " " + destinationUser.surname + " ha RIFIUTATO la richiesta di " + (notification.type == NOTIFICATION_TYPE.COACH_REQUEST ? "seguirti come coach" : (notification.type == NOTIFICATION_TYPE.ATHLETE_REQUEST ? 'essere seguito come atleta' : ''));
-            fromUser.notifications.push(new Notification({ type: NOTIFICATION_TYPE.REQUEST_REFUSED, from: destinationUser._id, destination: fromUser._id, message: message, bConsumed: false, creationDate: new Date() }));
+            fromUser.notifications.push(new Notification({ type: NOTIFICATION_TYPE.REQUEST_REFUSE, from: destinationUser._id, destination: fromUser._id, message: message, bConsumed: false, creationDate: new Date() }));
 
             // 3. update from and destination users
             Promise.all([
@@ -420,11 +420,11 @@ exports.cancelAthleteCoachLink = (req, res) => {
     // Validate request
     if (!req.body) { return res.status(400).send({ message: "Notification content can not be empty" }); }
 
-    let notification = req.body;
+    let notification = new Notification({ type: req.body.type, from: req.body.from, destination: req.body.destination, message: req.body.message, bConsumed: req.body.bConsumed, creationDate: req.body.creationDate });
     let coachUser;
     let athleteUser;
 
-    Promise.all([
+    Promise.all([ 
         User.findOne({ _id: req.params._id }),
         User.findOne({ _id: notification.from })
     ])
@@ -444,8 +444,8 @@ exports.cancelAthleteCoachLink = (req, res) => {
             }
 
             // 2. Cancel the link between athlete and coach
-            _.remove(coachUser.athletes, function(a) { a == athleteUser._id });
-            _.remove(athleteUser.coaches, function(c) { c == coachUser._id });
+            coachUser.athletes.splice(_.findIndex(coachUser.athletes, function(a) { athleteUser._id.equals(a) }), 1);
+            athleteUser.coaches.splice(_.findIndex(athleteUser.coaches, function(c) { coachUser._id.equals(c) }), 1);
 
             // 3. Add a notification in coach and athlete to notify them about the link cancellation
             coachUser.notifications.push(notification);
@@ -469,13 +469,14 @@ exports.cancelAthleteCoachLink = (req, res) => {
                     if (!cUser || !aUser) { return res.status(404).send({ message: "User not found" }); }
 
                     let fromUser = (cUser._id == notification.from ? cUser : aUser);
+                    let destUser = (cUser._id == notification.destination ? cUser : aUser);
                     // Returns the fromUser (the user who sent this request) updated by finding it in the database
                     User.find({ _id: fromUser._id }).populate({path: 'personalRecords', populate: {path: 'exercise'}})
                                                     .populate({path: 'notifications', populate: {path: 'from'}})
                                                     .populate({path: 'notifications', populate: {path: 'destination'}})
                                                     .populate('coaches').populate('athletes')
                         .then(users => {
-                            res.send(users[0]);
+                            res.send({fromUser: users[0], destUser: destUser});
                         })
                 }).catch(err => {
                     if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found" }); }
@@ -499,7 +500,7 @@ exports.cancelAthleteCoachLink = (req, res) => {
  */
 function consumeAndCleanNotifications(user, consumedNotId) {
     // Set the notification to consumed
-    (_.find(user.notifications, function (n) { return (n.type + "_" + n.from != consumedNotId); })).bConsumed = true;
+    (_.find(user.notifications, function (n) { return (n._id == consumedNotId); })).bConsumed = true;
 
     // Split the notifications list in two arrays: one with consumed notifications, one with unconsumed notifications.
     let notConsumedNotifications = _.filter(user.notifications, function (n) { return !n.bConsumed });

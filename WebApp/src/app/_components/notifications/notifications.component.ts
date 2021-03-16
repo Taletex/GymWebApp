@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpService } from '@app/_services/http-service/http-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
-import { Notification } from '@app/_models/training-model';
+import { Notification, User } from '@app/_models/training-model';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { Account, Role } from '@app/_models';
 import { NOTIFICATION_TYPE } from '@app/_services/general-service/general-service.service';
@@ -72,15 +72,24 @@ export class NotificationsComponent implements OnInit {
     this.notificationList = _.orderBy(this.notificationList, field, this.sortListStatus[field] ? 'asc' : 'desc');
   }
 
+  updateNotificationList(notification: Notification) {
+    this.notificationList[_.findIndex(this.notificationList, function(n) { return n._id == notification._id})] = _.cloneDeep(notification);
+    this.filterNotifications(null);
+  }
+
 
   /* ACTIONS */
-  acceptRequest(notification: Notification, notificationIndex: number) {
+  acceptRequest(notification: Notification) {
     this.bLoading = true;
     this.httpService.acceptRequest(this.account.user._id, notification)
     .subscribe(
       (data: any) => {
-        console.log(data);
+        console.log("acceptRequest result data: " + data);
+
+        // Update destination user (current user) and notification list
         this.account.user = data;
+        this.updateNotificationList(notification);
+
         this.bLoading = false;
         this.toastr.success('Richiesta correttamente accettata!');
       },
@@ -91,13 +100,17 @@ export class NotificationsComponent implements OnInit {
       });
   }
 
-  refuseRequest(notification: Notification, notificationIndex: number) {
+  refuseRequest(notification: Notification) {
     this.bLoading = true;
     this.httpService.refuseRequest(this.account.user._id, notification)
     .subscribe(
       (data: any) => {
-        console.log(data);
+        console.log("refuseRequest result data: " + data);
+
+        // Update destination user (current user) and notification list
         this.account.user = data;
+        this.updateNotificationList(notification);
+
         this.bLoading = false;
         this.toastr.success('Richiesta correttamente rifiutata!');
       },
@@ -109,13 +122,17 @@ export class NotificationsComponent implements OnInit {
   }
 
   
-  dismissNotification(notification: Notification, notificationIndex: number) {
+  dismissNotification(notification: Notification) {
     this.bLoading = true;
     this.httpService.dismissNotification(this.account.user._id, notification)
     .subscribe(
       (data: any) => {
-        console.log(data);
+        console.log("dismissNotification result data: " + data);
+
+        // Update destination user (current user) and notification list
         this.account.user = data;
+        this.updateNotificationList(notification);
+
         this.bLoading = false;
         this.toastr.success('Richiesta visualizzata!');
       },

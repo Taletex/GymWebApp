@@ -61,6 +61,7 @@ export class PersonalRecord {
 
 // Note: for convention, a notification is uniquely identified using type_from, because cannot be two equals notifications with the same type and from fields!
 export class Notification {
+    _id: string;
     type: string;
     from: string;           // ONLY ID: Don't need to get the whole user, just need the id (it reduces the communication volume)
     destination: string;   // ONLY ID: Don't need to get the whole user, just need the id (it reduces the communication volume)
@@ -68,7 +69,8 @@ export class Notification {
     bConsumed: boolean;
     creationDate: Date;
 
-    constructor(type: string = "", from: string = "", destination: string = "", message: string = "", bConsumed: boolean = false, creationDate: Date = new Date()) {
+    constructor(_id: string = "", type: string = "", from: string = "", destination: string = "", message: string = "", bConsumed: boolean = false, creationDate: Date = new Date()) {
+        this._id = _id;
         this.type = type;
         this.from = from;
         this.destination = destination;

@@ -321,7 +321,7 @@ async function getRefreshToken(token) {
     const refreshToken = await db.RefreshToken.findOne({ token }).populate({path: 'account', populate: { path: 'user', populate: {path: 'personalRecords', populate: {path: 'exercise'}}}})
                                                                  .populate({path: 'account', populate: { path: 'user', populate: {path: 'notifications', populate: {path: 'from'}}}})
                                                                  .populate({path: 'account', populate: { path: 'user', populate: {path: 'notifications', populate: {path: 'destination'}}}})
-                                                                 .populate({path: 'account', populate: { path: 'user', populate: 'coaches'}}).populate({path: 'account', populate: { path: 'user', populate: 'coaches'}});
+                                                                 .populate({path: 'account', populate: { path: 'user', populate: 'coaches'}}).populate({path: 'account', populate: { path: 'user', populate: 'athletes'}});
     if (!refreshToken || !refreshToken.isActive) throw 'Invalid token';
     return refreshToken;
 }

@@ -124,18 +124,15 @@ export class HttpService {
   }
 
   acceptRequest(destinationUserId: string, notification: Notification) {
-    let notificationId = notification.type + "_" + notification.from;
-    return this.http.put<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications/" + notificationId + "/accept", notification);
+    return this.http.put<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications/" + notification._id + "/accept", notification);
   }
 
   refuseRequest(destinationUserId: string, notification: Notification) {
-    let notificationId = notification.type + "_" + notification.from;
-    return this.http.put<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications/" + notificationId + "/refuse", notification);
+    return this.http.put<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications/" + notification._id + "/refuse", notification);
   }
 
   dismissNotification(destinationUserId: string, notification: Notification) {
-    let notificationId = notification.type + "_" + notification.from;
-    return this.http.put<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications/" + notificationId + "/dismiss", notification);
+    return this.http.put<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications/" + notification._id + "/dismiss", notification);
   }
 
   cancelAthleteCoachLink(destinationUserId: string, notification: Notification) {

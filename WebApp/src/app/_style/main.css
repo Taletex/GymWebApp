@@ -45,6 +45,11 @@
   display: none;
 }
 
+/* COLOURS */
+.bg-cyan {
+  background-color: rgba(112, 181, 249, 0.2) !important;
+}
+
 /* MISCELLANEOUS */
 .loading-overlay {
   position: absolute;
