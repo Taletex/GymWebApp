@@ -24,7 +24,11 @@ module.exports = {
 };
 
 async function authenticate({ email, password, ipAddress }) {
-    const account = await db.Account.findOne({ email }).populate('user').populate({ path: 'user', populate: { path: 'personalRecords', populate: { path: 'exercise'} }});
+    const account = await db.Account.findOne({ email }).populate('user')
+                                                       .populate({ path: 'user', populate: {path: 'personalRecords', populate: {path: 'exercise'}}})
+                                                       .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}}})
+                                                       .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'destination'}}})
+                                                       .populate({ path: 'user', populate: 'coaches'}).populate({ path: 'user', populate: 'athletes'});
 
     if (!account || !account.isVerified || !bcrypt.compareSync(password, account.passwordHash)) {
         throw 'Email or password is incorrect';
@@ -80,7 +84,10 @@ async function revokeToken({ token, ipAddress }) {
 // When register the account, creates also the associated user
 async function register(params, origin) {
     // validate
-    if (await db.Account.findOne({ email: params.email }).populate({ path: 'user', populate: { path: 'personalRecords', populate: { path: 'exercise'} }})) {
+    if (await db.Account.findOne({ email: params.email }).populate({ path: 'user', populate: {path: 'personalRecords', populate: {path: 'exercise'}}})
+                                                        .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}, populate: {path: 'from'}}})
+                                                        .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}, populate: {path: 'destination'}}})
+                                                        .populate({ path: 'user', populate: 'coaches'}).populate({ path: 'user', populate: 'athletes'})) {
         // send already registered error in email to prevent account enumeration
         return await sendAlreadyRegisteredEmail(params.email, origin);
     }
@@ -131,7 +138,10 @@ async function register(params, origin) {
 }
 
 async function verifyEmail({ token }) {
-    const account = await db.Account.findOne({ verificationToken: token }).populate({ path: 'user', populate: { path: 'personalRecords', populate: { path: 'exercise'} }});
+    const account = await db.Account.findOne({ verificationToken: token }).populate({ path: 'user', populate: {path: 'personalRecords', populate: {path: 'exercise'}}})
+                                                                          .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}, populate: {path: 'from'}}})
+                                                                          .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}, populate: {path: 'destination'}}})
+                                                                          .populate({ path: 'user', populate: 'coaches'}).populate({ path: 'user', populate: 'athletes'});
 
     if (!account) throw 'Verification failed';
 
@@ -141,7 +151,11 @@ async function verifyEmail({ token }) {
 }
 
 async function forgotPassword({ email }, origin) {
-    const account = await db.Account.findOne({ email }).populate({ path: 'user', populate: { path: 'personalRecords', populate: { path: 'exercise'} }});
+    const account = await db.Account.findOne({ email }).populate({ path: 'user', populate: {path: 'personalRecords', populate: {path: 'exercise'}}})
+                                                       .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}, populate: {path: 'from'}}})
+                                                       .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}, populate: {path: 'destination'}}})
+                                                       .populate({ path: 'user', populate: 'coaches'}).populate({ path: 'user', populate: 'athletes'});
+
 
     // always return ok response to prevent email enumeration
     if (!account) return;
@@ -161,7 +175,10 @@ async function validateResetToken({ token }) {
     const account = await db.Account.findOne({
         'resetToken.token': token,
         'resetToken.expires': { $gt: Date.now() }
-    }).populate({ path: 'user', populate: { path: 'personalRecords', populate: { path: 'exercise'} }});
+    }).populate({ path: 'user', populate: {path: 'personalRecords', populate: {path: 'exercise'}}})
+      .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}, populate: {path: 'from'}}})
+      .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}, populate: {path: 'destination'}}})
+      .populate({ path: 'user', populate: 'coaches'}).populate({ path: 'user', populate: 'athletes'});
 
     if (!account) throw 'Invalid token';
 }
@@ -170,7 +187,11 @@ async function resetPassword({ token, password }) {
     const account = await db.Account.findOne({
         'resetToken.token': token,
         'resetToken.expires': { $gt: Date.now() }
-    }).populate({ path: 'user', populate: { path: 'personalRecords', populate: { path: 'exercise'} }});
+    }).populate({ path: 'user', populate: {path: 'personalRecords', populate: {path: 'exercise'}}})
+      .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}, populate: {path: 'from'}}})
+      .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}, populate: {path: 'destination'}}})
+      .populate({ path: 'user', populate: 'coaches'}).populate({ path: 'user', populate: 'athletes'});
+
 
     if (!account) throw 'Invalid token';
 
@@ -182,7 +203,11 @@ async function resetPassword({ token, password }) {
 }
 
 async function getAll() {
-    const accounts = await db.Account.find().populate({ path: 'user', populate: { path: 'personalRecords', populate: { path: 'exercise'} }});
+    const accounts = await db.Account.find().populate({ path: 'user', populate: {path: 'personalRecords', populate: {path: 'exercise'}}})
+                                            .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}, populate: {path: 'from'}}})
+                                            .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}, populate: {path: 'destination'}}})
+                                            .populate({ path: 'user', populate: 'coaches'}).populate({ path: 'user', populate: 'athletes'});
+
     return _.sortBy(accounts.map(x => basicDetails(x)), ['user.name', 'usern.surname', 'email']);
 }
 
@@ -193,7 +218,10 @@ async function getById(id) {
 
 async function create(params) {
     // validate
-    if (await db.Account.findOne({ email: params.email }).populate({ path: 'user', populate: { path: 'personalRecords', populate: { path: 'exercise'} }})) {
+    if (await db.Account.findOne({ email: params.email }).populate({ path: 'user', populate: {path: 'personalRecords', populate: {path: 'exercise'}}})
+                                                            .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}, populate: {path: 'from'}}})
+                                                            .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}, populate: {path: 'destination'}}})
+                                                            .populate({ path: 'user', populate: 'coaches'}).populate({ path: 'user', populate: 'athletes'})) {
         throw 'Email "' + params.email + '" is already registered';
     }
 
@@ -241,7 +269,10 @@ async function update(id, params) {
     const account = await getAccount(id);
 
     // validate
-    if (account.email !== params.email && await db.Account.findOne({ email: params.email }).populate({ path: 'user', populate: { path: 'personalRecords', populate: { path: 'exercise'} }})) {
+    if (account.email !== params.email && await db.Account.findOne({ email: params.email }).populate({ path: 'user', populate: {path: 'personalRecords', populate: {path: 'exercise'}}})
+                                                                                            .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}, populate: {path: 'from'}}})
+                                                                                            .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}, populate: {path: 'destination'}}})
+                                                                                            .populate({ path: 'user', populate: 'coaches'}).populate({ path: 'user', populate: 'athletes'})) {
         throw 'Email "' + params.email + '" is already taken';
     }
 
@@ -270,7 +301,11 @@ async function _delete(id) {
 
 async function getAccount(id) {
     if (!db.isValidId(id)) throw 'Account not found';
-    const account = await db.Account.findById(id).populate({ path: 'user', populate: { path: 'personalRecords', populate: { path: 'exercise'} }});
+    const account = await db.Account.findById(id).populate({ path: 'user', populate: {path: 'personalRecords', populate: {path: 'exercise'}}})
+                                                 .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}, populate: {path: 'from'}}})
+                                                 .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}, populate: {path: 'destination'}}})
+                                                 .populate({ path: 'user', populate: 'coaches'}).populate({ path: 'user', populate: 'athletes'});
+
     if (!account) throw 'Account not found';
     return account;
 }
@@ -283,7 +318,10 @@ async function getUser(id) {
 }
 
 async function getRefreshToken(token) {
-    const refreshToken = await db.RefreshToken.findOne({ token }).populate({path: 'account', populate: { path: 'user', populate: { path: 'personalRecords', populate: { path: 'exercise'} } }});
+    const refreshToken = await db.RefreshToken.findOne({ token }).populate({path: 'account', populate: { path: 'user', populate: {path: 'personalRecords', populate: {path: 'exercise'}}}})
+                                                                 .populate({path: 'account', populate: { path: 'user', populate: {path: 'notifications', populate: {path: 'from'}}}})
+                                                                 .populate({path: 'account', populate: { path: 'user', populate: {path: 'notifications', populate: {path: 'destination'}}}})
+                                                                 .populate({path: 'account', populate: { path: 'user', populate: 'coaches'}}).populate({path: 'account', populate: { path: 'user', populate: 'coaches'}});
     if (!refreshToken || !refreshToken.isActive) throw 'Invalid token';
     return refreshToken;
 }

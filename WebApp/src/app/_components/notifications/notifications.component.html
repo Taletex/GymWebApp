@@ -9,8 +9,8 @@
             <label for="filterNotListType" class="col-form-label col-form-label-sm p-0 text-muted">Mostra notifiche</label>
             <select [(ngModel)]="filters.filterNotListType" class="form-control form-control-sm cursor-pointer" id="filterNotListType" name="filterNotListType" (change)="filterNotifications($event)">
                 <option [value]="''">Tutte</option>
-                <option [value]="'consumed'">Non Lette</option>
-                <option [value]="'notConsumed'">Lette</option>
+                <option [value]="'notConsumed'">Non Lette</option>
+                <option [value]="'consumed'">Lette</option>
             </select>
         </div>
         <div class="col-3 form-group pl-2 pr-1 m-0">
@@ -23,8 +23,10 @@
         <div class="col-3 form-group pl-2 pr-1 m-0">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Mittente Richiesta</label>
             <div class="input-group">
-                <input type="text" [(ngModel)]="filters.from" class="form-control form-control-sm" (keyup)="filterNotifications($event)"
-                    id="filterFrom" name="filterFrom" placeholder="Mittente richiesta...">
+                <input type="text" [(ngModel)]="filters.from.name" class="form-control form-control-sm" (keyup)="filterNotifications($event)"
+                    id="filterFromName" name="filterFromName" placeholder="Nome...">
+                <input type="text" [(ngModel)]="filters.from.surname" class="form-control form-control-sm" (keyup)="filterNotifications($event)"
+                    id="filterFromSurname" name="filterFromSurname" placeholder="Cognome...">
             </div>
         </div>
         <div class="col-3 form-group pl-2 pr-1 m-0">
@@ -40,6 +42,10 @@
     <div class="notifications__maincontainer card col-12 p-0 border border-secondary border">
         <div class="maincontainer__header card-header pl-2 pr-3 border border-secondary border-top-0 border-left-0 border-right-0 d-flex flex-column bg-dark text-white">
             <div class="col-12 row m-0 p-0 d-flex align-items-center justify-content-center">
+                <div class="col-1 d-flex align-items-center cursor-pointer" (click)="sortListByField('bConsumed')">
+                    <div><b class="d-block">Letta</b></div>
+                    <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['bConsumed']==null, 'fa fa-long-arrow-down': sortListStatus['bConsumed']==false, 'fa fa-long-arrow-up': sortListStatus['bConsumed']==true}"></span></div>
+                </div>
                 <div class="col-3 d-flex align-items-center cursor-pointer" (click)="sortListByField('type')">
                     <div><b class="d-block">Tipo</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['type']==null, 'fa fa-long-arrow-down': sortListStatus['type']==false, 'fa fa-long-arrow-up': sortListStatus['type']==true}"></span></div>
@@ -48,7 +54,7 @@
                     <div><b class="d-block">Mittente Richiesta</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['from']==null, 'fa fa-long-arrow-down': sortListStatus['from']==false, 'fa fa-long-arrow-up': sortListStatus['from']==true}"></span></div>
                 </div>
-                <div class="col-4 d-flex align-items-center cursor-pointer" (click)="sortListByField('message')">
+                <div class="col-3 d-flex align-items-center cursor-pointer" (click)="sortListByField('message')">
                     <div><b class="d-block">Messaggio</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['message']==null, 'fa fa-long-arrow-down': sortListStatus['message']==false, 'fa fa-long-arrow-up': sortListStatus['message']==true}"></span></div>
                 </div>
@@ -60,20 +66,25 @@
         <div class="maincontainer__body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2" [hidden]="bLoading">
             <div class="h-100 w-100 d-flex flex-column align-items-center justify-content-center" *ngIf="notificationList.length == 0">
                 <img src="assets/icons/misc/alert.svg" style="width:40px; height:auto;">
-                <span class="badge badge-light mt-2">Non hai nessuna notifica!</span>
+                <div [hidden]="filters.filterNotListType != 'notConsumed'" class="badge badge-light mt-2"><h6>Non hai nessuna nuova notifica!</h6></div>
+                <div [hidden]="filters.filterNotListType == 'notConsumed'" class="badge badge-light mt-2"><h6>Non ci sono notifiche!</h6></div>
             </div>
-            <div class="body__element list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1" *ngFor="let elem of notificationList; index as notificationIndex">
+            <div class="body__element list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1" 
+                 *ngFor="let elem of notificationList; index as notificationIndex" [ngClass]="{'disabled': elem.bConsumed}">
+                <div class="col-1">
+                    <span>{{elem.bConsumed ? "Si" : "No"}}</span>
+                </div>
                 <div class="col-3">
                     <span>{{elem.type}}</span>
                 </div>
                 <div class="col-3">
-                    <span>{{elem.from}}</span>
+                    <span>{{elem.from.name != null ? elem.from.name : ''}} {{elem.from.surname != null ? elem.from.surname : elem.from}}</span>
                 </div>
-                <div class="col-4"><span>{{elem.message}}</span></div>
+                <div class="col-3"><span>{{elem.message}}</span></div>
                 <div class="col-2 d-flex">
-                    <div *ngIf="(elem.type == NOTIFICATION_TYPE.COACH_REQUEST || elem.type == NOTIFICATION_TYPE.ATHLETE_REQUEST)" (click)="acceptRequest(elem)" class="ml-2 image-button" ngbTooltip="Accetta Richiesta" placement="left"><img src="assets/icons/actions/confirm.svg" style="width:20px; height:auto;"></div>
-                    <div *ngIf="(elem.type == NOTIFICATION_TYPE.COACH_REQUEST || elem.type == NOTIFICATION_TYPE.ATHLETE_REQUEST)" (click)="refuseRequest(elem)" class="ml-2 image-button" ngbTooltip="Rifiuta Richiesta" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>
-                    <div *ngIf="(elem.type == NOTIFICATION_TYPE.DISMISS || elem.type == NOTIFICATION_TYPE.REQUEST_SUCCESS || elem.type == NOTIFICATION_TYPE.REQUEST_REFUSE || elem.type == NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK || elem.type == NOTIFICATION.CANCEL_COACH_TO_ATHLETE_LINK)" (click)="dismissNotification(elem)" class="ml-2 image-button" ngbTooltip="Visualizza Richiesta" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
+                    <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.COACH_REQUEST || elem.type == NOTIFICATION_TYPE.ATHLETE_REQUEST)" (click)="acceptRequest(elem)" class="ml-2 image-button" ngbTooltip="Accetta Richiesta" placement="left"><img src="assets/icons/actions/confirm.svg" style="width:20px; height:auto;"></div>
+                    <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.COACH_REQUEST || elem.type == NOTIFICATION_TYPE.ATHLETE_REQUEST)" (click)="refuseRequest(elem)" class="ml-2 image-button" ngbTooltip="Rifiuta Richiesta" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>
+                    <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.DISMISS || elem.type == NOTIFICATION_TYPE.REQUEST_SUCCESS || elem.type == NOTIFICATION_TYPE.REQUEST_REFUSE || elem.type == NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK || elem.type == NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK)" (click)="dismissNotification(elem)" class="ml-2 image-button" ngbTooltip="Visualizza Richiesta" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
                 </div>
             </div>
         </div>

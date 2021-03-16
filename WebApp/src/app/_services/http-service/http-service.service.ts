@@ -139,6 +139,6 @@ export class HttpService {
   }
 
   cancelAthleteCoachLink(destinationUserId: string, notification: Notification) {
-    return this.http.put<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/cancelLink", notification);
+    return this.http.put<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications/cancelLink", notification);
   }
 }

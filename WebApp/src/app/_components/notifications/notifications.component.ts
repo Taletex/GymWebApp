@@ -34,6 +34,7 @@ export class NotificationsComponent implements OnInit {
     
     // Init filters and sort status
     this.resetFilters();
+    this.filterNotifications(null);
     this.resetSortStatus();
   }
 
@@ -46,21 +47,22 @@ export class NotificationsComponent implements OnInit {
     let filters = _.cloneDeep(this.filters);
     this.notificationList = _.filter(this.account.user.notifications, function(e) {
       return (
-        (filters.filterNotListType == 'consumed' ? e.bConsumed : (filters.filterNotListType == 'notConsumed' ? !e.bConsumed : true))
+        (filters.filterNotListType == 'consumed' ? e.bConsumed : (filters.filterNotListType == 'notConsumed' ? !e.bConsumed : true)) &&
         (filters.type != '' ? e.type.toLowerCase().includes(filters.type.toLowerCase()) : true) &&
-        (filters.from != '' ? e.from.toLowerCase().includes(filters.from.toLowerCase()) : true) &&
+        (filters.from.name != '' ? e.from.name.toLowerCase().includes(filters.from.name.toLowerCase()) : true) &&
+        (filters.from.surname != '' ? e.from.surname.toLowerCase().includes(filters.from.surname.toLowerCase()) : true) &&
         (filters.message != '' ? e.message.toLowerCase().includes(filters.message.toLowerCase()) : true)
       );
     });
   }
 
   resetFilters() {
-    this.filters = { filterNotListType: '', type: '', from: '', message: ''};
+    this.filters = { filterNotListType: 'notConsumed', type: '', from: {name: '', surname: ''}, message: ''};
   }
 
   
   resetSortStatus() {
-    this.sortListStatus = {type: null, from: null, message: null};
+    this.sortListStatus = {type: null, from: null, message: null, bConsumed: null};
   }
 
   sortListByField(field: string) {

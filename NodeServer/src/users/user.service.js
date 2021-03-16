@@ -57,7 +57,10 @@ exports.createUser = (req, res) => {
 
 // Retrieve and return all users from the database.
 exports.findAllUser = (req, res) => {
-    User.find().populate({ path: 'personalRecords', populate: { path: 'exercise' }, path: 'notifications' })
+    User.find().populate({path: 'personalRecords', populate: {path: 'exercise'}})
+               .populate({path: 'notifications', populate: {path: 'from'}})
+               .populate({path: 'notifications', populate: {path: 'destination'}})
+               .populate('coaches').populate('athletes')
         .then(users => {
             res.send(_.sortBy(users, ['name', 'surname']));
         }).catch(err => {
@@ -69,7 +72,10 @@ exports.findAllUser = (req, res) => {
 
 // Retrieve and return all users from the database.
 exports.findAllAthlete = (req, res) => {
-    User.find().populate({ path: 'personalRecords', populate: { path: 'exercise' }, path: 'notifications' })
+    User.find().populate({path: 'personalRecords', populate: {path: 'exercise'}})
+               .populate({path: 'notifications', populate: {path: 'from'}})
+               .populate({path: 'notifications', populate: {path: 'destination'}})
+               .populate('coaches').populate('athletes')
         .then(users => {
             res.send(_.sortBy(_.filter(users, function (user) { return (user.userType == "athlete" || user.userType == "both"); }), ['name', 'surname']));
         }).catch(err => {
@@ -81,7 +87,10 @@ exports.findAllAthlete = (req, res) => {
 
 // Retrieve and return all users from the database.
 exports.findAllCoaches = (req, res) => {
-    User.find().populate({ path: 'personalRecords', populate: { path: 'exercise' }, path: 'notifications' })
+    User.find().populate({path: 'personalRecords', populate: {path: 'exercise'}})
+               .populate({path: 'notifications', populate: {path: 'from'}})
+               .populate({path: 'notifications', populate: {path: 'destination'}})
+               .populate('coaches').populate('athletes')
         .then(users => {
             res.send(_.sortBy(_.filter(users, function (user) { return (user.userType == "coach" || user.userType == "both"); }), ['name', 'surname']));
         }).catch(err => {
@@ -93,7 +102,10 @@ exports.findAllCoaches = (req, res) => {
 
 // Find a single user with a id
 exports.findOneUser = (req, res) => {
-    User.find({ _id: req.params._id }).populate({ path: 'personalRecords', populate: { path: 'exercise' } }).populate({ path: 'notifications', populate: { path: 'from' }, populate: { path: 'destination' } })
+    User.find({ _id: req.params._id }).populate({path: 'personalRecords', populate: {path: 'exercise'}})
+                                        .populate({path: 'notifications', populate: {path: 'from'}})
+                                        .populate({path: 'notifications', populate: {path: 'destination'}})
+                                        .populate('coaches').populate('athletes')
         .then(user => {
             if (!user) {
                 return res.status(404).send({
@@ -146,7 +158,10 @@ exports.updateUser = (req, res) => {
             }
 
             // Returns the user update by finding it in the database
-            User.find({ _id: user._id }).populate({ path: 'personalRecords', populate: { path: 'exercise' } }).populate({ path: 'notifications', populate: { path: 'from' }, populate: { path: 'destination' } })
+            User.find({ _id: user._id }).populate({path: 'personalRecords', populate: {path: 'exercise'}})
+                                        .populate({path: 'notifications', populate: {path: 'from'}})
+                                        .populate({path: 'notifications', populate: {path: 'destination'}})
+                                        .populate('coaches').populate('athletes')
                 .then(users => {
                     res.send(users[0]);
                 })
@@ -206,7 +221,10 @@ exports.sendNotification = (req, res) => {
                     if (!user) { return res.status(404).send({ message: "User not found with id " + req.params._id }); }
 
                     // Returns the user (the user who sent this request) update by finding it in the database
-                    User.find({ _id: user._id }).populate({ path: 'personalRecords', populate: { path: 'exercise' } }).populate({ path: 'notifications', populate: { path: 'from' }, populate: { path: 'destination' } })
+                    User.find({ _id: user._id }).populate({path: 'personalRecords', populate: {path: 'exercise'}})
+                                                .populate({path: 'notifications', populate: {path: 'from'}})
+                                                .populate({path: 'notifications', populate: {path: 'destination'}})
+                                                .populate('coaches').populate('athletes')
                         .then(users => {
                             res.send(users[0]);
                         })
@@ -271,7 +289,10 @@ exports.acceptNotification = (req, res) => {
                     if (!destinationUser || !fromUser) { return res.status(404).send({ message: "User not found" }); }
 
                     // Returns the destinationUser (the user who sent this request) updated by finding it in the database
-                    User.find({ _id: destinationUser._id }).populate({ path: 'personalRecords', populate: { path: 'exercise' } }).populate({ path: 'notifications', populate: { path: 'from' }, populate: { path: 'destination' } })
+                    User.find({ _id: destinationUser._id }).populate({path: 'personalRecords', populate: {path: 'exercise'}})
+                                                           .populate({path: 'notifications', populate: {path: 'from'}})
+                                                           .populate({path: 'notifications', populate: {path: 'destination'}})
+                                                           .populate('coaches').populate('athletes')
                         .then(users => {
                             res.send(users[0]);
                         })
@@ -327,7 +348,10 @@ exports.refuseNotification = (req, res) => {
                     if (!destinationUser || !fromUser) { return res.status(404).send({ message: "User not found" }); }
 
                     // Returns the destinationUser (the user who sent this request) updated by finding it in the database
-                    User.find({ _id: destinationUser._id }).populate({ path: 'personalRecords', populate: { path: 'exercise' } }).populate({ path: 'notifications', populate: { path: 'from' }, populate: { path: 'destination' } })
+                    User.find({ _id: destinationUser._id }).populate({path: 'personalRecords', populate: {path: 'exercise'}})
+                                                            .populate({path: 'notifications', populate: {path: 'from'}})
+                                                            .populate({path: 'notifications', populate: {path: 'destination'}})
+                                                            .populate('coaches').populate('athletes')
                         .then(users => {
                             res.send(users[0]);
                         })
@@ -370,7 +394,10 @@ exports.dismissNotification = (req, res) => {
                     if (!destinationUser) { return res.status(404).send({ message: "User not found" }); }
 
                     // Returns the destinationUser (the user who sent this request) updated by finding it in the database
-                    User.find({ _id: destinationUser._id }).populate({ path: 'personalRecords', populate: { path: 'exercise' } }).populate({ path: 'notifications', populate: { path: 'from' }, populate: { path: 'destination' } })
+                    User.find({ _id: destinationUser._id }).populate({path: 'personalRecords', populate: {path: 'exercise'}})
+                                                            .populate({path: 'notifications', populate: {path: 'from'}})
+                                                            .populate({path: 'notifications', populate: {path: 'destination'}})
+                                                            .populate('coaches').populate('athletes')
                         .then(users => {
                             res.send(users[0]);
                         })
@@ -399,7 +426,7 @@ exports.cancelAthleteCoachLink = (req, res) => {
 
     Promise.all([
         User.findOne({ _id: req.params._id }),
-        User.findOne({ _id: notification.from._id })
+        User.findOne({ _id: notification.from })
     ])
         .then(([dUser, fUser]) => {
             if (!dUser || !fUser) { return res.status(404).send({ message: "User not found" }); }
@@ -443,7 +470,10 @@ exports.cancelAthleteCoachLink = (req, res) => {
 
                     let fromUser = (cUser._id == notification.from ? cUser : aUser);
                     // Returns the fromUser (the user who sent this request) updated by finding it in the database
-                    User.find({ _id: fromUser._id }).populate({ path: 'personalRecords', populate: { path: 'exercise' } }).populate({ path: 'notifications', populate: { path: 'from' }, populate: { path: 'destination' } })
+                    User.find({ _id: fromUser._id }).populate({path: 'personalRecords', populate: {path: 'exercise'}})
+                                                    .populate({path: 'notifications', populate: {path: 'from'}})
+                                                    .populate({path: 'notifications', populate: {path: 'destination'}})
+                                                    .populate('coaches').populate('athletes')
                         .then(users => {
                             res.send(users[0]);
                         })
