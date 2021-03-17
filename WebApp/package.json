@@ -33,6 +33,7 @@
     "moment": "^2.29.0",
     "ng-multiselect-dropdown": "^1.0.0-beta.13",
     "ng2-charts": "^2.3.3",
+    "ngx-socket-io": "^3.3.0",
     "ngx-toastr": "^13.0.0",
     "rxjs": "~6.5.5",
     "save": "^2.4.0",

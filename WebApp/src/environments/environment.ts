@@ -5,7 +5,8 @@
 // Server infos (change with http://localhost:4000 in the server)
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:4000'
+  apiUrl: 'http://localhost:4000',
+  socketConfig: { url: 'http://localhost:4000', options: {} }
 };
 
 /*

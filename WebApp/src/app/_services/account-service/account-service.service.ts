@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, finalize } from 'rxjs/operators';
+import { Socket } from 'ngx-socket-io';
+import * as _ from "lodash";
 
 import { environment } from '@environments/environment';
 import { Account } from '@app/_models';
@@ -12,14 +14,34 @@ const baseUrl = `${environment.apiUrl}/accounts`;
 @Injectable({ providedIn: 'root' })
 export class AccountService {
     private accountSubject: BehaviorSubject<Account>;
+    private bSocketInitialized: boolean = false;
     public account: Observable<Account>;
 
-    constructor(
-        private router: Router,
-        private http: HttpClient
-    ) {
+    constructor(private router: Router, private http: HttpClient, private socket: Socket) {
         this.accountSubject = new BehaviorSubject<Account>(null);
         this.account = this.accountSubject.asObservable();
+
+
+        // Socket account events initialization
+        let accountSubject = this.accountSubject;
+
+        this.account.subscribe(x => {
+            if(!this.bSocketInitialized && x != null) {
+                this.bSocketInitialized = true;
+                socket.emit('accountInit', {accountId: accountSubject.value.id, userId: accountSubject.value.user._id});
+            }
+        });
+
+        socket.on('accountUpdated', function(account) {
+            if(account.id == accountSubject.value.id)
+                accountSubject.next(account);
+        })
+        socket.on('userUpdated', function(user) {
+            if(user._id == accountSubject.value.user._id) {
+                accountSubject.value.user = user;
+                accountSubject.next(_.cloneDeep(accountSubject.value));
+            }
+        })
     }
 
     public get accountValue(): Account {

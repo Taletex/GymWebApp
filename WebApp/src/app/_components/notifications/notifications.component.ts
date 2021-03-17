@@ -29,7 +29,6 @@ export class NotificationsComponent implements OnInit {
     // Init account and notification list
     this.accountService.account.subscribe(x => {
       this.account = x
-      this.notificationList = _.cloneDeep(_.sortBy(this.account.user.notifications, ['bConsumed', 'creationDate']));
     });
     
     // Init filters and sort status

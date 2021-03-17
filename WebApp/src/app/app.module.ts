@@ -12,6 +12,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { ChartsModule } from 'ng2-charts';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 /* app components */
 import { AppComponent } from './app.component';
@@ -22,6 +23,7 @@ import { SidebarComponent } from './_components/sidebar/sidebar.component';
 import { JwtInterceptor, ErrorInterceptor, appInitializer } from './_helpers';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { NotificationsComponent } from './_components/notifications/notifications.component';
+import { environment } from '@environments/environment';
 
 @NgModule({
   imports: [
@@ -36,7 +38,8 @@ import { NotificationsComponent } from './_components/notifications/notification
     EditorModule, 
     BrowserAnimationsModule, 
     ToastrModule.forRoot(), 
-    NgMultiSelectDropDownModule.forRoot()
+    NgMultiSelectDropDownModule.forRoot(),
+    SocketIoModule.forRoot(environment.socketConfig)
   ],
   declarations: [
     AppComponent,
