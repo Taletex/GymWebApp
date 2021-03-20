@@ -310,7 +310,7 @@ module.exports = (io, clientSocketList) => {
 
                         sendUpdatedUserToItsSocket(destinationUser);    // Send user informations to updated user (if its client is online)
                         sendUpdatedUserToItsSocket(fromUser);           // Send user informations to updated user (if its client is online)
-                        res.send(dUser);                                // Send response to calling client
+                        res.send(destinationUser);                      // Send response to calling client
                     }).catch(err => {
                         if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found" }); }
                         return res.status(500).send({ message: "Error updating user in accept notification" });
