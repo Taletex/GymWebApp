@@ -46,17 +46,21 @@
                     <div><b class="d-block">Nuova</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['bConsumed']==null, 'fa fa-long-arrow-down': sortListStatus['bConsumed']==false, 'fa fa-long-arrow-up': sortListStatus['bConsumed']==true}"></span></div>
                 </div>
-                <div class="col-3 d-flex align-items-center cursor-pointer" (click)="sortListByField('type', false)">
+                <div class="col-2 d-flex align-items-center cursor-pointer" (click)="sortListByField('type', false)">
                     <div><b class="d-block">Tipo</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['type']==null, 'fa fa-long-arrow-down': sortListStatus['type']==false, 'fa fa-long-arrow-up': sortListStatus['type']==true}"></span></div>
                 </div>
-                <div class="col-3 d-flex align-items-center cursor-pointer" (click)="sortListByField('from', false)">
+                <div class="col-2 d-flex align-items-center cursor-pointer" (click)="sortListByField('from', false)">
                     <div><b class="d-block">Mittente Richiesta</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['from']==null, 'fa fa-long-arrow-down': sortListStatus['from']==false, 'fa fa-long-arrow-up': sortListStatus['from']==true}"></span></div>
                 </div>
                 <div class="col-3 d-flex align-items-center cursor-pointer" (click)="sortListByField('message', false)">
                     <div><b class="d-block">Messaggio</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['message']==null, 'fa fa-long-arrow-down': sortListStatus['message']==false, 'fa fa-long-arrow-up': sortListStatus['message']==true}"></span></div>
+                </div>
+                <div class="col-2 d-flex align-items-center cursor-pointer" (click)="sortListByField('creationDate', false)">
+                    <div><b class="d-block">Data</b></div>
+                    <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['creationDate']==null, 'fa fa-long-arrow-down': sortListStatus['creationDate']==false, 'fa fa-long-arrow-up': sortListStatus['creationDate']==true}"></span></div>
                 </div>
                 <div class="col-2">
                     <b>Azioni</b>
@@ -74,13 +78,14 @@
                 <div class="col-1">
                     <img [hidden]="elem.bConsumed" src="assets/icons/misc/dot.svg" style="width:30px; height:auto;">
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                     <span>{{elem.type}}</span>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                     <span>{{elem.from.name != null ? elem.from.name : ''}} {{elem.from.surname != null ? elem.from.surname : elem.from}}</span>
                 </div>
                 <div class="col-3"><span>{{elem.message}}</span></div>
+                <div class="col-2"><span>{{elem.creationDate | date:'HH:mm:ss - dd/MM/yyyy'}}</span></div>
                 <div class="col-2 d-flex">
                     <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.COACH_REQUEST || elem.type == NOTIFICATION_TYPE.ATHLETE_REQUEST)" (click)="acceptRequest(elem)" class="ml-2 image-button" ngbTooltip="Accetta Richiesta" placement="left"><img src="assets/icons/actions/confirm.svg" style="width:20px; height:auto;"></div>
                     <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.COACH_REQUEST || elem.type == NOTIFICATION_TYPE.ATHLETE_REQUEST)" (click)="refuseRequest(elem)" class="ml-2 image-button" ngbTooltip="Rifiuta Richiesta" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>

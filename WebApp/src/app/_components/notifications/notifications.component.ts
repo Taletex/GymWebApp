@@ -33,7 +33,7 @@ export class NotificationsComponent implements OnInit {
 
       // Update notification list
       if(this.sortListStatus != null && this.filters != null && this.filters != {}) {
-        this.notificationList = _.sortBy(_.cloneDeep(this.account.user.notifications), ['bConsumed', 'creationDate']);
+        this.notificationList = _.orderBy(_.cloneDeep(this.account.user.notifications), ['bConsumed', 'creationDate'], ['asc', 'desc']);
         this.filterNotifications(null);
         this.sortListByField(this.currentSortField, true);
       }
@@ -52,7 +52,7 @@ export class NotificationsComponent implements OnInit {
   /* FILTER FUNCTIONS */
   filterNotifications(event: any) {
     let filters = _.cloneDeep(this.filters);
-    this.notificationList = _.filter(this.account.user.notifications, function(e) {
+    this.notificationList = _.orderBy(_.filter(this.account.user.notifications, function(e) {
       return (
         (filters.filterNotListType == 'consumed' ? e.bConsumed : (filters.filterNotListType == 'notConsumed' ? !e.bConsumed : true)) &&
         (filters.type != '' ? e.type.toLowerCase().includes(filters.type.toLowerCase()) : true) &&
@@ -60,7 +60,7 @@ export class NotificationsComponent implements OnInit {
         (filters.from.surname != '' ? e.from.surname.toLowerCase().includes(filters.from.surname.toLowerCase()) : true) &&
         (filters.message != '' ? e.message.toLowerCase().includes(filters.message.toLowerCase()) : true)
       );
-    });
+    }), ['bConsumed', 'creationDate'], ['asc', 'desc'])
   }
 
   resetFilters() {

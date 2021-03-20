@@ -164,7 +164,7 @@ module.exports = (io, clientSocketList) => {
             contacts: req.body.contacts,
             residence: req.body.residence,
             personalRecords: req.body.personalRecords,
-            notifications: _.sortBy(req.body.notifications, ['bConsumed', 'creationDate']),
+            notifications: _.orderBy(req.body.notifications, ['bConsumed', 'creationDate'], ['asc', 'desc']),
             coaches: req.body.coaches,
             athletes: req.body.athletes
         }, { new: true })
@@ -233,7 +233,7 @@ module.exports = (io, clientSocketList) => {
 
                 // Find user and update it with the request body
                 User.findOneAndUpdate({ _id: req.params._id }, {
-                    notifications: _.sortBy(destinationUser.notifications, ['bConsumed', 'creationDate'])
+                    notifications: _.orderBy(destinationUser.notifications, ['bConsumed', 'creationDate'], ['asc', 'desc'], ['asc', 'desc'])
                 }, { new: true }).populate({path: 'personalRecords', populate: {path: 'exercise'}})
                                 .populate({path: 'notifications', populate: {path: 'from'}})
                                 .populate({path: 'notifications', populate: {path: 'destination'}})
@@ -296,7 +296,7 @@ module.exports = (io, clientSocketList) => {
                 // 4. update from and destination users
                 Promise.all([
                     User.findOneAndUpdate({ _id: destinationUser._id }, {
-                        notifications: _.sortBy(destinationUser.notifications, ['bConsumed', 'creationDate']),
+                        notifications: _.orderBy(destinationUser.notifications, ['bConsumed', 'creationDate'], ['asc', 'desc'], ['asc', 'desc']),
                         coaches: destinationUser.coaches,
                         athletes: destinationUser.athletes
                     }, { new: true }).populate({path: 'personalRecords', populate: {path: 'exercise'}})
@@ -304,7 +304,7 @@ module.exports = (io, clientSocketList) => {
                                     .populate({path: 'notifications', populate: {path: 'destination'}})
                                     .populate('coaches').populate('athletes'),
                     User.findOneAndUpdate({ _id: fromUser._id }, {
-                        notifications: _.sortBy(fromUser.notifications, ['bConsumed', 'creationDate']),
+                        notifications: _.orderBy(fromUser.notifications, ['bConsumed', 'creationDate'], ['asc', 'desc'], ['asc', 'desc']),
                         coaches: fromUser.coaches,
                         athletes: fromUser.athletes
                     }, { new: true }).populate({path: 'personalRecords', populate: {path: 'exercise'}})
@@ -363,7 +363,7 @@ module.exports = (io, clientSocketList) => {
                 // 3. update from and destination users
                 Promise.all([
                     User.findOneAndUpdate({ _id: destinationUser._id }, {
-                        notifications: _.sortBy(destinationUser.notifications, ['bConsumed', 'creationDate']),
+                        notifications: _.orderBy(destinationUser.notifications, ['bConsumed', 'creationDate'], ['asc', 'desc']),
                         coaches: destinationUser.coaches,
                         athletes: destinationUser.athletes
                     }, { new: true }).populate({path: 'personalRecords', populate: {path: 'exercise'}})
@@ -371,7 +371,7 @@ module.exports = (io, clientSocketList) => {
                                     .populate({path: 'notifications', populate: {path: 'destination'}})
                                     .populate('coaches').populate('athletes'),
                     User.findOneAndUpdate({ _id: fromUser._id }, {
-                        notifications: _.sortBy(fromUser.notifications, ['bConsumed', 'creationDate']),
+                        notifications: _.orderBy(fromUser.notifications, ['bConsumed', 'creationDate'], ['asc', 'desc']),
                         coaches: fromUser.coaches,
                         athletes: fromUser.athletes
                     }, { new: true }).populate({path: 'personalRecords', populate: {path: 'exercise'}})
@@ -422,7 +422,7 @@ module.exports = (io, clientSocketList) => {
                 // 2. update destination user
                 Promise.all([
                     User.findOneAndUpdate({ _id: destinationUser._id }, {
-                        notifications: _.sortBy(destinationUser.notifications, ['bConsumed', 'creationDate']),
+                        notifications: _.orderBy(destinationUser.notifications, ['bConsumed', 'creationDate'], ['asc', 'desc']),
                         coaches: destinationUser.coaches,
                         athletes: destinationUser.athletes
                     }, { new: true }).populate({path: 'personalRecords', populate: {path: 'exercise'}})
@@ -492,7 +492,7 @@ module.exports = (io, clientSocketList) => {
                 // 4. Find and update coach and athlete in the database
                 Promise.all([
                     User.findOneAndUpdate({ _id: coachUser._id }, {
-                        notifications: _.sortBy(coachUser.notifications, ['bConsumed', 'creationDate']),
+                        notifications: _.orderBy(coachUser.notifications, ['bConsumed', 'creationDate'], ['asc', 'desc']),
                         coaches: coachUser.coaches,
                         athletes: coachUser.athletes
                     }, { new: true }).populate({path: 'personalRecords', populate: {path: 'exercise'}})
@@ -500,7 +500,7 @@ module.exports = (io, clientSocketList) => {
                                     .populate({path: 'notifications', populate: {path: 'destination'}})
                                     .populate('coaches').populate('athletes'),
                     User.findOneAndUpdate({ _id: athleteUser._id }, {
-                        notifications: _.sortBy(athleteUser.notifications, ['bConsumed', 'creationDate']),
+                        notifications: _.orderBy(athleteUser.notifications, ['bConsumed', 'creationDate'], ['asc', 'desc']),
                         coaches: athleteUser.coaches,
                         athletes: athleteUser.athletes
                     }, { new: true }).populate({path: 'personalRecords', populate: {path: 'exercise'}})
@@ -553,13 +553,13 @@ module.exports = (io, clientSocketList) => {
         // Removes oldest consumed notifications in order to save only the MAX_NOTIFICATION_LIST_LENGTH recent ones
         if (consumedNotifications.lenght > MAX_NOTIFICATION_LIST_LENGTH) {
             let outBuffer = consumedNotifications.lenght - MAX_NOTIFICATION_LIST_LENGTH;
-            _.sortBy(consumedNotifications, ['bConsumed', 'creationDate']);
+            _.orderBy(consumedNotifications, ['bConsumed', 'creationDate'], ['asc', 'desc']);
 
             for (let i = 0; i < outBuffer; i++) {
                 consumedNotifications.pop();
             }
 
-            user.notifications = _.sortBy(notConsumedNotifications.concat(consumedNotifications), ['bConsumed', 'creationDate']);
+            user.notifications = _.orderBy(notConsumedNotifications.concat(consumedNotifications), ['bConsumed', 'creationDate'], ['asc', 'desc']);
         }
     }
 

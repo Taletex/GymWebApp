@@ -204,7 +204,7 @@ export class UsersComponent implements OnInit {
   /* FILTER FUNCTIONS */
   filterUsers(event: any) {
     let filters = _.cloneDeep(this.filters);
-    this.userList = _.filter(this.originalUserList, function(u) {
+    this.userList = _.sortBy(_.filter(this.originalUserList, function(u) {
       return (
         (filters.name != '' ? u.name.toLowerCase().includes(filters.name.toLowerCase()) : true) &&
         (filters.surname != '' ? u.surname.toLowerCase().includes(filters.surname.toLowerCase()) : true) &&
@@ -214,7 +214,7 @@ export class UsersComponent implements OnInit {
         (filters.bodyWeight != null ? u.bodyWeight == filters.bodyWeight : true) &&
         (filters.yearsOfExperience != null ? u.yearsOfExperience == filters.yearsOfExperience : true)
       );
-    });
+    }), ['name', 'surname'])
   }
 
   setUserList(event: any) {
