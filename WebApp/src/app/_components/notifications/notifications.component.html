@@ -62,8 +62,22 @@
                     <div><b class="d-block">Data</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['creationDate']==null, 'fa fa-long-arrow-down': sortListStatus['creationDate']==false, 'fa fa-long-arrow-up': sortListStatus['creationDate']==true}"></span></div>
                 </div>
-                <div class="col-2">
-                    <b>Azioni</b>
+                <div class="col-2 d-flex align-items-center cursor-pointer">
+                    <div class="dropdown">
+                        <button class="btn p-0 text-white" type="button" id="dropdownActionMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <b>Azioni</b><img src="assets/icons/actions/menu-button.svg" style="width:15px; height:auto;" class="ml-2 mb-1">
+                        </button>
+                        <div class="dropdown-menu p-1" aria-labelledby="dropdownActionMenuButton">
+                            <a (click)="dismissAllNotifications()" class="dropdown-item d-flex align-items-center p-1" href="#">
+                                <img src="assets/icons/actions/visibility.svg" style="width:15px; height:auto;"> 
+                                <span class="ml-2">Visualizza tutto</span>
+                                </a>
+                            <a (click)="cancelAllNotifications()" class="dropdown-item d-flex align-items-center p-1" href="#">
+                                <img src="assets/icons/actions/garbage-can.svg" style="width:15px; height:auto;"> 
+                                <span class="ml-2">Cancella tutto</span>
+                            </a>
+                        </div>
+                      </div>
                 </div>
             </div>
         </div>
@@ -74,7 +88,7 @@
                 <div [hidden]="filters.filterNotListType == 'notConsumed'" class="badge badge-light mt-2"><h6>Non ci sono notifiche!</h6></div>
             </div>
             <div class="body__element list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1" 
-                 *ngFor="let elem of notificationList; index as notificationIndex" [ngClass]="{'disabled': elem.bConsumed, 'list-group-item-cyan': !elem.bConsumed, 'bg-custom-lightgray': elem.bConsumed}">
+                 *ngFor="let elem of notificationList; index as notificationIndex" [ngClass]="{'list-group-item-cyan': !elem.bConsumed, 'bg-custom-lightgray': elem.bConsumed}">
                 <div class="col-1">
                     <img [hidden]="elem.bConsumed" src="assets/icons/misc/dot.svg" style="width:30px; height:auto;">
                 </div>
@@ -90,6 +104,7 @@
                     <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.COACH_REQUEST || elem.type == NOTIFICATION_TYPE.ATHLETE_REQUEST)" (click)="acceptRequest(elem)" class="ml-2 image-button" ngbTooltip="Accetta Richiesta" placement="left"><img src="assets/icons/actions/confirm.svg" style="width:20px; height:auto;"></div>
                     <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.COACH_REQUEST || elem.type == NOTIFICATION_TYPE.ATHLETE_REQUEST)" (click)="refuseRequest(elem)" class="ml-2 image-button" ngbTooltip="Rifiuta Richiesta" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>
                     <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.DISMISS || elem.type == NOTIFICATION_TYPE.REQUEST_SUCCESS || elem.type == NOTIFICATION_TYPE.REQUEST_REFUSE || elem.type == NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK || elem.type == NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK)" (click)="dismissNotification(elem)" class="ml-2 image-button" ngbTooltip="Visualizza Richiesta" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
+                    <div *ngIf="elem.bConsumed" (click)="cancelNotification(elem)" class="ml-2 image-button" ngbTooltip="Cancella Notifica" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
                 </div>
             </div>
         </div>

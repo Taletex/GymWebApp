@@ -141,4 +141,19 @@ export class NotificationsComponent implements OnInit {
       });
   }
 
+  
+  dismissAllNotifications() {
+    alert("TODO");
+  }
+
+
+  cancelNotification(notification: Notification) {
+    alert("TODO");
+  }
+
+  
+  cancelAllNotifications() {
+    alert("TODO");
+  }
+
 }
