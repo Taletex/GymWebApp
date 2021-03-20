@@ -73,12 +73,12 @@ export class UsersComponent implements OnInit {
           this.resetFilters();
 
           this.bLoading = false;
-          console.log(this.userList);
+          console.log("User List", this.userList);
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
           this.toastr.error('An error occurred while loading the user list!');
-          console.log(error);
+          console.log("Get User Error", error);
         });
   }
 
@@ -92,13 +92,13 @@ export class UsersComponent implements OnInit {
         this.userList = _.cloneDeep(this.originalUserList);
         this.resetFilters();
 
-        console.log(this.userList);
+        console.log("Athlete List", this.userList);
         this.bLoading = false;
       },
       (error: HttpErrorResponse) => {
         this.bLoading = false;
         this.toastr.error('An error occurred while loading the athlete list!');
-        console.log(error);
+        console.log("Get Athletes Error", error);
       });
   }
 
@@ -112,13 +112,13 @@ export class UsersComponent implements OnInit {
         this.userList = _.cloneDeep(this.originalUserList);
         this.resetFilters();
 
-        console.log(this.userList);
+        console.log("Coaches List", this.userList);
         this.bLoading = false;
       },
       (error: HttpErrorResponse) => {
         this.bLoading = false;
         this.toastr.error('An error occurred while loading the coach list!');
-        console.log(error);
+        console.log("Get Coaches Error", error);
       });
   }
 
@@ -190,7 +190,7 @@ export class UsersComponent implements OnInit {
       this.originalUserList = _.sortBy(this.account.user.athletes.concat(this.account.user.coaches), ['name', 'surname']);
       this.userList = _.cloneDeep(this.originalUserList);
       this.resetFilters();
-      console.log(this.userList);
+      console.log("Linked User List", this.userList);
       this.bLoading = false;
     } else if(this.filters.filterUserListType == 'all') {
       this.initFullUserList();
@@ -292,7 +292,7 @@ export class UsersComponent implements OnInit {
   canCancelAthleteToCoachLinkRequestBeSent(user: User) {
     return (
       (user._id != this.account.user._id) &&
-      (_.find(user.notifications, function(n) { !n.bConsumed && n.type == NOTIFICATION_TYPE.COACH_REQUEST && n.destination._id == user._id }) != undefined) 
+      (_.find(user.notifications, function(n) { return !n.bConsumed && n.type == NOTIFICATION_TYPE.COACH_REQUEST && n.destination._id == user._id }) != undefined) 
     )
   }
 
@@ -303,7 +303,7 @@ export class UsersComponent implements OnInit {
   canCancelCoachToAthleteLinkRequestBeSent(user: User) {
     return (
       (user._id != this.account.user._id) &&
-      (_.find(user.notifications, function(n) { !n.bConsumed && n.type == NOTIFICATION_TYPE.ATHLETE_REQUEST && n.destination._id == user._id }) != undefined)  
+      (_.find(user.notifications, function(n) { return !n.bConsumed && n.type == NOTIFICATION_TYPE.ATHLETE_REQUEST && n.destination._id == user._id }) != undefined)  
     )
   }
 
@@ -327,7 +327,7 @@ export class UsersComponent implements OnInit {
     this.httpService.sendNotification(destinationUser._id, newNotification)
     .subscribe(
       (data: any) => {
-        console.log("Send Notification destination User: " + data);
+        console.log("Send Notification destination User", data);
         this.updateUserInUserLists(data);
         this.bLoading = false;
         this.toastr.success('Richiesta correttamente inviata!');
@@ -335,7 +335,7 @@ export class UsersComponent implements OnInit {
       (error: HttpErrorResponse) => {
         this.bLoading = false;
         this.toastr.error("Si è verificato un errore durante l'invio della richiesta");
-        console.log(error);
+        console.log("Send Notification Error", error);
       });
   }
   
@@ -358,7 +358,7 @@ export class UsersComponent implements OnInit {
     this.httpService.cancelAthleteCoachLink(destinationUser._id, newNotification)
     .subscribe(
       (data: any) => {
-        console.log("cancelAthleteCoachLink result data: " + data);
+        console.log("cancelAthleteCoachLink result data", data);
 
         // Update from user (current user) and dest user
         if(data.fromUser != null)
@@ -372,7 +372,7 @@ export class UsersComponent implements OnInit {
       (error: HttpErrorResponse) => {
         this.bLoading = false;
         this.toastr.error("Si è verificato un errore durante l'invio della richiesta");
-        console.log(error);
+        console.log("cancelAthleteCoachLink error", error);
       });
   }
   
@@ -383,10 +383,10 @@ export class UsersComponent implements OnInit {
     // Find the notification which need to be canceled
     switch(notificationType) {
       case NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK_REQUEST:
-        notification = _.find(destinationUser.notifications, function(n) { n.type == NOTIFICATION_TYPE.COACH_REQUEST && n.destination._id == destinationUser._id })
+        notification = _.find(destinationUser.notifications, function(n) { return !n.bConsumed && n.type == NOTIFICATION_TYPE.COACH_REQUEST && n.destination._id == destinationUser._id })
         break;
       case NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK_REQUEST:
-        notification =  _.find(destinationUser.notifications, function(n) { n.type == NOTIFICATION_TYPE.ATHLETE_REQUEST && n.destination._id == destinationUser._id });
+        notification =  _.find(destinationUser.notifications, function(n) { return !n.bConsumed && n.type == NOTIFICATION_TYPE.ATHLETE_REQUEST && n.destination._id == destinationUser._id });
         break
     }
 
@@ -395,7 +395,7 @@ export class UsersComponent implements OnInit {
     this.httpService.dismissNotification(destinationUser._id, notification)
     .subscribe(
       (data: any) => {
-        console.log("dismissNotification result data: " + data);
+        console.log("dismissNotification result data", data);
 
         // Update destination user (not the current user)
         this.updateUserInUserLists(data);
@@ -406,7 +406,7 @@ export class UsersComponent implements OnInit {
       (error: HttpErrorResponse) => {
         this.bLoading = false;
         this.toastr.error("Si è verificato un errore durante l'eliminazione della richiesta di collegamento!");
-        console.log(error);
+        console.log("dismissNotification error", error);
       });
   }
 }
