@@ -21,6 +21,7 @@ export class NotificationsComponent implements OnInit {
   public account: Account;
   public Role = Role;
   public sortListStatus: any;
+  private currentSortField: any;
   public NOTIFICATION_TYPE = NOTIFICATION_TYPE;
 
 
@@ -29,6 +30,13 @@ export class NotificationsComponent implements OnInit {
     // Init account and notification list
     this.accountService.account.subscribe(x => {
       this.account = x
+
+      // Update notification list
+      if(this.sortListStatus != null && this.filters != null && this.filters != {}) {
+        this.notificationList = _.sortBy(_.cloneDeep(this.account.user.notifications), ['bConsumed', 'creationDate']);
+        this.filterNotifications(null);
+        this.sortListByField(this.currentSortField, true);
+      }
     });
     
     // Init filters and sort status
@@ -64,17 +72,20 @@ export class NotificationsComponent implements OnInit {
     this.sortListStatus = {type: null, from: null, message: null, bConsumed: null};
   }
 
-  sortListByField(field: string) {
-    let currentFieldStatus = this.sortListStatus[field];
-    this.resetSortStatus();
-    this.sortListStatus[field] = currentFieldStatus == null ? true : !currentFieldStatus;
-    this.notificationList = _.orderBy(this.notificationList, field, this.sortListStatus[field] ? 'asc' : 'desc');
-  }
-
-  updateNotificationList(notification: Notification) {
-    this.notificationList[_.findIndex(this.notificationList, function(n) { return n._id == notification._id})] = _.cloneDeep(notification);
-    this.filterNotifications(null);
-  }
+  /**
+     * Sort notification list by field
+     * @param field field used to sort the list
+     * @param bRepeatLastSort if true, the function repeats the last sort of the field passed as argument
+     */
+    sortListByField(field: string, bRepeatLastSort: boolean) {
+      if(field != null) {
+        let currentFieldStatus = this.sortListStatus[field];
+        this.resetSortStatus();
+        this.sortListStatus[field] = bRepeatLastSort ? currentFieldStatus : (currentFieldStatus == null ? true : !currentFieldStatus);
+        this.notificationList = _.orderBy(this.notificationList, field, this.sortListStatus[field] ? 'asc' : 'desc');
+        this.currentSortField = field;
+      }
+    }
 
 
   /* ACTIONS */
@@ -83,19 +94,15 @@ export class NotificationsComponent implements OnInit {
     this.httpService.acceptRequest(this.account.user._id, notification)
     .subscribe(
       (data: any) => {
-        console.log("acceptRequest result data: " + data);
-
-        // Update destination user (current user) and notification list
-        this.account.user = data;
-        this.updateNotificationList(notification);
-
+        // Note: this function doesn't need to update user and notification list because this is done using the socket!
         this.bLoading = false;
+        console.log("acceptRequest result data", data);
         this.toastr.success('Richiesta correttamente accettata!');
       },
       (error: HttpErrorResponse) => {
         this.bLoading = false;
         this.toastr.error("Si è verificato un errore durante l'invio di accettazione richiesta");
-        console.log(error);
+        console.log("acceptRequest error", error);
       });
   }
 
@@ -104,19 +111,15 @@ export class NotificationsComponent implements OnInit {
     this.httpService.refuseRequest(this.account.user._id, notification)
     .subscribe(
       (data: any) => {
-        console.log("refuseRequest result data: " + data);
-
-        // Update destination user (current user) and notification list
-        this.account.user = data;
-        this.updateNotificationList(notification);
-
+        // Note: this function doesn't need to update user and notification list because this is done using the socket!
         this.bLoading = false;
+        console.log("refuseRequest result data", data);
         this.toastr.success('Richiesta correttamente rifiutata!');
       },
       (error: HttpErrorResponse) => {
         this.bLoading = false;
         this.toastr.error("Si è verificato un errore durante l'invio di rifiuto richiesta");
-        console.log(error);
+        console.log("refuseRequest error", error);
       });
   }
 
@@ -126,19 +129,15 @@ export class NotificationsComponent implements OnInit {
     this.httpService.dismissNotification(this.account.user._id, notification)
     .subscribe(
       (data: any) => {
-        console.log("dismissNotification result data: " + data);
-
-        // Update destination user (current user) and notification list
-        this.account.user = data;
-        this.updateNotificationList(notification);
-
+        // Note: this function doesn't need to update user and notification list because this is done using the socket!
         this.bLoading = false;
+        console.log("dismissNotification result data", data);
         this.toastr.success('Richiesta visualizzata!');
       },
       (error: HttpErrorResponse) => {
         this.bLoading = false;
         this.toastr.error("Si è verificato un errore durante l'invio di visualizzazione richiesta");
-        console.log(error.error.message);
+        console.log("dismissNotification error", error);
       });
   }
 
