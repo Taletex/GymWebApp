@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { Account, Role } from '@app/_models';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { GeneralService, PAGEMODE, PAGES, NOTIFICATION_TYPE } from '@app/_services/general-service/general-service.service';
+import { Socket } from 'ngx-socket-io';
 import * as _ from "lodash";
 
 @Component({
@@ -27,7 +28,7 @@ export class UsersComponent implements OnInit {
   public sortListStatus: any;
   public NOTIFICATION_TYPE = NOTIFICATION_TYPE;
 
-  constructor(private router: Router, private accountService: AccountService, private httpService: HttpService, private toastr: ToastrService, public generalService: GeneralService) {
+  constructor(private router: Router, private accountService: AccountService, private httpService: HttpService, private toastr: ToastrService, public generalService: GeneralService, private socket: Socket) {
     this.resetFilters();
     this.accountService.account.subscribe(x => this.account = x);
     
@@ -36,6 +37,21 @@ export class UsersComponent implements OnInit {
     // Init filters and sort status
     this.resetFilters();
     this.resetSortStatus();
+
+    // Init socket events
+    let scope = this;
+    socket.on('userListUserUpdated', function(user) {
+      if(user != null) {
+        let originalUserListUserIdx = _.findIndex(scope.originalUserList, function(u) { return u._id == user._id });
+        let userListUserIdx = _.findIndex(scope.userList, function(u) { return u._id == user._id });
+
+        if(originalUserListUserIdx != -1)
+          scope.originalUserList[originalUserListUserIdx] = _.cloneDeep(user);
+
+        if(userListUserIdx != -1)
+          scope.userList[userListUserIdx] = _.cloneDeep(user);
+      }
+    })
   }
 
   ngOnInit() {}
@@ -123,8 +139,14 @@ export class UsersComponent implements OnInit {
   }
 
   updateUserInUserLists(user: User) {
-    this.originalUserList[_.findIndex(this.originalUserList, function(u) { return u._id == user._id })] = _.cloneDeep(user);
-    this.userList[_.findIndex(this.userList, function(u) { return u._id == user._id })] = _.cloneDeep(user);
+    let originalUserListUserIdx = _.findIndex(this.originalUserList, function(u) { return u._id == user._id });
+    let userListUserIdx = _.findIndex(this.userList, function(u) { return u._id == user._id });
+
+    if(originalUserListUserIdx != -1)
+      this.originalUserList[originalUserListUserIdx] = _.cloneDeep(user);
+
+    if(userListUserIdx != -1)
+      this.userList[userListUserIdx] = _.cloneDeep(user);
   }
 
   updateUserInUserListsAfterLinkCancellation(user: User) {

@@ -308,9 +308,16 @@ module.exports = (io, clientSocketList) => {
                     .then(([destinationUser, fromUser]) => {
                         if (!destinationUser || !fromUser) { return res.status(404).send({ message: "User not found" }); }
 
-                        sendUpdatedUserToItsSocket(destinationUser);    // Send user informations to updated user (if its client is online)
-                        sendUpdatedUserToItsSocket(fromUser);           // Send user informations to updated user (if its client is online)
-                        res.send(destinationUser);                      // Send response to calling client
+                        // Update fromUser and destUser informations in destUser client
+                        sendUpdatedUserToItsSocket(destinationUser);                    
+                        sendUpdatedUserToClientSocket(fromUser, destinationUser._id);
+
+                        // Update fromUser and destUser informations in fromUser client
+                        sendUpdatedUserToItsSocket(fromUser);           
+                        sendUpdatedUserToClientSocket(destinationUser, fromUser._id);
+
+                        // Send response to calling client
+                        res.send(destinationUser);                      
                     }).catch(err => {
                         if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found" }); }
                         return res.status(500).send({ message: "Error updating user in accept notification" });
@@ -367,9 +374,17 @@ module.exports = (io, clientSocketList) => {
                 ])
                     .then(([destinationUser, fromUser]) => {
                         if (!destinationUser || !fromUser) { return res.status(404).send({ message: "User not found" }); }
-                            sendUpdatedUserToItsSocket(destinationUser);         // Send user informations to updated user (if its client is online)
-                            sendUpdatedUserToItsSocket(fromUser);                // Send user informations to updated user (if its client is online)
-                            res.send(destinationUser);                           // Send response to calling client
+
+                        // Update fromUser and destUser informations in destUser client
+                        sendUpdatedUserToItsSocket(destinationUser);                    
+                        sendUpdatedUserToClientSocket(fromUser, destinationUser._id);
+
+                        // Update fromUser and destUser informations in fromUser client
+                        sendUpdatedUserToItsSocket(fromUser);           
+                        sendUpdatedUserToClientSocket(destinationUser, fromUser._id);
+
+                        // Send response to calling client
+                        res.send(destinationUser); 
                     }).catch(err => {
                         if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found" }); }
                         return res.status(500).send({ message: "Error updating user in accept notification" });
@@ -483,11 +498,18 @@ module.exports = (io, clientSocketList) => {
                         if (!cUser || !aUser) { return res.status(404).send({ message: "User not found" }); }
 
                         let fromUser = (cUser._id.equals(notification.from) ? cUser : aUser);
-                        let destUser = (cUser._id.equals(notification.destination) ? cUser : aUser);
+                        let destinationUser = (cUser._id.equals(notification.destination) ? cUser : aUser);
 
-                        sendUpdatedUserToItsSocket(destUser);                   // Send user informations to updated user (if its client is online)
-                        sendUpdatedUserToItsSocket(fromUser);                   // Send user informations to updated user (if its client is online)
-                        res.send({destUser: destUser, fromUser: fromUser});     // Send response to calling client
+                        // Update fromUser and destUser informations in destUser client
+                        sendUpdatedUserToItsSocket(destinationUser);                    
+                        sendUpdatedUserToClientSocket(fromUser, destinationUser._id);
+
+                        // Update fromUser and destUser informations in fromUser client
+                        sendUpdatedUserToItsSocket(fromUser);           
+                        sendUpdatedUserToClientSocket(destinationUser, fromUser._id);
+
+                        // Send response to calling client
+                        res.send({destUser: destinationUser, fromUser: fromUser}); 
                     }).catch(err => {
                         if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found" }); }
                         return res.status(500).send({ message: "Error updating user in accept notification" });
@@ -528,13 +550,24 @@ module.exports = (io, clientSocketList) => {
     }
 
     /**
-     * Send user informations to destination user (if its client is online)
+     * Send user informations to destination client (if the client is online)
      * @param {*} user 
      */
     function sendUpdatedUserToItsSocket(user) {
         let userSocket = _.find(clientSocketList, function(socket) { return socket.userId == user._id});
         if(userSocket != undefined && userSocket.socketId) {
             io.to(userSocket.socketId).emit('userUpdated', user);
+        }
+    }
+
+    /**
+     * Used when a client needs to update an user in an userList (if the client is online)
+     * @param {*} user 
+     */
+    function sendUpdatedUserToClientSocket(user, destClientUserId) {
+        let userSocket = _.find(clientSocketList, function(socket) { return socket.userId == destClientUserId});
+        if(userSocket != undefined && userSocket.socketId) {
+            io.to(userSocket.socketId).emit('userListUserUpdated', user);
         }
     }
 
