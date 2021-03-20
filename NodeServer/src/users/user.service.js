@@ -240,8 +240,15 @@ module.exports = (io, clientSocketList) => {
                                 .populate('coaches').populate('athletes')
                     .then(user => {
                         if (!user) { return res.status(404).send({ message: "User not found with id " + req.params._id }); }
-                            sendUpdatedUserToItsSocket(user);    // Send user informations to updated user (if its client is online)
-                            res.send(user);                      // Send response to calling client
+
+                        // Update destUser informations in destUser client
+                        sendUpdatedUserToItsSocket(user);    
+
+                        // Update destUser informations in fromUser client
+                        sendUpdatedUserToClientSocket(user, req.body.from);
+
+                        // Send response to calling client
+                        res.send(user);                      
                     }).catch(err => {
                         if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found with id " + req.params._id }); }
                         return res.status(500).send({ message: "Error updating user with id " + req.params._id });
@@ -425,8 +432,15 @@ module.exports = (io, clientSocketList) => {
                 ])
                     .then(([destinationUser]) => {
                         if (!destinationUser) { return res.status(404).send({ message: "User not found" }); }
-                            sendUpdatedUserToItsSocket(destinationUser);   // Send user informations to destination user (if its client is online)
-                            res.send(destinationUser);                     // Send response to calling client
+
+                        // Update destUser informations in destUser client
+                        sendUpdatedUserToItsSocket(destinationUser);    
+
+                        // Update destUser informations in fromUser client
+                        sendUpdatedUserToClientSocket(destinationUser, req.body.from);
+
+                        // Send response to calling client
+                        res.send(destinationUser);                      
                     }).catch(err => {
                         if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found" }); }
                         return res.status(500).send({ message: "Error updating user in accept notification" });

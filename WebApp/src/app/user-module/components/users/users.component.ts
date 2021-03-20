@@ -26,11 +26,21 @@ export class UsersComponent implements OnInit {
   public account: Account;
   public Role = Role;
   public sortListStatus: any;
+  private currentSortField: any;
   public NOTIFICATION_TYPE = NOTIFICATION_TYPE;
 
   constructor(private router: Router, private accountService: AccountService, private httpService: HttpService, private toastr: ToastrService, public generalService: GeneralService, private socket: Socket) {
     this.resetFilters();
-    this.accountService.account.subscribe(x => this.account = x);
+    this.accountService.account.subscribe(x => {
+      this.account = x;
+      
+      // If users are filtered by "link", update the user list because somethink could have been changed
+      if(this.filters.filterUserListType == "links") {
+        this.originalUserList = _.sortBy(this.account.user.athletes.concat(this.account.user.coaches), ['name', 'surname']);
+        this.filterUsers(null);
+        this.sortListByField(this.currentSortField, true);
+      }
+    });
     
     this.setUserList(null);
 
@@ -38,10 +48,11 @@ export class UsersComponent implements OnInit {
     this.resetFilters();
     this.resetSortStatus();
 
-    // Init socket events
+    // Socket events
     let scope = this;
     socket.on('userListUserUpdated', function(user) {
       if(user != null) {
+        // Update user in user list
         let originalUserListUserIdx = _.findIndex(scope.originalUserList, function(u) { return u._id == user._id });
         let userListUserIdx = _.findIndex(scope.userList, function(u) { return u._id == user._id });
 
@@ -228,15 +239,25 @@ export class UsersComponent implements OnInit {
     this.sortListStatus = {name: null, variant: null, description: null};
   }
 
-  sortListByField(field: string) {
-    let currentFieldStatus = this.sortListStatus[field];
-    this.resetSortStatus();
-    this.sortListStatus[field] = currentFieldStatus == null ? true : !currentFieldStatus;
-
-    if(field=='user')
-      this.userList = _.orderBy(this.userList, ['name', 'surname'], this.sortListStatus[field] ? 'asc' : 'desc');
-    else
-      this.userList = _.orderBy(this.userList, field, this.sortListStatus[field] ? 'asc' : 'desc');
+  /**
+   * Sort user list by field
+   * @param field field used to sort the list
+   * @param bRepeatLastSort if true, the function repeats the last sort of the field passed as argument
+   */
+  sortListByField(field: string, bRepeatLastSort: boolean) {
+    if(field != null) {
+      let currentFieldStatus = this.sortListStatus[field];
+      this.resetSortStatus();
+  
+      this.sortListStatus[field] = bRepeatLastSort ? currentFieldStatus : (currentFieldStatus == null ? true : !currentFieldStatus);
+  
+      if(field=='user')
+        this.userList = _.orderBy(this.userList, ['name', 'surname'], this.sortListStatus[field] ? 'asc' : 'desc');
+      else
+        this.userList = _.orderBy(this.userList, field, this.sortListStatus[field] ? 'asc' : 'desc');
+  
+      this.currentSortField = field;
+    }
   }
 
 
@@ -349,9 +370,9 @@ export class UsersComponent implements OnInit {
     this.httpService.sendNotification(destinationUser._id, newNotification)
     .subscribe(
       (data: any) => {
-        console.log("Send Notification destination User", data);
-        this.updateUserInUserLists(data);
+        // Note: this function doesn't need to update any user because update is made using sockets
         this.bLoading = false;
+        console.log("Send Notification destination User", data);
         this.toastr.success('Richiesta correttamente inviata!');
       },
       (error: HttpErrorResponse) => {
@@ -380,15 +401,9 @@ export class UsersComponent implements OnInit {
     this.httpService.cancelAthleteCoachLink(destinationUser._id, newNotification)
     .subscribe(
       (data: any) => {
-        console.log("cancelAthleteCoachLink result data", data);
-
-        // Update from user (current user) and dest user
-        if(data.fromUser != null)
-          this.account.user = data.fromUser;
-        if(data.destUser != null)
-          this.updateUserInUserListsAfterLinkCancellation(data.destUser);
-
+        // Note: this function doesn't need to update any user because update is made using sockets
         this.bLoading = false;
+        console.log("cancelAthleteCoachLink result data", data);
         this.toastr.success('Richiesta correttamente inviata!');
       },
       (error: HttpErrorResponse) => {
@@ -417,12 +432,9 @@ export class UsersComponent implements OnInit {
     this.httpService.dismissNotification(destinationUser._id, notification)
     .subscribe(
       (data: any) => {
-        console.log("dismissNotification result data", data);
-
-        // Update destination user (not the current user)
-        this.updateUserInUserLists(data);
-
+        // Note: this function doesn't need to update any user because update is made using sockets
         this.bLoading = false;
+        console.log("dismissNotification result data", data);
         this.toastr.success('Richiesta di collegamento correttamente eliminata!');
       },
       (error: HttpErrorResponse) => {
