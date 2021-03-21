@@ -1,10 +1,8 @@
 
 module.exports = function(io, clientSocketList) {
     
-    const cors = require('cors');
     const express = require('express');
     const router = express.Router();
-    const corsOptions = {origin: '*', optionsSuccessStatus: 200}; 
     const userService = require('src/users/user.service')(io, clientSocketList);
 
     /* ROUTES */

@@ -46,6 +46,7 @@ module.exports = (io, clientSocketList) => {
 
     /**
      * Send user informations to destination client (if the client is online)
+     * This function can be used to update a client when its user notifications are updated
      * @param {*} user 
      */
     function sendUpdatedUserToItsSocket(user) {

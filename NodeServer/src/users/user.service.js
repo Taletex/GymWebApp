@@ -1,7 +1,5 @@
 const { User, Notification } = require('src/users/user.model.js');
 const { NOTIFICATION_ONLY_DISMISS, NOTIFICATION_TYPE } = require('src/_helpers/enum.js');
-const { NotificationSchema } = require('./user.model');
-const { concat, isObject } = require('lodash');
 const _ = require('lodash');
 
 /** REST CALLBACKS **/

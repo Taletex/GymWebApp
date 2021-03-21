@@ -46,7 +46,7 @@ io.on('connection', (socket) => {
 
 /* ROUTES INITIALIZATION */
 app.get('/', (req, res) => { res.json({ "message": "Welcome to GymWebApp database application." }); });
-app.use('/trainings', require('src/trainings/training.controller'));
+app.use('/trainings', require('src/trainings/training.controller')(io, clientSocketList));
 app.use('/exercises', require('src/exercises/exercise.controller'));
 app.use('/users', require('src/users/user.controller')(io, clientSocketList));
 app.use('/accounts', require('src/accounts/accounts.controller'));
