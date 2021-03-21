@@ -138,4 +138,16 @@ export class HttpService {
   cancelAthleteCoachLink(destinationUserId: string, notification: Notification) {
     return this.http.put<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications/cancelLink", notification);
   }
+
+  dismissAllNotifications(destinationUserId: string, notifications: Notification[]) {
+    return this.http.put<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications/dismissAll", notifications);
+  }
+
+  cancelNotification(destinationUserId: string, notification: Notification) {
+    return this.http.put<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications/" + notification._id + "/cancel", notification);
+  }
+
+  cancelAllNotifications(destinationUserId: string, notifications: Notification[]) {
+    return this.http.put<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications/cancelAll", notifications);
+  }
 }

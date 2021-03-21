@@ -143,17 +143,56 @@ export class NotificationsComponent implements OnInit {
 
   
   dismissAllNotifications() {
-    alert("TODO");
+    this.bLoading = true;
+    this.httpService.dismissAllNotifications(this.account.user._id, this.account.user.notifications)
+    .subscribe(
+      (data: any) => {
+        // Note: this function doesn't need to update user and notification list because this is done using the socket!
+        this.bLoading = false;
+        console.log("dismissAllNotifications result data", data);
+        this.toastr.success('Tutte le richieste sono state visualizzate!');
+      },
+      (error: HttpErrorResponse) => {
+        this.bLoading = false;
+        this.toastr.error("Si è verificato un errore durante l'invio di visualizzazione di tutte le richieste");
+        console.log("dismissAllNotifications error", error);
+      });
   }
 
 
   cancelNotification(notification: Notification) {
-    alert("TODO");
+    this.bLoading = true;
+    this.httpService.cancelNotification(this.account.user._id, notification)
+    .subscribe(
+      (data: any) => {
+        // Note: this function doesn't need to update user and notification list because this is done using the socket!
+        this.bLoading = false;
+        console.log("cancelNotification result data", data);
+        this.toastr.success('Richiesta cancellata!');
+      },
+      (error: HttpErrorResponse) => {
+        this.bLoading = false;
+        this.toastr.error("Si è verificato un errore durante l'invio di cancellazione della richiesta");
+        console.log("cancelNotification error", error);
+      });
   }
 
-  
+
   cancelAllNotifications() {
-    alert("TODO");
+    this.bLoading = true;
+    this.httpService.cancelAllNotifications(this.account.user._id, this.account.user.notifications)
+    .subscribe(
+      (data: any) => {
+        // Note: this function doesn't need to update user and notification list because this is done using the socket!
+        this.bLoading = false;
+        console.log("cancelAllNotifications result data", data);
+        this.toastr.success('Tutte le richieste (visualizzate) sono state cancellate!');
+      },
+      (error: HttpErrorResponse) => {
+        this.bLoading = false;
+        this.toastr.error("Si è verificato un errore durante l'invio di cancellazione di tutte le richieste");
+        console.log("cancelAllNotifications error", error);
+      });
   }
 
 }

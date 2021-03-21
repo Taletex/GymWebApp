@@ -44,5 +44,14 @@ module.exports = function(io, clientSocketList) {
     // Dismiss a notification for a given User
     router.put('/:_id/notifications/:_notId/dismiss', (req, res, next) => {userService.dismissNotification(req, res, next)});
 
+    // Dismiss all notifications for a given User
+    router.put('/:_id/notifications/dismissAll', (req, res, next) => {userService.dismissAllNotifications(req, res, next)});
+
+    // Cancel a notification for a given User
+    router.put('/:_id/notifications/:_notId/cancel', (req, res, next) => {userService.cancelNotification(req, res, next)});
+
+    // Cancel all notifications for a given User
+    router.put('/:_id/notifications/cancelAll', (req, res, next) => {userService.cancelAllNotifications(req, res, next)});
+
     return router;
 }
