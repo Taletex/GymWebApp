@@ -1,34 +1,14 @@
 const { User, Notification } = require('src/users/user.model.js');
-const _ = require('lodash');
+const { NOTIFICATION_ONLY_DISMISS, NOTIFICATION_TYPE } = require('src/_helpers/enum.js');
 const { NotificationSchema } = require('./user.model');
 const { concat, isObject } = require('lodash');
-const MAX_NOTIFICATION_LIST_LENGTH = 100;
-
-const NOTIFICATION_TYPE = {
-    COACH_REQUEST: "coach_request",
-    ATHLETE_REQUEST: "athlete_request",
-    REQUEST_SUCCESS: "request_success",
-    REQUEST_REFUSE: "request_refuse",
-    CANCEL_ATHLETE_TO_COACH_LINK: "cancel_athlete_to_coach_link",
-    CANCEL_COACH_TO_ATHLETE_LINK: "cancel_coach_to_athlete_link",
-    CANCEL_ATHLETE_TO_COACH_LINK_REQUEST: "cancel_athlete_to_coach_link_request",
-    CANCEL_COACH_TO_ATHLETE_LINK_REQUEST: "cancel_coach_to_athlete_link_request",
-    DISMISS: "dismiss"
-}
-
-const NOTIFICATION_ONLY_DISMISS = [
-    NOTIFICATION_TYPE.REQUEST_SUCCESS,
-    NOTIFICATION_TYPE.REQUEST_REFUSE,
-    NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK,
-    NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK,
-    NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK_REQUEST,
-    NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK_REQUEST,
-    NOTIFICATION_TYPE.DISMISS,
-]
+const _ = require('lodash');
 
 /** REST CALLBACKS **/
-
 module.exports = (io, clientSocketList) => {
+
+    const notificationService = require('src/_helpers/notification.service')(io, clientSocketList);
+
     return {
         createUser,
         findAllUser,
@@ -46,7 +26,6 @@ module.exports = (io, clientSocketList) => {
         cancelNotification,
         cancelAllNotifications
     };
-
 
 
     // Create and Save a new User
@@ -255,10 +234,10 @@ module.exports = (io, clientSocketList) => {
                         if (!user) { return res.status(404).send({ message: "User not found with id " + req.params._id }); }
 
                         // Update destUser informations in destUser client
-                        sendUpdatedUserToItsSocket(user);    
+                        notificationService.sendUpdatedUserToItsSocket(user);    
 
                         // Update destUser informations in fromUser client
-                        sendUpdatedUserToClientSocket(user, req.body.from);
+                        notificationService.sendUpdatedUserToClientSocket(user, req.body.from);
 
                         // Send response to calling client
                         res.send(user);                      
@@ -290,7 +269,7 @@ module.exports = (io, clientSocketList) => {
                 fromUser = fUser;
 
                 // 1. in destination user set the notification as consumed and pop exceeded elements in the notifications list
-                if(consumeAndCleanNotifications(destinationUser, req.params._notId)) {
+                if(notificationService.consumeAndCleanNotifications(destinationUser, req.params._notId)) {
 
                     // 2. update destiantion and from coaches and athletes lists
                     if (notification.type == NOTIFICATION_TYPE.COACH_REQUEST) {
@@ -329,12 +308,12 @@ module.exports = (io, clientSocketList) => {
                             if (!destinationUser || !fromUser) { return res.status(404).send({ message: "User not found" }); }
 
                             // Update fromUser and destUser informations in destUser client
-                            sendUpdatedUserToItsSocket(destinationUser);                    
-                            sendUpdatedUserToClientSocket(fromUser, destinationUser._id);
+                            notificationService.sendUpdatedUserToItsSocket(destinationUser);                    
+                            notificationService.sendUpdatedUserToClientSocket(fromUser, destinationUser._id);
 
                             // Update fromUser and destUser informations in fromUser client
-                            sendUpdatedUserToItsSocket(fromUser);           
-                            sendUpdatedUserToClientSocket(destinationUser, fromUser._id);
+                            notificationService.sendUpdatedUserToItsSocket(fromUser);           
+                            notificationService.sendUpdatedUserToClientSocket(destinationUser, fromUser._id);
 
                             // Send response to calling client
                             res.send(destinationUser);                      
@@ -368,7 +347,7 @@ module.exports = (io, clientSocketList) => {
                 fromUser = fUser;
 
                 // 1. in destination user set the notification as consumed and pop exceeded elements in the notifications list
-                if(consumeAndCleanNotifications(destinationUser, req.params._notId)) {
+                if(notificationService.consumeAndCleanNotifications(destinationUser, req.params._notId)) {
                     
                     // 2. add a notification to the from user (to inform about the refused request)
                     let message = "L'utente " + destinationUser.name + " " + destinationUser.surname + " ha RIFIUTATO la richiesta di " + (notification.type == NOTIFICATION_TYPE.COACH_REQUEST ? "seguirti come coach" : (notification.type == NOTIFICATION_TYPE.ATHLETE_REQUEST ? 'essere seguito come atleta' : ''));
@@ -397,12 +376,12 @@ module.exports = (io, clientSocketList) => {
                             if (!destinationUser || !fromUser) { return res.status(404).send({ message: "User not found" }); }
 
                             // Update fromUser and destUser informations in destUser client
-                            sendUpdatedUserToItsSocket(destinationUser);                    
-                            sendUpdatedUserToClientSocket(fromUser, destinationUser._id);
+                            notificationService.sendUpdatedUserToItsSocket(destinationUser);                    
+                            notificationService.sendUpdatedUserToClientSocket(fromUser, destinationUser._id);
 
                             // Update fromUser and destUser informations in fromUser client
-                            sendUpdatedUserToItsSocket(fromUser);           
-                            sendUpdatedUserToClientSocket(destinationUser, fromUser._id);
+                            notificationService.sendUpdatedUserToItsSocket(fromUser);           
+                            notificationService.sendUpdatedUserToClientSocket(destinationUser, fromUser._id);
 
                             // Send response to calling client
                             res.send(destinationUser); 
@@ -435,7 +414,7 @@ module.exports = (io, clientSocketList) => {
                 let notificationToConsume = notificationToConsumeIndex != -1 ? destinationUser.notifications[notificationToConsumeIndex] : null;
                 
                 // 1. in destination user set the notification as consumed and pop exceeded elements in the notifications list
-                if(consumeAndCleanNotifications(destinationUser, req.params._notId)) {
+                if(notificationService.consumeAndCleanNotifications(destinationUser, req.params._notId)) {
 
                     // 2. update destination user
                     Promise.all([
@@ -452,10 +431,10 @@ module.exports = (io, clientSocketList) => {
                             if (!destinationUser) { return res.status(404).send({ message: "User not found" }); }
 
                             // Update destUser informations in destUser client
-                            sendUpdatedUserToItsSocket(destinationUser);    
+                            notificationService.sendUpdatedUserToItsSocket(destinationUser);    
 
                             // Update destUser informations in fromUser client
-                            sendUpdatedUserToClientSocket(destinationUser, notificationToConsume.from);
+                            notificationService.sendUpdatedUserToClientSocket(destinationUser, notificationToConsume.from);
 
                             // Send response to calling client
                             res.send(destinationUser);                      
@@ -536,12 +515,12 @@ module.exports = (io, clientSocketList) => {
                         let destinationUser = (cUser._id.equals(notification.destination) ? cUser : aUser);
 
                         // Update fromUser and destUser informations in destUser client
-                        sendUpdatedUserToItsSocket(destinationUser);                    
-                        sendUpdatedUserToClientSocket(fromUser, destinationUser._id);
+                        notificationService.sendUpdatedUserToItsSocket(destinationUser);                    
+                        notificationService.sendUpdatedUserToClientSocket(fromUser, destinationUser._id);
 
                         // Update fromUser and destUser informations in fromUser client
-                        sendUpdatedUserToItsSocket(fromUser);           
-                        sendUpdatedUserToClientSocket(destinationUser, fromUser._id);
+                        notificationService.sendUpdatedUserToItsSocket(fromUser);           
+                        notificationService.sendUpdatedUserToClientSocket(destinationUser, fromUser._id);
 
                         // Send response to calling client
                         res.send({destUser: destinationUser, fromUser: fromUser}); 
@@ -575,7 +554,7 @@ module.exports = (io, clientSocketList) => {
                 if(notificationToConsumeList.length > 0) {
                     for(let i=0; i<destinationUser.notifications.length; i++) {
                         if(_.find(NOTIFICATION_ONLY_DISMISS, function(e) { return e == destinationUser.notifications[i].type; }) != undefined)
-                            consumeAndCleanNotifications(destinationUser, destinationUser.notifications[i]._id)
+                            notificationService.consumeAndCleanNotifications(destinationUser, destinationUser.notifications[i]._id)
                     }
 
                     // 2. update destination user
@@ -593,11 +572,11 @@ module.exports = (io, clientSocketList) => {
                             if (!destinationUser) { return res.status(404).send({ message: "User not found" }); }
 
                             // Update destUser informations in destUser client
-                            sendUpdatedUserToItsSocket(destinationUser);    
+                            notificationService.sendUpdatedUserToItsSocket(destinationUser);    
 
                             // Update destUser informations in fromUser clients
                             for(let j=0; j<notificationToConsumeList.length; j++) {
-                                sendUpdatedUserToClientSocket(destinationUser, notificationToConsumeList[j].from);
+                                notificationService.sendUpdatedUserToClientSocket(destinationUser, notificationToConsumeList[j].from);
                             }
 
                             // Send response to calling client
@@ -650,10 +629,10 @@ module.exports = (io, clientSocketList) => {
                             if (!destinationUser) { return res.status(404).send({ message: "User not found" }); }
 
                             // Update destUser informations in destUser client
-                            sendUpdatedUserToItsSocket(destinationUser);    
+                            notificationService.sendUpdatedUserToItsSocket(destinationUser);    
 
                             // Update destUser informations in fromUser client
-                            sendUpdatedUserToClientSocket(destinationUser, notificationToCancel.from);
+                            notificationService.sendUpdatedUserToClientSocket(destinationUser, notificationToCancel.from);
 
                             // Send response to calling client
                             res.send(destinationUser);                      
@@ -702,11 +681,11 @@ module.exports = (io, clientSocketList) => {
                             if (!destinationUser) { return res.status(404).send({ message: "User not found" }); }
 
                             // Update destUser informations in destUser client
-                            sendUpdatedUserToItsSocket(destinationUser);    
+                            notificationService.sendUpdatedUserToItsSocket(destinationUser);    
 
                             // Update destUser informations in fromUser clients
                             for(let i=0; i<notificationToCancelList.length; i++) {
-                                sendUpdatedUserToClientSocket(destinationUser, notificationToCancelList[i].from);
+                                notificationService.sendUpdatedUserToClientSocket(destinationUser, notificationToCancelList[i].from);
                             }
 
                             // Send response to calling client
@@ -722,63 +701,6 @@ module.exports = (io, clientSocketList) => {
                 if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found" }); }
                 return res.status(500).send({ message: "Error updating user in cancelAllNotifications" });
             });
-    }
-
-    /** UTILS **/
-
-    /**
-     * This function is used whenever a notifications has to become consumed. 
-     * This function set the notification to consumed and pop the notifications list in the user in order to mantain only MAX_NOTIFICATION_LIST_LENGTH consumed notifications
-     */
-    function consumeAndCleanNotifications(user, consumedNotId) {
-        // Set the notification to consumed, if the notification exists
-        let notificationToConsumeIndex = _.findIndex(user.notifications, function(n) { return n._id == consumedNotId; });
-        if(notificationToConsumeIndex != -1) {
-            user.notifications[notificationToConsumeIndex].bConsumed = true;
-
-            // Split the notifications list in two arrays: one with consumed notifications, one with unconsumed notifications.
-            let notConsumedNotifications = _.filter(user.notifications, function (n) { return !n.bConsumed });
-            let consumedNotifications = _.filter(user.notifications, function (n) { return n.bConsumed });
-
-            // Removes oldest consumed notifications in order to save only the MAX_NOTIFICATION_LIST_LENGTH recent ones
-            if (consumedNotifications.lenght > MAX_NOTIFICATION_LIST_LENGTH) {
-                let outBuffer = consumedNotifications.lenght - MAX_NOTIFICATION_LIST_LENGTH;
-                _.orderBy(consumedNotifications, ['bConsumed', 'creationDate'], ['asc', 'desc']);
-
-                for (let i = 0; i < outBuffer; i++) {
-                    consumedNotifications.pop();
-                }
-
-                user.notifications = _.orderBy(notConsumedNotifications.concat(consumedNotifications), ['bConsumed', 'creationDate'], ['asc', 'desc']);
-            }
-
-            return true;
-        } 
-        else {
-            return false;
-        }
-    }
-
-    /**
-     * Send user informations to destination client (if the client is online)
-     * @param {*} user 
-     */
-    function sendUpdatedUserToItsSocket(user) {
-        let userSocket = _.find(clientSocketList, function(socket) { return socket.userId == user._id});
-        if(userSocket != undefined && userSocket.socketId) {
-            io.to(userSocket.socketId).emit('userUpdated', user);
-        }
-    }
-
-    /**
-     * Used when a client needs to update an user in an userList (if the client is online)
-     * @param {*} user 
-     */
-    function sendUpdatedUserToClientSocket(user, destClientUserId) {
-        let userSocket = _.find(clientSocketList, function(socket) { return socket.userId == destClientUserId});
-        if(userSocket != undefined && userSocket.socketId) {
-            io.to(userSocket.socketId).emit('userListUserUpdated', user);
-        }
     }
 
 }
