@@ -15,7 +15,7 @@ export class TrainingModalComponent implements OnInit {
   public closeResult: string;
 
   @Input() newTraining: Training;
-  @Input() athleteList: Array<User>;
+  @Input() athleteList: Array<any>;
   @Output() onClose: EventEmitter<any> = new EventEmitter();
   @Output() onAbort: EventEmitter<any> = new EventEmitter();
 

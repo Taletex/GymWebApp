@@ -37,7 +37,7 @@ export class TrainingComponent implements OnInit {
   public activeSession: Array<number>;
   public copiedExercise: SessionExercise = new SessionExercise();
   public copiedSeries: Series = new Series();
-  public athleteList: Array<User> = [];
+  public athleteList: Array<any> = [];
   public exerciseList: Array<Exercise> = [];
   public hoveredDate: NgbDate | null = null;
   public fromDate: NgbDate;
@@ -127,7 +127,8 @@ export class TrainingComponent implements OnInit {
             this.getExercises();
 
             // Init athlete list
-            this.getAthletes();
+            this.athleteList = this.account.user.athletes;
+            this.athleteList.push(this.account.user);
 
             this.activeWeek = 1;
             this.activeSession = [];
@@ -277,23 +278,6 @@ export class TrainingComponent implements OnInit {
 
     if(maxHeight) 
       this.options.format.maxSessionContainerHeight = maxHeight + "px";
-  }
-
-  getAthletes() {
-    this.bLoading = true;
-
-    this.httpService.getAthletes()
-    .subscribe(
-      (data: Array<User>) => {
-        this.athleteList = data;
-        console.log(this.athleteList);
-        this.bLoading = false;
-      },
-      (error: HttpErrorResponse) => {
-        this.bLoading = false;
-        this.toastr.error('An error occurred while loading the athlete list!');
-        console.log(error.error.message);
-      });
   }
 
   getExercises() {

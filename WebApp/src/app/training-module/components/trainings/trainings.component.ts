@@ -18,7 +18,7 @@ import * as _ from "lodash";
 export class TrainingsComponent implements OnInit {
   public originalTrainingList: Array<Training> = [];
   public trainingList: Array<Training> = [];
-  public athleteList: Array<User> = [];
+  public athleteList: Array<any> = [];
   public newTraining: Training;
   public filters: any = {};
   public bLoading: boolean = false;
@@ -57,17 +57,18 @@ export class TrainingsComponent implements OnInit {
 
   getViewElements() {
     this.bLoading = true;
-    forkJoin({trainings: this.httpService.getTrainingsByUserId(this.account.user._id), athletes: this.httpService.getAthletes()})
+    forkJoin({trainings: this.httpService.getTrainingsByUserId(this.account.user._id)})
       .subscribe(
         (data: any) => {
           this.originalTrainingList = data.trainings;
           this.trainingList = _.cloneDeep(this.originalTrainingList);
-          console.log(this.trainingList);
+          console.log("Training List", this.trainingList);
           
           this.resetFilters();
 
-          this.athleteList = data.athletes;
-          console.log(this.athleteList);
+          this.athleteList = this.account.user.athletes;
+          this.athleteList.push(this.account.user);
+          console.log("Atlete List", this.athleteList);
 
           this.bLoading = false;
         },
