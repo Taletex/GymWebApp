@@ -68,14 +68,14 @@
                             <b>Azioni</b><img src="assets/icons/actions/menu-button.svg" style="width:15px; height:auto;" class="ml-2 mb-1">
                         </button>
                         <div class="dropdown-menu p-1" aria-labelledby="dropdownActionMenuButton">
-                            <a (click)="dismissAllNotifications()" class="dropdown-item d-flex align-items-center p-1">
+                            <button (click)="dismissAllNotifications()" [ngClass]="{'disabled cursor-not-allowed': !canDismissAllNotifications()}" [disabled]="!canDismissAllNotifications()" class="dropdown-item d-flex align-items-center p-1">
                                 <img src="assets/icons/actions/visibility.svg" style="width:15px; height:auto;"> 
                                 <span class="ml-2">Visualizza tutto</span>
-                                </a>
-                            <a (click)="cancelAllNotifications()" class="dropdown-item d-flex align-items-center p-1">
+                                </button>
+                            <button (click)="cancelAllNotifications()" [ngClass]="{'disabled cursor-not-allowed': !canCancelAllNotifications()}" [disabled]="!canCancelAllNotifications()" class="dropdown-item d-flex align-items-center p-1">
                                 <img src="assets/icons/actions/garbage-can.svg" style="width:15px; height:auto;"> 
                                 <span class="ml-2">Cancella tutto</span>
-                            </a>
+                            </button>
                         </div>
                       </div>
                 </div>

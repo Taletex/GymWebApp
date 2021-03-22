@@ -5,7 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Notification, User } from '@app/_models/training-model';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { Account, Role } from '@app/_models';
-import { NOTIFICATION_TYPE } from '@app/_services/general-service/general-service.service';
+import { NOTIFICATION_TYPE, NOTIFICATION_ONLY_DISMISS } from '@app/_services/general-service/general-service.service';
 import * as _ from "lodash";
 
 @Component({
@@ -195,4 +195,13 @@ export class NotificationsComponent implements OnInit {
       });
   }
 
+
+  /* CHECK FUNCTIONS */
+  canDismissAllNotifications():boolean {
+    return (_.find(this.account.user.notifications, function(n) { return !n.bConsumed && NOTIFICATION_ONLY_DISMISS.includes(n.type); }) != undefined);
+  }
+  
+  canCancelAllNotifications():boolean {
+    return (_.find(this.account.user.notifications, function(n) { return n.bConsumed; }) != undefined);
+  }
 }

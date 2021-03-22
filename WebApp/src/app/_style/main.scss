@@ -87,6 +87,10 @@ $custom-lightgray: rgb(179 179 179 / 15%);
   cursor: pointer !important;
 }
 
+.cursor-not-allowed {
+  cursor: not-allowed !important;
+}
+
 .overflow-auto {
   overflow: auto !important;
 }

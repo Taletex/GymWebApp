@@ -147,6 +147,10 @@
   cursor: pointer !important;
 }
 
+.cursor-not-allowed {
+  cursor: not-allowed !important;
+}
+
 .overflow-auto {
   overflow: auto !important;
 }

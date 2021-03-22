@@ -546,12 +546,12 @@ module.exports = (io, clientSocketList) => {
                 if (!dUser) { return res.status(404).send({ message: "User not found" }); }
 
                 destinationUser = dUser;
-                let notificationToConsumeList = _.filter(destinationUser.notifications, function(n) { return !n.bConsumed; });
+                let notificationToConsumeList = _.filter(destinationUser.notifications, function(n) { return !n.bConsumed && NOTIFICATION_ONLY_DISMISS.includes(n.type); });
                 
                 // 1. Check if there are some notification to be consumed, and if yes, consume them (just consume all notifications that does not need confirmation, but only dismiss)
                 if(notificationToConsumeList.length > 0) {
                     for(let i=0; i<destinationUser.notifications.length; i++) {
-                        if(_.find(NOTIFICATION_ONLY_DISMISS, function(e) { return e == destinationUser.notifications[i].type; }) != undefined)
+                        if(!destinationUser.notifications[i].bConsumed && NOTIFICATION_ONLY_DISMISS.includes(destinationUser.notifications[i].type))
                             notificationService.consumeAndCleanNotifications(destinationUser, destinationUser.notifications[i]._id)
                     }
 
