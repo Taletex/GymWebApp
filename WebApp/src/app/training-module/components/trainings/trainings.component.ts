@@ -66,7 +66,7 @@ export class TrainingsComponent implements OnInit {
           
           this.resetFilters();
 
-          this.athleteList = this.account.user.athletes;
+          this.athleteList = _.cloneDeep(this.account.user.athletes);
           this.athleteList.push(this.account.user);
           console.log("Atlete List", this.athleteList);
 

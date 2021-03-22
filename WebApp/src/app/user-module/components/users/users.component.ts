@@ -36,7 +36,7 @@ export class UsersComponent implements OnInit {
       
       // If users are filtered by "link", update the user list because somethink could have been changed
       if(this.filters.filterUserListType == "links") {
-        this.originalUserList = _.sortBy(this.account.user.athletes.concat(this.account.user.coaches), ['name', 'surname']);
+        this.originalUserList = _.sortBy(_.cloneDeep(this.account.user.athletes).concat(_.cloneDeep(this.account.user.coaches)), ['name', 'surname']);
         this.filterUsers(null);
         this.sortListByField(this.currentSortField, true);
       }
@@ -220,7 +220,7 @@ export class UsersComponent implements OnInit {
   setUserList(event: any) {
     if(this.filters.filterUserListType == 'links') {
       this.bLoading = true;
-      this.originalUserList = _.sortBy(this.account.user.athletes.concat(this.account.user.coaches), ['name', 'surname']);
+      this.originalUserList = _.sortBy(_.cloneDeep(this.account.user.athletes).concat(_.cloneDeep(this.account.user.coaches)), ['name', 'surname']);
       this.userList = _.cloneDeep(this.originalUserList);
       this.resetFilters();
       console.log("Linked User List", this.userList);

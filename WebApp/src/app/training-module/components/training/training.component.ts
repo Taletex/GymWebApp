@@ -127,7 +127,7 @@ export class TrainingComponent implements OnInit {
             this.getExercises();
 
             // Init athlete list
-            this.athleteList = this.account.user.athletes;
+            this.athleteList = _.cloneDeep(this.account.user.athletes);
             this.athleteList.push(this.account.user);
 
             this.activeWeek = 1;
