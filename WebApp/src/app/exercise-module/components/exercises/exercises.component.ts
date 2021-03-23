@@ -48,7 +48,7 @@ export class ExercisesComponent implements OnInit {
           this.originalExerciseList = data;
           this.exerciseList = _.cloneDeep(this.originalExerciseList);
           this.resetFilters();
-
+          
           this.bLoading = false;
           console.log(this.exerciseList);
         },
@@ -136,6 +136,12 @@ export class ExercisesComponent implements OnInit {
       this.exerciseList = _.orderBy(this.exerciseList, ['variant.name', 'variant.intensityCoefficient'], this.sortListStatus[field] ? 'asc' : 'desc');
     else
       this.exerciseList = _.orderBy(this.exerciseList, field, this.sortListStatus[field] ? 'asc' : 'desc');
+  }
+
+  sortListByFieldUI(field: string) {
+    if(!this.bLoading) {
+      this.sortListByField(field);
+    }
   }
 
 }

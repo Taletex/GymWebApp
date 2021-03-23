@@ -21,16 +21,16 @@ const adminModule = () => import('./admin-module/admin.module').then(x => x.Admi
 
 const routes: Routes = [
   { path: '', redirectTo: 'homepage', pathMatch: 'full', canActivate: [AuthGuard]},
-  { path: 'homepage', component: HomepageComponent, canActivate: [AuthGuard]},
-  { path: 'trainings', loadChildren: trainingModule, canActivate: [AuthGuard]},
-  { path: 'exercises', loadChildren: exerciseModule, canActivate: [AuthGuard]},
-  { path: 'users', loadChildren: userModule, canActivate: [AuthGuard]},
-  { path: 'userprofile', loadChildren: profileModule, canActivate: [AuthGuard]},
-  { path: 'notifications', component: NotificationsComponent, canActivate: [AuthGuard]},
+  { path: 'homepage', component: HomepageComponent, canActivate: [AuthGuard], data: {animation: 'HomePage'}},
+  { path: 'trainings', loadChildren: trainingModule, canActivate: [AuthGuard], data: {animation: 'TrainingsPage'}},
+  { path: 'exercises', loadChildren: exerciseModule, canActivate: [AuthGuard], data: {animation: 'ExercisesPage'}},
+  { path: 'users', loadChildren: userModule, canActivate: [AuthGuard], data: {animation: 'UsersPage'}},
+  { path: 'userprofile', loadChildren: profileModule, canActivate: [AuthGuard], data: {animation: 'UserProfilePage'}},
+  { path: 'notifications', component: NotificationsComponent, canActivate: [AuthGuard], data: {animation: 'NotificationsPage'}},
   
   { path: 'account', loadChildren: accountModule },
   { path: 'profile', loadChildren: profileModule, canActivate: [AuthGuard] },
-  { path: 'admin', loadChildren: adminModule, canActivate: [AuthGuard], data: { roles: [Role.Admin] } },
+  { path: 'admin', loadChildren: adminModule, canActivate: [AuthGuard], data: { roles: [Role.Admin], animation: 'AdminPage' },  },
   
   { path: '**', redirectTo: '' }
 ];

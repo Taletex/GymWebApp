@@ -260,6 +260,11 @@ export class UsersComponent implements OnInit {
     }
   }
 
+  sortListByFieldUI(field: string) {
+    if(!this.bLoading) 
+      this.sortListByField(field, false);
+  }
+
 
   isCoachInUser(coach: User) {
     return (_.find(this.account.user.coaches, function(c) { return c._id == coach._id; }) != undefined);

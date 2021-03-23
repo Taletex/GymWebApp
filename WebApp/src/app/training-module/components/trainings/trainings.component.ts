@@ -164,4 +164,9 @@ export class TrainingsComponent implements OnInit {
     this.trainingList = _.orderBy(this.trainingList, field, this.sortListStatus[field] ? 'asc' : 'desc');
   }
 
+  sortListByFieldUI(field: string) {
+    if(!this.bLoading)
+      this.sortListByField(field);
+  }
+
 }

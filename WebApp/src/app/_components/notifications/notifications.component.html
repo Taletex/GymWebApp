@@ -7,7 +7,7 @@
         </div>
         <div class="col-2 form-group pl-2 pr-1 m-0">
             <label for="filterNotListType" class="col-form-label col-form-label-sm p-0 text-muted">Mostra notifiche</label>
-            <select [(ngModel)]="filters.filterNotListType" class="form-control form-control-sm cursor-pointer" id="filterNotListType" name="filterNotListType" (change)="filterNotifications($event)">
+            <select [(ngModel)]="filters.filterNotListType" class="form-control form-control-sm cursor-pointer" id="filterNotListType" name="filterNotListType" (change)="filterNotifications($event)" [disabled]="bLoading">
                 <option [value]="''">Tutte</option>
                 <option [value]="'notConsumed'">Nuove</option>
                 <option [value]="'consumed'">Lette</option>
@@ -17,23 +17,23 @@
             <label class="col-form-label col-form-label-sm p-0 text-muted">Tipo</label>
             <div class="input-group">
                 <input type="text" [(ngModel)]="filters.type" class="form-control form-control-sm" (keyup)="filterNotifications($event)"
-                    id="filterType" name="filterType" placeholder="Tipo...">
+                    id="filterType" name="filterType" placeholder="Tipo..." [disabled]="bLoading">
             </div>
         </div>
         <div class="col-3 form-group pl-2 pr-1 m-0">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Mittente Richiesta</label>
             <div class="input-group">
                 <input type="text" [(ngModel)]="filters.from.name" class="form-control form-control-sm" (keyup)="filterNotifications($event)"
-                    id="filterFromName" name="filterFromName" placeholder="Nome...">
+                    id="filterFromName" name="filterFromName" placeholder="Nome..." [disabled]="bLoading">
                 <input type="text" [(ngModel)]="filters.from.surname" class="form-control form-control-sm" (keyup)="filterNotifications($event)"
-                    id="filterFromSurname" name="filterFromSurname" placeholder="Cognome...">
+                    id="filterFromSurname" name="filterFromSurname" placeholder="Cognome..." [disabled]="bLoading">
             </div>
         </div>
         <div class="col-3 form-group pl-2 pr-1 m-0">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Messaggio</label>
             <div class="input-group">
                 <input type="text" [(ngModel)]="filters.message" class="form-control form-control-sm" (keyup)="filterNotifications($event)"
-                    id="filterMessage" name="filterMessage" placeholder="Messaggio...">
+                    id="filterMessage" name="filterMessage" placeholder="Messaggio..." [disabled]="bLoading">
             </div>
         </div>
     </div>
@@ -42,29 +42,29 @@
     <div class="notifications__maincontainer card col-12 p-0 border border-secondary border">
         <div class="maincontainer__header card-header pl-2 pr-3 border border-secondary border-top-0 border-left-0 border-right-0 d-flex flex-column bg-dark text-white">
             <div class="col-12 row m-0 p-0 d-flex align-items-center justify-content-center">
-                <div class="col-1 d-flex align-items-center cursor-pointer" (click)="sortListByField('bConsumed', false)">
+                <div class="col-1 d-flex align-items-center" (click)="sortListByFieldUI('bConsumed')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">Nuova</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['bConsumed']==null, 'fa fa-long-arrow-down': sortListStatus['bConsumed']==false, 'fa fa-long-arrow-up': sortListStatus['bConsumed']==true}"></span></div>
                 </div>
-                <div class="col-2 d-flex align-items-center cursor-pointer" (click)="sortListByField('type', false)">
+                <div class="col-2 d-flex align-items-center" (click)="sortListByFieldUI('type')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">Tipo</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['type']==null, 'fa fa-long-arrow-down': sortListStatus['type']==false, 'fa fa-long-arrow-up': sortListStatus['type']==true}"></span></div>
                 </div>
-                <div class="col-2 d-flex align-items-center cursor-pointer" (click)="sortListByField('from', false)">
+                <div class="col-2 d-flex align-items-center" (click)="sortListByFieldUI('from')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">Mittente Richiesta</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['from']==null, 'fa fa-long-arrow-down': sortListStatus['from']==false, 'fa fa-long-arrow-up': sortListStatus['from']==true}"></span></div>
                 </div>
-                <div class="col-3 d-flex align-items-center cursor-pointer" (click)="sortListByField('message', false)">
+                <div class="col-3 d-flex align-items-center" (click)="sortListByFieldUI('message')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">Messaggio</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['message']==null, 'fa fa-long-arrow-down': sortListStatus['message']==false, 'fa fa-long-arrow-up': sortListStatus['message']==true}"></span></div>
                 </div>
-                <div class="col-2 d-flex align-items-center cursor-pointer" (click)="sortListByField('creationDate', false)">
+                <div class="col-2 d-flex align-items-center" (click)="sortListByFieldUI('creationDate')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">Data</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['creationDate']==null, 'fa fa-long-arrow-down': sortListStatus['creationDate']==false, 'fa fa-long-arrow-up': sortListStatus['creationDate']==true}"></span></div>
                 </div>
-                <div class="col-2 d-flex align-items-center cursor-pointer">
+                <div class="col-2 d-flex align-items-center"  [ngClass]="{'cursor-pointer': !bLoading}">
                     <div class="dropdown">
-                        <button class="btn p-0 text-white" type="button" id="dropdownActionMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button class="btn p-0 text-white" type="button" id="dropdownActionMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" [disabled]="bLoading">
                             <b>Azioni</b><img src="assets/icons/actions/menu-button.svg" style="width:15px; height:auto;" class="ml-2 mb-1">
                         </button>
                         <div class="dropdown-menu p-1" aria-labelledby="dropdownActionMenuButton">
@@ -81,11 +81,19 @@
                 </div>
             </div>
         </div>
-        <div class="maincontainer__body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2" [hidden]="bLoading">
+        <div class="maincontainer__body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2 position-relative">
             <div class="h-100 w-100 d-flex flex-column align-items-center justify-content-center" *ngIf="notificationList.length == 0">
                 <img src="assets/icons/misc/alert.svg" style="width:40px; height:auto;">
                 <div [hidden]="filters.filterNotListType != 'notConsumed'" class="badge badge-light mt-2"><h6>Non hai nessuna nuova notifica!</h6></div>
                 <div [hidden]="filters.filterNotListType == 'notConsumed'" class="badge badge-light mt-2"><h6>Non ci sono notifiche!</h6></div>
+            </div>
+             <!-- Loader -->
+            <div class='h-100 w-100' [hidden]="!bLoading">
+                <div style="position:absolute; background-color:black; opacity:50%; right:0; top:0;" class="w-100 h-100">
+                    <div class="container d-flex align-items-center justify-content-center w-100 h-100">
+                        <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                    </div>
+                </div>
             </div>
             <div class="body__element list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1" 
                  *ngFor="let elem of notificationList; index as notificationIndex" [ngClass]="{'list-group-item-cyan': !elem.bConsumed, 'bg-custom-lightgray': elem.bConsumed}">
@@ -109,13 +117,5 @@
             </div>
         </div>
     </div>
-
-    <!-- Loader -->
-    <div class='h-100 w-100' [hidden]="!bLoading">
-        <div style="position:absolute; background-color:black; opacity:50%; right:0; top:0;" class="w-100 h-100">
-            <div class="container d-flex align-items-center justify-content-center w-100 h-100">
-                <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
-            </div>
-        </div>
-    </div>
+   
 </div>

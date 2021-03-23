@@ -9,28 +9,28 @@
             <label class="col-form-label col-form-label-sm p-0 text-muted">Nome</label>
             <div class="input-group">
                 <input type="text" [(ngModel)]="filters.name" class="form-control form-control-sm" (keyup)="filterExercises($event)"
-                    id="filterName" name="filterName" placeholder="Nome...">
+                    id="filterName" name="filterName" placeholder="Nome..." [disabled]="bLoading">
             </div>
         </div>
         <div class="col-3 form-group pl-2 pr-1 m-0">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Variante (nome)</label>
             <div class="input-group">
                 <input type="text" [(ngModel)]="filters.variant.name" class="form-control form-control-sm" (keyup)="filterExercises($event)"
-                    id="filterVariantName" name="filterVariantName" placeholder="Nome variante...">
+                    id="filterVariantName" name="filterVariantName" placeholder="Nome variante..." [disabled]="bLoading">
             </div>
         </div>
         <div class="col-2 form-group pl-2 pr-1 m-0">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Variante (coefficiente)</label>
             <div class="input-group">
                 <input type="number" min=0.1 [(ngModel)]="filters.variant.intensityCoefficient" class="form-control form-control-sm" (keyup)="filterExercises($event)" (change)="filterExercises($event)"
-                    id="filterVariantCoefficient" name="filterVariantCoefficient" placeholder="Coefficiente...">
+                    id="filterVariantCoefficient" name="filterVariantCoefficient" placeholder="Coefficiente..." [disabled]="bLoading">
             </div>
         </div>
         <div class="col-3 form-group pl-2 pr-1 m-0">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Descrizione</label>
             <div class="input-group">
                 <input type="text" [(ngModel)]="filters.description" class="form-control form-control-sm" (keyup)="filterExercises($event)"
-                    id="filterDescription" name="filterDescription" placeholder="Descrizione...">
+                    id="filterDescription" name="filterDescription" placeholder="Descrizione..." [disabled]="bLoading">
             </div>
         </div>
     </div>
@@ -39,15 +39,15 @@
     <div class="exercises__maincontainer card col-12 p-0 border border-secondary border">
         <div class="maincontainer__header card-header pl-2 pr-3 border border-secondary border-top-0 border-left-0 border-right-0 d-flex flex-column bg-dark text-white">
             <div class="col-12 row m-0 p-0 d-flex align-items-center justify-content-center">
-                <div class="col-2 d-flex align-items-center cursor-pointer" (click)="sortListByField('name')">
+                <div class="col-2 d-flex align-items-center" (click)="sortListByFieldUI('name')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">Nome</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['name']==null, 'fa fa-long-arrow-down': sortListStatus['name']==false, 'fa fa-long-arrow-up': sortListStatus['name']==true}"></span></div>
                 </div>
-                <div class="col-4 d-flex align-items-center cursor-pointer" (click)="sortListByField('variant')">
+                <div class="col-4 d-flex align-items-center" (click)="sortListByFieldUI('variant')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">Variante</b><small class="d-block">Nome &bull; Coefficiente</small></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['variant']==null, 'fa fa-long-arrow-down': sortListStatus['variant']==false, 'fa fa-long-arrow-up': sortListStatus['variant']==true}"></span></div>
                 </div>
-                <div class="col-4 d-flex align-items-center cursor-pointer" (click)="sortListByField('description')">
+                <div class="col-4 d-flex align-items-center" (click)="sortListByFieldUI('description')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">Descrizione</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['description']==null, 'fa fa-long-arrow-down': sortListStatus['description']==false, 'fa fa-long-arrow-up': sortListStatus['description']==true}"></span></div>
                 </div>
@@ -56,10 +56,18 @@
                 </div>
             </div>
         </div>
-        <div class="maincontainer__body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2" [hidden]="bLoading">
+        <div class="maincontainer__body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2 position-relative">
             <div class="h-100 w-100 d-flex flex-column align-items-center justify-content-center" *ngIf="exerciseList.length == 0">
                 <img src="assets/icons/misc/alert.svg" style="width:40px; height:auto;">
                 <span class="badge badge-light mt-2">Nessun esercizio presente nella piattaforma</span>
+            </div>
+            <!-- Loader -->
+            <div class='h-100 w-100' [hidden]="!bLoading">
+                <div style="position:absolute; background-color:black; opacity:50%; right:0; top:0;" class="w-100 h-100">
+                    <div class="container d-flex align-items-center justify-content-center w-100 h-100">
+                        <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                    </div>
+                </div>
             </div>
             <div class="body__element list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1" *ngFor="let elem of exerciseList; index as exerciseIndex">
                 <div class="col-2">
@@ -75,18 +83,10 @@
                     <a *ngIf="account.role == Role.Admin"(click)="deleteExercise(elem._id, exerciseIndex)" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></a>
                 </div>
             </div>
-            <app-exercise-modal (onClose)="createExercise()" *ngIf="(account.user.userType=='both' || account.user.userType == 'coach')"  [(newExercise)] = "newExercise" style="position: absolute; right: 15px; bottom: 15px">
+            <app-exercise-modal (onClose)="createExercise()" *ngIf="!bLoading && (account.user.userType=='both' || account.user.userType == 'coach')"  [(newExercise)] = "newExercise" style="position: absolute; right: 15px; bottom: 15px">
                 <div class="image-button-big cursor-pointer" ngbTooltip="Nuovo" placement="top"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></div>
             </app-exercise-modal>
         </div>
     </div>
 
-    <!-- Loader -->
-    <div class='h-100 w-100' [hidden]="!bLoading">
-        <div style="position:absolute; background-color:black; opacity:50%; right:0; top:0;" class="w-100 h-100">
-            <div class="container d-flex align-items-center justify-content-center w-100 h-100">
-                <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
-            </div>
-        </div>
-    </div>
 </div>

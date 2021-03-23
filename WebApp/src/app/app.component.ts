@@ -1,13 +1,18 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { Account, Role } from './_models';
 
+import { slideInAnimation } from '@app/animations';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  animations: [
+    slideInAnimation
+  ]
 })
 export class AppComponent {
   title = 'GYM WEB APP';
@@ -20,5 +25,9 @@ export class AppComponent {
 
   logout() {
     this.accountService.logout();
+  }
+
+  prepareRoute(outlet: RouterOutlet) {
+    return outlet && outlet.activatedRouteData && outlet.activatedRouteData.animation;
   }
 }

@@ -7,7 +7,7 @@
         </div>
         <div class="col-2 form-group px-1 m-0">
             <label for="filterUserListType" class="col-form-label col-form-label-sm p-0 text-muted">Mostra Collegamenti/Tutti gli utenti</label>
-            <select [(ngModel)]="filters.filterUserListType" class="form-control form-control-sm cursor-pointer" id="filterUserListType" name="filterUserListType" (change)="setUserList($event)">
+            <select [(ngModel)]="filters.filterUserListType" class="form-control form-control-sm cursor-pointer" id="filterUserListType" name="filterUserListType" (change)="setUserList($event)" [disabled]="bLoading">
                 <option [value]="'links'">Solo collegamenti</option>
                 <option [value]="'all'">Tutti gli utenti</option>
             </select>
@@ -16,14 +16,14 @@
             <label class="col-form-label col-form-label-sm p-0 text-muted">Utente</label>
             <div class="input-group">
                 <input type="text" [(ngModel)]="filters.name" class="form-control form-control-sm" (keyup)="filterUsers($event)"
-                    id="filterAuthorName" name="filterAuthorName" placeholder="Nome...">
+                    id="filterAuthorName" name="filterAuthorName" placeholder="Nome..." [disabled]="bLoading">
                 <input type="text" [(ngModel)]="filters.surname" class="form-control form-control-sm" (keyup)="filterUsers($event)"
-                    id="filterAuthorSurname" name="filterAuthorSurname" placeholder="Cognome...">
+                    id="filterAuthorSurname" name="filterAuthorSurname" placeholder="Cognome..." [disabled]="bLoading">
             </div>
         </div>
         <div class="col-1 form-group px-1 m-0" *ngIf="account.user.userType=='both'">
             <label for="filterType" class="col-form-label col-form-label-sm p-0 text-muted">Tipo</label>
-            <select [(ngModel)]="filters.userType" class="form-control form-control-sm cursor-pointer" placeholder="Tipo utente..." id="filterType" name="filterType" (change)="filterUsers($event)">
+            <select [(ngModel)]="filters.userType" class="form-control form-control-sm cursor-pointer" placeholder="Tipo utente..." id="filterType" name="filterType" (change)="filterUsers($event)" [disabled]="bLoading">
                 <option value="" disabled selected>Tipo...</option>
                 <option [value]="'athlete'">Atleta</option>
                 <option [value]="'coach'">Coach</option>
@@ -34,11 +34,11 @@
         <div class="col-2 form-group px-1 m-0">
             <label for="filterDoB" class="col-form-label col-form-label-sm p-0 text-muted">DoB</label>
             <input type="date" [(ngModel)]="filters.dateOfBirth" class="form-control form-control-sm" (keyup)="filterUsers($event)" (change)="filterUsers($event)"
-                    id="filterDoB" name="filterDoB">
+                    id="filterDoB" name="filterDoB" [disabled]="bLoading">
         </div>
         <div class="col-1 form-group px-1 m-0">
             <label for="filterSex" class="col-form-label col-form-label-sm p-0 text-muted">Sesso</label>
-            <select [(ngModel)]="filters.sex" class="form-control form-control-sm cursor-pointer" placeholder="Sesso..." id="filterSex" name="filterSex" (change)="filterUsers($event)">
+            <select [(ngModel)]="filters.sex" class="form-control form-control-sm cursor-pointer" placeholder="Sesso..." id="filterSex" name="filterSex" (change)="filterUsers($event)" [disabled]="bLoading">
                 <option value="" disabled selected>Sesso...</option>
                 <option [value]="'M'">Uomo</option>
                 <option [value]="'F'">Donna</option>
@@ -47,12 +47,12 @@
         <div class="col-1 form-group px-1 m-0">
             <label for="filterBw" class="col-form-label col-form-label-sm p-0 text-muted">BodyWeight</label>
             <input type="number" [(ngModel)]="filters.bodyWeight" min=0 class="form-control form-control-sm" (keyup)="filterUsers($event)"
-                    id="filterBw" name="filterBw" placeholder="Peso corporeo...">
+                    id="filterBw" name="filterBw" placeholder="Peso corporeo..." [disabled]="bLoading">
         </div>
         <div class="col-1 form-group px-1 m-0">
             <label for="filterExperience" class="col-form-label col-form-label-sm p-0 text-muted">Esperienza (anni)</label>
             <input type="number" [(ngModel)]="filters.yearsOfExperience" min=0 class="form-control form-control-sm" (keyup)="filterUsers($event)" (change)="filterUsers($event)"
-                    id="filterExperience" name="filterExperience" placeholder="Esperienza...">
+                    id="filterExperience" name="filterExperience" placeholder="Esperienza..." [disabled]="bLoading">
         </div>
         
     </div>
@@ -62,27 +62,27 @@
 
         <div class="maincontainer__header card-header pl-2 pr-3 border border-secondary border-top-0 border-left-0 border-right-0 d-flex flex-column bg-dark text-white">
             <div class="col-12 row m-0 p-0 d-flex align-items-center justify-content-center">
-                <div class="col-3 d-flex align-items-center cursor-pointer" (click)="sortListByField('user', false)">
+                <div class="col-3 d-flex align-items-center" (click)="sortListByFieldUI('user')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">Utente</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['user']==null, 'fa fa-long-arrow-down': sortListStatus['user']==false, 'fa fa-long-arrow-up': sortListStatus['user']==true}"></span></div>
                 </div>
-                <div class="col-1 d-flex align-items-center cursor-pointer" (click)="sortListByField('userType', false)">
+                <div class="col-1 d-flex align-items-center" (click)="sortListByFieldUI('userType')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">Tipo</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['userType']==null, 'fa fa-long-arrow-down': sortListStatus['userType']==false, 'fa fa-long-arrow-up': sortListStatus['userType']==true}"></span></div>
                 </div>
-                <div class="col-2 d-flex align-items-center cursor-pointer" (click)="sortListByField('dateOf Birth', false)">
+                <div class="col-2 d-flex align-items-center" (click)="sortListByFieldUI('dateOf Birth')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">DoB</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['dateOfBirth']==null, 'fa fa-long-arrow-down': sortListStatus['dateOfBirth']==false, 'fa fa-long-arrow-up': sortListStatus['dateOfBirth']==true}"></span></div>
                 </div>
-                <div class="col-1 d-flex align-items-center cursor-pointer" (click)="sortListByField('sex', false)">
+                <div class="col-1 d-flex align-items-center" (click)="sortListByFieldUI('sex')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">Sesso</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['sex']==null, 'fa fa-long-arrow-down': sortListStatus['sex']==false, 'fa fa-long-arrow-up': sortListStatus['sex']==true}"></span></div>
                 </div>
-                <div class="col-2 d-flex align-items-center cursor-pointer" (click)="sortListByField('bodyWeight', false)">
+                <div class="col-2 d-flex align-items-center" (click)="sortListByFieldUI('bodyWeight')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">BodyWeight</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['bodyWeight']==null, 'fa fa-long-arrow-down': sortListStatus['bodyWeight']==false, 'fa fa-long-arrow-up': sortListStatus['bodyWeight']==true}"></span></div>
                 </div>
-                <div class="col-2 d-flex align-items-center cursor-pointer" (click)="sortListByField('yearsOfExperience', false)">
+                <div class="col-2 d-flex align-items-center" (click)="sortListByFieldUI('yearsOfExperience')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">Esperienza (Anni)</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['yearsOfExperience']==null, 'fa fa-long-arrow-down': sortListStatus['yearsOfExperience']==false, 'fa fa-long-arrow-up': sortListStatus['yearsOfExperience']==true}"></span></div>
                 </div>
@@ -92,7 +92,7 @@
             </div>
         </div>
 
-        <div class="maincontainer__body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2" [hidden]="bLoading">
+        <div class="maincontainer__body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2 position-relative">
             <div class="h-100 w-100 d-flex flex-column align-items-center justify-content-center" *ngIf="userList.length == 0">
                 <img src="assets/icons/misc/alert.svg" style="width:40px; height:auto;">
                 <span class="badge badge-light mt-2" [hidden]="filters.filterUserListType == 'links'">Nessun utente presente nella piattaforma</span>
@@ -101,6 +101,14 @@
                     <h6>Clicca qui sotto per visualizzare gli utenti del sistema e iniziare a collegarti con loro!</h6>
                 </div>
                 <button class="btn btn-sm btn-outline-info mt-2" [hidden]="filters.filterUserListType == 'all'" (click)="filters.filterUserListType = 'all'; setUserList(null);">Mostra Utenti</button>
+            </div>
+            <!-- Loader -->
+            <div class='h-100 w-100' [hidden]="!bLoading">
+                <div style="position:absolute; background-color:black; opacity:50%; right:0; top:0;" class="w-100 h-100">
+                    <div class="container d-flex align-items-center justify-content-center w-100 h-100">
+                        <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                    </div>
+                </div>
             </div>
             <div class="body__element list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1" *ngFor="let elem of userList; index as userIndex">
                 <div class="col-3"><span class="text-capitalize">{{elem.name}} {{elem.surname}}</span> <div *ngIf="elem._id == account.user._id">(utente corrente)</div></div>
@@ -131,12 +139,4 @@
         </div>
     </div>
 
-    <!-- Loader -->
-    <div class='h-100 w-100' [hidden]="!bLoading">
-        <div style="position:absolute; background-color:black; opacity:50%; right:0; top:0;" class="w-100 h-100">
-            <div class="container d-flex align-items-center justify-content-center w-100 h-100">
-                <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
-            </div>
-        </div>
-    </div>
 </div>

@@ -73,19 +73,24 @@ export class NotificationsComponent implements OnInit {
   }
 
   /**
-     * Sort notification list by field
-     * @param field field used to sort the list
-     * @param bRepeatLastSort if true, the function repeats the last sort of the field passed as argument
-     */
-    sortListByField(field: string, bRepeatLastSort: boolean) {
-      if(field != null) {
-        let currentFieldStatus = this.sortListStatus[field];
-        this.resetSortStatus();
-        this.sortListStatus[field] = bRepeatLastSort ? currentFieldStatus : (currentFieldStatus == null ? true : !currentFieldStatus);
-        this.notificationList = _.orderBy(this.notificationList, field, this.sortListStatus[field] ? 'asc' : 'desc');
-        this.currentSortField = field;
-      }
+   * Sort notification list by field
+   * @param field field used to sort the list
+   * @param bRepeatLastSort if true, the function repeats the last sort of the field passed as argument
+   */
+  sortListByField(field: string, bRepeatLastSort: boolean) {
+    if(field != null) {
+      let currentFieldStatus = this.sortListStatus[field];
+      this.resetSortStatus();
+      this.sortListStatus[field] = bRepeatLastSort ? currentFieldStatus : (currentFieldStatus == null ? true : !currentFieldStatus);
+      this.notificationList = _.orderBy(this.notificationList, field, this.sortListStatus[field] ? 'asc' : 'desc');
+      this.currentSortField = field;
     }
+  }
+
+  sortListByFieldUI(field: string) {
+    if(!this.bLoading)
+      this.sortListByField(field, false);
+  }
 
 
   /* ACTIONS */
