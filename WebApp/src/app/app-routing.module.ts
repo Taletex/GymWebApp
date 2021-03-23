@@ -20,7 +20,7 @@ const adminModule = () => import('./admin-module/admin.module').then(x => x.Admi
 
 
 const routes: Routes = [
-  { path: '', redirectTo: 'homepage', pathMatch: 'full', canActivate: [AuthGuard]},
+  { path: '', redirectTo: 'homepage', pathMatch: 'full', canActivate: [AuthGuard], data: {animation: 'HomePage'}},
   { path: 'homepage', component: HomepageComponent, canActivate: [AuthGuard], data: {animation: 'HomePage'}},
   { path: 'trainings', loadChildren: trainingModule, canActivate: [AuthGuard], data: {animation: 'TrainingsPage'}},
   { path: 'exercises', loadChildren: exerciseModule, canActivate: [AuthGuard], data: {animation: 'ExercisesPage'}},
