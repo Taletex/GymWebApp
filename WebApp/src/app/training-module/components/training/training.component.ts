@@ -8,9 +8,9 @@ import { HttpService } from '@app/_services/http-service/http-service.service';
 import { UtilsService } from '@app/_services/utils-service/utils-service.service';
 import { TrainingService } from '../../services/training-service/training-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Training, Week, Series, Exercise, Session, User, Variant, SessionExercise } from '@app/_models/training-model';
+import { Training, Week, Series, Exercise, Session, User, Variant, SessionExercise, Notification } from '@app/_models/training-model';
 import * as _ from "lodash";
-import { GeneralService, PAGES, PAGEMODE, PageStatus } from '@app/_services/general-service/general-service.service';
+import { GeneralService, PAGES, PAGEMODE, NOTIFY_MEDIUM_TYPE, PageStatus, NOTIFICATION_TYPE } from '@app/_services/general-service/general-service.service';
 import * as jsPDF from 'jspdf';
 import * as $ from 'jquery';
 import { Role } from '@app/_models';
@@ -50,6 +50,7 @@ export class TrainingComponent implements OnInit {
   // Visual notifies 
   public bLoading = false;
   public PAGEMODE = PAGEMODE;
+  public NOTIFY_MEDIUM_TYPE = NOTIFY_MEDIUM_TYPE;
   public PAGES = PAGES;
   public pageStatus: PageStatus = new PageStatus();
 
@@ -755,5 +756,45 @@ export class TrainingComponent implements OnInit {
     }).error((err) => {
       this.toastr.error("An error occurs during import process");
     })
+  }
+
+  /* NOTIFICATION FUNCTIONS */
+  sendNotifyVia(type: NOTIFY_MEDIUM_TYPE) {
+    switch(type) {
+      case NOTIFY_MEDIUM_TYPE.MYTRAININGPLATFORM:
+        this.sendTrainingNotifications();
+        break;
+      case NOTIFY_MEDIUM_TYPE.EMAIL:
+        console.log("TODO");
+        alert("TODO");
+        break;
+      case NOTIFY_MEDIUM_TYPE.TELEGRAM:
+        console.log("TODO");
+        alert("TODO");
+        break;
+    }
+  }
+
+  sendTrainingNotifications() {
+    if(this.training.athletes.length > 0) {
+      this.bLoading = true;
+
+      let notificationMessage = "Il coach " + this.training.author.name + " " + this.training.author.surname + " ha modificato l'<a href='trainings/" + this.training._id + "'>allenamento</a>.";
+      let notification = new Notification("", NOTIFICATION_TYPE.TRAINING_MODIFIED, this.account.user._id, "", notificationMessage, false, new Date());  // Note: id is empty because it is assigned from the back-end, destination id is empty because it is assigned from the back-end
+
+      this.httpService.sendTrainingNotifications(this.training._id, _.map(this.training.athletes, function (a) { return a._id;}), notification)
+      .subscribe(
+        (data: Array<Exercise>) => {
+          this.toastr.success("Notifica inviata correttamente a tutti gli atleti dell'allenamento!");
+          console.log("sendNotifications data", data);
+          this.bLoading = false;
+        },
+        (error: HttpErrorResponse) => {
+          this.bLoading = false;
+          this.toastr.error("Si è verificato un errore durante l'invio delle notifiche agli atleti dell'allenamento");
+          console.log("sendNotification error", error.error.message);
+        });
+    }
+    
   }
 }

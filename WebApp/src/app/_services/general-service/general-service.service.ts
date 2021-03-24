@@ -29,6 +29,12 @@ export class PageStatus {
   }
 } 
 
+export enum NOTIFY_MEDIUM_TYPE{
+  MYTRAININGPLATFORM = "mytrainingplatform",
+  EMAIL = "email",
+  TELEGRAM = "telegram"
+}
+
 export enum NOTIFICATION_TYPE {
   COACH_REQUEST = "coach_request",
   ATHLETE_REQUEST = "athlete_request",

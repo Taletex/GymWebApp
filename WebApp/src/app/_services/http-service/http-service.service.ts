@@ -150,4 +150,8 @@ export class HttpService {
   cancelAllNotifications(destinationUserId: string, notifications: Notification[]) {
     return this.http.put<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications/cancelAll", notifications);
   }
+
+  sendTrainingNotifications(trainingId: string, athletesIds: string[], notification: Notification) {
+    return this.http.put<any>(this.baseServerUrl + "/trainings/" + trainingId + "/notifications", {athletes: athletesIds, notification: notification});
+  }
 }

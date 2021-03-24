@@ -16,7 +16,8 @@ module.exports = (io, clientSocketList) => {
         findAllTrainingByUserId,
         findOneTraining,
         updateTraining,
-        deleteTraining
+        deleteTraining,
+        sendTrainingNotifications
     };
 
 
@@ -78,7 +79,7 @@ module.exports = (io, clientSocketList) => {
         training.save()
         .then(data => {
 
-            // 1. Send notifications to all athletes and retrieve the new training
+            // 1. Find athletes and the new training
             Promise.all([
                 User.find({_id: {$in: req.body.athletes}}), 
                 Training.findOne({_id: training._id}).populate('author').populate('athletes').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
@@ -269,5 +270,44 @@ module.exports = (io, clientSocketList) => {
             });
         });
     };
+
+    function sendTrainingNotifications(req, res, next) {
+        
+        // 1. Find athletes and the new training
+        Promise.all([
+            User.find({_id: {$in: req.body.athletes}}), 
+            Training.findOne({_id: req.params._id}).populate('author').populate('athletes').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
+        ])
+        .then(([users, training]) => {
+            
+            // 2. Send notifications to all athletes client (if online)
+            const userPromise = users.map(user => {
+                return new Promise((resolve, reject) => {
+                    user.notifications.push(new Notification({ type: req.body.notification.type, from: req.body.notification.from, destination: user._id, message: req.body.notification.message, bConsumed: req.body.notification.bConsumed, creationDate: req.body.notification.creationDate }));
+                    user.save((error, result) => {
+                        if (error)
+                          reject(error)
+
+                        result.populate({path: 'personalRecords', populate: {path: 'exercise'}})
+                        .populate({path: 'notifications', populate: {path: 'destination'}})
+                        .populate({path: 'notifications', populate: {path: 'from'}})
+                        .populate('coaches').populate('athletes').execPopulate().then((result) => {
+                            resolve(result);
+                        })
+                      })
+                })
+            })
+            Promise.all(userPromise).then((users) => {
+
+                // 3. Update all client informations using the socket
+                for(let i=0; i<users.length; i++) 
+                    notificationService.sendUpdatedUserToItsSocket(users[i]);
+
+                // 4. Return the new training
+                res.send(training);
+            })
+
+        })
+    }
 }
 

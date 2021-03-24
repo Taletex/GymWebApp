@@ -22,6 +22,9 @@ module.exports = function(io, clientSocketList) {
     
     // Update a Training with id
     router.put('/:_id', (req, res, next) => {trainingService.updateTraining(req, res, next)});
+    
+    // Send notifications to all training athletes
+    router.put('/:_id/notifications', (req, res, next) => {trainingService.sendTrainingNotifications(req, res, next)});
 
     // Delete a Training with id
     router.delete('/:_id', (req, res, next) => {trainingService.deleteTraining(req, res, next)});
