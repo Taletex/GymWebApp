@@ -2,7 +2,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const crypto = require("crypto");
-const sendEmail = require('src/_helpers/send-email');
+const email = require('src/_helpers/send-email');
 const db = require('src/_helpers/db');
 const Role = require('src/_helpers/role');
 const _ = require('lodash');
@@ -365,9 +365,9 @@ async function sendVerificationEmail(account, origin) {
                    <p><code>${account.verificationToken}</code></p>`;
     }
 
-    await sendEmail({
+    await email.sendEmail({
         to: account.email,
-        subject: 'Sign-up Verification API - Verify Email',
+        subject: 'MyTrainingPlatform - Verify Email',
         html: `<h4>Verify Email</h4>
                <p>Thanks for registering!</p>
                ${message}`
@@ -382,9 +382,9 @@ async function sendAlreadyRegisteredEmail(email, origin) {
         message = `<p>If you don't know your password you can reset it via the <code>/account/forgot-password</code> api route.</p>`;
     }
 
-    await sendEmail({
+    await email.sendEmail({
         to: email,
-        subject: 'Sign-up Verification API - Email Already Registered',
+        subject: 'MyTrainingPlatform - Email Already Registered',
         html: `<h4>Email Already Registered</h4>
                <p>Your email <strong>${email}</strong> is already registered.</p>
                ${message}`
@@ -402,9 +402,9 @@ async function sendPasswordResetEmail(account, origin) {
                    <p><code>${account.resetToken.token}</code></p>`;
     }
 
-    await sendEmail({
+    await email.sendEmail({
         to: account.email,
-        subject: 'Sign-up Verification API - Reset Password',
+        subject: 'MyTrainingPlatform - Reset Password',
         html: `<h4>Reset Password Email</h4>
                ${message}`
     });

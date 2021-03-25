@@ -765,8 +765,7 @@ export class TrainingComponent implements OnInit {
         this.sendTrainingNotifications();
         break;
       case NOTIFY_MEDIUM_TYPE.EMAIL:
-        console.log("TODO");
-        alert("TODO");
+        this.sendTrainingEmails();
         break;
       case NOTIFY_MEDIUM_TYPE.TELEGRAM:
         console.log("TODO");
@@ -784,7 +783,7 @@ export class TrainingComponent implements OnInit {
 
       this.httpService.sendTrainingNotifications(this.training._id, _.map(this.training.athletes, function (a) { return a._id;}), notification)
       .subscribe(
-        (data: Array<Exercise>) => {
+        (data) => {
           this.toastr.success("Notifica inviata correttamente a tutti gli atleti dell'allenamento!");
           console.log("sendNotifications data", data);
           this.bLoading = false;
@@ -795,6 +794,30 @@ export class TrainingComponent implements OnInit {
           console.log("sendNotification error", error.error.message);
         });
     }
-    
+  }
+
+  sendTrainingEmails() {
+    if(this.training.athletes.length > 0) {
+      this.bLoading = true;
+
+      this.httpService.sendTrainingEmails(this.training)
+      .subscribe(
+        (data: any) => {
+          let message = "Notifica inviata correttamente agli atleti ";
+          if(data.successAthletes != null && data.successAthletes.length > 0) {
+            for(let athlete of data.successAthletes) {
+              message = message + ` ${athlete.name} ${athlete.surname},`;
+            }
+          }
+          this.toastr.success(message);
+          console.log("sendTrainingEmails data", data);
+          this.bLoading = false;
+        },
+        (error: HttpErrorResponse) => {
+          this.bLoading = false;
+          this.toastr.error("Si è verificato un errore durante l'invio delle email agli atleti dell'allenamento. Verifica che gli utenti destinatari abbiano configurato una email.");
+          console.log("sendTrainingEmails error", error.error.message);
+        });
+    }
   }
 }

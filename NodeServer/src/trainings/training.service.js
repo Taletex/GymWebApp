@@ -1,9 +1,9 @@
 const {Training} = require('src/trainings/training.model.js');
-const {User, UserSchema} = require('src/users/user.model.js')
+const {User} = require('src/users/user.model.js')
+const {Notification} = require('../users/user.model');
 const {NOTIFICATION_TYPE} = require('src/_helpers/enum.js');
 const _ = require('lodash');
-const { Notification } = require('../users/user.model');
-const { forEach } = require('lodash');
+const email = require('src/_helpers/send-email');
 
 /** REST CALLBACKS **/
 module.exports = (io, clientSocketList) => {
@@ -17,7 +17,8 @@ module.exports = (io, clientSocketList) => {
         findOneTraining,
         updateTraining,
         deleteTraining,
-        sendTrainingNotifications
+        sendTrainingNotifications,
+        sendTrainingEmails
     };
 
 
@@ -275,10 +276,9 @@ module.exports = (io, clientSocketList) => {
         
         // 1. Find athletes and the new training
         Promise.all([
-            User.find({_id: {$in: req.body.athletes}}), 
-            Training.findOne({_id: req.params._id}).populate('author').populate('athletes').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
+            User.find({_id: {$in: req.body.athletes}})
         ])
-        .then(([users, training]) => {
+        .then(([users]) => {
             
             // 2. Send notifications to all athletes client (if online)
             const userPromise = users.map(user => {
@@ -303,11 +303,59 @@ module.exports = (io, clientSocketList) => {
                 for(let i=0; i<users.length; i++) 
                     notificationService.sendUpdatedUserToItsSocket(users[i]);
 
-                // 4. Return the new training
-                res.send(training);
-            })
+                // 4. Return success string
+                res.status(200).send(users);
+            }).catch(err => {
+                res.status(500).send({
+                    message: err.message || "Some error occurred while send training notifications."
+                });
+            });
 
-        })
+        }).catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while send training notifications."
+            });
+        });
     }
+
+    /**
+     * Send email to all athlete of a training telling them that the training has been modified by the author.
+     * TODO: send pdf training as attachment to the email
+     */
+    function sendTrainingEmails(req, res, next) {
+        if(req.body != null && req.body.author != null && req.body.athletes != null) {
+
+            // 1. Check if athletes emails are valid
+            let athletes = _.filter(req.body.athletes, function(a) { return (a.contacts.email != null && email.validateEmail(a.contacts.email)) });
+            
+            if(athletes.length > 0) {
+
+                // 2. Send emails to destination users
+                const emailPromise = athletes.map(athlete => {
+                    return new Promise((resolve, reject) => {
+                        email.sendEmail({
+                            to: athlete.contacts.email,
+                            subject: 'MyTrainingPlatform - Aggiornamento Allenamento',
+                            html: `<h4>Allenamento ${req.params._id} Aggiornato!</h4>
+                                <p>Il tuo coach ${req.body.author.name} ${req.body.author.surname} ha aggiornato l'allenamento </p><a href="http://www.mytrainingplatform.it/trainings/${req.params._id}">${req.params._id}!</a>` // use http://localhost for development
+                        }).then((data) => { resolve(data); }).catch((err) => reject(err));
+                    })
+                })
+                Promise.all(emailPromise).then((results) => {
+        
+                    // 3. Send response to client
+                    res.status(200).send({message: "Email correttamente inviate agli utenti", successAthletes: athletes});
+                }).catch(err => {
+                    res.status(500).send({
+                        message: err.message || "Some error occurred while sending the Training emails."
+                    });
+                });
+
+            } else
+                res.status(500).send({message: "Send Training Email list is empty."});
+        } else 
+            res.status(500).send({message: "Send Training Email body request is empty."});
+    }
+    
 }
 

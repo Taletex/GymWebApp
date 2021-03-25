@@ -52,6 +52,14 @@ export class HttpService {
   deleteTraining(id: string): Observable<any> {
     return this.http.delete<any>(this.baseServerUrl + "/trainings/" + id);
   }
+  
+  sendTrainingNotifications(trainingId: string, athletesIds: string[], notification: Notification) {
+    return this.http.put<any>(this.baseServerUrl + "/trainings/" + trainingId + "/notifications", {athletes: athletesIds, notification: notification});
+  }
+
+  sendTrainingEmails(training: Training) {
+    return this.http.put<any>(this.baseServerUrl + "/trainings/" + training._id + "/emails", {athletes: training.athletes, author: training.author});
+  }
 
   /* EXERCISES CRUD */
   getExercises(): Observable<any> {
@@ -151,7 +159,4 @@ export class HttpService {
     return this.http.put<any>(this.baseServerUrl + "/users/" +  destinationUserId + "/notifications/cancelAll", notifications);
   }
 
-  sendTrainingNotifications(trainingId: string, athletesIds: string[], notification: Notification) {
-    return this.http.put<any>(this.baseServerUrl + "/trainings/" + trainingId + "/notifications", {athletes: athletesIds, notification: notification});
-  }
 }

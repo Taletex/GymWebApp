@@ -25,6 +25,9 @@ module.exports = function(io, clientSocketList) {
     
     // Send notifications to all training athletes
     router.put('/:_id/notifications', (req, res, next) => {trainingService.sendTrainingNotifications(req, res, next)});
+ 
+    // Send email to all training athletes
+    router.put('/:_id/emails', (req, res, next) => {trainingService.sendTrainingEmails(req, res, next)});
 
     // Delete a Training with id
     router.delete('/:_id', (req, res, next) => {trainingService.deleteTraining(req, res, next)});
