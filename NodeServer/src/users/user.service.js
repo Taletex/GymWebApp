@@ -213,39 +213,48 @@ module.exports = (io, clientSocketList) => {
         if (!req.body) { return res.status(400).send({ message: "Notification content can not be empty" }); }
 
         Promise.all([
-            User.findOne({ _id: req.params._id })
+            User.findOne({ _id: req.params._id }),
+            User.findOne({ _id: req.body.from })
         ])
-            .then(([dUser]) => {
-                if (!dUser) { return res.status(404).send({ message: "User not found" }); }
+            .then(([dUser, fUser]) => {
+                if (!dUser || !fUser) { return res.status(404).send({ message: "User not found" }); }
 
-                destinationUser = dUser;
-                destinationUser.notifications.push(new Notification({ type: req.body.type, from: req.body.from, destination: req.body.destination, message: req.body.message, bConsumed: req.body.bConsumed, creationDate: req.body.creationDate }));
+                // 1. Check if request type is coach or athlete request and the link between coach and athlete does not exist (if it exists the notification can't be sent)
+                if((req.body.type == NOTIFICATION_TYPE.COACH_REQUEST && !isLinkYetEstablished(dUser, fUser)) ||
+                   (req.body.type == NOTIFICATION_TYPE.ATHLETE_REQUEST && !isLinkYetEstablished(fUser, dUser)) ||
+                   (req.body.type != NOTIFICATION_TYPE.COACH_REQUEST && req.body.type != NOTIFICATION_TYPE.ATHLETE_REQUEST)) {
 
-                // Find user and update it with the request body
-                User.findOneAndUpdate({ _id: req.params._id }, {
-                    notifications: _.orderBy(destinationUser.notifications, ['bConsumed', 'creationDate'], ['asc', 'desc'], ['asc', 'desc'])
-                }, { new: true }).populate({path: 'personalRecords', populate: {path: 'exercise'}})
-                                .populate({path: 'notifications', populate: {path: 'from'}})
-                                .populate({path: 'notifications', populate: {path: 'destination'}})
-                                .populate('coaches').populate('athletes')
-                    .then(user => {
-                        if (!user) { return res.status(404).send({ message: "User not found with id " + req.params._id }); }
+                    // 2. Push the new notification in destination user
+                    dUser.notifications.push(new Notification({ type: req.body.type, from: req.body.from, destination: req.body.destination, message: req.body.message, bConsumed: req.body.bConsumed, creationDate: req.body.creationDate }));
 
-                        // Update destUser informations in destUser client
-                        notificationService.sendUpdatedUserToItsSocket(user);    
+                    // 3. Find user and update it with the request body
+                    User.findOneAndUpdate({ _id: req.params._id }, {
+                        notifications: _.orderBy(dUser.notifications, ['bConsumed', 'creationDate'], ['asc', 'desc'], ['asc', 'desc'])
+                    }, { new: true }).populate({path: 'personalRecords', populate: {path: 'exercise'}})
+                                    .populate({path: 'notifications', populate: {path: 'from'}})
+                                    .populate({path: 'notifications', populate: {path: 'destination'}})
+                                    .populate('coaches').populate('athletes')
+                        .then(user => {
+                            if (!user) { return res.status(404).send({ message: "SendNotification: User not found with id " + req.params._id }); }
 
-                        // Update destUser informations in fromUser client
-                        notificationService.sendUpdatedUserToClientSocket(user, req.body.from);
+                            // 4. Update destUser informations in destUser and fromUser clients
+                            notificationService.sendUpdatedUserToItsSocket(user);    
+                            notificationService.sendUpdatedUserToClientSocket(user, req.body.from);
 
-                        // Send response to calling client
-                        res.send(user);                      
-                    }).catch(err => {
-                        if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found with id " + req.params._id }); }
-                        return res.status(500).send({ message: "Error updating user with id " + req.params._id });
-                    });
+                            // 5. Send response to calling client
+                            res.send(user);                      
+                        }).catch(err => {
+                            if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found with id " + req.params._id }); }
+                            return res.status(500).send({ message: "SendNotification: Error updating user with id " + req.params._id + " (" + err + ")"});
+                        });
+                } else {
+                    return res.status(500).send({ message: "SendNotification: Error sending the notification request (notification type not recognizer or link between athlete/coach already exists)" });
+                }
+                
+                
             }).catch(err => {
-                if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found" }); }
-                return res.status(500).send({ message: "Error updating user in sendNotification" });
+                if (err.kind === 'ObjectId') { return res.status(404).send({ message: "SendNotification: User not found" }); }
+                return res.status(500).send({ message: "SendNotification: Error updating user with id " + req.params._id + " (" + err + ")"});
             });
     };
 
@@ -266,17 +275,19 @@ module.exports = (io, clientSocketList) => {
                 destinationUser = dUser;
                 fromUser = fUser;
 
-                // 1. in destination user set the notification as consumed and pop exceeded elements in the notifications list
+                // 1. in destination user set the notification as consumed and pop exceeded elements in the notifications list 
                 if(notificationService.consumeAndCleanNotifications(destinationUser, req.params._notId)) {
 
-                    // 2. update destiantion and from coaches and athletes lists
-                    if (notification.type == NOTIFICATION_TYPE.COACH_REQUEST) {
-                        destinationUser.athletes.push(notification.from);
+                    // 2. update destiantion and from coaches and athletes lists (only if there is no existing link between coach and athlete)
+                    if ( notification.type == NOTIFICATION_TYPE.COACH_REQUEST && !isLinkYetEstablished(destinationUser, fromUser) ) {
+                        destinationUser.athletes.push(notification.from._id);
                         fromUser.coaches.push(destinationUser._id);
-                    }
-                    if (notification.type == NOTIFICATION_TYPE.ATHLETE_REQUEST) {
+                    } 
+                    else if ( notification.type == NOTIFICATION_TYPE.ATHLETE_REQUEST && !isLinkYetEstablished(fromUser, destinationUser) ) {
                         destinationUser.coaches.push(notification.from);
                         fromUser.athletes.push(destinationUser._id);
+                    } else {
+                        return res.status(500).send({ message: "Error updating users in accept notification: link between athlete and coach already exists." });
                     }
 
                     // 3. add a notification to the from user (to inform about the request success)
@@ -476,7 +487,7 @@ module.exports = (io, clientSocketList) => {
                         break;
                 }
 
-                // 2. Cancel the link between athlete and coach, if they exists, else return an error
+                // 2. Cancel the link between athlete and coach, if it exists, else return an error
                 let coachToRemoveIndex = _.findIndex(coachUser.athletes, function(a) { return athleteUser._id.equals(a) });
                 let athleteToRemoveIndex = _.findIndex(athleteUser.coaches, function(c) { return coachUser._id.equals(c) });
                 if(coachToRemoveIndex != -1 && athleteToRemoveIndex != -1) {
@@ -699,6 +710,11 @@ module.exports = (io, clientSocketList) => {
                 if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found" }); }
                 return res.status(500).send({ message: "Error updating user in cancelAllNotifications" });
             });
+    }
+
+    /* UTILS */
+    function isLinkYetEstablished(coach, athlete) {
+        return (coach.athletes.includes(athlete._id) || athlete.coaches.includes(coach._id));
     }
 
 }
