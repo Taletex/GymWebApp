@@ -90,3 +90,6 @@ NodeServer/.npm
 
 # Optional REPL history
 NodeServer/.node_repl_history
+
+# Generated PDFs
+NodeServer/files
