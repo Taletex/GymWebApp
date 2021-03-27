@@ -2,13 +2,15 @@
 
     .exercise__maincontainer {
 
-        /* 
+        border: 0px !important;
+
         .maincontainer__header {
+            border: 0px !important;
         }
-        */
         
         .maincontainer__body {
             height: calc(100vh - 155px);
+            border: 1px solid rgba(0, 0, 0, 0.125) !important;
         }
 
     }

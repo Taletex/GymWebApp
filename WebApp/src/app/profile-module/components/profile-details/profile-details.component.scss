@@ -1,13 +1,16 @@
 .main__profile-details {
     .profile-details__maincontainer {
-        /* 
+
+        border: 0px !important;
+
         .maincontainer__header {
+            border: 0px !important;
         } 
-        */
 
         .maincontainer__body {
             overflow: auto;
             height: calc(100vh - 164px);
+            border: 1px solid rgba(0, 0, 0, 0.125) !important;
         }
     }
 }

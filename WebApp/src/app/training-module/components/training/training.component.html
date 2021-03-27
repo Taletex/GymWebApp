@@ -1,7 +1,7 @@
 <div class="main__training row m-3" [ngClass]="{'w-100 h-100': !bUserAuthorized}">
     <div class="training__maincontainer card col-12 p-0" *ngIf="bUserAuthorized">
-        <div class="maincontainer__header card-header py-2 pr-2">
-            <div class="d-flex align-items-baseline mb-2">
+        <div class="maincontainer__header card-header py-2 px-0">
+            <div class="d-flex align-items-baseline">
                 <h5 class="m-0 d-flex align-items-center">ALLENAMENTO {{training.type}} ({{training.startDate | date:'dd/MM/yyyy'}} - {{training.endDate | date:'dd/MM/yyyy'}})<img [hidden]="!bDirty" src="assets/icons/misc/alert.svg" style="width:24px; height:auto;" class="ml-2" ngbTooltip="Modifiche non salvate" placement="top"></h5>
                 <div class="d-flex input-group w-auto ml-auto">
                     <div class="input-group-prepend"><span class="input-group-text">ACTIONS</span></div>
@@ -59,7 +59,7 @@
                     </div>
                 </div>
             </div>
-            <h6 class="m-0 truncate-fullwidth">
+            <h6 class="m-0 truncate-fullwidth pb-1">
                 <span *ngIf="account.user._id == training.author._id">Atleti 
                     <span *ngFor="let athlete of training.athletes; last as lastAthlete">
                         {{athlete.name}} {{athlete.surname}} ({{athlete.dateOfBirth | date:'dd/MM/yyyy'}} &bull; {{athlete.bodyWeight}} kg)<span [hidden]="lastAthlete">,</span>
