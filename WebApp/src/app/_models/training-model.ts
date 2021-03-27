@@ -171,11 +171,15 @@ export class SessionExercise {
 export class Session {
     name: string;
     comment: string;
+    startDate: Date;
+    endDate: Date;
     exercises: [SessionExercise];
 
-    constructor(name: string = "", comment: string = "", exercises: [SessionExercise] = [new SessionExercise()] ) {
+    constructor(name: string = "", comment: string = "", startDate: Date = new Date(), endDate: Date = new Date(), exercises: [SessionExercise] = [new SessionExercise()] ) {
         this.name = name;
         this.comment = comment;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.exercises = exercises;
     }
 }

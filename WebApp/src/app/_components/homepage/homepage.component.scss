@@ -1,14 +1,12 @@
 .main__homepage {
 
-    .card, .card-header, .card-body{
-        background-color: rgba(0,0,0,0)  !important;
-    }
-
     .homepage__maincontainer {
+        background-color: rgba(0,0,0,0)  !important;
+        border: 0px !important;
 
         .maincontainer__header {
+            background-color: rgba(0,0,0,0)  !important;
             border: 0px;
-            background-color: white;
         }
 
         .maincontainer__body {

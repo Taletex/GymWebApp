@@ -72,7 +72,7 @@ export class TrainingComponent implements OnInit {
     toolbar:
     'closeEditor undo redo | formatselect | bold italic backcolor | \
     alignleft aligncenter alignright alignjustify | \
-    bullist numlist outdent indent | removeformat | help',
+    bullist numlist outdent indent | removeformat | code | help',
     content_css: 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css',
     noneditable_noneditable_class: 'mceNonEditable',
     content_style: '.mceNonEditable{ background-color: #343a40 !important; color: white !important; cursor: not-allowed !important; }'
@@ -800,7 +800,7 @@ export class TrainingComponent implements OnInit {
     if(this.training.athletes.length > 0) {
       this.bLoading = true;
 
-      this.httpService.sendTrainingEmails(this.training)
+      this.httpService.sendTrainingEmails(this.training, this.trainingService.trainingReadViewToString(this.readOnlyTraining, this.options))
       .subscribe(
         (data: any) => {
           let message = "Notifica inviata correttamente agli atleti ";

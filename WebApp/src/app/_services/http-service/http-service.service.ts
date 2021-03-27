@@ -57,8 +57,8 @@ export class HttpService {
     return this.http.put<any>(this.baseServerUrl + "/trainings/" + trainingId + "/notifications", {athletes: athletesIds, notification: notification});
   }
 
-  sendTrainingEmails(training: Training) {
-    return this.http.put<any>(this.baseServerUrl + "/trainings/" + training._id + "/emails", {athletes: training.athletes, author: training.author});
+  sendTrainingEmails(training: Training, trainingAsHTML: string) {
+    return this.http.put<any>(this.baseServerUrl + "/trainings/" + training._id + "/emails", {athletes: training.athletes, author: training.author, trainingAsHTML: trainingAsHTML});
   }
 
   /* EXERCISES CRUD */

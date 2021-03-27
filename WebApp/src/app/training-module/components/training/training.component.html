@@ -306,7 +306,17 @@
                                                 <input type="text" [(ngModel)]="session.name" class="form-control form-control-sm"
                                                     id="trainingName_{{weekIndex}}" name="trainingName_{{weekIndex}}" placeholder="Nome sessione...">
                                             </div>
-                                            <div class="col-10 form-group pr-0">
+                                            <div class="col-2 form-group">
+                                                <label for="sessionStartDate" class="col-form-label col-form-label-sm text-muted">Data inizio</label>
+                                                <input type="datetime-local"  [ngModel] ="session.startDate | date:'yyyy-MM-ddTHH:mm'" (ngModelChange)="session.startDate = $event" class="form-control form-control-sm"
+                                                    id="sessionStartDate" name="sessionStartDate">
+                                            </div>
+                                            <div class="col-2 form-group">
+                                                <label for="sessionEndDate" class="col-form-label col-form-label-sm text-muted">Data Fine</label>
+                                                <input type="datetime-local"  [ngModel] ="session.endDate | date:'yyyy-MM-ddTHH:mm'" [min]="session.startDate | date:'yyyy-MM-ddTHH:mm'" (ngModelChange)="session.endDate = $event" class="form-control form-control-sm"
+                                                    id="sessionEndDate" name="sessionEndDate">
+                                            </div>
+                                            <div class="col-6 form-group pr-0">
                                                 <label for="trainingComment_{{weekIndex}}" class="col-form-label col-form-label-sm text-muted">Commento</label>
                                                 <input type="text" [(ngModel)]="session.comment" class="form-control form-control-sm"
                                                     id="trainingComment_{{weekIndex}}" name="trainingComment_{{weekIndex}}" placeholder="Commento...">

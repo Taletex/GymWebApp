@@ -13,6 +13,8 @@ import { ChartsModule } from 'ng2-charts';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 /* app components */
 import { AppComponent } from './app.component';
@@ -24,6 +26,7 @@ import { JwtInterceptor, ErrorInterceptor, appInitializer } from './_helpers';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { NotificationsComponent } from './_components/notifications/notifications.component';
 import { environment } from '@environments/environment';
+import { TrainingCalendarComponent } from './_components/training-calendar/training-calendar.component';
 
 @NgModule({
   imports: [
@@ -39,14 +42,19 @@ import { environment } from '@environments/environment';
     BrowserAnimationsModule, 
     ToastrModule.forRoot(), 
     NgMultiSelectDropDownModule.forRoot(),
-    SocketIoModule.forRoot(environment.socketConfig)
+    SocketIoModule.forRoot(environment.socketConfig),
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory,
+    })
   ],
   declarations: [
     AppComponent,
     HomepageComponent,
     PageNotFoundComponent,
     SidebarComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    TrainingCalendarComponent
   ],
   providers: [
     { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AccountService] },

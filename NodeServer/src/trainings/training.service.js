@@ -4,6 +4,8 @@ const {Notification} = require('../users/user.model');
 const {NOTIFICATION_TYPE} = require('src/_helpers/enum.js');
 const _ = require('lodash');
 const email = require('src/_helpers/send-email');
+var html_to_pdf = require('html-pdf-node');
+const fs = require('fs');
 
 /** REST CALLBACKS **/
 module.exports = (io, clientSocketList) => {
@@ -322,7 +324,8 @@ module.exports = (io, clientSocketList) => {
      * Send email to all athlete of a training telling them that the training has been modified by the author.
      * TODO: send pdf training as attachment to the email
      */
-    function sendTrainingEmails(req, res, next) {
+    async function sendTrainingEmails(req, res, next) {
+
         if(req.body != null && req.body.author != null && req.body.athletes != null) {
 
             // 1. Check if athletes emails are valid
@@ -330,12 +333,20 @@ module.exports = (io, clientSocketList) => {
             
             if(athletes.length > 0) {
 
-                // 2. Send emails to destination users
+                // 2. Prepare Training as PDF
+                let filePath = "./files/" + req.params._id + ".pdf";
+
+                await createTrainingAsPDF(req.body.trainingAsHTML, filePath);
+
+                // 3. Send emails to destination users
                 const emailPromise = athletes.map(athlete => {
                     return new Promise((resolve, reject) => {
                         email.sendEmail({
                             to: athlete.contacts.email,
                             subject: 'MyTrainingPlatform - Aggiornamento Allenamento',
+                            attachments: [{   
+                                path: filePath,
+                            }],
                             html: `<h4>Allenamento ${req.params._id} Aggiornato!</h4>
                                 <p>Il tuo coach ${req.body.author.name} ${req.body.author.surname} ha aggiornato l'allenamento </p><a href="http://www.mytrainingplatform.it/trainings/${req.params._id}">${req.params._id}!</a>` // use http://localhost for development
                         }).then((data) => { resolve(data); }).catch((err) => reject(err));
@@ -343,7 +354,7 @@ module.exports = (io, clientSocketList) => {
                 })
                 Promise.all(emailPromise).then((results) => {
         
-                    // 3. Send response to client
+                    // 4. Send response to client
                     res.status(200).send({message: "Email correttamente inviate agli utenti", successAthletes: athletes});
                 }).catch(err => {
                     res.status(500).send({
@@ -356,6 +367,23 @@ module.exports = (io, clientSocketList) => {
         } else 
             res.status(500).send({message: "Send Training Email body request is empty."});
     }
-    
+
+
+    /* UTILS */
+    async function createTrainingAsPDF(trainingAsHTML, filePath) {
+        let options = { format: 'A4', printBackground: true };
+        let file = { content: trainingAsHTML, name: 'example.pdf' };
+
+        return new Promise((resolve, reject) => {
+
+            html_to_pdf.generatePdf(file, options).then((buffer) => {
+                fs.appendFileSync(filePath, new Buffer.from(buffer));   // Save training in files folder
+                resolve(buffer);
+            }).catch((err) => {
+                reject(err | "Error during pdf creation");
+            });;
+        });
+    }
+
 }
 

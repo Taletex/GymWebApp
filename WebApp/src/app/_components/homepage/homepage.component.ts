@@ -1,5 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AccountService } from '@app/_services/account-service/account-service.service';
+import { HttpService } from '@app/_services/http-service/http-service.service';
+import { Account, Role } from '@app/_models';
+import { forkJoin } from 'rxjs';
+import { Training } from '@app/_models/training-model';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-homepage',
@@ -8,7 +15,17 @@ import { Router } from '@angular/router';
 })
 export class HomepageComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  public account: Account;
+  public trainingList: Training[];
+  bLoading: boolean = false;
+
+  constructor(private router: Router, private httpService: HttpService, private accountService: AccountService, private toastr: ToastrService) { 
+    this.accountService.account.subscribe(x => {
+      this.account = x;
+    });
+
+    this.getViewElements();
+  }
 
   ngOnInit(): void {
   }
@@ -17,4 +34,19 @@ export class HomepageComponent implements OnInit {
     this.router.navigate([section]);
   }
 
+  getViewElements() {
+    this.bLoading = true;
+    forkJoin({trainings: this.httpService.getTrainingsByUserId(this.account.user._id)})
+      .subscribe(
+        (data: any) => {
+          this.trainingList = data.trainings;
+          console.log("Training List", this.trainingList);
+          this.bLoading = false;
+        },
+        (error: HttpErrorResponse) => {
+          this.bLoading = false;
+          this.toastr.error('Si è verificato un errore durante il caricamento della homepage');
+          console.log(error.error.message);
+        });
+  }
 }

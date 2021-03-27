@@ -26,7 +26,7 @@ export class SidebarComponent implements OnInit {
     this.bExpandedSidebar = true;
     this.bActiveList[(this.router.url).split('/')[1]] = true;
     this.accountService.account.subscribe(x => {
-      this.account = x
+      this.account = x;
       this.unreadNotificationLength = (_.filter(this.account.user.notifications, function(n) { return !n.bConsumed; })).length;
     });
   }

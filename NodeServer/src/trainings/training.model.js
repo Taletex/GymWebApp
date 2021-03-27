@@ -20,6 +20,8 @@ const SessionExerciseSchema = mongoose.Schema({
 const SessionSchema = mongoose.Schema({
     name: String,
     comment: String,
+    startDate: Date,
+    endDate: Date,
     exercises: [SessionExerciseSchema]
 }, { _id: false})
 
