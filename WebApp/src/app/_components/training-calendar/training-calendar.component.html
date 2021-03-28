@@ -1,11 +1,51 @@
+<div class="row text-center mb-2">
+    <div class="col-md-4 d-flex justify-content-start align-items-center">
+        <div class="btn-group">
+            <div class="btn btn-sm btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate"
+                (viewDateChange)="closeOpenMonthViewDay()">
+                Previous
+            </div>
+            <div class="btn btn-sm btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate">
+                Today
+            </div>
+            <div class="btn btn-sm btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate"
+                (viewDateChange)="closeOpenMonthViewDay()">
+                Next
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 d-flex justify-content-center align-items-center">
+        <h5>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h5>
+    </div>
+    <div class="col-md-4 d-flex justify-content-end align-items-center">
+        <div class="btn-group">
+            <div class="btn btn-sm btn-primary" (click)="setView(CalendarView.Month)"
+                [class.active]="view === CalendarView.Month">
+                Month
+            </div>
+            <div class="btn btn-sm btn-primary" (click)="setView(CalendarView.Week)"
+                [class.active]="view === CalendarView.Week">
+                Week
+            </div>
+            <div class="btn btn-sm btn-primary" (click)="setView(CalendarView.Day)" [class.active]="view === CalendarView.Day">
+                Day
+            </div>
+        </div>
+    </div>
+</div>
 <div [ngSwitch]="view">
     <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="events" [activeDayIsOpen]="false"
         (eventClicked)="eventClicked($event)">
     </mwl-calendar-month-view>
-    <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="events"
+    <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="events" [hourSegments]="1"
         (eventClicked)="eventClicked($event)">
     </mwl-calendar-week-view>
-    <mwl-calendar-day-view *ngSwitchCase="'day'" [viewDate]="viewDate" [events]="events"
+    <mwl-calendar-day-view *ngSwitchCase="'day'" [viewDate]="viewDate" [events]="events" [hourSegments]="1"
         (eventClicked)="eventClicked($event)">
     </mwl-calendar-day-view>
-</div> 
+
+    <!-- Session Modal -->
+    <app-session-modal [hidden]="true" [(training)]="selectedTraining" [(week)]="selectedWeek" [(session)]="selectedSession" [(weekIndex)]="selectedWeekIndex" [(sessionIndex)]="selectedSessionIndex">
+        <button id="openSessionModalBtn" class="image-button cursor-pointer"></button>
+    </app-session-modal>
+</div>

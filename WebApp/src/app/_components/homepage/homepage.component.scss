@@ -10,6 +10,23 @@
         }
 
         .maincontainer__body {
+            .body__element {
+                border: 0px !important;
+
+                .card {
+                    border: 0px !important;
+                    box-shadow: 0 0 0.875rem 0 rgb(41 48 66 / 5%);
+
+
+                    .card-header {
+                        border: 0px !important;
+                    }
+                    .card-body {
+                        border: 0px !important;
+                    }
+                }
+            }
+
             height: calc(100vh - 121px);
             overflow: auto;
 

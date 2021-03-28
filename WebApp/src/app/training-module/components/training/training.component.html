@@ -2,7 +2,11 @@
     <div class="training__maincontainer card col-12 p-0" *ngIf="bUserAuthorized">
         <div class="maincontainer__header card-header py-2 px-0">
             <div class="d-flex align-items-baseline">
-                <h5 class="m-0 d-flex align-items-center">ALLENAMENTO {{training.type}} ({{training.startDate | date:'dd/MM/yyyy'}} - {{training.endDate | date:'dd/MM/yyyy'}})<img [hidden]="!bDirty" src="assets/icons/misc/alert.svg" style="width:24px; height:auto;" class="ml-2" ngbTooltip="Modifiche non salvate" placement="top"></h5>
+                <h5 class="m-0 d-flex align-items-center text-uppercase">
+                    ALLENAMENTO {{training.type}} ({{training.startDate | date:'dd/MM/yyyy'}} - {{training.endDate | date:'dd/MM/yyyy'}})
+                    <span class="badge badge-info ml-2 text-uppercase mt-1" [ngClass]="{'badge-info': training.state == TRAINING_STATES.NEW, 'badge-primary': training.state == TRAINING_STATES.STARTED, 'badge-success': training.state == TRAINING_STATES.COMPLETED, 'badge-danger': training.state == TRAINING_STATES.ABORTED, 'badge-warning': training.state == TRAINING_STATES.PARTIAL_COMPLETED}">{{training.state}}</span>
+                    <img [hidden]="!bDirty" src="assets/icons/misc/alert.svg" style="width:24px; height:auto;" class="ml-2 mt-1" ngbTooltip="Modifiche non salvate" placement="top">
+                </h5>
                 <div class="d-flex input-group w-auto ml-auto">
                     <div class="input-group-prepend"><span class="input-group-text">ACTIONS</span></div>
                     <div class="d-flex align-items-center form-control">
@@ -75,7 +79,7 @@
                 <div class="card w-100 border-0" [hidden]="bTinyMCEEditorOpen">
                     <div class="card-header d-flex border bg-dark text-white" style="border-radius: 5px !important;">
                         <div>
-                            <h5>ALLENAMENTO {{readOnlyTraining.type}} {{readOnlyTraining._id}}</h5>
+                            <h5 class="text-uppercase">ALLENAMENTO {{readOnlyTraining.type}} {{readOnlyTraining._id}}</h5>
                             <h6 class="m-0">Allenamento creato da {{readOnlyTraining.author.name}} {{readOnlyTraining.author.surname}} il {{readOnlyTraining.creationDate | date:'dd/MM/yyyy'}}, durata dal {{readOnlyTraining.startDate | date:'dd/MM/yyyy'}} al {{readOnlyTraining.endDate | date:'dd/MM/yyyy'}}</h6>
                             <h6 class="m-0">
                                 <span *ngIf="account.user._id == training.author._id">Atleti 
@@ -203,20 +207,21 @@
                         <ng-template ngbNavContent class="w-100">
                             <div class="form-row m-0">
                                 <div class="col-12 form-group">Allenamento creato da {{training.author.name}} {{training.author.surname}} il {{training.creationDate | date:'dd/MM/yyyy'}}</div>
-                                <div class="col-4 form-group">
+                                <div class="col-2 form-group">
+                                    <label for="trainingState" class="col-form-label col-form-label-sm text-muted">Stato</label>
+                                    <select [(ngModel)]="training.state" class="form-control form-control-sm cursor-pointer" id="trainingState" name="trainingState">
+                                        <option *ngFor="let state of TRAINING_STATES | keyvalue" [value]="state.value" class="text-capitalize">{{state.value}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-2 form-group">
                                     <label for="trainingType" class="col-form-label col-form-label-sm text-muted">Disciplina</label>
                                     <select [(ngModel)]="training.type" class="form-control form-control-sm cursor-pointer" id="trainingType" name="trainingType"
-                                        *ngIf="(training.type=='POWERLIFTING' || training.type=='WEIGHTLIFTING' || training.type=='CROSSFIT' || training.type=='BODYBUILDING' || training.type=='SALA ATTREZZI')">
-                                        <option [value]="'POWERLIFTING'">POWERLIFTING</option>
-                                        <option [value]="'WEIGHTLIFTING'">WEIGHTLIFTING</option>
-                                        <option [value]="'CROSSFIT'">CROSSFIT</option>
-                                        <option [value]="'BODYBUILDING'">BODYBUILDING</option>
-                                        <option [value]="'SALA ATTREZZI'">SALA ATTREZZI</option>
-                                        <option [value]="'Custom'">(+)</option>
+                                        *ngIf="(training.type==TRAINING_TYPES.POWERLIFTING || training.type==TRAINING_TYPES.WEIGHTLIFTING || training.type==TRAINING_TYPES.CROSSFIT || training.type==TRAINING_TYPES.BODYBUILDING || training.type==TRAINING_TYPES.SALA)">
+                                        <option *ngFor="let type of TRAINING_TYPES | keyvalue" [value]="type.value" class="text-capitalize">{{type.value}}</option>
                                     </select>
-                                    <div class="position-relative" *ngIf="!(training.type=='POWERLIFTING' || training.type=='WEIGHTLIFTING' || training.type=='CROSSFIT' || training.type=='BODYBUILDING' || training.type=='SALA ATTREZZI')">
-                                        <input type="text" [(ngModel)]="training.type" class="form-control form-control-sm">
-                                        <div (click)="training.type='POWERLIFTING'" style="position:absolute; right: 3px; top: 0px;">&times;</div>
+                                    <div class="position-relative" *ngIf="!(training.type==TRAINING_TYPES.POWERLIFTING || training.type==TRAINING_TYPES.WEIGHTLIFTING || training.type==TRAINING_TYPES.CROSSFIT || training.type==TRAINING_TYPES.BODYBUILDING || training.type==TRAINING_TYPES.SALA)">
+                                        <input type="text" [(ngModel)]="training.type" class="form-control form-control-sm" id="trainingType" name="trainingType">
+                                        <div (click)="training.type=TRAINING_TYPES.POWERLIFTING" style="position:absolute; right: 3px; top: 0px;">&times;</div>
                                     </div>
                                 </div>
                                 <div class="col-4 form-group">
@@ -419,7 +424,7 @@
                                                                 <option [value]="'Low Effort'">Low Effort</option>
                                                                 <option [value]="'Med Effort'">Med Effort</option>
                                                                 <option [value]="'Max Effort'">Max Effort</option>
-                                                                <option [value]="'Custom'">(+)</option>
+                                                                <option [value]="'custom'">(+)</option>
                                                             </select>
                                                             <div class="position-relative" *ngIf="!(elem.measure=='kg' || elem.measure=='lbs' || elem.measure=='%' || elem.measure=='RPE' || elem.measure=='Low Effort' || elem.measure=='Med Effort' || elem.measure=='Max Effort')">
                                                                 <input type="text" [(ngModel)]="elem.measure" class="form-control form-control-sm"

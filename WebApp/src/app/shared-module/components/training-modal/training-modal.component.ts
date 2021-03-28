@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Training, User } from '@app/_models/training-model';
+import { Training, TRAINING_TYPES, User } from '@app/_models/training-model';
 import { UtilsService } from '@app/_services/utils-service/utils-service.service';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 
@@ -13,6 +13,7 @@ export class TrainingModalComponent implements OnInit {
 
   private dropdownSettings = {};
   public closeResult: string;
+  public TRAINING_TYPES = TRAINING_TYPES;
 
   @Input() newTraining: Training;
   @Input() athleteList: Array<any>;

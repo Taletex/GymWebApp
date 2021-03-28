@@ -4,9 +4,10 @@ import { AccountService } from '@app/_services/account-service/account-service.s
 import { HttpService } from '@app/_services/http-service/http-service.service';
 import { Account, Role } from '@app/_models';
 import { forkJoin } from 'rxjs';
-import { Training } from '@app/_models/training-model';
+import { Training, TRAINING_STATES } from '@app/_models/training-model';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ToastrService } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr'
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-homepage',
@@ -17,6 +18,8 @@ export class HomepageComponent implements OnInit {
 
   public account: Account;
   public trainingList: Training[];
+  public trainingStatusLengthList: any;
+  public TRAINING_STATES = TRAINING_STATES;
   bLoading: boolean = false;
 
   constructor(private router: Router, private httpService: HttpService, private accountService: AccountService, private toastr: ToastrService) { 
@@ -40,6 +43,8 @@ export class HomepageComponent implements OnInit {
       .subscribe(
         (data: any) => {
           this.trainingList = data.trainings;
+          this.trainingStatusLengthList = _.countBy(this.trainingList, 'state');
+          console.log(this.trainingStatusLengthList);
           console.log("Training List", this.trainingList);
           this.bLoading = false;
         },

@@ -10,8 +10,99 @@
             
             <div class="row m-0">
 
+                <!-- USER STATUS CARD -->
+                <div class="col-12 col-sm-6 col-xl d-flex px-2 body__element mb-3">
+                    <div class="card illustration flex-fill">
+                        <div class="card-body p-0 d-flex flex-fill">
+                            <div class="row mx-0 w-100">
+                                <div class="col-7">
+                                    <div class="illustration-text p-3 m-1">
+                                        <h6 class="illustration-text">Bentornato {{account.user.name}}</h6>
+                                        <p *ngIf="account.user.userType=='both'" class="mb-0">Coach e Atleta</p>
+                                        <p *ngIf="account.user.userType=='athlete'" class="mb-0">Atleta</p>
+                                        <p *ngIf="account.user.userType=='coach'" class="mb-0">Coach</p>
+                                    </div>
+                                </div>
+                                <div class="col-5 align-self-end text-right">
+                                    <img src="assets/img/customer-support.png" alt="Customer Support" class="img-fluid illustration-img">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TRAINING STATUS CARD -->
+                <div class="col-12 col-sm-6 col-xl d-flex px-2 body__element mb-3">
+                    <div class="card flex-fill">
+                        <div class="card-body py-4">
+                            <div class="media">
+                                <div class="media-body mr-3">
+                                    <h5 class="mb-2">Stato Allenamenti</h5>
+                                    <div class="mb-2" *ngIf="trainingList && trainingList.length > 0">
+                                        <a routerLink="/trainings" routerLinkActive="active" class="badge badge-info p-1 mr-2">{{trainingStatusLengthList[TRAINING_STATES.NEW] != null ?  trainingStatusLengthList[TRAINING_STATES.NEW] : '0'}} Nuovi</a> 
+                                        <a routerLink="/trainings" routerLinkActive="active" class="badge badge-primary p-1 mr-2">{{trainingStatusLengthList[TRAINING_STATES.STARTED] != null ?  trainingStatusLengthList[TRAINING_STATES.STARTED] : '0'}} In Corso</a> 
+                                        <a routerLink="/trainings" routerLinkActive="active" class="badge badge-success p-1 mr-2">{{trainingStatusLengthList[TRAINING_STATES.COMPLETED] != null ?  trainingStatusLengthList[TRAINING_STATES.COMPLETED] : '0'}} Completati</a> 
+                                        <a routerLink="/trainings" routerLinkActive="active" class="badge badge-danger p-1">{{trainingStatusLengthList[TRAINING_STATES.ABORTED] != null ?  trainingStatusLengthList[TRAINING_STATES.ABORTED] : '0'}} Cancellati</a> 
+                                    </div>
+                                </div>
+                                <div class="d-inline-block">
+                                    <div class="stat">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-crosshair align-middle"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COACH STATUS CARD -->
+                <div class="col-12 col-sm-6 col-xl d-flex px-2 body__element mb-3">
+                    <div class="card flex-fill">
+                        <div class="card-body py-4">
+                            <div class="media">
+                                <div class="media-body mr-3">
+                                    <h5 class="mb-2">Monitor Coach</h5>
+                                    <div class="mb-2" *ngIf="account.user.userType == 'coach' || account.user.userType == 'both'">
+                                        Stai seguendo <a routerLink="/users" routerLinkActive="active" class="badge badge-info p-1 mr-2">{{account.user.athletes.length}} atleti</a> 
+                                    </div>
+                                </div>
+                                <div class="d-inline-block">
+                                    <div class="stat">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users align-middle"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- ATHLETE STATUS CARD -->
+                 <div class="col-12 col-sm-6 col-xl d-flex px-2 body__element mb-3">
+                    <div class="card flex-fill">
+                        <div class="card-body py-4">
+                            <div class="media">
+                                <div class="media-body  mr-3">
+                                    <h5 class="mb-2">Monitor Atleta</h5>
+                                    <div class="mb-2" *ngIf="account.user.userType == 'athlete' || account.user.userType == 'both'">
+                                        Sei seguito da <a routerLink="/users" routerLinkActive="active" class="badge badge-info p-1 mr-2">{{account.user.coaches.length}} coach</a> 
+                                    </div>
+                                </div>
+                                <div class="d-inline-block">
+                                    <div class="stat">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user align-middle"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row m-0">
+
                 <!-- CALENDAR CARD -->
-                <div class="col-12 col-lg-6 px-2">
+                <div class="col-12 col-lg-8 px-2 body__element">
                     <div class="card bg-white p-2">
                         <div class="card-header border-0 bg-white">
                             <h5>Calendario Allenamenti</h5>
@@ -23,7 +114,7 @@
                 </div>
 
                 <!-- EXPLORE CARD -->
-                <div class="col-12 col-lg-6 px-2">
+                <div class="col-12 col-lg-4 px-2 body__element">
                     <div class="card bg-white p-2">
                         <div class="card-header border-0 bg-white">
                             <h5>Esplora l'applicazione</h5>
@@ -78,10 +169,20 @@
                         </div>
                     </div>
                 </div>
+                
+            </div>
+
+            <!-- Loader -->
+            <div class='h-100 w-100' [hidden]="!bLoading">
+                <div style="position:absolute; background-color:black; opacity:50%; right:0; top:0;" class="w-100 h-100">
+                    <div class="container d-flex align-items-center justify-content-center w-100 h-100">
+                        <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                    </div>
+                </div>
             </div>
             
         </div>
 
     </div>
-    
+
 </div>

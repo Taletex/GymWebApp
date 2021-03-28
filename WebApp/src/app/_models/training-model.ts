@@ -198,6 +198,7 @@ export class Week {
 
 export class Training {
     _id: string;
+    state: TRAINING_STATES;
     author: User;
     athletes: User[];
     type: string;
@@ -209,8 +210,9 @@ export class Training {
     weeks: [Week];
     oldVersions: string[];
 
-    constructor(author: User = new User(), athletes: User[] = <User[]>[], type: string = "POWERLIFTING", creationDate: Date = new Date(), updatedAt: Date = new Date(),
+    constructor(author: User = new User(), athletes: User[] = <User[]>[], state: TRAINING_STATES = TRAINING_STATES.NEW, type: string = TRAINING_TYPES.POWERLIFTING, creationDate: Date = new Date(), updatedAt: Date = new Date(),
                 startDate: Date = new Date(), endDate: Date = new Date(), comment: string = "", weeks: [Week] = [new Week()], oldVersions: string[] = []) {
+        this.state = state;
         this.author = author;
         this.athletes = athletes;
         this.type = type;
@@ -227,6 +229,19 @@ export class Training {
     }
 }
 
+export enum TRAINING_STATES {
+    NEW = "nuovo",
+    STARTED = "in corso",
+    COMPLETED = "completato",
+    PARTIAL_COMPLETED = "completato parzialmente",
+    ABORTED = "cancellato"
+}
 
-
-
+export enum TRAINING_TYPES {
+    POWERLIFTING = "powerlifting",
+    WEIGHTLIFTING = "weightlifting",
+    CROSSFIT = "crossfit",
+    BODYBUILDING = "bodybuilding",
+    SALA = "sala attrezzi",
+    CUSTOM = "custom"
+}

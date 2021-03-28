@@ -10,5 +10,13 @@ export const colors: any = [
   { // Yellow
     primary: '#e3bc08',
     secondary: '#FDF1BA',
+  },
+  { // Green
+    primary: '#1eff4b',
+    secondary: '#d1ffdb',
+  },
+  { // Violet
+    primary: '#c71eff',
+    secondary: '#f9d1ff',
   }
 ];

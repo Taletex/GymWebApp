@@ -67,6 +67,7 @@ module.exports = (io, clientSocketList) => {
         
         // Create a Training
         const training = new Training(trainingDecorator({
+            state: req.body.state,
             author: req.body.author,
             athletes: req.body.athletes,
             type: req.body.type,
@@ -218,6 +219,7 @@ module.exports = (io, clientSocketList) => {
 
         // Find training and update it with the request body
         Training.findOneAndUpdate({_id: req.params._id}, trainingDecorator({
+            state: req.body.state,
             author: req.body.author,
             athletes: req.body.athletes,
             type: req.body.type,

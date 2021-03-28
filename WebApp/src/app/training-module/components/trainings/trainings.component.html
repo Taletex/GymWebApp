@@ -56,9 +56,13 @@
                     <div><b>Tipo</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['type']==null, 'fa fa-long-arrow-down': sortListStatus['type']==false, 'fa fa-long-arrow-up': sortListStatus['type']==true}"></span></div>
                 </div>
-                <div class="col-2 d-flex align-items-center" (click)="sortListByFieldUI('startDate')" [ngClass]="{'cursor-pointer': !bLoading}">
-                    <div><b class="d-block">Data inizio</b><small class="d-block">Data fine</small></div>
+                <div class="col-1 d-flex align-items-center" (click)="sortListByFieldUI('startDate')" [ngClass]="{'cursor-pointer': !bLoading}">
+                    <div><b class="d-block">Inizio</b><small class="d-block">Fine</small></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['startDate']==null, 'fa fa-long-arrow-down': sortListStatus['startDate']==false, 'fa fa-long-arrow-up': sortListStatus['startDate']==true}"></span></div>
+                </div>
+                <div class="col-1 d-flex align-items-center" (click)="sortListByFieldUI('state')" [ngClass]="{'cursor-pointer': !bLoading}">
+                    <div><b class="d-block">Stato</b></div>
+                    <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['state']==null, 'fa fa-long-arrow-down': sortListStatus['state']==false, 'fa fa-long-arrow-up': sortListStatus['state']==true}"></span></div>
                 </div>
                 <div class="col-2 d-flex align-items-center" (click)="sortListByFieldUI('comment')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b>Commento</b></div>
@@ -106,10 +110,13 @@
                         </div>
                     </ng-template>
                 </div>
-                <div class="col-2"><span>{{training.type}}</span></div>
-                <div class="col-2">
+                <div class="col-2"><span class="text-capitalize">{{training.type}}</span></div>
+                <div class="col-1">
                     <span class="d-block">{{training.startDate | date:'dd/MM/yyyy'}}</span>
                     <small>{{training.endDate | date:'dd/MM/yyyy'}}</small>
+                </div>
+                <div class="col-1">
+                    <span class="text-uppercase badge" [ngClass]="{'badge-info': training.state == TRAINING_STATES.NEW, 'badge-primary': training.state == TRAINING_STATES.STARTED, 'badge-success': training.state == TRAINING_STATES.COMPLETED, 'badge-danger': training.state == TRAINING_STATES.ABORTED, 'badge-warning': training.state == TRAINING_STATES.PARTIAL_COMPLETED}">{{training.state}}</span>
                 </div>
                 <div class="col-2"><span>{{training.comment != "" ? training.comment : "Nessun Commento"}}</span></div>
                 <div class="col-2 d-flex">
@@ -124,7 +131,7 @@
                 <div *ngIf="trainingList.length > 0 && (account.user.userType=='both' || account.user.userType=='coach')" (click)="exportAllTrainings()" class="image-button-big" ngbTooltip="Esporta tutti gli allenamenti" placement="top"><img src="assets/icons/actions/export.svg" style="width:40px; height:auto;"></div>    
                 <div *ngIf="(account.user.userType=='both' || account.user.userType == 'coach')" class="ml-2">
                     <app-training-modal (onClose)="createTraining()" [(newTraining)] = "newTraining" [(originalAthleteList)]="athleteList" [(athleteList)] = "athleteList">
-                        <div class="image-button-big cursor-pointer" ngbTooltip="Nuovo Allenamento" placement="top"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></div>
+                        <div class="image-button-big cursor-pointer" ngbTooltip="Nuovo Allenamento" placement="left"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></div>
                     </app-training-modal>
                 </div>    
             </div>

@@ -1,7 +1,8 @@
 .main__header {
   cursor: default;
   height: 44px;
-  box-shadow: 0px 2px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 2rem 0 rgba(41, 48, 66, 0.1);
+  background-color: #ffffff;
 }
 .main__header .account-info {
   position: absolute;
@@ -55,6 +56,59 @@
 }
 
 /* MISCELLANEOUS */
+.illustration {
+  background: #e0eafc !important;
+  color: #3f80ea !important;
+}
+
+.illustration-text {
+  color: #3f80ea;
+}
+
+.illustration-img {
+  max-width: 150px;
+  width: 100%;
+}
+
+@media (min-width: 1440px) {
+  .illustration-img {
+    max-width: 175px;
+  }
+}
+.flex-fill {
+  flex: 1 1 auto !important;
+}
+
+.media {
+  display: flex;
+  align-items: flex-start;
+}
+
+.media-body {
+  flex: 1;
+}
+
+.d-inline-block {
+  display: inline-block !important;
+}
+
+.stat {
+  background: #e0eafc;
+  border-radius: 50%;
+  /* padding: 0.75rem; */
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat svg {
+  width: 24px;
+  height: 24px;
+  color: #3f80ea !important;
+}
+
 .loading-overlay {
   position: absolute;
   top: 0px;

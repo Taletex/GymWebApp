@@ -8,7 +8,7 @@ import { HttpService } from '@app/_services/http-service/http-service.service';
 import { UtilsService } from '@app/_services/utils-service/utils-service.service';
 import { TrainingService } from '../../services/training-service/training-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Training, Week, Series, Exercise, Session, User, Variant, SessionExercise, Notification } from '@app/_models/training-model';
+import { Training, Week, Series, Exercise, Session, User, Variant, SessionExercise, Notification, TRAINING_STATES, TRAINING_TYPES } from '@app/_models/training-model';
 import * as _ from "lodash";
 import { GeneralService, PAGES, PAGEMODE, NOTIFY_MEDIUM_TYPE, PageStatus, NOTIFICATION_TYPE } from '@app/_services/general-service/general-service.service';
 import * as jsPDF from 'jspdf';
@@ -27,6 +27,8 @@ declare const tinymce: any;
 export class TrainingComponent implements OnInit {
 
   public bUserAuthorized: boolean = true;
+  public TRAINING_STATES = TRAINING_STATES;
+  public TRAINING_TYPES = TRAINING_TYPES;
   public training: Training = new Training();
   public draftTraining: Training = new Training();
   public originalTraining: Training = new Training();

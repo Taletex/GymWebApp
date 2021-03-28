@@ -31,6 +31,7 @@ const WeekSchema = mongoose.Schema({
 }, { _id: false})
 
 const TrainingSchema = mongoose.Schema({
+    state: String,
     author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

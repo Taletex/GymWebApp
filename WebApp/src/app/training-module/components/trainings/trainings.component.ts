@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpService } from '@app/_services/http-service/http-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
-import { Training, User } from '@app/_models/training-model';
+import { Training, TRAINING_STATES, User } from '@app/_models/training-model';
 import { GeneralService, PAGEMODE, PAGES } from '@app/_services/general-service/general-service.service';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { Role } from '@app/_models';
@@ -16,6 +16,7 @@ import * as _ from "lodash";
   styleUrls: ['./trainings.component.scss']
 })
 export class TrainingsComponent implements OnInit {
+  public TRAINING_STATES = TRAINING_STATES;
   public originalTrainingList: Array<Training> = [];
   public trainingList: Array<Training> = [];
   public athleteList: Array<any> = [];
@@ -153,7 +154,7 @@ export class TrainingsComponent implements OnInit {
   }
 
   resetSortStatus() {
-    this.sortListStatus = {author: null, athletes: null, type: null, startDate: null, comment: null};
+    this.sortListStatus = {state: null, author: null, athletes: null, type: null, startDate: null, comment: null};
   }
 
   sortListByField(field: string) {

@@ -15,21 +15,13 @@
                         <div class="col-4 form-group">
                             <label for="newTrainingType"
                                 class="col-form-label col-form-label-sm text-muted">Disciplina</label>
-                            <select [(ngModel)]="newTraining.type" class="form-control form-control-sm cursor-pointer"
-                                id="newTrainingType" name="newTrainingType"
-                                *ngIf="(newTraining.type=='POWERLIFTING' || newTraining.type=='WEIGHTLIFTING' || newTraining.type=='CROSSFIT' || newTraining.type=='BODYBUILDING' || newTraining.type=='SALA ATTREZZI')">
-                                <option [value]="'POWERLIFTING'">POWERLIFTING</option>
-                                <option [value]="'WEIGHTLIFTING'">WEIGHTLIFTING</option>
-                                <option [value]="'CROSSFIT'">CROSSFIT</option>
-                                <option [value]="'BODYBUILDING'">BODYBUILDING</option>
-                                <option [value]="'SALA ATTREZZI'">SALA ATTREZZI</option>
-                                <option [value]="'Custom'">(+)</option>
+                            <select [(ngModel)]="newTraining.type" class="form-control form-control-sm cursor-pointer" id="newTraining" name="newTraining"
+                                *ngIf="(newTraining.type==TRAINING_TYPES.POWERLIFTING || newTraining.type==TRAINING_TYPES.WEIGHTLIFTING || newTraining.type==TRAINING_TYPES.CROSSFIT || newTraining.type==TRAINING_TYPES.BODYBUILDING || newTraining.type==TRAINING_TYPES.SALA)">
+                                <option *ngFor="let type of TRAINING_TYPES | keyvalue" [value]="type.value" class="text-capitalize">{{type.value}}</option>
                             </select>
-                            <div class="position-relative"
-                                *ngIf="!(newTraining.type=='POWERLIFTING' || newTraining.type=='WEIGHTLIFTING' || newTraining.type=='CROSSFIT' || newTraining.type=='BODYBUILDING' || newTraining.type=='SALA ATTREZZI')">
-                                <input type="text" [(ngModel)]="newTraining.type" class="form-control form-control-sm">
-                                <div (click)="newTraining.type='POWERLIFTING'"
-                                    style="position:absolute; right: 3px; top: 0px;">&times;</div>
+                            <div class="position-relative" *ngIf="!(newTraining.type==TRAINING_TYPES.POWERLIFTING || newTraining.type==TRAINING_TYPES.WEIGHTLIFTING || newTraining.type==TRAINING_TYPES.CROSSFIT || newTraining.type==TRAINING_TYPES.BODYBUILDING || newTraining.type==TRAINING_TYPES.SALA)">
+                                <input type="text" [(ngModel)]="newTraining.type" class="form-control form-control-sm" id="newTraining" name="newTraining">
+                                <div (click)="newTraining.type=TRAINING_TYPES.POWERLIFTING" style="position:absolute; right: 3px; top: 0px;">&times;</div>
                             </div>
                         </div>
                         <div class="col-4 form-group">

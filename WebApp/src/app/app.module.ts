@@ -21,6 +21,7 @@ import { AppComponent } from './app.component';
 import { HomepageComponent } from './_components/homepage/homepage.component';
 import { PageNotFoundComponent } from './_components/page-not-found/page-not-found.component';
 import { SidebarComponent } from './_components/sidebar/sidebar.component';
+import { SharedModule } from '@app/shared-module/shared.module';
 
 import { JwtInterceptor, ErrorInterceptor, appInitializer } from './_helpers';
 import { AccountService } from '@app/_services/account-service/account-service.service';
@@ -46,7 +47,8 @@ import { TrainingCalendarComponent } from './_components/training-calendar/train
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,
-    })
+    }),
+    SharedModule
   ],
   declarations: [
     AppComponent,
