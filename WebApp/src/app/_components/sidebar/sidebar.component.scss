@@ -1,5 +1,4 @@
 $menu-blue: #0f1042e6;
-$media-screen-max-1000px: "screen and (max-width: 1000px)";
 
 .main__sidebar {
     &.expanded {
@@ -11,11 +10,23 @@ $media-screen-max-1000px: "screen and (max-width: 1000px)";
         transition: all 1s;
     }
 
-    @media #{$media-screen-max-1000px} {
+    @media (max-width: 991.98px) {
         &.expanded {
             width: 140px;
         }
+
+        h6 {
+            font-size: 80%;
+            transition: font-size .1 ease-in-out !important;
+        }
+
+
     }
+
+    @media (max-width: 575.98px) { 
+        width: 50px !important;
+        transition: all 1s;
+     }
 
     .sidebar__container {
         background-color: $menu-blue;
@@ -24,7 +35,8 @@ $media-screen-max-1000px: "screen and (max-width: 1000px)";
             box-shadow: 0px 2px 1px rgba(0, 0, 0, 0.2);
             border-bottom: 1px solid #131746c7;
             padding: 0.5rem;
-            height: 44px;
+            height: 60px;
+            min-height: 60px;
         }
 
         .container__body {

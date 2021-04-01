@@ -1,6 +1,6 @@
 .main__header {
     cursor: default;
-    height: 44px;
+    height: 60px;
     box-shadow: 0 0 2rem 0 rgb(41 48 66 / 10%);
     background-color: #ffffff;
 
@@ -16,6 +16,13 @@
 }
 
 .main-content {
+
+    overflow: hidden !important;
+
+    @media (max-width: 575.98px) {
+        overflow: auto !important;
+    }
+
 
     /* ===== Scrollbar ===== */
     /* Customize website's scrollbar like Mac OS

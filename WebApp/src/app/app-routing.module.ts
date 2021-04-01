@@ -32,7 +32,7 @@ const routes: Routes = [
   { path: 'profile', loadChildren: profileModule, canActivate: [AuthGuard] },
   { path: 'admin', loadChildren: adminModule, canActivate: [AuthGuard], data: { roles: [Role.Admin], animation: 'AdminPage' },  },
   
-  { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: 'homepage', pathMatch: 'full', canActivate: [AuthGuard], data: {animation: 'HomePage'}}
 ];
 
 @NgModule({

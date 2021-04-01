@@ -15,7 +15,7 @@ import { slideInAnimation } from '@app/animations';
   ]
 })
 export class AppComponent {
-  title = 'GYM WEB APP';
+  title = 'My Training Platform';
   Role = Role;
   account: Account;
 

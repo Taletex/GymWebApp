@@ -3,9 +3,9 @@
     <div class="sidebar__container col-12 d-flex flex-column p-0">
 
         <!-- Sidebar Header -->
-        <div class="container__header w-100 d-flex justify-content-start cursor-pointer" (click)="bExpandedSidebar = !bExpandedSidebar">
+        <div class="container__header w-100 d-flex justify-content-start align-items-center cursor-pointer" (click)="bExpandedSidebar = !bExpandedSidebar">
             <img src="assets/icons/sidebar/menu.svg" style="width:24px; height:auto;" [hidden]="bExpandedSidebar" class="ml-1">
-            <h5 class="text-white m-0" [hidden]="!bExpandedSidebar">Menu</h5>
+            <h6 class="text-white m-0 menu-title" [hidden]="!bExpandedSidebar">My Training Platform</h6>
         </div>
 
         <!-- Sidebar Body (contains sidebar links) -->
