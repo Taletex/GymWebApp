@@ -23,11 +23,6 @@ $menu-blue: #0f1042e6;
 
     }
 
-    @media (max-width: 575.98px) { 
-        width: 50px !important;
-        transition: all 1s;
-     }
-
     .sidebar__container {
         background-color: $menu-blue;
 

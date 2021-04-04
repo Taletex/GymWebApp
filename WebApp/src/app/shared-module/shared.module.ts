@@ -10,6 +10,9 @@ import { ConfirmationModalComponent } from './components/confirmation-modal/conf
 import { PageNotAuthorizedComponent } from './components/page-not-authorized/page-not-authorized.component';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { SessionModalComponent } from './components/session-modal/session-modal.component';
+import { WeekViewComponent } from './components/week-view/week-view.component';
+import { SessionViewComponent } from './components/session-view/session-view.component';
+import { TrainingViewComponent } from './components/training-view/training-view.component';
 
 export { TrainingModalComponent } from './components/training-modal/training-modal.component';
 export { ExerciseModalComponent } from './components/exercise-modal/exercise-modal.component';
@@ -32,7 +35,10 @@ export { PageNotAuthorizedComponent } from './components/page-not-authorized/pag
         UserModalComponent,
         ConfirmationModalComponent,
         PageNotAuthorizedComponent,
-        SessionModalComponent
+        SessionModalComponent,
+        WeekViewComponent,
+        SessionViewComponent,
+        TrainingViewComponent
     ],
     exports: [
         TrainingModalComponent,

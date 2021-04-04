@@ -1,0 +1,20 @@
+col-12    position: relative; width: 100%; padding-right: 15px; padding-left: 15px; -ms-flex: 0 0 100%; flex: 0 0 100%; max-width: 100%;
+col-4	  position: relative; width: 100%; padding-right: 15px; padding-left: 15px; -ms-flex: 0 0 33.333333%; flex: 0 0 33.333333%; max-width: 33.333333%;
+col-8	  position: relative; width: 100%; padding-right: 15px; padding-left: 15px;  -ms-flex: 0 0 66.666667%; flex: 0 0 66.666667%; max-width: 66.666667%;
+
+row	display: -ms-flexbox; display: flex; -ms-flex-wrap: wrap; flex-wrap: wrap; margin-right: -15px; margin-left: -15px;
+px-3	padding-left: 1rem !important; padding-right: 1rem !important
+m-0	margin: 0px !important
+d-flex	display: -ms-flexbox !important; display: flex !important;
+
+card	position: relative; display: -ms-flexbox; display: flex; -ms-flex-direction: column; flex-direction: column; min-width: 0; word-wrap: break-word; background-color: #fff; background-clip: border-box; border: 1px solid rgba(0, 0, 0, 0.125); border-radius: 0.25rem;
+card-body -ms-flex: 1 1 auto; flex: 1 1 auto; min-height: 1px; padding: 1.25rem;
+card-header: padding: 0.75rem 1.25rem; margin-bottom: 0; background-color: rgba(0, 0, 0, 0.03); border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+card-footer: padding: 0.75rem 1.25rem; background-color: rgba(0, 0, 0, 0.03); border-top: 1px solid rgba(0, 0, 0, 0.125);
+
+bg-dark: background-color: #343a40 !important
+
+border: border: 1px solid #dee2e6 !important;
+
+-apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
+-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "L

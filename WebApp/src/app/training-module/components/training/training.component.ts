@@ -142,7 +142,7 @@ export class TrainingComponent implements OnInit {
             this.fromDate = calendar.getToday();
             this.toDate = calendar.getNext(calendar.getToday(), 'd', 28);
 
-            this.editorContent = this.trainingService.trainingReadViewToString(this.training, this.options);
+            this.editorContent = this.generalService.trainingReadViewToString(this.training, this.options);
 
             this.pageStatus = this.generalService.getPageStatus();
             if(this.pageStatus[PAGES.TRAININGS] == PAGEMODE.READONLY)
@@ -672,7 +672,7 @@ export class TrainingComponent implements OnInit {
 
   // TinyMCE Handling functions
   openTinyMCEEditor() {
-    this.editorContent = this.trainingService.trainingReadViewToString(this.readOnlyTraining, this.options);
+    this.editorContent = this.generalService.trainingReadViewToString(this.readOnlyTraining, this.options);
     this.bTinyMCEEditorOpen = true;
   }
 
@@ -802,7 +802,7 @@ export class TrainingComponent implements OnInit {
     if(this.training.athletes.length > 0) {
       this.bLoading = true;
 
-      this.httpService.sendTrainingEmails(this.training, this.trainingService.trainingReadViewToString(this.readOnlyTraining, this.options))
+      this.httpService.sendTrainingEmails(this.training, "<div style='font-family:Arial, Helvetica, sans-serif;'>" + this.generalService.trainingReadViewToString(this.readOnlyTraining, this.options) + "</div>")
       .subscribe(
         (data: any) => {
           let message = "Notifica inviata correttamente agli atleti ";

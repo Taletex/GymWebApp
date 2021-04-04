@@ -1,51 +1,47 @@
 <ng-template #sessionModal let-modal>
-    <div class="sessionmodal__container">
+    <div id="sessionModal" class="sessionmodal__container">
         <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">Sessione {{session.name}} (Sessione {{sessionIndex+1}} - Settimana {{weekIndex+1}} - Allenamento <a class="badge badge-info" href="trainings/{{training._id}}">{{training._id}}</a>)</h4>
+            <h4 class="modal-title" id="modal-basic-title" *ngIf="training != null && options.currentViewType == VIEW_TYPES.TRAINING">Allenamento <a class="badge badge-info" href="trainings/{{training._id}}">{{training._id}}</a></h4>
+            <h4 class="modal-title" id="modal-basic-title" *ngIf="week != null && options.currentViewType == VIEW_TYPES.WEEK">Settimana {{weekIndex+1}} - Allenamento <a class="badge badge-info" href="trainings/{{training._id}}">{{training._id}}</a></h4>
+            <h4 class="modal-title" id="modal-basic-title" *ngIf="session != null && options.currentViewType == VIEW_TYPES.SESSION">Sessione {{session.name}} (Sessione {{sessionIndex+1}} - Settimana {{weekIndex+1}} - Allenamento <a class="badge badge-info" href="trainings/{{training._id}}">{{training._id}}</a>)</h4>
             <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <div class="modal-body">
-            <div id="sessionContainer" class="card">
-                <div class="card-header m-0 px-0 text-white" style="background-color: rgba(0, 0, 0, 0.6) !important;">
-                    <div class="row m-0 px-3 py-0" style="font-size: small; font-style: italic;">
-                        <div class="col-4 px-0">
-                            <span>Esercizio (variante)</span>
-                        </div>
-                        <div class="col-8 pr-0">
-                            <div class="row m-0 d-flex">
-                                <span *ngIf="options.format.seriesFormat == 'seriesxrep'">Serie &times; Ripetizioni</span>
-                                <span *ngIf="options.format.seriesFormat == 'repxseries'">Ripetizioni &times; Serie</span>
-                                <span class="ml-auto">Riposo</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body h-100 p-0">
-                    <div *ngFor="let exercise of session.exercises; index as exerciseIndex" class="row m-0 px-3 py-1 border border-left-0 border-right-0 border-top-0">
-                        <div class="col-4 px-0">
-                            <div><span>{{exercise.exercise.name}} ({{exercise.exercise.variant.name}})</span></div>
-                            <div><small>({{exercise.exercise.description}})</small></div>
-                        </div>
-                        <div class="col-8 pr-0">
-                            <div *ngFor="let series of exercise.series; index as seriesIndex" class="row m-0 d-flex">
-                                <span *ngIf="options.format.seriesFormat == 'seriesxrep'">{{series.seriesNumber}} &times; {{series.repNumber}} @ {{series.weight}} {{series.measure}}</span>
-                                <span *ngIf="options.format.seriesFormat == 'repxseries'">{{series.repNumber}} &times; {{series.seriesNumber}} @ {{series.weight}} {{series.measure}}</span>
-                                <span class="ml-auto">{{series.rest}}''</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer border-0 bg-white px-3">
-                    <span>{{(session.comment == null || session.comment == '') ? 'Nessun commento' : ('Commento: ' + session.comment)}}</span>
-                </div>
-            </div>
+        <div id="sessionModalBody" class="modal-body">
+            <app-training-view *ngIf="training != null && options.currentViewType == VIEW_TYPES.TRAINING" [(training)]="training" [(options)]="options"></app-training-view>
+            <app-week-view *ngIf="week != null && options.currentViewType == VIEW_TYPES.WEEK" [(week)]="week" [(options)]="options"></app-week-view>
+            <app-session-view *ngIf="session != null && options.currentViewType == VIEW_TYPES.SESSION" [(session)]="session" [(options)]="options"></app-session-view>
         </div>
         <div class="modal-footer">
-            <div class="position-relative">
-                <button class="btn btn-info" ngbAutofocus (click)="printSession()">Stampa</button>
-                <button class="btn btn-success ml-2" ngbAutofocus (click)="downloadSession()">Scarica</button>
+            <div class="position-relative d-flex">
+                <div class="dropdown dropup">
+                    <button class="btn btn-secondary dropdown-toggle text-capitalize" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      {{options.currentViewType}}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <button class="dropdown-item" (click)="setView(VIEW_TYPES.SESSION)" *ngIf="session != null" [ngClass]="{'active': options.currentViewType == VIEW_TYPES.SESSION}">Sessione</button>
+                      <button class="dropdown-item" (click)="setView(VIEW_TYPES.WEEK)" *ngIf="week != null" [ngClass]="{'active': options.currentViewType == VIEW_TYPES.WEEK}">Settimana</button>
+                      <button class="dropdown-item" (click)="setView(VIEW_TYPES.TRAINING)" *ngIf="training != null" [ngClass]="{'active': options.currentViewType == VIEW_TYPES.TRAINING}">Allenamento</button>
+                    </div>
+                </div>
+                <div class="dropdown dropup ml-2">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="formatDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" (click)="initOptions()">
+                      Formattazione
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="formatDropdownMenuButton">
+                      <a *ngIf="options.currentViewType == VIEW_TYPES.TRAINING" class="dropdown-item cursor-pointer d-flex align-items-center justify-content-center">
+                        <span>Settimane per riga: </span><input type="number" class="ml-2" [(ngModel)]="options.format.weeksForRow" min="1" max="8" (ngModelChange)="clampWeeksForRowValue()">
+                      </a>
+                      <a class="dropdown-item cursor-pointer">
+                          <button (click)="options.format.seriesFormat = 'seriesxrep'" class="btn btn-sm btn-outline-secondary">Serie x Rep</button>
+                          <button (click)="options.format.seriesFormat = 'repxseries'" class="btn btn-sm btn-outline-secondary ml-2">Rep x Series</button>
+                      </a>
+                      <a class="dropdown-item cursor-pointer" (click)="setDefaultoptions()">Ripristina originale</a>
+                    </div>
+                </div>
+                <button class="btn btn-info ml-2" (click)="printSession()">Stampa</button>
+                <!-- <button class="btn btn-success ml-2" ngbAutofocus (click)="downloadSession()">Scarica</button> -->
             </div>
         </div>
     </div>

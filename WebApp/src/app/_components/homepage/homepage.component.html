@@ -14,7 +14,7 @@
                 <div class="col-12 col-sm-6 col-xl d-flex px-2 body__element mb-3">
                     <div class="card illustration flex-fill">
                         <div class="card-body p-0 d-flex flex-fill">
-                            <div class="row mx-0 w-100">
+                            <div class="row mx-0 w-100" style="background-image: 'assets/img/customer-support.png'">
                                 <div class="col-7">
                                     <div class="illustration-text p-3 m-1">
                                         <h6 class="illustration-text">Bentornato {{account.user.name}}</h6>
@@ -108,7 +108,7 @@
                             <h5>Calendario Allenamenti</h5>
                         </div>
                         <div class="card-body pt-0" *ngIf="trainingList && trainingList.length > 0">
-                            <app-training-calendar [(trainingList)]="trainingList"></app-training-calendar>
+                            <app-training-calendar [(trainingList)]="trainingList" [(account)]="account"></app-training-calendar>
                         </div>
                     </div>
                 </div>

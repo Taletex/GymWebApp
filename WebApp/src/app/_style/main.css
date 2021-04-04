@@ -1,7 +1,7 @@
 @charset "UTF-8";
 .main__header {
   cursor: default;
-  height: 44px;
+  height: 60px;
   box-shadow: 0 0 2rem 0 rgba(41, 48, 66, 0.1);
   background-color: #ffffff;
 }
@@ -15,6 +15,7 @@
 }
 
 .main-content {
+  overflow: hidden !important;
   /* ===== Scrollbar ===== */
   /* Customize website's scrollbar like Mac OS
   Not supports in Firefox and IE */
@@ -23,6 +24,11 @@
   /* scrollbar itself */
   /* set button(top and bottom of the scrollbar) */
   /* ===== END SCROLLBAR ===== */
+}
+@media (max-width: 575.98px) {
+  .main-content {
+    overflow: auto !important;
+  }
 }
 .main-content ::-webkit-scrollbar {
   background-color: #fff;
