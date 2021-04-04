@@ -9,9 +9,9 @@
             </button>
         </div>
         <div id="sessionModalBody" class="modal-body">
-            <app-training-view *ngIf="training != null && options.currentViewType == VIEW_TYPES.TRAINING" [(training)]="training" [(options)]="options"></app-training-view>
-            <app-week-view *ngIf="week != null && options.currentViewType == VIEW_TYPES.WEEK" [(week)]="week" [(options)]="options"></app-week-view>
-            <app-session-view *ngIf="session != null && options.currentViewType == VIEW_TYPES.SESSION" [(session)]="session" [(options)]="options"></app-session-view>
+            <app-training-view *ngIf="training != null && options.currentViewType == VIEW_TYPES.TRAINING" [training]="training" [(options)]="options"></app-training-view>
+            <app-week-view *ngIf="week != null && options.currentViewType == VIEW_TYPES.WEEK" [week]="week" [(options)]="options"></app-week-view>
+            <app-session-view *ngIf="session != null && options.currentViewType == VIEW_TYPES.SESSION" [session]="session" [(options)]="options"></app-session-view>
         </div>
         <div class="modal-footer">
             <div class="position-relative d-flex">

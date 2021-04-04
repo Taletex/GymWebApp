@@ -46,7 +46,10 @@ export { PageNotAuthorizedComponent } from './components/page-not-authorized/pag
         UserModalComponent, 
         ConfirmationModalComponent,
         PageNotAuthorizedComponent,
-        SessionModalComponent
+        SessionModalComponent,
+        WeekViewComponent,
+        SessionViewComponent,
+        TrainingViewComponent
     ]
 })
 export class SharedModule { }

@@ -1,5 +1,5 @@
 <div class="d-flex m-0" style="flex-wrap: wrap;">
-
+    
     <div class="card my-3 p-0" *ngFor="let week of training.weeks; index as weekIndex; last as bLastWeek"
         style="border-color: rgba(0, 0, 0, 0.6) !important;"
         [ngClass]="{'margin-right-1': weekIndex==0 || ((weekIndex+1)%options.format.weeksForRow!=0),'flex-1': options.format.weeksForRow == 1 || options.format.weeksForRow == 0 || options.format.weeksForRow == null, 'flex-2': options.format.weeksForRow == 2, 'flex-3': options.format.weeksForRow == 3, 'flex-4': options.format.weeksForRow == 4, 'flex-5': options.format.weeksForRow == 5, 'flex-6': options.format.weeksForRow == 6, 'flex-7': options.format.weeksForRow == 7, 'flex-8': options.format.weeksForRow == 8}">
