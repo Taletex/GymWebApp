@@ -67,6 +67,15 @@ export class NotificationsComponent implements OnInit {
     this.filters = { filterNotListType: 'notConsumed', type: '', from: {name: '', surname: ''}, message: ''};
   }
 
+  cancelFilters() {
+    this.resetFilters();
+    this.resetSortStatus();
+    this.filterNotifications(null);
+  }
+
+  areFiltersDirty(): boolean {
+    return (this.filters.filterNotListType != 'notConsumed' || this.filters.type != '' || this.filters.from.name != '' || this.filters.from.surname != '' || this.filters.message != '');
+  }
   
   resetSortStatus() {
     this.sortListStatus = {type: null, from: null, message: null, bConsumed: null};

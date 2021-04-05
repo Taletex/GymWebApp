@@ -2,31 +2,48 @@
 
     <!-- FILTERS -->
     <div class="exercises__filters col-12 row mb-2 mx-0 my-0 plx-2 border">
-        <div class="col-1 d-flex align-items-center border border-left-0 border-top-0 border-bottom-0">
-            <h6 class="m-0">Filtri</h6><span class="fa fa-filter ml-2" style="font-size: 20px;"></span>
+        <div class="col-1 d-flex flex-column justify-content-center border border-left-0 border-top-0 border-bottom-0 pl-0">
+            <div class="d-flex">
+                <div class="d-flex flex-column">
+                    <span class="fa fa-filter" style="font-size: 20px;"></span>
+                    <span *ngIf="areFiltersDirty()" class="fa fa-times text-danger cursor-pointer" style="font-size: 16px;" (click)="cancelFilters()" ngbTooltip="Ripristina Filtri" placement="right"></span>
+                </div>
+                <div class="ml-2">
+                    <h6 class="d-none d-md-block m-0">Filtri</h6>
+                    {{exerciseList.length}}/{{originalExerciseList.length}}
+                </div>
+            </div>
         </div>
-        <div class="col-3 form-group pl-2 pr-1 m-0">
+        <div class="col-2 form-group d-flex flex-column justify-content-center pl-2 pr-1 m-0" ngbTooltip="Visualizza esercizi default di sistema, custom di atleta/coach o tutti" placement="top">
+            <label for="filterExerciseType" class="col-form-label col-form-label-sm p-0 text-muted">Default/Custom</label>
+            <select [(ngModel)]="filters.type" class="form-control form-control-sm cursor-pointer" id="filterExerciseType" name="filterExerciseType" (change)="filterExercises($event)" [disabled]="bLoading">
+                <option [value]="''">Tutti</option>
+                <option [value]="'custom'">Custom</option>
+                <option [value]="'default'">Default</option>
+            </select>
+        </div>
+        <div class="col-2 d-flex flex-column justify-content-center form-group pl-2 pr-1 m-0">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Nome</label>
             <div class="input-group">
                 <input type="text" [(ngModel)]="filters.name" class="form-control form-control-sm" (keyup)="filterExercises($event)"
                     id="filterName" name="filterName" placeholder="Nome..." [disabled]="bLoading">
             </div>
         </div>
-        <div class="col-3 form-group pl-2 pr-1 m-0">
+        <div class="col-2 d-flex flex-column justify-content-center form-group pl-2 pr-1 m-0">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Variante (nome)</label>
             <div class="input-group">
                 <input type="text" [(ngModel)]="filters.variant.name" class="form-control form-control-sm" (keyup)="filterExercises($event)"
                     id="filterVariantName" name="filterVariantName" placeholder="Nome variante..." [disabled]="bLoading">
             </div>
         </div>
-        <div class="col-2 form-group pl-2 pr-1 m-0">
+        <div class="col-2 d-flex flex-column justify-content-center form-group pl-2 pr-1 m-0">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Variante (coefficiente)</label>
             <div class="input-group">
                 <input type="number" min=0.1 [(ngModel)]="filters.variant.intensityCoefficient" class="form-control form-control-sm" (keyup)="filterExercises($event)" (change)="filterExercises($event)"
                     id="filterVariantCoefficient" name="filterVariantCoefficient" placeholder="Coefficiente..." [disabled]="bLoading">
             </div>
         </div>
-        <div class="col-3 form-group pl-2 pr-1 m-0">
+        <div class="col-3 d-flex flex-column justify-content-center form-group pl-2 pr-1 m-0">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Descrizione</label>
             <div class="input-group">
                 <input type="text" [(ngModel)]="filters.description" class="form-control form-control-sm" (keyup)="filterExercises($event)"
@@ -36,7 +53,7 @@
     </div>
 
     <!-- MAIN CONTAINER -->
-    <div class="exercises__maincontainer card col-12 p-0 border border-secondary border">
+    <div class="exercises__maincontainer card col-12 p-0 border border-secondary border position-relative">
         <div class="maincontainer__header card-header pl-2 pr-3 border border-secondary border-top-0 border-left-0 border-right-0 d-flex flex-column bg-dark text-white">
             <div class="col-12 row m-0 p-0 d-flex align-items-center justify-content-center">
                 <div class="col-2 d-flex align-items-center" (click)="sortListByFieldUI('name')" [ngClass]="{'cursor-pointer': !bLoading}">
@@ -56,7 +73,7 @@
                 </div>
             </div>
         </div>
-        <div class="maincontainer__body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2 position-relative">
+        <div class="maincontainer__body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2">
             <div class="h-100 w-100 d-flex flex-column align-items-center justify-content-center" *ngIf="exerciseList.length == 0">
                 <img src="assets/icons/misc/alert.svg" style="width:40px; height:auto;">
                 <span class="badge badge-light mt-2">Nessun esercizio presente nella piattaforma</span>

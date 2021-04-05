@@ -2,17 +2,26 @@
 
     <!-- FILTERS -->
     <div class="users__filters col-12 row mb-2 mx-0 my-0 plx-2 border">
-        <div class="col-1 d-flex align-items-center border border-left-0 border-top-0 border-bottom-0">
-            <h6 class="m-0">Filtri</h6><span class="fa fa-filter ml-2" style="font-size: 20px;"></span>
+        <div class="col-1 d-flex flex-column justify-content-center border border-left-0 border-top-0 border-bottom-0 pl-0">
+            <div class="d-flex">
+                <div class="d-flex flex-column">
+                    <span class="fa fa-filter" style="font-size: 20px;"></span>
+                    <span *ngIf="areFiltersDirty()" class="fa fa-times text-danger cursor-pointer" style="font-size: 16px;" (click)="cancelFilters()" ngbTooltip="Ripristina Filtri" placement="right"></span>
+                </div>
+                <div class="ml-2">
+                    <h6 class="d-none d-md-block m-0">Filtri</h6>
+                    {{userList.length}}/{{originalUserList.length}}
+                </div>
+            </div>
         </div>
-        <div class="col-2 form-group px-1 m-0">
+        <div class="col-2 d-flex flex-column justify-content-center form-group px-1 m-0">
             <label for="filterUserListType" class="col-form-label col-form-label-sm p-0 text-muted">Mostra Collegamenti/Tutti gli utenti</label>
             <select [(ngModel)]="filters.filterUserListType" class="form-control form-control-sm cursor-pointer" id="filterUserListType" name="filterUserListType" (change)="setUserList($event)" [disabled]="bLoading">
                 <option [value]="'links'">Solo collegamenti</option>
                 <option [value]="'all'">Tutti gli utenti</option>
             </select>
         </div>
-        <div class="col-3 form-group pl-2 pr-1 m-0">
+        <div class="col-3 d-flex flex-column justify-content-center form-group pl-2 pr-1 m-0">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Utente</label>
             <div class="input-group">
                 <input type="text" [(ngModel)]="filters.name" class="form-control form-control-sm" (keyup)="filterUsers($event)"
@@ -21,7 +30,7 @@
                     id="filterAuthorSurname" name="filterAuthorSurname" placeholder="Cognome..." [disabled]="bLoading">
             </div>
         </div>
-        <div class="col-1 form-group px-1 m-0" *ngIf="account.user.userType=='both'">
+        <div class="col-1 d-flex flex-column justify-content-center form-group px-1 m-0" *ngIf="account.user.userType=='both'">
             <label for="filterType" class="col-form-label col-form-label-sm p-0 text-muted">Tipo</label>
             <select [(ngModel)]="filters.userType" class="form-control form-control-sm cursor-pointer" placeholder="Tipo utente..." id="filterType" name="filterType" (change)="filterUsers($event)" [disabled]="bLoading">
                 <option value="" disabled selected>Tipo...</option>
@@ -31,12 +40,12 @@
                 <option [value]="''">Tutti</option>
             </select>
         </div>
-        <div class="col-2 form-group px-1 m-0">
+        <div class="col-2 d-flex flex-column justify-content-center form-group px-1 m-0">
             <label for="filterDoB" class="col-form-label col-form-label-sm p-0 text-muted">DoB</label>
             <input type="date" [(ngModel)]="filters.dateOfBirth" class="form-control form-control-sm" (keyup)="filterUsers($event)" (change)="filterUsers($event)"
                     id="filterDoB" name="filterDoB" [disabled]="bLoading">
         </div>
-        <div class="col-1 form-group px-1 m-0">
+        <div class="col-1 d-flex flex-column justify-content-center form-group px-1 m-0">
             <label for="filterSex" class="col-form-label col-form-label-sm p-0 text-muted">Sesso</label>
             <select [(ngModel)]="filters.sex" class="form-control form-control-sm cursor-pointer" placeholder="Sesso..." id="filterSex" name="filterSex" (change)="filterUsers($event)" [disabled]="bLoading">
                 <option value="" disabled selected>Sesso...</option>
@@ -44,12 +53,12 @@
                 <option [value]="'F'">Donna</option>
             </select>
         </div>
-        <div class="col-1 form-group px-1 m-0">
+        <div class="col-1 d-flex flex-column justify-content-center form-group px-1 m-0">
             <label for="filterBw" class="col-form-label col-form-label-sm p-0 text-muted">BodyWeight</label>
             <input type="number" [(ngModel)]="filters.bodyWeight" min=0 class="form-control form-control-sm" (keyup)="filterUsers($event)"
                     id="filterBw" name="filterBw" placeholder="Peso corporeo..." [disabled]="bLoading">
         </div>
-        <div class="col-1 form-group px-1 m-0">
+        <div class="col-1 d-flex flex-column justify-content-center form-group px-1 m-0">
             <label for="filterExperience" class="col-form-label col-form-label-sm p-0 text-muted">Esperienza (anni)</label>
             <input type="number" [(ngModel)]="filters.yearsOfExperience" min=0 class="form-control form-control-sm" (keyup)="filterUsers($event)" (change)="filterUsers($event)"
                     id="filterExperience" name="filterExperience" placeholder="Esperienza..." [disabled]="bLoading">
@@ -58,7 +67,7 @@
     </div>
 
     <!-- MAIN CONTAINER -->
-    <div class="users__maincontainer card col-12 p-0 border border-secondary border">
+    <div class="users__maincontainer card col-12 p-0 border border-secondary border position-relative">
 
         <div class="maincontainer__header card-header pl-2 pr-3 border border-secondary border-top-0 border-left-0 border-right-0 d-flex flex-column bg-dark text-white">
             <div class="col-12 row m-0 p-0 d-flex align-items-center justify-content-center">
@@ -92,7 +101,7 @@
             </div>
         </div>
 
-        <div class="maincontainer__body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2 position-relative">
+        <div class="maincontainer__body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2">
             <div class="h-100 w-100 d-flex flex-column align-items-center justify-content-center" *ngIf="userList.length == 0">
                 <img src="assets/icons/misc/alert.svg" style="width:40px; height:auto;">
                 <span class="badge badge-light mt-2" [hidden]="filters.filterUserListType == 'links'">Nessun utente presente nella piattaforma</span>

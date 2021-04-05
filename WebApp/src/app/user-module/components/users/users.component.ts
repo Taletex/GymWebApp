@@ -217,6 +217,16 @@ export class UsersComponent implements OnInit {
     }), ['name', 'surname'])
   }
 
+  cancelFilters() {
+    this.resetFilters();
+    this.resetSortStatus();
+    this.filterUsers(null);
+  }
+
+  areFiltersDirty(): boolean {
+    return (this.filters.name != '' || this.filters.surname != '' || this.filters.userType != '' || this.filters.dateOfBirth != '' || this.filters.sex != '' || this.filters.bodyWeight != null || this.filters.yearsOfExperience != null);
+  }
+
   setUserList(event: any) {
     if(this.filters.filterUserListType == 'links') {
       this.bLoading = true;

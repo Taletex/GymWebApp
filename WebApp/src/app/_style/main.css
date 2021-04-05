@@ -1178,6 +1178,15 @@ ngb-carousel .picsum-img-wrapper > img {
   right: 5px;
 }
 
+/* BOOTSTRAP RE-DEFINITION */
+.form-control-sm {
+  height: calc(1.2em + 0.5rem + 2px) !important;
+  padding: 0.15rem 0.4rem !important;
+  font-size: 0.875rem !important;
+  line-height: 1.2 !important;
+  border-radius: 0.2rem !important;
+}
+
 /* MEDIA QUERIES */
 @media (max-width: 575.98px) {
   .h-vh-fixed {

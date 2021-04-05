@@ -2,10 +2,19 @@
 
     <!-- FILTERS -->
     <div class="notifications__filters col-12 row mb-2 mx-0 my-0 plx-2 border">
-        <div class="col-1 d-flex align-items-center border border-left-0 border-top-0 border-bottom-0">
-            <h6 class="m-0">Filtri</h6><span class="fa fa-filter ml-2" style="font-size: 20px;"></span>
+        <div class="col-1 d-flex flex-column justify-content-center border border-left-0 border-top-0 border-bottom-0 pl-0">
+            <div class="d-flex">
+                <div class="d-flex flex-column">
+                    <span class="fa fa-filter" style="font-size: 20px;"></span>
+                    <span *ngIf="areFiltersDirty()" class="fa fa-times text-danger cursor-pointer" style="font-size: 16px;" (click)="cancelFilters()" ngbTooltip="Ripristina Filtri" placement="right"></span>
+                </div>
+                <div class="ml-2">
+                    <h6 class="d-none d-md-block m-0">Filtri</h6>
+                    {{notificationList.length}}/{{account.user.notifications.length}}
+                </div>
+            </div>
         </div>
-        <div class="col-2 form-group pl-2 pr-1 m-0">
+        <div class="col-2 d-flex flex-column justify-content-center form-group pl-2 pr-1 m-0">
             <label for="filterNotListType" class="col-form-label col-form-label-sm p-0 text-muted">Mostra notifiche</label>
             <select [(ngModel)]="filters.filterNotListType" class="form-control form-control-sm cursor-pointer" id="filterNotListType" name="filterNotListType" (change)="filterNotifications($event)" [disabled]="bLoading">
                 <option [value]="''">Tutte</option>
@@ -13,14 +22,14 @@
                 <option [value]="'consumed'">Lette</option>
             </select>
         </div>
-        <div class="col-3 form-group pl-2 pr-1 m-0">
+        <div class="col-3 d-flex flex-column justify-content-center form-group pl-2 pr-1 m-0">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Tipo</label>
             <div class="input-group">
                 <input type="text" [(ngModel)]="filters.type" class="form-control form-control-sm" (keyup)="filterNotifications($event)"
                     id="filterType" name="filterType" placeholder="Tipo..." [disabled]="bLoading">
             </div>
         </div>
-        <div class="col-3 form-group pl-2 pr-1 m-0">
+        <div class="col-3 d-flex flex-column justify-content-center form-group pl-2 pr-1 m-0">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Mittente Richiesta</label>
             <div class="input-group">
                 <input type="text" [(ngModel)]="filters.from.name" class="form-control form-control-sm" (keyup)="filterNotifications($event)"
@@ -29,7 +38,7 @@
                     id="filterFromSurname" name="filterFromSurname" placeholder="Cognome..." [disabled]="bLoading">
             </div>
         </div>
-        <div class="col-3 form-group pl-2 pr-1 m-0">
+        <div class="col-3 d-flex flex-column justify-content-center form-group pl-2 pr-1 m-0">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Messaggio</label>
             <div class="input-group">
                 <input type="text" [(ngModel)]="filters.message" class="form-control form-control-sm" (keyup)="filterNotifications($event)"

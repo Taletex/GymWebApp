@@ -2,10 +2,19 @@
 
     <!-- FILTERS -->
     <div class="trainings__filters col-12 row mb-2 mx-0 my-0 plx-2 border">
-        <div class="col-1 d-flex align-items-center border border-left-0 border-top-0 border-bottom-0">
-            <h6 class="m-0">Filtri</h6><span class="fa fa-filter ml-2" style="font-size: 20px;"></span>
+        <div class="col-1 d-flex flex-column justify-content-center border border-left-0 border-top-0 border-bottom-0 pl-0">
+            <div class="d-flex">
+                <div class="d-flex flex-column">
+                    <span class="fa fa-filter" style="font-size: 20px;"></span>
+                    <span *ngIf="areFiltersDirty()" class="fa fa-times text-danger cursor-pointer" style="font-size: 16px;" (click)="cancelFilters()" ngbTooltip="Ripristina Filtri" placement="right"></span>
+                </div>
+                <div class="ml-2">
+                    <h6 class="d-none d-md-block m-0">Filtri</h6>
+                    {{trainingList.length}}/{{originalTrainingList.length}}
+                </div>
+            </div>
         </div>
-        <div class="col-3 form-group pl-2 pr-1 m-0">
+        <div class="col-3 d-flex flex-column justify-content-center form-group pl-2 pr-1 m-0">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Autore</label>
             <div class="input-group">
                 <input type="text" [(ngModel)]="filters.author.name" class="form-control form-control-sm" (keyup)="filterTrainings($event)"
@@ -14,7 +23,7 @@
                     id="filterAuthorSurname" name="filterAuthorSurname" placeholder="Cognome..." [disabled]="bLoading">
             </div>
         </div>
-        <div class="col-3 form-group px-1 m-0">
+        <div class="col-3 d-flex flex-column justify-content-center form-group px-1 m-0">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Atleta</label>
             <div class="input-group">
                 <input type="text" [(ngModel)]="filters.athlete.name" class="form-control form-control-sm" (keyup)="filterTrainings($event)"
@@ -23,17 +32,17 @@
                     id="filterAtleteSurname" name="filterAtleteSurname" placeholder="Cognome..." [disabled]="bLoading">
             </div>
         </div>
-        <div class="col-1 form-group px-1 m-0">
+        <div class="col-1 d-flex flex-column justify-content-center form-group px-1 m-0">
             <label for="filterType" class="col-form-label col-form-label-sm p-0 text-muted">Tipo</label>
             <input type="text" [(ngModel)]="filters.type" class="form-control form-control-sm" id="filterType" (keyup)="filterTrainings($event)"
                 name="filterType" placeholder="Tipo..." [disabled]="bLoading">
         </div>
-        <div class="col-2 form-group px-1 m-0">
+        <div class="col-2 d-flex flex-column justify-content-center form-group px-1 m-0">
             <label for="filterCreationDate" class="col-form-label col-form-label-sm p-0 text-muted">Creazione</label>
             <input type="date" [(ngModel)]="filters.creationDate" class="form-control form-control-sm" (keyup)="filterTrainings($event)" (change)="filterTrainings($event)"
                 id="filterCreationDate" name="filterCreationDate" [disabled]="bLoading">
         </div>
-        <div class="col-2 form-group px-1 m-0">
+        <div class="col-2 d-flex flex-column justify-content-center form-group px-1 m-0">
             <label for="filterStartDate" class="col-form-label col-form-label-sm p-0 text-muted">Inizio</label>
             <input type="date" [(ngModel)]="filters.startDate" class="form-control form-control-sm" (keyup)="filterTrainings($event)" (change)="filterTrainings($event)"
                 id="filterStartDate" name="filterStartDate" [disabled]="bLoading">
@@ -41,7 +50,7 @@
     </div>
 
     <!-- MAIN CONTAINER -->
-    <div class="trainings__maincontainer card col-12 p-0 border border-secondary border main-list-table">
+    <div class="trainings__maincontainer card col-12 p-0 border border-secondary border main-list-table position-relative">
         <div class="maincontainer__header card-header pl-2 pr-3 border border-secondary border-top-0 border-left-0 border-right-0 d-flex flex-column bg-dark text-white">
             <div class="col-12 row m-0 p-0 d-flex align-items-center justify-content-center">
                 <div class="col-2 d-flex align-items-center" (click)="sortListByFieldUI('author')" [ngClass]="{'cursor-pointer': !bLoading}">
@@ -73,7 +82,7 @@
                 </div>
             </div>
         </div>
-        <div class="maincontainer__body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2 table-body position-relative">
+        <div class="maincontainer__body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2 table-body">
             <div class="h-100 w-100 d-flex flex-column align-items-center justify-content-center badge badge-light" *ngIf="trainingList.length == 0 && !bLoading">
                 <img src="assets/icons/misc/alert.svg" style="width:40px; height:auto;">
                 <h4>Nessun allenamento presente nella piattaforma</h4>

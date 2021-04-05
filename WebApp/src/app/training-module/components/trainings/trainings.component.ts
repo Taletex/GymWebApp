@@ -153,6 +153,16 @@ export class TrainingsComponent implements OnInit {
     this.filters = { author: { name: '', surname: '' }, creationDate: '', startDate: '', athlete: { name: '', surname: '' }, type: '' };
   }
 
+  cancelFilters() {
+    this.resetFilters();
+    this.resetSortStatus();
+    this.filterTrainings(null);
+  }
+
+  areFiltersDirty(): boolean {
+    return (this.filters.author.name != '' || this.filters.author.surname != '' || this.filters.creationDate != '' || this.filters.startDate != '' || this.filters.athlete.name != '' || this.filters.athlete.surname != '' || this.filters.type != '');
+  }
+
   resetSortStatus() {
     this.sortListStatus = {state: null, author: null, athletes: null, type: null, startDate: null, comment: null};
   }

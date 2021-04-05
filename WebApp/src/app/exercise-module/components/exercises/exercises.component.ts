@@ -108,20 +108,32 @@ export class ExercisesComponent implements OnInit {
   /* FILTER FUNCTIONS */
   filterExercises(event: any) {
     let filters = _.cloneDeep(this.filters);
+    let user = this.account.user;
     this.exerciseList = _.filter(this.originalExerciseList, function(e) {
       return (
         (filters.name != '' ? e.name.toLowerCase().includes(filters.name.toLowerCase()) : true) &&
         (filters.variant.name != '' ? e.variant.name.toLowerCase().includes(filters.variant.name.toLowerCase()) : true) &&
         (filters.variant.intensityCoefficient != null ? (e.variant.intensityCoefficient == filters.variant.intensityCoefficient) : true) &&
-        (filters.description != '' ? e.description.toLowerCase().includes(filters.description.toLowerCase()) : true)
+        (filters.description != '' ? e.description.toLowerCase().includes(filters.description.toLowerCase()) : true) &&
+        (filters.type == 'custom' ? (user.coaches.includes(e.creator) || user._id == e.creator) : 
+         (filters.type == 'default' ? !(user.coaches.includes(e.creator) || user._id == e.creator) : true) )
       );
     });
   }
 
   resetFilters() {
-    this.filters = { name: '', variant: {name: '', intensityCoefficient: null}, description: ''};
+    this.filters = { type: '', name: '', variant: {name: '', intensityCoefficient: null}, description: ''};
   }
 
+  cancelFilters() {
+    this.resetFilters();
+    this.resetSortStatus();
+    this.filterExercises(null);
+  }
+
+  areFiltersDirty(): boolean {
+    return (this.filters.type != '' || this.filters.name != '' || this.filters.variant.name != '' || this.filters.variant.intensityCoefficient != null || this.filters.description != '');
+  }
   
   resetSortStatus() {
     this.sortListStatus = {name: null, variant: null, description: null};
