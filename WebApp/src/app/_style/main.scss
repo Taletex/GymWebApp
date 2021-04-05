@@ -1,5 +1,4 @@
 @use "../app.component";
-@import "../../../node_modules/bootstrap/scss/bootstrap";
 
 $menu-blue: #0f1042e6;
 $custom-cyan: rgb(112 181 249 / 20%);
@@ -698,12 +697,17 @@ ngb-carousel .picsum-img-wrapper>img {
   min-width: 20rem !important;
 }
 
-@include media-breakpoint-down(sm) {
+@media (max-width: 767.98px) {
   .navbar-expand .navbar-nav .dropdown-menu-lg {
     min-width: 100% !important;
   }
 }
 
+.dropdown-no-arrow {
+  .dropdown-toggle::after {
+    content: none;
+  }
+}
 
 
 /* loader */
@@ -761,14 +765,14 @@ ngb-carousel .picsum-img-wrapper>img {
 
 /* MEDIA QUERIES */
 .h-vh-fixed {
-  @include media-breakpoint-down(xs) {
+  @media (max-width: 575.98px) {
     height: 100% !important;
   }
 }
 
 .h4 {
   font-size: 1.5rem;
-  @include media-breakpoint-down(sm) {
+  @media (max-width: 767.98px) {
     font-size: 1.2rem !important;
   }
 }

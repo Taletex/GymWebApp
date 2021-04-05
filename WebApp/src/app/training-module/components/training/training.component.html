@@ -46,14 +46,15 @@
                     </div>
                 </div>
                 <div class="d-flex input-group w-auto ml-2 overflow-visible" *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)">
-                    <div class="d-flex align-items-center form-control dropdown">
+                    <div class="d-flex align-items-center form-control dropdown" [ngClass]="{'dropdown-no-arrow': !this.canNotificationBeSent()}">
                         <div class="opacity-3" *ngIf="training.athletes.length == 0">
                             <img src="assets/icons/actions/notification.svg" style="width:20px; height:auto;">
                         </div>
 
-                        <div class="dropdown-toggle image-button" type="button" id="messageDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" 
-                             aria-expanded="false" ngbTooltip="Notifica Atleti" placement="left" *ngIf="training.athletes.length > 0">
+                        <div *ngIf="training.athletes.length > 0" id="messageDropdownMenuButton" class="dropdown-toggle image-button" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" 
+                            [ngClass]="{'disabled cursor-not-allowed opacity-3': !this.canNotificationBeSent()}" ngbTooltip="{{this.canNotificationBeSent() ? 'Notifica Atleti' : 'Per poter inviare una notifica devi attendere 30s da quando hai inviato la precedente!'}}" placement="left">
                             <img src="assets/icons/actions/notification.svg" style="width:20px; height:auto;">
+                            <small *ngIf="!this.canNotificationBeSent()">{{timeLeft}}</small>
                         </div>
                         <div class="dropdown-menu history-dropdownmenu-botton" aria-labelledby="messageDropdownMenuButton" *ngIf="training.athletes.length > 0">
                             <a class="dropdown-item cursor-pointer" (click)="sendNotifyVia(NOTIFY_MEDIUM_TYPE.MYTRAININGPLATFORM)">Via MyTrainingPlatform</a>

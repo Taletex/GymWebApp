@@ -16,8 +16,10 @@ import * as $ from 'jquery';
 import { Role } from '@app/_models';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import { stringify } from '@angular/compiler/src/util';
 
 declare const tinymce: any;
+const NOTIFICATION_WAIT_SECONDS: number = 30;
 
 @Component({
   selector: 'app-training',
@@ -44,6 +46,8 @@ export class TrainingComponent implements OnInit {
   public hoveredDate: NgbDate | null = null;
   public fromDate: NgbDate;
   public toDate: NgbDate | null = null;
+  public interval: number;
+  public timeLeft: number = NOTIFICATION_WAIT_SECONDS;
 
   // Account information
   account = this.accountService.accountValue;
@@ -173,6 +177,11 @@ export class TrainingComponent implements OnInit {
       itemsShowLimit: 3,
       allowSearchFilter: true
     };
+
+    if(!this.canNotificationBeSent()) {
+      this.timeLeft = Math.abs( Math.trunc( ((new Date().getTime()) - (parseInt(localStorage.getItem("sentNotificationTime")))) / 1000 - NOTIFICATION_WAIT_SECONDS) );
+      this.startTimer(this.timeLeft);
+    }
   }
 
   get getItems() {
@@ -762,18 +771,40 @@ export class TrainingComponent implements OnInit {
 
   /* NOTIFICATION FUNCTIONS */
   sendNotifyVia(type: NOTIFY_MEDIUM_TYPE) {
-    switch(type) {
-      case NOTIFY_MEDIUM_TYPE.MYTRAININGPLATFORM:
-        this.sendTrainingNotifications();
-        break;
-      case NOTIFY_MEDIUM_TYPE.EMAIL:
-        this.sendTrainingEmails();
-        break;
-      case NOTIFY_MEDIUM_TYPE.TELEGRAM:
-        console.log("TODO");
-        alert("TODO");
-        break;
+    if(this.canNotificationBeSent()) {
+      localStorage.setItem("sentNotificationTime", stringify(new Date().getTime()));
+      this.startTimer(null);
+
+      switch(type) {
+        case NOTIFY_MEDIUM_TYPE.MYTRAININGPLATFORM:
+          this.sendTrainingNotifications();
+          break;
+        case NOTIFY_MEDIUM_TYPE.EMAIL:
+          this.sendTrainingEmails();
+          break;
+        case NOTIFY_MEDIUM_TYPE.TELEGRAM:
+          console.log("TODO");
+          alert("TODO");
+          break;
+      }
+
     }
+  }
+
+  canNotificationBeSent() {
+    let currentTime = new Date().getTime();
+    let lastNotificationTime = new Date(parseInt(localStorage.getItem("sentNotificationTime"))).getTime();
+    return ( lastNotificationTime == null || isNaN(lastNotificationTime) || (currentTime > (lastNotificationTime + (NOTIFICATION_WAIT_SECONDS * 1000))) );
+  }
+
+  startTimer(time: number) {
+    this.interval = setInterval(() => {
+      if(this.timeLeft > 0) {
+        this.timeLeft--;
+      } else {
+        this.timeLeft = time | NOTIFICATION_WAIT_SECONDS;;
+      }
+    },1000)
   }
 
   sendTrainingNotifications() {
