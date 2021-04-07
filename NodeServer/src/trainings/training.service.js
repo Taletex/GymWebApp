@@ -57,7 +57,7 @@ module.exports = (io, clientSocketList) => {
     };
 
     // Create and Save a new Training
-    function createTraining(req, res, next) {
+    async function createTraining(req, res, next) {
         // Validate request
         if(!req.body) {
             return res.status(400).send({
@@ -129,7 +129,7 @@ module.exports = (io, clientSocketList) => {
 
 
     // Retrieve and return all trainings from the database
-    function findAllTraining(req, res, next) {
+    async function findAllTraining(req, res, next) {
         Training.find({}).populate('author').populate('athletes').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
         .then(trainings => {
             res.send( _.sortBy(trainings, ['creationDate', 'author.name', 'author.surname']) );

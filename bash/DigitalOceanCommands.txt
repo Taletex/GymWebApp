@@ -39,13 +39,30 @@ How to avviare Su Digital Ocean:
   + pm2 save
 - Avviare WebApp (in produzione)
   + Come buildare e deployare l'app angular sul server digital ocean (cerca sezione "Build Angular Client"): https://grokonez.com/frontend/angular/angular-deployment/how-to-deploy-angular-on-nginx-remote-server-example-use-vultr-vps-hosting#Build_Angular_Client
+       - Praticamente devi fare ng build --prod per buildare e poi il contenuto di dist lo copi in /var/www/html del server
   + Nota: il percorso dove copiare la cartella dist, è: /var/www/html
+
+
+DROP MONGO DB:
+- Basta inserire da linea di comando: mongo gymapp --eval "db.dropDatabase()"
 
 
 TRASFERIMENTO CON FILE ZILLA
 Indirizzo: sftp://139.59.153.56
 username: root
 psw (la psw)
+
+
+
+Avviare server NodeServer.
+1. cd GymWebApp
+2. cd NodeServer
+3. pm2 ps 
+4. pm2 delete (id processo server)
+5. npm install (installazione dipendenze)
+6. Verificare che config.json contenga le info giuste per il mailserver
+7. pm2 start server.js
+
 
 
 

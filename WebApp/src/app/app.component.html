@@ -228,9 +228,9 @@
             </a>
             <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-toggle="dropdown"
               aria-expanded="false">
-              <img src="assets/img/linkeding_photo.jpg" class="avatar img-fluid rounded-circle mr-1"
-                alt="{{account.user.name}} {{account.user.surname}}"> <span
-                class="text-dark">{{account.user.name}}</span>
+              <img *ngIf="account.user.profilePicture == null" src="assets/icons/misc/user.svg" class="avatar img-fluid rounded-circle mr-1" alt="{{account.user.name}} {{account.user.surname}}"> 
+              <img *ngIf="account.user.profilePicture != null" src="assets/icons/misc/user.svg" class="avatar img-fluid rounded-circle mr-1" alt="{{account.user.name}} {{account.user.surname}}"> 
+              <span class="text-dark">{{account.user.name}}</span>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
               <a class="dropdown-item" href="/userprofile"><svg xmlns="http://www.w3.org/2000/svg" width="24"
