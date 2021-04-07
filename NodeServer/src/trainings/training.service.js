@@ -3,7 +3,7 @@ const {User} = require('src/users/user.model.js')
 const {Notification} = require('../users/user.model');
 const {NOTIFICATION_TYPE} = require('src/_helpers/enum.js');
 const _ = require('lodash');
-const email = require('src/_helpers/send-email');
+const emailHelper = require('src/_helpers/send-email');
 var html_to_pdf = require('html-pdf-node');
 const fs = require('fs');
 
@@ -331,7 +331,7 @@ module.exports = (io, clientSocketList) => {
         if(req.body != null && req.body.author != null && req.body.athletes != null) {
 
             // 1. Check if athletes emails are valid
-            let athletes = _.filter(req.body.athletes, function(a) { return (a.contacts.email != null && email.validateEmail(a.contacts.email)) });
+            let athletes = _.filter(req.body.athletes, function(a) { return (a.contacts.email != null && emailHelper.validateEmail(a.contacts.email)) });
             
             if(athletes.length > 0) {
 
@@ -343,7 +343,7 @@ module.exports = (io, clientSocketList) => {
                 // 3. Send emails to destination users
                 const emailPromise = athletes.map(athlete => {
                     return new Promise((resolve, reject) => {
-                        email.sendEmail({
+                        emailHelper.sendEmail({
                             to: athlete.contacts.email,
                             subject: 'MyTrainingPlatform - Aggiornamento Allenamento',
                             attachments: [{   

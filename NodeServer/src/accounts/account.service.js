@@ -2,7 +2,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const crypto = require("crypto");
-const email = require('src/_helpers/send-email');
+const emailHelper = require('src/_helpers/send-email');
 const db = require('src/_helpers/db');
 const Role = require('src/_helpers/role');
 const _ = require('lodash');
@@ -365,7 +365,7 @@ async function sendVerificationEmail(account, origin) {
                    <p><code>${account.verificationToken}</code></p>`;
     }
 
-    await email.sendEmail({
+    await emailHelper.sendEmail({
         to: account.email,
         subject: 'MyTrainingPlatform - Verify Email',
         html: `<h4>Verify Email</h4>
@@ -382,7 +382,7 @@ async function sendAlreadyRegisteredEmail(email, origin) {
         message = `<p>If you don't know your password you can reset it via the <code>/account/forgot-password</code> api route.</p>`;
     }
 
-    await email.sendEmail({
+    await emailHelper.sendEmail({
         to: email,
         subject: 'MyTrainingPlatform - Email Already Registered',
         html: `<h4>Email Already Registered</h4>
@@ -402,7 +402,7 @@ async function sendPasswordResetEmail(account, origin) {
                    <p><code>${account.resetToken.token}</code></p>`;
     }
 
-    await email.sendEmail({
+    await emailHelper.sendEmail({
         to: account.email,
         subject: 'MyTrainingPlatform - Reset Password',
         html: `<h4>Reset Password Email</h4>
