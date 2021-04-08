@@ -11,7 +11,12 @@ enum EmailStatus {
     Failed
 }
 
-@Component({ templateUrl: 'verify-email.component.html', styleUrls: ['verify-email.component.scss'] })
+@Component({ 
+    selector: 'app-verify-email',
+    templateUrl: 'verify-email.component.html', 
+    styleUrls: ['verify-email.component.scss'] 
+})
+
 export class VerifyEmailComponent implements OnInit {
     EmailStatus = EmailStatus;
     emailStatus = EmailStatus.Verifying;

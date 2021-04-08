@@ -8,7 +8,12 @@ import { AccountService } from '@app/_services/account-service/account-service.s
 import { MustMatch } from '@app/_helpers';
 import { ToastrService } from 'ngx-toastr';
 
-@Component({ templateUrl: 'register.component.html', styleUrls: ['register.component.scss']  })
+@Component({ 
+    selector: 'app-register',
+    templateUrl: 'register.component.html', 
+    styleUrls: ['register.component.scss'] 
+})
+
 export class RegisterComponent implements OnInit {
     form: FormGroup;
     loading = false;

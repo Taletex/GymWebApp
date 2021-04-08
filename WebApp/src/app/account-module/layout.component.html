@@ -4,28 +4,28 @@
 
         <!-- NAVBAR -->
         <div class="nav-container">
-            <nav class="navbar navbar-expand-lg navbar-dark bg-black-custom">
+            <nav class="navbar navbar-expand navbar-dark bg-black-custom">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
                     aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-                    <a class="navbar-brand mr-2" href="account/login#top-elem"><img src="assets/icons/favicon-white.png" style="max-height:35px; width:auto;"></a>
-                    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    <a class="navbar-brand mr-2 d-none d-sm-inline-block" href="account/login#top-elem"><img src="assets/icons/favicon-white.png" style="max-height:35px; width:auto;"></a>
+                    <ul class="navbar-nav mr-auto">
                         <li class="nav-item" (click)="setActiveElem('home')" [ngClass]="{'active': navbarActiveList['home']}">
-                            <a class="nav-link" href="account/login#top-elem">Home</a>
+                            <a class="nav-link" href="{{(router.url.split('#')[0])}}#top-elem">Home</a>
                         </li>
                         <li class="nav-item" (click)="setActiveElem('services')" [ngClass]="{'active': navbarActiveList['services']}">
-                            <a class="nav-link" href="account/login#services-elem">Servizi</a>
+                            <a class="nav-link" href="{{(router.url.split('#')[0])}}#services-elem">Servizi</a>
                         </li>
                         <li class="nav-item" (click)="setActiveElem('contacts')" [ngClass]="{'active': navbarActiveList['contacts']}">
-                            <a class="nav-link" href="account/login#contacts-elem">Contatti</a>
+                            <a class="nav-link" href="{{(router.url.split('#')[0])}}#contacts-elem">Contatti</a>
                         </li>
                         <li class="nav-item ml-auto" (click)="setActiveElem('login')" [ngClass]="{'active': navbarActiveList['login']}">
-                            <a class="nav-link" href="account/login#login-elem">Login</a>
+                            <a class="nav-link" [routerLink]="['/account/login']" href="" fragment="login-elem">Login</a>
                         </li>
-                        <li class="nav-item ml-auto" (click)="setActiveElem('login')" [ngClass]="{'active': navbarActiveList['register']}">
-                            <a class="nav-link" href="account/register#login-elem">Registrati</a>
+                        <li class="nav-item ml-auto" (click)="setActiveElem('register')" [ngClass]="{'active': navbarActiveList['register']}">
+                            <a class="nav-link" [routerLink]="['/account/register']" href="" fragment="login-elem">Registrati</a>
                         </li>
                     </ul>
                 </div>
@@ -33,76 +33,69 @@
         </div>
 
         <!-- HEADER -->
-        <section id="top-elem" class="maincontainer__header text-white h-100 d-flex">
+        <section id="top-elem" class="maincontainer__header d-flex align-items-center text-white p-2 p-lg-5">
                 <div class="row w-100 m-0 d-flex align-items-center justify-content-left h-60">
-                    <div class="col-7">
+                    <div class="col-12 col-lg-7 homepage-main-description">
                         <h1 class="font-header-homepage mb-4">My Training Platform</h1>
-                        <h4>The platform for athletes and coaches training handling</h4>
-                        <h4>Developed with the latest technologies by sport experts like you</h4>
+                        <h4 class="d-none d-lg-block font-description-homepage">The platform for athletes and coaches training handling</h4>
+                        <h4 class="d-none d-lg-block font-description-homepage">Developed with the latest technologies by sport experts like you</h4>
+                        <h4 class="d-lg-none font-description-homepage">The platform for athletes and coaches training handling. Developed with the latest technologies by sport experts like you</h4>
                     </div>
                     <!-- Router Outlet Elem -->
-                    <div class="col-5 homepage-router-outlet border-dark border-right-0 border-radius-5" id="login-elem">
-                        <router-outlet></router-outlet>
+                    <div class="col-12 col-lg-5 mb-5 mb-lg-0" id="login-elem">
+                        <div class="homepage-router-outlet border-dark w-100 radius-5">
+                            <router-outlet></router-outlet>
+                        </div>
                     </div>
                 </div>
             <div class="h-40">&nbsp;</div>
         </section>
 
         <!-- MAIN CONTAINER -->
-        <section class="maincontainer__body">
+        <section class="maincontainer__body py-3 py-lg-5">
             <!-- Services -->
-            <div class="row m-0 body__element pb-0 pt-8" id="services-elem">
+            <div class="row m-0 body__element pb-0" id="services-elem">
                 <h1 class="p-4">Servizi</h1>
             </div>
             <div class="row m-0 body__element">
-                <div class="col-4 px-4">
+                <div class="col-12">
                     <p>As a <em><b>coach</b></em>, create your own trainings and assign them to your athletes! 100%
                         freedom on the creation process (exercise, sessions, weeks, etc.)</p>
-                </div>
-                <div class="col-8 px-4">
                     <img src="assets/img/01-edit-training-preview.png">
                 </div>
             </div>
             <div class="row m-0 body__element">
-                <div class="col-8 px-4">
-                    <img src="assets/img/02-editor-training-preview.png">
-                </div>
-                <div class="col-4 px-4">
+                <div class="col-12">
                     <p>As a <em><b>coach</b></em> edit training format as you prefer before send it to your athlete!</p>
+                    <img src="assets/img/02-editor-training-preview.png">
                 </div>
             </div>
             <div class="row m-0 body__element">
-                <div class="col-4 px-4">
+                <div class="col-12">
                     <p>As an <em><b>athlete</b></em>, visualize the trainings your coaches assigned to you!</p>
-                </div>
-                <div class="col-8 px-4">
                     <img src="assets/img/03-read-training-preview.png">
                 </div>
             </div>
             <div class="row m-0 body__element">
-                <div class="col-8 px-4">
-                    <img src="assets/img/04-stats-training-preview.png">
-                </div>
-                <div class="col-4 px-4">
+                <div class="col-12">
                     <p>For each training visualize statistics about intensity and more!</p>
+                    <img src="assets/img/04-stats-training-preview.png">
                 </div>
             </div>
             <div class="row m-0 body__element">
-                <div class="col-4 px-4">
+                <div class="col-12">
                     <p>As a <em><b>coach</b></em>, create your own exercises in order to use them during the training
                         creation process!</p>
-                </div>
-                <div class="col-8 px-4">
                     <img src="assets/img/05-create-exercise-preview.png">
                 </div>
             </div>
         </section>
 
         <!-- FOOTER -->
-        <footer class="maincontainer__footer footer p-5" id="contacts-elem">
-            <div class="row px-5 mb-5">
-                <div class="col-md-3"></div>
-                <div class="col-md-3">
+        <footer class="maincontainer__footer footer px-2 py-5 px-lg-5" id="contacts-elem">
+            <div class="row m-0 mb-5">
+                <div class="col-lg-3"></div>
+                <div class="col-lg-3">
                     <aside>
                         <h6 class="text-uppercase">About Me</h6>
                         <div>
@@ -113,30 +106,30 @@
                         </div>
                     </aside>
                 </div>
-                <div class="col-md-3">
+                <div class="col-lg-3 mt-5 mt-lg-0">
                     <aside>
                         <h6 class="text-uppercase">Contacts</h6>
                         <div>
-                            <p>
+                            <p style="word-break: break-all;">
                                 Location: Riposto (CT), Italy<br>
                                 E-mail: alessandromessina95@hotmail.com<br>
-                                Phone: n.d.<br>
+                                <!-- Phone: n.d.<br> -->
                             </p>
                         </div>
-                        <div class="d-flex justify-content-left">
-                            <span>You can find me on</span>
-                            <div class="ml-2"><a href="https://www.linkedin.com/feed/" target="blank"><span class="fa fa-linkedin"></span></a></div>
-                            <div class="ml-2"><a href="https://www.instagram.com/alessandro_messina95/" target="blank"><span class="fa fa-instagram"></span></a></div>
-                            <div class="ml-2"><a href="https://twitter.com/alessandro_mess" target="blank"><span class="fa fa-twitter"></span></a></div>
-                            <div class="ml-2"><a href="https://github.com/Taletex" target="blank"><span class="fa fa-github"></span></a></div>
+                        <div>
+                            <span class="mr-2">You can find me on</span>
+                            <a href="https://www.linkedin.com/feed/" target="blank" class="mr-2"><span class="fa fa-linkedin"></span></a>
+                            <a href="https://www.instagram.com/alessandro_messina95/" target="blank" class="mr-2"><span class="fa fa-instagram"></span></a>
+                            <a href="https://twitter.com/alessandro_mess" target="blank" class="mr-2"><span class="fa fa-twitter"></span></a>
+                            <a href="https://github.com/Taletex" target="blank"><span class="fa fa-github"></span></a>
                         </div>
                     </aside>
                 </div>
-                <div class="col-md-3"></div>
+                <div class="col-lg-3 mt-5 mt-lg-0"></div>
             </div>
-            <div class="row">
-                <div class="col-md-12 d-flex align-items-center justify-content-center">
-                    <span>© 2020 Alessandro Messina, All Rights Reserved.</span>
+            <div class="row m-0">
+                <div class="col-lg-12 d-flex align-items-center justify-content-center">
+                    <span class="text-center">© 2020 Alessandro Messina, All Rights Reserved.</span>
                 </div>
             </div>
         </footer>

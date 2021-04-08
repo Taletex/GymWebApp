@@ -438,10 +438,6 @@ $custom-lightgray: rgb(179 179 179 / 15%);
   }
 }
 
-.font-header-homepage {
-  font-size: 5rem;
-}
-
 /* TEXT STYLE */
 .truncate {
   width: 250px;
@@ -781,6 +777,25 @@ ngb-carousel .picsum-img-wrapper>img {
   font-size: 1.5rem;
   @media (max-width: 767.98px) {
     font-size: 1.2rem !important;
+  }
+}
+
+.form-control-max-xl {
+  @media (max-width: 1400px) { 
+    height: calc(1.2em + 0.5rem + 2px) !important;
+    padding: 0.15rem 0.4rem !important;
+    font-size: 0.875rem !important;
+    line-height: 1.2 !important;
+    border-radius: 0.2rem !important;
+  }
+}
+
+.col-form-label-max-xl {
+  @media (max-width: 1400px) { 
+    padding-top: calc(0.25rem + 1px) !important;
+    padding-bottom: calc(0.25rem + 1px) !important;
+    font-size: 0.875rem !important;
+    line-height: 1.5 !important;
   }
 }
 

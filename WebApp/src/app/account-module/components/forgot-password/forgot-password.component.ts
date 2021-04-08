@@ -5,7 +5,12 @@ import { first, finalize } from 'rxjs/operators';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { ToastrService } from 'ngx-toastr';
 
-@Component({ templateUrl: 'forgot-password.component.html', styleUrls: ['forgot-password.component.scss']  })
+@Component({ 
+    selector: 'app-forgot-password',
+    templateUrl: 'forgot-password.component.html', 
+    styleUrls: ['forgot-password.component.scss']  
+})
+
 export class ForgotPasswordComponent implements OnInit {
     form: FormGroup;
     loading = false;

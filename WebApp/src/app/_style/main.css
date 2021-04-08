@@ -661,10 +661,6 @@
   font-weight: 900;
 }
 
-.font-header-homepage {
-  font-size: 5rem;
-}
-
 /* TEXT STYLE */
 .truncate {
   width: 250px;
@@ -1200,6 +1196,25 @@ ngb-carousel .picsum-img-wrapper > img {
 @media (max-width: 767.98px) {
   .h4 {
     font-size: 1.2rem !important;
+  }
+}
+
+@media (max-width: 1400px) {
+  .form-control-max-xl {
+    height: calc(1.2em + 0.5rem + 2px) !important;
+    padding: 0.15rem 0.4rem !important;
+    font-size: 0.875rem !important;
+    line-height: 1.2 !important;
+    border-radius: 0.2rem !important;
+  }
+}
+
+@media (max-width: 1400px) {
+  .col-form-label-max-xl {
+    padding-top: calc(0.25rem + 1px) !important;
+    padding-bottom: calc(0.25rem + 1px) !important;
+    font-size: 0.875rem !important;
+    line-height: 1.5 !important;
   }
 }
 

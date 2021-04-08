@@ -1,11 +1,29 @@
 ﻿<div class="card">
-    <h3 class="card-header">Register</h3>
-    <div class="card-body">
+    <h3 class="card-header pt-0">Register</h3>
+    <div class="card-body py-0">
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="form-row">
-                <div class="form-group col">
-                    <label>User Type</label>
-                    <select formControlName="userType" class="form-control"
+                <div class="form-group col-12 col-sm">
+                    <label class="col-form-label col-form-label-max-xl">First Name</label>
+                    <input type="text" formControlName="name" class="form-control form-control-max-xl"
+                        [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
+                    <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                        <div *ngIf="f.name.errors.required">First Name is required</div>
+                    </div>
+                </div>
+                <div class="form-group col-12 col-sm">
+                    <label class="col-form-label col-form-label-max-xl">Last Name</label>
+                    <input type="text" formControlName="surname" class="form-control form-control-max-xl"
+                        [ngClass]="{ 'is-invalid': submitted && f.surname.errors }" />
+                    <div *ngIf="submitted && f.surname.errors" class="invalid-feedback">
+                        <div *ngIf="f.surname.errors.required">Last Name is required</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-12 col-sm-3">
+                    <label class="col-form-label col-form-label-max-xl">User Type</label>
+                    <select formControlName="userType" class="form-control form-control-max-xl cursor-pointer"
                         [ngClass]="{ 'is-invalid': submitted && f.userType.errors }">
                         <option value="coach">Coach</option>
                         <option value="athlete">Athlete</option>
@@ -15,45 +33,29 @@
                         <div *ngIf="f.userType.errors.required">User Type is required</div>
                     </div>
                 </div>
-                <div class="form-group col-5">
-                    <label>First Name</label>
-                    <input type="text" formControlName="name" class="form-control"
-                        [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
-                    <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-                        <div *ngIf="f.name.errors.required">First Name is required</div>
+                <div class="form-group col-12 col-sm-9">
+                    <label class="col-form-label col-form-label-max-xl">Email</label>
+                    <input type="text" formControlName="email" class="form-control form-control-max-xl"
+                        [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+                    <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                        <div *ngIf="f.email.errors.required">Email is required</div>
+                        <div *ngIf="f.email.errors.email">Email must be a valid email address</div>
                     </div>
-                </div>
-                <div class="form-group col-5">
-                    <label>Last Name</label>
-                    <input type="text" formControlName="surname" class="form-control"
-                        [ngClass]="{ 'is-invalid': submitted && f.surname.errors }" />
-                    <div *ngIf="submitted && f.surname.errors" class="invalid-feedback">
-                        <div *ngIf="f.surname.errors.required">Last Name is required</div>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Email</label>
-                <input type="text" formControlName="email" class="form-control"
-                    [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
-                <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
-                    <div *ngIf="f.email.errors.required">Email is required</div>
-                    <div *ngIf="f.email.errors.email">Email must be a valid email address</div>
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group col">
-                    <label>Password</label>
-                    <input type="password" formControlName="password" class="form-control"
+                <div class="form-group col-12 col-sm">
+                    <label class="col-form-label col-form-label-max-xl">Password</label>
+                    <input type="password" formControlName="password" class="form-control form-control-max-xl"
                         [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
                     <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
                         <div *ngIf="f.password.errors.required">Password is required</div>
                         <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
                     </div>
                 </div>
-                <div class="form-group col">
-                    <label>Confirm Password</label>
-                    <input type="password" formControlName="confirmPassword" class="form-control"
+                <div class="form-group col-12 col-sm">
+                    <label class="col-form-label col-form-label-max-xl">Confirm Password</label>
+                    <input type="password" formControlName="confirmPassword" class="form-control form-control-max-xl"
                         [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" />
                     <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback">
                         <div *ngIf="f.confirmPassword.errors.required">Confirm Password is required</div>
@@ -67,12 +69,12 @@
                 <label for="acceptTerms" class="form-check-label">Accept Terms & Conditions</label>
                 <div *ngIf="submitted && f.acceptTerms.errors" class="invalid-feedback">Accept Ts & Cs is required</div>
             </div>
-            <div class="form-group">
-                <button [disabled]="loading" class="btn btn-primary">
+            <div class="form-group mb-0">
+                <button [disabled]="loading" class="btn btn-sm btn-primary">
                     <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
                     Register
                 </button>
-                <a routerLink="../login" href="" class="btn btn-link">Cancel</a>
+                <a routerLink="../login" href="" class="btn btn-sm btn-link">Cancel</a>
             </div>
         </form>
     </div>
