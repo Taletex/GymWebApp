@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { HttpService } from '@app/_services/http-service/http-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
@@ -7,6 +7,7 @@ import { AccountService } from '@app/_services/account-service/account-service.s
 import { Account, Role } from '@app/_models';
 import { NOTIFICATION_TYPE, NOTIFICATION_ONLY_DISMISS } from '@app/_services/general-service/general-service.service';
 import * as _ from "lodash";
+import { trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-notifications',
@@ -23,8 +24,9 @@ export class NotificationsComponent implements OnInit {
   public sortListStatus: any;
   private currentSortField: any;
   public NOTIFICATION_TYPE = NOTIFICATION_TYPE;
-
-
+  public bWindowOverMd: boolean;
+  private lastWindowWidth: number;
+  private triggerWidth: number = 767.98;
   constructor(private httpService: HttpService, private toastr: ToastrService, private accountService: AccountService) { 
 
     // Init account and notification list
@@ -43,6 +45,10 @@ export class NotificationsComponent implements OnInit {
     this.resetFilters();
     this.filterNotifications(null);
     this.resetSortStatus();
+
+    // Init responsiveness aux
+    this.lastWindowWidth = window.innerWidth;
+    this.initFiltersExpandability();
   }
 
   ngOnInit(): void {
@@ -64,7 +70,7 @@ export class NotificationsComponent implements OnInit {
   }
 
   resetFilters() {
-    this.filters = { filterNotListType: 'notConsumed', type: '', from: {name: '', surname: ''}, message: ''};
+    this.filters = { bExpanded: true, filterNotListType: 'notConsumed', type: '', from: {name: '', surname: ''}, message: ''};
   }
 
   cancelFilters() {
@@ -217,5 +223,36 @@ export class NotificationsComponent implements OnInit {
   
   canCancelAllNotifications():boolean {
     return (_.find(this.account.user.notifications, function(n) { return n.bConsumed; }) != undefined);
+  }
+
+  toggleRow(elem) {
+    console.log("TODO");
+  }
+
+
+  /* responsiveness FUNCTIONS */
+  initFiltersExpandability() {
+    if(this.lastWindowWidth >= this.triggerWidth)
+      this.filters.bExpanded = true;
+    else if(this.lastWindowWidth < this.triggerWidth)
+      this.filters.bExpanded = false;
+
+    this.bWindowOverMd = this.filters.bExpanded;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  @HostListener('fullscreenchange', ['$event'])
+  @HostListener('webkitfullscreenchange', ['$event'])
+  @HostListener('mozfullscreenchange', ['$event'])
+  @HostListener('MSFullscreenChange', ['$event'])
+  onResize(event) {
+    let currentWidth = event.target.innerWidth;
+
+    if(currentWidth < this.triggerWidth && this.lastWindowWidth >= this.triggerWidth)
+      this.filters.bExpanded = this.bWindowOverMd = false;
+    else if(currentWidth >= this.triggerWidth && this.lastWindowWidth < this.triggerWidth)
+      this.filters.bExpanded = this.bWindowOverMd = true;
+
+    this.lastWindowWidth = currentWidth;
   }
 }

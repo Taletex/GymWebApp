@@ -1,35 +1,38 @@
 <div class="main__notifications row m-3">
 
     <!-- FILTERS -->
-    <div class="notifications__filters col-12 row mb-2 mx-0 my-0 plx-2 border">
-        <div class="col-1 d-flex flex-column justify-content-center border border-left-0 border-top-0 border-bottom-0 pl-0">
+    <div class="notifications__filters col-12 row d-flex align-items-baseline border mb-2 m-0 pr-2 pt-2" [ngClass]="{'pb-2 min-height-200': !bWindowOverMd && filters.bExpanded, 'min-height-60': bWindowOverMd}">
+        <div class="col-12 col-md-1 d-flex flex-column justify-content-center pl-0 pr-1 pr-md-2">
             <div class="d-flex">
                 <div class="d-flex flex-column">
                     <span class="fa fa-filter" style="font-size: 20px;"></span>
                     <span *ngIf="areFiltersDirty()" class="fa fa-times text-danger cursor-pointer" style="font-size: 16px;" (click)="cancelFilters()" ngbTooltip="Ripristina Filtri" placement="right"></span>
                 </div>
                 <div class="ml-2">
-                    <h6 class="d-none d-md-block m-0">Filtri</h6>
+                    <h6 class="m-0">Filtri</h6>
                     {{notificationList.length}}/{{account.user.notifications.length}}
+                </div>
+                <div class="d-flex d-md-none align-items-center w-100 ml-2">
+                    <button class="btn btn-sm btn-outline-info w-100  m-0" (click)="filters.bExpanded = !filters.bExpanded">{{filters.bExpanded ? 'Nascondi Filtri' : 'Mostra Filtri'}} <span class="fa" [ngClass]="{'fa-arrow-circle-up': filters.bExpanded, 'fa-arrow-circle-down': !filters.bExpanded }"></span></button>
                 </div>
             </div>
         </div>
-        <div class="col-2 d-flex flex-column justify-content-center form-group pl-2 pr-1 m-0">
-            <label for="filterNotListType" class="col-form-label col-form-label-sm p-0 text-muted">Mostra notifiche</label>
+        <div class="col-6 col-md-2 d-flex flex-column justify-content-center form-group pl-2 pr-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">
+            <label for="filterNotListType" class="col-form-label col-form-label-sm p-0 text-muted">Notifiche</label>
             <select [(ngModel)]="filters.filterNotListType" class="form-control form-control-sm cursor-pointer" id="filterNotListType" name="filterNotListType" (change)="filterNotifications($event)" [disabled]="bLoading">
                 <option [value]="''">Tutte</option>
                 <option [value]="'notConsumed'">Nuove</option>
                 <option [value]="'consumed'">Lette</option>
             </select>
         </div>
-        <div class="col-3 d-flex flex-column justify-content-center form-group pl-2 pr-1 m-0">
+        <div class="col-6 col-md-3 d-flex flex-column justify-content-center form-group pl-2 pr-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Tipo</label>
             <div class="input-group">
                 <input type="text" [(ngModel)]="filters.type" class="form-control form-control-sm" (keyup)="filterNotifications($event)"
                     id="filterType" name="filterType" placeholder="Tipo..." [disabled]="bLoading">
             </div>
         </div>
-        <div class="col-3 d-flex flex-column justify-content-center form-group pl-2 pr-1 m-0">
+        <div class="col-12 col-md-3 d-flex flex-column justify-content-center form-group pl-2 pr-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Mittente Richiesta</label>
             <div class="input-group">
                 <input type="text" [(ngModel)]="filters.from.name" class="form-control form-control-sm" (keyup)="filterNotifications($event)"
@@ -38,7 +41,7 @@
                     id="filterFromSurname" name="filterFromSurname" placeholder="Cognome..." [disabled]="bLoading">
             </div>
         </div>
-        <div class="col-3 d-flex flex-column justify-content-center form-group pl-2 pr-1 m-0">
+        <div class="col-12 col-md-3 d-flex flex-column justify-content-center form-group pl-2 pr-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Messaggio</label>
             <div class="input-group">
                 <input type="text" [(ngModel)]="filters.message" class="form-control form-control-sm" (keyup)="filterNotifications($event)"
@@ -49,29 +52,29 @@
 
     <!-- MAIN CONTAINER -->
     <div class="notifications__maincontainer main-list-table card col-12 p-0 border border-secondary border">
-        <div class="maincontainer__header card-header pl-2 pr-3 border border-secondary border-top-0 border-left-0 border-right-0 d-flex flex-column bg-dark text-white">
+        <div class="maincontainer__header table-header card-header pl-2 pr-3 border border-secondary border-top-0 border-left-0 border-right-0 d-flex flex-column bg-dark text-white">
             <div class="col-12 row m-0 p-0 d-flex align-items-center justify-content-center">
-                <div class="col-1 d-none d-sm-flex align-items-center" (click)="sortListByFieldUI('bConsumed')" [ngClass]="{'cursor-pointer': !bLoading}">
+                <div class="col-1 d-none d-md-flex align-items-center" (click)="sortListByFieldUI('bConsumed')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">Nuova</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['bConsumed']==null, 'fa fa-long-arrow-down': sortListStatus['bConsumed']==false, 'fa fa-long-arrow-up': sortListStatus['bConsumed']==true}"></span></div>
                 </div>
-                <div class="col-2 d-none d-sm-flex align-items-center" (click)="sortListByFieldUI('type')" [ngClass]="{'cursor-pointer': !bLoading}">
+                <div class="col-2 d-none d-md-flex align-items-center" (click)="sortListByFieldUI('type')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">Tipo</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['type']==null, 'fa fa-long-arrow-down': sortListStatus['type']==false, 'fa fa-long-arrow-up': sortListStatus['type']==true}"></span></div>
                 </div>
-                <div class="col-2 d-none d-sm-flex align-items-center" (click)="sortListByFieldUI('from')" [ngClass]="{'cursor-pointer': !bLoading}">
-                    <div><b class="d-block">Mittente Richiesta</b></div>
-                    <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['from']==null, 'fa fa-long-arrow-down': sortListStatus['from']==false, 'fa fa-long-arrow-up': sortListStatus['from']==true}"></span></div>
-                </div>
-                <div class="col-9 col-sm-3 d-flex align-items-center" (click)="sortListByFieldUI('message')" [ngClass]="{'cursor-pointer': !bLoading}">
-                    <div><b class="d-block">Messaggio</b></div>
-                    <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['message']==null, 'fa fa-long-arrow-down': sortListStatus['message']==false, 'fa fa-long-arrow-up': sortListStatus['message']==true}"></span></div>
-                </div>
-                <div class="col-2 d-none d-sm-flex align-items-center" (click)="sortListByFieldUI('creationDate')" [ngClass]="{'cursor-pointer': !bLoading}">
+                <div class="col-2 d-none d-md-flex align-items-center" (click)="sortListByFieldUI('creationDate')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">Data</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['creationDate']==null, 'fa fa-long-arrow-down': sortListStatus['creationDate']==false, 'fa fa-long-arrow-up': sortListStatus['creationDate']==true}"></span></div>
                 </div>
-                <div class="col-3 col-sm-2 d-flex align-items-center px-2 px-sm-3"  [ngClass]="{'cursor-pointer': !bLoading}">
+                <div class="col-2 d-none d-md-flex align-items-center" (click)="sortListByFieldUI('from')" [ngClass]="{'cursor-pointer': !bLoading}">
+                    <div><b class="d-block">Mittente Richiesta</b></div>
+                    <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['from']==null, 'fa fa-long-arrow-down': sortListStatus['from']==false, 'fa fa-long-arrow-up': sortListStatus['from']==true}"></span></div>
+                </div>
+                <div class="col-8 col-md-3 d-flex align-items-center" (click)="sortListByFieldUI('message')" [ngClass]="{'cursor-pointer': !bLoading}">
+                    <div><b class="d-block">Messaggio</b></div>
+                    <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['message']==null, 'fa fa-long-arrow-down': sortListStatus['message']==false, 'fa fa-long-arrow-up': sortListStatus['message']==true}"></span></div>
+                </div>
+                <div class="col-4 col-md-2 d-flex align-items-center justify-content-end px-2 px-md-2"  [ngClass]="{'cursor-pointer': !bLoading}">
                     <div class="dropdown">
                         <button class="btn p-0 text-white" type="button" id="dropdownActionMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" [disabled]="bLoading">
                             <b>Azioni</b><img src="assets/icons/actions/menu-button.svg" style="width:15px; height:auto;" class="ml-2 mb-1">
@@ -90,6 +93,7 @@
                 </div>
             </div>
         </div>
+        
         <div class="maincontainer__body table-body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2 position-relative">
             <div class="h-100 w-100 d-flex flex-column align-items-center justify-content-center" *ngIf="notificationList.length == 0">
                 <img src="assets/icons/misc/alert.svg" style="width:40px; height:auto;">
@@ -104,21 +108,49 @@
                     </div>
                 </div>
             </div>
-            <div class="body__element row list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1 m-0" 
-                 *ngFor="let elem of notificationList; index as notificationIndex" [ngClass]="{'list-group-item-cyan': !elem.bConsumed, 'bg-custom-lightgray': elem.bConsumed}">
-                <!-- <div class="d-inline d-sm-none col-2"><img src="assets/icons/actions/plus.svg" class="table-icon-md"></div> -->
-                <div class="d-none d-sm-inline col-sm-1"><img [hidden]="elem.bConsumed" src="assets/icons/misc/dot.svg" class="table-icon-lg"></div>
-                <div class="d-none d-sm-inline col-sm-2"><span>{{elem.type}}</span></div>
-                <div class="d-none d-sm-inline col-sm-2"><span>{{elem.creationDate | date:'HH:mm:ss - dd/MM/yyyy'}}</span></div>
-                <div class="d-none d-sm-inline col-sm-2"><span>{{elem.from.name != null ? elem.from.name : ''}} {{elem.from.surname != null ? elem.from.surname : elem.from}}</span></div>
-                <div class="col-9 col-sm-3" [innerHTML]="elem.message"></div>
-                <div class="col-3 col-sm-2 d-flex px-2 px-sm-3">
-                    <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.COACH_REQUEST || elem.type == NOTIFICATION_TYPE.ATHLETE_REQUEST)" (click)="acceptRequest(elem)" class="ml-2 image-button" ngbTooltip="Accetta Richiesta" placement="left"><img src="assets/icons/actions/confirm.svg" style="width:20px; height:auto;"></div>
-                    <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.COACH_REQUEST || elem.type == NOTIFICATION_TYPE.ATHLETE_REQUEST)" (click)="refuseRequest(elem)" class="ml-2 image-button" ngbTooltip="Rifiuta Richiesta" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>
-                    <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.DISMISS || elem.type == NOTIFICATION_TYPE.REQUEST_SUCCESS || elem.type == NOTIFICATION_TYPE.REQUEST_REFUSE || elem.type == NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK || elem.type == NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK || elem.type == NOTIFICATION_TYPE.TRAINING_CREATED || elem.type == NOTIFICATION_TYPE.TRAINING_MODIFIED)" (click)="dismissNotification(elem)" class="ml-2 image-button" ngbTooltip="Visualizza Richiesta" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
-                    <div *ngIf="elem.bConsumed" (click)="cancelNotification(elem)" class="ml-2 image-button" ngbTooltip="Cancella Notifica" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
-                </div>
-            </div>
+
+            <!-- Content -->
+            
+            <ngb-accordion #a="ngbAccordion" [closeOthers]="true" class="table-body-accordion w-100 text-dark">
+                <ngb-panel id="custom-panel-{{notificationIndex}}" *ngFor="let elem of notificationList; index as notificationIndex">
+                  <ng-template ngbPanelHeader let-opened="opened" class="p-0">
+                    <div class="body__element row list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1 m-0" 
+                    [ngClass]="{'list-group-item-cyan': !elem.bConsumed, 'bg-custom-lightgray': elem.bConsumed}">
+                        <!-- <div class="d-inline d-md-none col-2"><img src="assets/icons/actions/plus.svg" class="table-icon-md"></div> -->
+                        <div class="d-none d-md-inline col-md-1"><img [hidden]="elem.bConsumed" src="assets/icons/misc/dot.svg" class="table-icon-lg"></div>
+                        <div class="d-none d-md-inline col-md-2"><span>{{elem.type}}</span></div>
+                        <div class="d-none d-md-inline col-md-2"><span>{{elem.creationDate | date:'HH:mm:ss - dd/MM/yyyy'}}</span></div>
+                        <div class="d-none d-md-inline col-md-2"><span>{{elem.from.name != null ? elem.from.name : ''}} {{elem.from.surname != null ? elem.from.surname : elem.from}}</span></div>
+                        <div class="col-9 col-md-3" [innerHTML]="elem.message"></div>
+                        <div class="col-3 col-md-2 d-flex justify-content-end px-2 px-md-2">
+                            <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.COACH_REQUEST || elem.type == NOTIFICATION_TYPE.ATHLETE_REQUEST)" (click)="acceptRequest(elem)" class="ml-2 image-button" ngbTooltip="Accetta Richiesta" placement="left"><img src="assets/icons/actions/confirm.svg" style="width:20px; height:auto;"></div>
+                            <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.COACH_REQUEST || elem.type == NOTIFICATION_TYPE.ATHLETE_REQUEST)" (click)="refuseRequest(elem)" class="ml-2 image-button" ngbTooltip="Rifiuta Richiesta" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>
+                            <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.DISMISS || elem.type == NOTIFICATION_TYPE.REQUEST_SUCCESS || elem.type == NOTIFICATION_TYPE.REQUEST_REFUSE || elem.type == NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK || elem.type == NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK || elem.type == NOTIFICATION_TYPE.TRAINING_CREATED || elem.type == NOTIFICATION_TYPE.TRAINING_MODIFIED)" (click)="dismissNotification(elem)" class="ml-2 image-button" ngbTooltip="Visualizza Richiesta" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
+                            <div *ngIf="elem.bConsumed" (click)="cancelNotification(elem)" class="ml-2 image-button" ngbTooltip="Cancella Notifica" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
+                            <div class="d-inline d-md-none ml-2 image-button" ngbTooltip="{{opened ? 'Nascondi Dettagli' : 'Mostra Dettagli'}}" placement="left"><button ngbPanelToggle class="btn btn-transparent"><span class="fa text-dark" [ngClass]="{'fa-arrow-circle-up': opened, 'fa-arrow-circle-down': !opened}"></span></button></div>
+                        </div>
+                    </div>
+                  </ng-template>
+                  <ng-template class="d-block d-md-none" ngbPanelContent>
+                    <div class="row m-0">
+                        <div class="col-4 text-muted">Nuova</div>
+                        <div class="col-8">{{elem.bConsumed ? 'No' : 'Si'}}</div>
+                    </div>
+                    <div class="row m-0">
+                        <div class="col-4 text-muted">Tipo</div>
+                        <div class="col-8">{{elem.type}}</div>
+                    </div>
+                    <div class="row m-0">
+                        <div class="col-4 text-muted">Data</div>
+                        <div class="col-8">{{elem.creationDate | date:'HH:mm:ss - dd/MM/yyyy'}}</div>
+                    </div>
+                    <div class="row m-0">
+                        <div class="col-4 text-muted">Mittente</div>
+                        <div class="col-8">{{elem.from.name != null ? elem.from.name : ''}} {{elem.from.surname != null ? elem.from.surname : elem.from}}</div>
+                    </div>
+                  </ng-template>
+                </ngb-panel>
+              </ngb-accordion>
         </div>
     </div>
    
