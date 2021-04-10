@@ -799,4 +799,10 @@ ngb-carousel .picsum-img-wrapper>img {
   }
 }
 
+.btn-no-focus {
+  &:focus {
+    box-shadow: none !important;
+  }
+}
+
 

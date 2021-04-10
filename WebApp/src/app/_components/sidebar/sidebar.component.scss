@@ -10,17 +10,21 @@ $menu-blue: #0f1042e6;
         transition: all 1s;
     }
 
+
     @media (max-width: 991.98px) {
         &.expanded {
             width: 140px;
         }
 
-        h6 {
-            font-size: 80%;
-            transition: font-size .1 ease-in-out !important;
+        h5 {
+            font-size: 1rem;
+            transition: all 1s;
         }
+    }
 
-
+    @media (max-width: 575.98px) {
+        width: 50px !important;
+        transition: all 1s;
     }
 
     .sidebar__container {

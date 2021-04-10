@@ -39,4 +39,13 @@ export class SidebarComponent implements OnInit {
     this.generalService.openPageWithMode(mode, page, id);
   } 
 
+  canSidebarBeExpanded() {
+    return window.innerWidth > 575.98
+  }
+
+  toggleSidebar() {
+    if(this.canSidebarBeExpanded())
+      this.bExpandedSidebar = !this.bExpandedSidebar;
+  }
+
 }

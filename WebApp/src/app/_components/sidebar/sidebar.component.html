@@ -3,9 +3,11 @@
     <div class="sidebar__container col-12 d-flex flex-column p-0">
 
         <!-- Sidebar Header -->
-        <div class="container__header w-100 d-flex justify-content-start align-items-center cursor-pointer" (click)="bExpandedSidebar = !bExpandedSidebar">
-            <img src="assets/icons/sidebar/menu.svg" style="width:24px; height:auto;" [hidden]="bExpandedSidebar" class="ml-1">
-            <h6 class="text-white m-0 menu-title" [hidden]="!bExpandedSidebar">My Training Platform</h6>
+        <div class="container__header w-100">
+            <button class="h-100 w-100 d-flex justify-content-center align-items-center cursor-pointer bg-transparent text-white btn border-0 p-0 btn-no-focus" (click)="toggleSidebar()">
+                <img  src="assets/icons/favicon-white.png" style="width:24px; height:auto;">
+                <h5 class="d-none d-sm-inline text-white m-0 menu-title" *ngIf="bExpandedSidebar" >My Training Platform</h5>
+            </button>
         </div>
 
         <!-- Sidebar Body (contains sidebar links) -->
@@ -14,25 +16,25 @@
                 class="sidebar__element link-button w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
                 [ngClass]="{'active': bActiveList.homepage}">
                 <img src="assets/icons/sidebar/home.svg" style="width:24px; height:auto;" class="ml-1 mr-2">
-                <span [hidden]="!bExpandedSidebar">Homepage</span>
+                <span *ngIf="bExpandedSidebar" class="d-none d-sm-inline">Homepage</span>
             </a>
             <a routerLink="/trainings" routerLinkActive="active"
                 class="sidebar__element link-button w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
                 [ngClass]="{'active': bActiveList.trainings}">
                 <img src="assets/icons/sidebar/writing.svg" style="width:24px; height:auto;" class="ml-1 mr-2">
-                <span [hidden]="!bExpandedSidebar">Allenamenti</span>
+                <span *ngIf="bExpandedSidebar" class="d-none d-sm-inline">Allenamenti</span>
             </a>
             <a routerLink="/exercises" routerLinkActive="active"
                 class="sidebar__element link-button w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
                 [ngClass]="{'active': bActiveList.exercises}">
                 <img src="assets/icons/sidebar/barbell.svg" style="width:24px; height:auto;" class="ml-1 mr-2">
-                <span [hidden]="!bExpandedSidebar">Esercizi</span>
+                <span *ngIf="bExpandedSidebar" class="d-none d-sm-inline">Esercizi</span>
             </a>
             <a routerLink="/users" routerLinkActive="active"
                 class="sidebar__element link-button w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
                 [ngClass]="{'active': bActiveList.users}">
                 <img src="assets/icons/sidebar/athlete.svg" style="width:24px; height:auto;" class="ml-1 mr-2">
-                <span [hidden]="!bExpandedSidebar">
+                <span *ngIf="bExpandedSidebar" class="d-none d-sm-inline">
                     <span [hidden]="account.user.userType != 'both'">Utenti</span>
                     <span [hidden]="account.user.userType != 'athlete'">Coach</span>
                     <span [hidden]="account.user.userType != 'coach'">Atleti</span>
@@ -42,19 +44,19 @@
                 class="sidebar__element link-button w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
                 [ngClass]="{'active': bActiveList.userprofile}">
                 <img src="assets/icons/sidebar/user.svg" style="width:24px; height:auto;" class="ml-1 mr-2">
-                <span [hidden]="!bExpandedSidebar">Profilo</span>
+                <span *ngIf="bExpandedSidebar" class="d-none d-sm-inline">Profilo</span>
             </a>
             <a routerLink="/notifications" routerLinkActive="active"
                 class="sidebar__element link-button position-relative w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
                 [ngClass]="{'active': bActiveList.notifications}">
                 <img src="assets/icons/sidebar/bell.svg" style="width:24px; height:auto;" class="ml-1 mr-2"><small class="position-absolute" style="left: 32px; top: 0px; z-index:2;">{{unreadNotificationLength}}</small>
-                <span [hidden]="!bExpandedSidebar">Notifiche </span>
+                <span *ngIf="bExpandedSidebar" class="d-none d-sm-inline">Notifiche </span>
             </a>
             <a routerLink="/admin" routerLinkActive="active" *ngIf="account.role == Role.Admin"
                 class="sidebar__element link-button w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
                 [ngClass]="{'active': bActiveList.admin}">
                 <img src="assets/icons/sidebar/support.svg" style="width:24px; height:auto;" class="ml-1 mr-2">
-                <span [hidden]="!bExpandedSidebar">Admin</span>
+                <span *ngIf="bExpandedSidebar" class="d-none d-sm-inline">Admin</span>
             </a>
         </div>
 
