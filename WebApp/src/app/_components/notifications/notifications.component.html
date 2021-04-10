@@ -48,7 +48,7 @@
     </div>
 
     <!-- MAIN CONTAINER -->
-    <div class="notifications__maincontainer card col-12 p-0 border border-secondary border">
+    <div class="notifications__maincontainer main-list-table card col-12 p-0 border border-secondary border">
         <div class="maincontainer__header card-header pl-2 pr-3 border border-secondary border-top-0 border-left-0 border-right-0 d-flex flex-column bg-dark text-white">
             <div class="col-12 row m-0 p-0 d-flex align-items-center justify-content-center">
                 <div class="col-1 d-flex align-items-center" (click)="sortListByFieldUI('bConsumed')" [ngClass]="{'cursor-pointer': !bLoading}">
@@ -90,7 +90,7 @@
                 </div>
             </div>
         </div>
-        <div class="maincontainer__body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2 position-relative">
+        <div class="maincontainer__body table-body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2 position-relative">
             <div class="h-100 w-100 d-flex flex-column align-items-center justify-content-center" *ngIf="notificationList.length == 0">
                 <img src="assets/icons/misc/alert.svg" style="width:40px; height:auto;">
                 <div [hidden]="filters.filterNotListType != 'notConsumed'" class="badge badge-light mt-2"><h6>Non hai nessuna nuova notifica!</h6></div>
@@ -104,20 +104,14 @@
                     </div>
                 </div>
             </div>
-            <div class="body__element list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1" 
+            <div class="body__element row list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1 m-0" 
                  *ngFor="let elem of notificationList; index as notificationIndex" [ngClass]="{'list-group-item-cyan': !elem.bConsumed, 'bg-custom-lightgray': elem.bConsumed}">
-                <div class="col-1">
-                    <img [hidden]="elem.bConsumed" src="assets/icons/misc/dot.svg" style="width:30px; height:auto;">
-                </div>
-                <div class="col-2">
-                    <span>{{elem.type}}</span>
-                </div>
-                <div class="col-2">
-                    <span>{{elem.from.name != null ? elem.from.name : ''}} {{elem.from.surname != null ? elem.from.surname : elem.from}}</span>
-                </div>
-                <div class="col-3" [innerHTML]="elem.message"></div>
-                <div class="col-2"><span>{{elem.creationDate | date:'HH:mm:ss - dd/MM/yyyy'}}</span></div>
-                <div class="col-2 d-flex">
+                <div class="col-2 col-sm-1"><img [hidden]="elem.bConsumed" src="assets/icons/misc/dot.svg" class="table-icon-big"></div>
+                <div class="col-5 col-sm-2"><span>{{elem.type}}</span></div>
+                <div class="col-5 col-sm-2"><span>{{elem.creationDate | date:'HH:mm:ss - dd/MM/yyyy'}}</span></div>
+                <div class="col-5 col-sm-2"><span>{{elem.from.name != null ? elem.from.name : ''}} {{elem.from.surname != null ? elem.from.surname : elem.from}}</span></div>
+                <div class="col-7 col-sm-3" [innerHTML]="elem.message"></div>
+                <div class="col-6 col-sm-2 d-flex">
                     <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.COACH_REQUEST || elem.type == NOTIFICATION_TYPE.ATHLETE_REQUEST)" (click)="acceptRequest(elem)" class="ml-2 image-button" ngbTooltip="Accetta Richiesta" placement="left"><img src="assets/icons/actions/confirm.svg" style="width:20px; height:auto;"></div>
                     <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.COACH_REQUEST || elem.type == NOTIFICATION_TYPE.ATHLETE_REQUEST)" (click)="refuseRequest(elem)" class="ml-2 image-button" ngbTooltip="Rifiuta Richiesta" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>
                     <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.DISMISS || elem.type == NOTIFICATION_TYPE.REQUEST_SUCCESS || elem.type == NOTIFICATION_TYPE.REQUEST_REFUSE || elem.type == NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK || elem.type == NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK || elem.type == NOTIFICATION_TYPE.TRAINING_CREATED || elem.type == NOTIFICATION_TYPE.TRAINING_MODIFIED)" (click)="dismissNotification(elem)" class="ml-2 image-button" ngbTooltip="Visualizza Richiesta" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>

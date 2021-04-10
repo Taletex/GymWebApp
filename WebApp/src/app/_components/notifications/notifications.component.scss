@@ -19,8 +19,8 @@
             height: calc(100vh - 232px);
 
             .body__element {
-                height: 80px;
-                overflow: hidden;
+                min-height: 80px;
+                overflow: visible;
             }
         }
 
