@@ -28,12 +28,12 @@
                     <fieldset class="col-12 row m-0 p-0 py-2 border" [disabled]="(pageStatus[PAGES.USERS] == PAGEMODE.READONLY)">
                         <div class="col-2 form-group">
                             <label for="userName" class="col-form-label col-form-label-sm text-muted">Nome</label>
-                            <input type="text" required [(ngModel)]="user.name" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                            <input type="text" required maxlength="30" [(ngModel)]="user.name" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
                                 id="userName" name="userName">
                         </div>
                         <div class="col-2 form-group">
                             <label for="userSurname" class="col-form-label col-form-label-sm text-muted">Cognome</label>
-                            <input type="text" required [(ngModel)]="user.surname" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                            <input type="text" required maxlength="30" [(ngModel)]="user.surname" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
                                 id="userSurname" name="userSurname">
                         </div>
                         <div class="col-2 form-group">
@@ -59,7 +59,7 @@
                             </select>
                         </div>
                         <div class="col-2 form-group">
-                            <label for="userBw" class="col-form-label col-form-label-sm text-muted">Body Weight</label>
+                            <label for="userBw" class="col-form-label col-form-label-sm text-muted">Peso</label>
                             <input type="number" min=10 max=500 [(ngModel)]="user.bodyWeight" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
                                 id="userBw" name="userBw">
                         </div>
@@ -70,27 +70,27 @@
                         </div>
                         <div class="col-2 form-group">
                             <label for="userContactsEmail" class="col-form-label col-form-label-sm text-muted">Email</label>
-                            <input type="email" [(ngModel)]="user.contacts.email" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                            <input type="email" maxlength="100" [(ngModel)]="user.contacts.email" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
                                 id="userContactsEmail" name="userContactsEmail">
                         </div>
                         <div class="col-2 form-group">
                             <label for="userContactsTelephone" class="col-form-label col-form-label-sm text-muted">Telefono</label>
-                            <input type="tel" required [(ngModel)]="user.contacts.telephone" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                            <input type="tel" required maxlength="15" [(ngModel)]="user.contacts.telephone" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
                                 id="userContactsTelephone" name="userContactsTelephone">
                         </div>
                         <div class="col-2 form-group">
                             <label for="userResidenceState" class="col-form-label col-form-label-sm text-muted">Stato</label>
-                            <input type="text" [(ngModel)]="user.residence.state" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                            <input type="text" maxlength="50" [(ngModel)]="user.residence.state" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
                                 id="userResidenceState" name="userResidenceState">
                         </div>
                         <div class="col-2 form-group">
                             <label for="userResidenceCity" class="col-form-label col-form-label-sm text-muted">Città</label>
-                            <input type="text" [(ngModel)]="user.residence.city" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                            <input type="text" maxlength="50" [(ngModel)]="user.residence.city" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
                                 id="userResidenceCity" name="userResidenceCity">
                         </div>
                         <div class="col-2 form-group">
                             <label for="userResidenceAddress" class="col-form-label col-form-label-sm text-muted">Indirizzo</label>
-                            <input type="text" [(ngModel)]="user.residence.address" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                            <input type="text" maxlength="100" [(ngModel)]="user.residence.address" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
                                 id="userResidenceAddress" name="userResidenceAddress">
                         </div>
                     </fieldset>
@@ -147,21 +147,21 @@
                                     <div class="col-1 form-group">
                                         <label for="serie_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
                                             [hidden]="!seriesFirst">Serie</label>
-                                        <input type="number" min="1" [(ngModel)]="elem.seriesNumber" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                        <input type="number" min="1" max="1000" [(ngModel)]="elem.seriesNumber" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
                                             class="form-control form-control-sm" id="serie_{{prIndex}}_{{seriesIndex}}"
                                             name="serie_{{prIndex}}_{{seriesIndex}}" placeholder="Serie...">
                                     </div>
                                     <div class="col-1 form-group">
                                         <label for="rep_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
                                             [hidden]="!seriesFirst">Rep</label>
-                                        <input type="number" min="1" [(ngModel)]="elem.repNumber" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                        <input type="number" min="1" max="1000"  [(ngModel)]="elem.repNumber" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
                                             class="form-control form-control-sm" id="rep_{{prIndex}}_{{seriesIndex}}"
                                             name="rep_{{prIndex}}_{{seriesIndex}}" placeholder="Rep...">
                                     </div>
                                     <div class="col-1 form-group">
                                         <label for="peso_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
                                             [hidden]="!seriesFirst">Peso</label>
-                                        <input type="number" min="0" [(ngModel)]="elem.weight" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                        <input type="number" min="0" max="9999" [(ngModel)]="elem.weight" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
                                             class="form-control form-control-sm" id="peso_{{prIndex}}_{{seriesIndex}}"
                                             name="peso_{{prIndex}}_{{seriesIndex}}" placeholder="Peso...">
                                     </div>
@@ -182,7 +182,7 @@
                                     <div class="col-1 form-group">
                                         <label for="rest_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
                                             [hidden]="!seriesFirst">Recupero</label>
-                                        <input type="number" min="0" [(ngModel)]="elem.rest" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                        <input type="number" min="0" max [(ngModel)]="elem.rest" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
                                             class="form-control form-control-sm" id="rest_{{prIndex}}_{{seriesIndex}}" 
                                             name="rest_{{prIndex}}_{{seriesIndex}}">
                                     </div>
@@ -194,7 +194,7 @@
                                     </div>
                                     <div class="col-1 form-group d-flex flex-column justify-content-center align-items-center">
                                         <label for="competition_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
-                                        [hidden]="!seriesFirst">Comp.</label>
+                                        [hidden]="!seriesFirst">In Competizione</label>
                                         <input type="checkbox" [(ngModel)]="elem.bCompetition" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}" 
                                             id="competition_{{prIndex}}_{{seriesIndex}}" name="competition_{{prIndex}}_{{seriesIndex}}">
                                     </div>
@@ -207,7 +207,7 @@
                                     <div class="col-4 form-group">
                                         <label for="comment_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
                                             [hidden]="!seriesFirst">Commento</label>
-                                        <input type="text" [(ngModel)]="elem.comment"
+                                        <input type="text" [(ngModel)]="elem.comment" maxlength="200"
                                             class="form-control form-control-sm" id="comment_{{prIndex}}_{{seriesIndex}}" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
                                             name="comment_{{prIndex}}_{{seriesIndex}}" placeholder="Commento...">
                                     </div>

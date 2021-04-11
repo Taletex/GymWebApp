@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { HttpService } from '@app/_services/http-service/http-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
@@ -21,6 +21,9 @@ export class ExercisesComponent implements OnInit {
   public account: Account;
   public Role = Role;
   public sortListStatus: any;
+  public bWindowOverMd: boolean;
+  private lastWindowWidth: number;
+  private triggerWidth: number = 767.98;
 
 
   constructor(private httpService: HttpService, private toastr: ToastrService, private accountService: AccountService) { 
@@ -35,6 +38,10 @@ export class ExercisesComponent implements OnInit {
     // Init filters and sort status
     this.resetFilters();
     this.resetSortStatus();
+
+    // Init responsiveness aux
+    this.lastWindowWidth = window.innerWidth;
+    this.initFiltersExpandability();
   }
 
   ngOnInit(): void {
@@ -46,7 +53,7 @@ export class ExercisesComponent implements OnInit {
       .subscribe(
         (data: any) => {
           this.originalExerciseList = data;
-          this.exerciseList = _.cloneDeep(this.originalExerciseList);
+          this.exerciseList = _.cloneDeep(_.sortBy(this.originalExerciseList, ['name', 'variant.name']));
           this.resetFilters();
           
           this.bLoading = false;
@@ -67,7 +74,7 @@ export class ExercisesComponent implements OnInit {
           this.bLoading = false;
           
           this.originalExerciseList.push(data);
-          this.exerciseList = _.cloneDeep(this.originalExerciseList);
+          this.exerciseList = _.cloneDeep(_.sortBy(this.originalExerciseList, ['name', 'variant.name']));
           this.resetFilters();
           this.initNewExercise();
 
@@ -88,7 +95,7 @@ export class ExercisesComponent implements OnInit {
           this.bLoading = false;
 
           this.originalExerciseList.splice(index, 1);
-          this.exerciseList = _.cloneDeep(this.originalExerciseList);
+          this.exerciseList = _.cloneDeep(_.sortBy(this.originalExerciseList, ['name', 'variant.name']));
           this.filterExercises(null);
 
           this.toastr.success('Exercise successfully deleted!');
@@ -122,7 +129,8 @@ export class ExercisesComponent implements OnInit {
   }
 
   resetFilters() {
-    this.filters = { type: '', name: '', variant: {name: '', intensityCoefficient: null}, description: ''};
+    this.filters = { bExpanded: true, type: '', name: '', variant: {name: '', intensityCoefficient: null}, description: ''};
+    this.initFiltersExpandability();
   }
 
   cancelFilters() {
@@ -154,6 +162,33 @@ export class ExercisesComponent implements OnInit {
     if(!this.bLoading) {
       this.sortListByField(field);
     }
+  }
+
+  
+  /* responsiveness FUNCTIONS */
+  initFiltersExpandability() {
+    if(this.lastWindowWidth >= this.triggerWidth)
+      this.filters.bExpanded = true;
+    else if(this.lastWindowWidth < this.triggerWidth)
+      this.filters.bExpanded = false;
+
+    this.bWindowOverMd = this.filters.bExpanded;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  @HostListener('fullscreenchange', ['$event'])
+  @HostListener('webkitfullscreenchange', ['$event'])
+  @HostListener('mozfullscreenchange', ['$event'])
+  @HostListener('MSFullscreenChange', ['$event'])
+  onResize(event) {
+    let currentWidth = event.target.innerWidth;
+
+    if(currentWidth < this.triggerWidth && this.lastWindowWidth >= this.triggerWidth)
+      this.filters.bExpanded = this.bWindowOverMd = false;
+    else if(currentWidth >= this.triggerWidth && this.lastWindowWidth < this.triggerWidth)
+      this.filters.bExpanded = this.bWindowOverMd = true;
+
+    this.lastWindowWidth = currentWidth;
   }
 
 }

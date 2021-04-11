@@ -1,27 +1,30 @@
 <div class="main__users row m-3">
 
     <!-- FILTERS -->
-    <div class="users__filters col-12 row mb-2 mx-0 my-0 plx-2 border">
-        <div class="col-1 d-flex flex-column justify-content-center border border-left-0 border-top-0 border-bottom-0 pl-0">
+    <div class="users__filters col-12 row d-flex align-items-center border mb-2 m-0 pr-2 py-2" [ngClass]="{'py-3 min-height-200': !bWindowOverMd && filters.bExpanded, 'min-height-60': bWindowOverMd}">
+        <div class="col-12 col-md-1 d-flex flex-column justify-content-center pl-0 pr-1 pr-md-2">
             <div class="d-flex">
                 <div class="d-flex flex-column">
                     <span class="fa fa-filter" style="font-size: 20px;"></span>
                     <span *ngIf="areFiltersDirty()" class="fa fa-times text-danger cursor-pointer" style="font-size: 16px;" (click)="cancelFilters()" ngbTooltip="Ripristina Filtri" placement="right"></span>
                 </div>
                 <div class="ml-2">
-                    <h6 class="d-none d-md-block m-0">Filtri</h6>
+                    <h6 class="m-0">Filtri</h6>
                     {{userList.length}}/{{originalUserList.length}}
+                </div>
+                <div class="d-flex d-md-none align-items-center w-100 ml-2">
+                    <button class="btn btn-sm btn-outline-info w-100  m-0" (click)="filters.bExpanded = !filters.bExpanded">{{filters.bExpanded ? 'Nascondi Filtri' : 'Mostra Filtri'}} <span class="fa" [ngClass]="{'fa-arrow-circle-up': filters.bExpanded, 'fa-arrow-circle-down': !filters.bExpanded }"></span></button>
                 </div>
             </div>
         </div>
-        <div class="col-2 d-flex flex-column justify-content-center form-group px-1 m-0">
-            <label for="filterUserListType" class="col-form-label col-form-label-sm p-0 text-muted">Mostra Collegamenti/Tutti gli utenti</label>
+        <div class="col-12 col-md-2 d-flex flex-column justify-content-center form-group pl-2 pr-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">
+            <label for="filterUserListType" class="col-form-label col-form-label-sm p-0 text-muted">Visualizza</label>
             <select [(ngModel)]="filters.filterUserListType" class="form-control form-control-sm cursor-pointer" id="filterUserListType" name="filterUserListType" (change)="setUserList($event)" [disabled]="bLoading">
                 <option [value]="'links'">Solo collegamenti</option>
                 <option [value]="'all'">Tutti gli utenti</option>
             </select>
         </div>
-        <div class="col-3 d-flex flex-column justify-content-center form-group pl-2 pr-1 m-0">
+        <div class="col-6 col-md-3 d-flex flex-column justify-content-center form-group pl-2 pr-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Utente</label>
             <div class="input-group">
                 <input type="text" [(ngModel)]="filters.name" class="form-control form-control-sm" (keyup)="filterUsers($event)"
@@ -30,7 +33,7 @@
                     id="filterAuthorSurname" name="filterAuthorSurname" placeholder="Cognome..." [disabled]="bLoading">
             </div>
         </div>
-        <div class="col-1 d-flex flex-column justify-content-center form-group px-1 m-0" *ngIf="account.user.userType=='both'">
+        <div class="col-6 col-md-2 d-flex flex-column justify-content-center form-group pl-2 pr-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded && account.user.userType=='both'">
             <label for="filterType" class="col-form-label col-form-label-sm p-0 text-muted">Tipo</label>
             <select [(ngModel)]="filters.userType" class="form-control form-control-sm cursor-pointer" placeholder="Tipo utente..." id="filterType" name="filterType" (change)="filterUsers($event)" [disabled]="bLoading">
                 <option value="" disabled selected>Tipo...</option>
@@ -40,12 +43,12 @@
                 <option [value]="''">Tutti</option>
             </select>
         </div>
-        <div class="col-2 d-flex flex-column justify-content-center form-group px-1 m-0">
+        <div class="col-6 col-md-2 d-flex flex-column justify-content-center form-group pl-2 pr-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">
             <label for="filterDoB" class="col-form-label col-form-label-sm p-0 text-muted">DoB</label>
             <input type="date" [(ngModel)]="filters.dateOfBirth" class="form-control form-control-sm" (keyup)="filterUsers($event)" (change)="filterUsers($event)"
                     id="filterDoB" name="filterDoB" [disabled]="bLoading">
         </div>
-        <div class="col-1 d-flex flex-column justify-content-center form-group px-1 m-0">
+        <div class="col-6 col-md-1 d-flex flex-column justify-content-center form-group pl-2 pr-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">
             <label for="filterSex" class="col-form-label col-form-label-sm p-0 text-muted">Sesso</label>
             <select [(ngModel)]="filters.sex" class="form-control form-control-sm cursor-pointer" placeholder="Sesso..." id="filterSex" name="filterSex" (change)="filterUsers($event)" [disabled]="bLoading">
                 <option value="" disabled selected>Sesso...</option>
@@ -53,55 +56,54 @@
                 <option [value]="'F'">Donna</option>
             </select>
         </div>
-        <div class="col-1 d-flex flex-column justify-content-center form-group px-1 m-0">
-            <label for="filterBw" class="col-form-label col-form-label-sm p-0 text-muted">BodyWeight</label>
+        <div class="col-6 col-md-1 d-flex flex-column justify-content-center form-group pl-2 pr-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">
+            <label for="filterBw" class="col-form-label col-form-label-sm p-0 text-muted">Peso</label>
             <input type="number" [(ngModel)]="filters.bodyWeight" min=0 class="form-control form-control-sm" (keyup)="filterUsers($event)"
                     id="filterBw" name="filterBw" placeholder="Peso corporeo..." [disabled]="bLoading">
         </div>
-        <div class="col-1 d-flex flex-column justify-content-center form-group px-1 m-0">
-            <label for="filterExperience" class="col-form-label col-form-label-sm p-0 text-muted">Esperienza (anni)</label>
+        <!-- <div class="col-6 col-md-1 d-flex flex-column justify-content-center form-group pl-2 pr-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">
+            <label for="filterExperience" class="col-form-label col-form-label-sm p-0 text-muted">EXP (anni)</label>
             <input type="number" [(ngModel)]="filters.yearsOfExperience" min=0 class="form-control form-control-sm" (keyup)="filterUsers($event)" (change)="filterUsers($event)"
                     id="filterExperience" name="filterExperience" placeholder="Esperienza..." [disabled]="bLoading">
-        </div>
-        
+        </div> -->
     </div>
 
     <!-- MAIN CONTAINER -->
-    <div class="users__maincontainer card col-12 p-0 border border-secondary border position-relative">
+    <div class="users__maincontainer main-list-table card col-12 p-0 border border-secondary border">
 
-        <div class="maincontainer__header card-header pl-2 pr-3 border border-secondary border-top-0 border-left-0 border-right-0 d-flex flex-column bg-dark text-white">
+        <div class="maincontainer__header table-header card-header pl-2 pr-3 border-bottom border-secondary d-flex flex-column bg-dark text-white">
             <div class="col-12 row m-0 p-0 d-flex align-items-center justify-content-center">
-                <div class="col-3 d-flex align-items-center" (click)="sortListByFieldUI('user')" [ngClass]="{'cursor-pointer': !bLoading}">
+                <div class="col-6 col-md-3 d-flex align-items-center" (click)="sortListByFieldUI('user')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">Utente</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['user']==null, 'fa fa-long-arrow-down': sortListStatus['user']==false, 'fa fa-long-arrow-up': sortListStatus['user']==true}"></span></div>
                 </div>
-                <div class="col-1 d-flex align-items-center" (click)="sortListByFieldUI('userType')" [ngClass]="{'cursor-pointer': !bLoading}">
+                <div class="col-3 col-md-2 d-flex align-items-center" (click)="sortListByFieldUI('userType')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">Tipo</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['userType']==null, 'fa fa-long-arrow-down': sortListStatus['userType']==false, 'fa fa-long-arrow-up': sortListStatus['userType']==true}"></span></div>
                 </div>
-                <div class="col-2 d-flex align-items-center" (click)="sortListByFieldUI('dateOf Birth')" [ngClass]="{'cursor-pointer': !bLoading}">
+                <div class="col-2 d-none d-md-flex align-items-center" (click)="sortListByFieldUI('dateOf Birth')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">DoB</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['dateOfBirth']==null, 'fa fa-long-arrow-down': sortListStatus['dateOfBirth']==false, 'fa fa-long-arrow-up': sortListStatus['dateOfBirth']==true}"></span></div>
                 </div>
-                <div class="col-1 d-flex align-items-center" (click)="sortListByFieldUI('sex')" [ngClass]="{'cursor-pointer': !bLoading}">
+                <div class="col-1 d-none d-md-flex align-items-center" (click)="sortListByFieldUI('sex')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">Sesso</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['sex']==null, 'fa fa-long-arrow-down': sortListStatus['sex']==false, 'fa fa-long-arrow-up': sortListStatus['sex']==true}"></span></div>
                 </div>
-                <div class="col-2 d-flex align-items-center" (click)="sortListByFieldUI('bodyWeight')" [ngClass]="{'cursor-pointer': !bLoading}">
-                    <div><b class="d-block">BodyWeight</b></div>
+                <div class="col-2 d-none d-md-flex align-items-center" (click)="sortListByFieldUI('bodyWeight')" [ngClass]="{'cursor-pointer': !bLoading}">
+                    <div><b class="d-block">Peso</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['bodyWeight']==null, 'fa fa-long-arrow-down': sortListStatus['bodyWeight']==false, 'fa fa-long-arrow-up': sortListStatus['bodyWeight']==true}"></span></div>
                 </div>
-                <div class="col-2 d-flex align-items-center" (click)="sortListByFieldUI('yearsOfExperience')" [ngClass]="{'cursor-pointer': !bLoading}">
-                    <div><b class="d-block">Esperienza (Anni)</b></div>
+                <!-- <div class="col-2 d-none d-md-flex align-items-center" (click)="sortListByFieldUI('yearsOfExperience')" [ngClass]="{'cursor-pointer': !bLoading}">
+                    <div><b class="d-block">EXP (Anni)</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['yearsOfExperience']==null, 'fa fa-long-arrow-down': sortListStatus['yearsOfExperience']==false, 'fa fa-long-arrow-up': sortListStatus['yearsOfExperience']==true}"></span></div>
-                </div>
-                <div class="col-1">
+                </div> -->
+                <div class="col-3 col-md-2 d-flex align-items-center justify-content-end">
                     <b>Azioni</b>
                 </div>
             </div>
         </div>
 
-        <div class="maincontainer__body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2">
+        <div class="maincontainer__body table-body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2">
             <div class="h-100 w-100 d-flex flex-column align-items-center justify-content-center" *ngIf="userList.length == 0">
                 <img src="assets/icons/misc/alert.svg" style="width:40px; height:auto;">
                 <span class="badge badge-light mt-2" [hidden]="filters.filterUserListType == 'links'">Nessun utente presente nella piattaforma</span>
@@ -119,33 +121,80 @@
                     </div>
                 </div>
             </div>
-            <div class="body__element list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1" *ngFor="let elem of userList; index as userIndex">
-                <div class="col-3"><span class="text-capitalize">{{elem.name}} {{elem.surname}}</span> <div *ngIf="elem._id == account.user._id">(utente corrente)</div></div>
-                <div class="col-1"><span class="text-capitalize">{{elem.userType}}</span></div>
-                <div class="col-2"><span>{{elem.dateOfBirth | date:'dd/MM/yyyy' }}</span></div>
-                <div class="col-1"><span class="text-capitalize">{{elem.sex}}</span></div>
-                <div class="col-2"><span>{{elem.bodyWeight}} kg</span></div>
-                <div class="col-2"><span>{{elem.yearsOfExperience}}</span></div>
-                <div class="col-1 d-flex">
-                    <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.USERS, elem._id)" *ngIf="elem._id != account.user._id" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
-                    <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.PROFILES)" *ngIf="elem._id == account.user._id" class="image-button" ngbTooltip="Profilo" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
-
-                    <!-- Athlete-Coach Link Requests -->
-                    <div (click)="sendNotification(NOTIFICATION_TYPE.COACH_REQUEST, elem)" *ngIf="canCoachRequestBeSent(elem)" class="image-button ml-2" ngbTooltip="Richiesta segui coach" placement="left"><img src="assets/icons/actions/add-friend.svg" style="width:20px; height:auto;" ></div>
-                    <div (click)="sendNotification(NOTIFICATION_TYPE.ATHLETE_REQUEST, elem)" *ngIf="canAthleteRequestBeSent(elem)" class="image-button ml-2" ngbTooltip="Richiesta segui atleta" placement="left"><img src="assets/icons/actions/add-friend-secondary.svg" style="width:20px; height:auto;"></div>
-                    <div (click)="cancelAthleteCoachLink(NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK, elem)" *ngIf="canCancelAthleteToCoachLinkBeSent(elem)" class="image-button ml-2" ngbTooltip="Elimina collegamento con Coach" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>
-                    <div (click)="cancelAthleteCoachLink(NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK, elem)" *ngIf="canCancelCoachToAthleteLinkBeSent(elem)" class="image-button ml-2" ngbTooltip="Elimina collegamento con Atleta" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>
-                    <div (click)="cancelAthleteCoachLinkRequest(NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK_REQUEST, elem)" *ngIf="canCancelAthleteToCoachLinkRequestBeSent(elem)" class="image-button ml-2" ngbTooltip="Elimina richiesta di collegamento con Coach" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>
-                    <div (click)="cancelAthleteCoachLinkRequest(NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK_REQUEST, elem)" *ngIf="canCancelCoachToAthleteLinkRequestBeSent(elem)" class="image-button ml-2" ngbTooltip="Elimina richiesta di collegamento con Atleta" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>
-                    <!-- <div *ngIf="account.role == Role.Admin" (click)="openPageWithMode(PAGEMODE.WRITE, PAGES.USERS, elem._id)" class="ml-2 image-button" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></div>
-                    <div *ngIf="account.role == Role.Admin" (click)="deleteTraining(elem._id, trainingIndex)" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
-                    -->
-                </div>
-            </div>
-            <!-- <app-user-modal (onClose)="createUser()" [(newUser)] = "newUser" style="position: absolute; right: 15px; bottom: 15px">
-                <div class="image-button cursor-pointer" ngbTooltip="Nuovo" placement="top"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></div>
-            </app-user-modal> -->
+            <!-- Content -->
+            <ngb-accordion #a="ngbAccordion" [closeOthers]="true" class="table-body-accordion w-100 text-dark">
+                <ngb-panel id="custom-panel-{{userIndex}}" *ngFor="let elem of userList; index as userIndex">
+                    <ng-template ngbPanelHeader let-opened="opened" class="p-0">
+                        <div class="body__element row list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1 m-0">
+                            <div class="col-6 col-md-3">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <img *ngIf="elem.profilePicture == null" src="assets/icons/misc/user.svg" class="avatar-sm img-fluid rounded-circle mr-1" alt="{{elem.name}} {{elem.surname}}"> 
+                                        <img *ngIf="elem.profilePicture != null" src="assets/icons/misc/user.svg" class="avatar-sm img-fluid rounded-circle mr-1" alt="{{elem.name}} {{elem.surname}}"> 
+                                    </div>
+                                    <div><span class="text-capitalize d-block">{{elem.name}}</span> <span class="text-capitalize">{{elem.surname}}</span></div>
+                                </div>
+                                <div *ngIf="elem._id == account.user._id">(utente corrente)</div>
+                            </div>
+                            <div class="col-3 col-md-2 "><span class="text-capitalize truncate-fullwidth">{{elem.userType}}</span></div>
+                            <div class="d-none d-md-inline col-md-2"><span>{{elem.dateOfBirth | date:'dd/MM/yyyy' }}</span></div>
+                            <div class="d-none d-md-inline col-md-1"><span class="text-capitalize">{{elem.sex}}</span></div>
+                            <div class="d-none d-md-inline col-md-2"><span>{{elem.bodyWeight}} kg</span></div>
+                            <!-- <div class="d-none d-md-inline col-md-2"><span>{{elem.yearsOfExperience}}</span></div> -->
+                            <div class="col-3 col-md-2 d-flex justify-content-end">
+                                <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.USERS, elem._id)" *ngIf="elem._id != account.user._id" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
+                                <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.PROFILES)" *ngIf="elem._id == account.user._id" class="image-button" ngbTooltip="Profilo" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
+            
+                                <!-- Athlete-Coach Link Requests -->
+                                <div (click)="sendNotification(NOTIFICATION_TYPE.COACH_REQUEST, elem)" *ngIf="canCoachRequestBeSent(elem)" class="image-button ml-2 d-none d-md-inline" ngbTooltip="Richiesta segui coach" placement="left"><img src="assets/icons/actions/add-friend.svg" style="width:20px; height:auto;" ></div>
+                                <div (click)="sendNotification(NOTIFICATION_TYPE.ATHLETE_REQUEST, elem)" *ngIf="canAthleteRequestBeSent(elem)" class="image-button ml-2 d-none d-md-inline" ngbTooltip="Richiesta segui atleta" placement="left"><img src="assets/icons/actions/add-friend-secondary.svg" style="width:20px; height:auto;"></div>
+                                <div (click)="cancelAthleteCoachLink(NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK, elem)" *ngIf="canCancelAthleteToCoachLinkBeSent(elem)" class="image-button ml-2 d-none d-md-inline" ngbTooltip="Elimina collegamento con Coach" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>
+                                <div (click)="cancelAthleteCoachLink(NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK, elem)" *ngIf="canCancelCoachToAthleteLinkBeSent(elem)" class="image-button ml-2 d-none d-md-inline" ngbTooltip="Elimina collegamento con Atleta" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>
+                                <div (click)="cancelAthleteCoachLinkRequest(NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK_REQUEST, elem)" *ngIf="canCancelAthleteToCoachLinkRequestBeSent(elem)" class="image-button ml-2 d-none d-md-inline" ngbTooltip="Elimina richiesta di collegamento con Coach" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>
+                                <div (click)="cancelAthleteCoachLinkRequest(NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK_REQUEST, elem)" *ngIf="canCancelCoachToAthleteLinkRequestBeSent(elem)" class="image-button ml-2 d-none d-md-inline" ngbTooltip="Elimina richiesta di collegamento con Atleta" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>
+                                <!-- <div *ngIf="account.role == Role.Admin" (click)="openPageWithMode(PAGEMODE.WRITE, PAGES.USERS, elem._id)" class="ml-2 image-button" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></div>
+                                <div *ngIf="account.role == Role.Admin" (click)="deleteTraining(elem._id, trainingIndex)" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
+                                -->
+                            
+                                <div class="d-inline d-md-none ml-2 image-button" ngbTooltip="{{opened ? 'Nascondi Dettagli' : 'Mostra Dettagli'}}" placement="left"><button ngbPanelToggle class="btn btn-transparent"><span class="fa text-dark" [ngClass]="{'fa-arrow-circle-up': opened, 'fa-arrow-circle-down': !opened}"></span></button></div>
+                            </div>
+                        </div>
+                    </ng-template>
+                    <ng-template class="d-block d-md-none" ngbPanelContent>
+                        <div class="row m-0">
+                            <div class="col-4 text-muted">Data di Nascita</div>
+                            <div class="col-8">{{elem.dateOfBirth | date:'dd/MM/yyyy' }}</div>
+                        </div>
+                        <div class="row m-0">
+                            <div class="col-4 text-muted">Sesso</div>
+                            <div class="col-8">{{elem.sex == 'M' ? 'Maschio' : 'Femmina'}}</div>
+                        </div>
+                        <div class="row m-0">
+                            <div class="col-4 text-muted">Peso</div>
+                            <div class="col-8">{{elem.bodyWeight}} kg</div>
+                        </div>
+                        <div class="row m-0">
+                            <div class="col-4 text-muted">Esp (anni)</div>
+                            <div class="col-8">{{elem.yearsOfExperience}}</div>
+                        </div>
+                        <div class="row m-0 mt-2">
+                            <div class="col-4 text-muted">Azioni</div>
+                            <div class="col-8 d-flex">
+                                <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.USERS, elem._id)" *ngIf="elem._id != account.user._id" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
+                                <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.PROFILES)" *ngIf="elem._id == account.user._id" class="image-button" ngbTooltip="Profilo" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
+            
+                                <!-- Athlete-Coach Link Requests -->
+                                <div (click)="sendNotification(NOTIFICATION_TYPE.COACH_REQUEST, elem)" *ngIf="canCoachRequestBeSent(elem)" class="image-button ml-2" ngbTooltip="Richiesta segui coach" placement="left"><img src="assets/icons/actions/add-friend.svg" style="width:20px; height:auto;" ></div>
+                                <div (click)="sendNotification(NOTIFICATION_TYPE.ATHLETE_REQUEST, elem)" *ngIf="canAthleteRequestBeSent(elem)" class="image-button ml-2" ngbTooltip="Richiesta segui atleta" placement="left"><img src="assets/icons/actions/add-friend-secondary.svg" style="width:20px; height:auto;"></div>
+                                <div (click)="cancelAthleteCoachLink(NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK, elem)" *ngIf="canCancelAthleteToCoachLinkBeSent(elem)" class="image-button ml-2" ngbTooltip="Elimina collegamento con Coach" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>
+                                <div (click)="cancelAthleteCoachLink(NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK, elem)" *ngIf="canCancelCoachToAthleteLinkBeSent(elem)" class="image-button ml-2" ngbTooltip="Elimina collegamento con Atleta" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>
+                                <div (click)="cancelAthleteCoachLinkRequest(NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK_REQUEST, elem)" *ngIf="canCancelAthleteToCoachLinkRequestBeSent(elem)" class="image-button ml-2" ngbTooltip="Elimina richiesta di collegamento con Coach" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>
+                                <div (click)="cancelAthleteCoachLinkRequest(NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK_REQUEST, elem)" *ngIf="canCancelCoachToAthleteLinkRequestBeSent(elem)" class="image-button ml-2" ngbTooltip="Elimina richiesta di collegamento con Atleta" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </ngb-panel>
+            </ngb-accordion>
         </div>
     </div>
-
 </div>

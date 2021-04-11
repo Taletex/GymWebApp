@@ -73,7 +73,6 @@ export class TrainingsComponent implements OnInit {
           console.log("Training List", this.trainingList);
           
           this.resetFilters();
-          this.initFiltersExpandability();
 
           this.athleteList = _.cloneDeep(this.account.user.athletes);
           this.athleteList.push(this.account.user);
@@ -159,6 +158,7 @@ export class TrainingsComponent implements OnInit {
 
   resetFilters() {
     this.filters = { bExpanded: true, author: { name: '', surname: '' }, creationDate: '', startDate: '', athlete: { name: '', surname: '' }, type: '' };
+    this.initFiltersExpandability();
   }
 
   cancelFilters() {

@@ -1,20 +1,23 @@
 <div class="main__exercises row m-3">
 
     <!-- FILTERS -->
-    <div class="exercises__filters col-12 row mb-2 mx-0 my-0 plx-2 border">
-        <div class="col-1 d-flex flex-column justify-content-center border border-left-0 border-top-0 border-bottom-0 pl-0">
+    <div class="exercises__filters col-12 row d-flex align-items-center border mb-2 m-0 pr-2 py-2" [ngClass]="{'py-3 min-height-200': !bWindowOverMd && filters.bExpanded, 'min-height-60': bWindowOverMd}">
+        <div class="col-12 col-md-1 d-flex flex-column justify-content-center pl-0 pr-1 pr-md-2">
             <div class="d-flex">
                 <div class="d-flex flex-column">
                     <span class="fa fa-filter" style="font-size: 20px;"></span>
                     <span *ngIf="areFiltersDirty()" class="fa fa-times text-danger cursor-pointer" style="font-size: 16px;" (click)="cancelFilters()" ngbTooltip="Ripristina Filtri" placement="right"></span>
                 </div>
                 <div class="ml-2">
-                    <h6 class="d-none d-md-block m-0">Filtri</h6>
+                    <h6 class="m-0">Filtri</h6>
                     {{exerciseList.length}}/{{originalExerciseList.length}}
+                </div>
+                <div class="d-flex d-md-none align-items-center w-100 ml-2">
+                    <button class="btn btn-sm btn-outline-info w-100  m-0" (click)="filters.bExpanded = !filters.bExpanded">{{filters.bExpanded ? 'Nascondi Filtri' : 'Mostra Filtri'}} <span class="fa" [ngClass]="{'fa-arrow-circle-up': filters.bExpanded, 'fa-arrow-circle-down': !filters.bExpanded }"></span></button>
                 </div>
             </div>
         </div>
-        <div class="col-2 form-group d-flex flex-column justify-content-center pl-2 pr-1 m-0" ngbTooltip="Visualizza esercizi default di sistema, custom di atleta/coach o tutti" placement="top">
+        <div class="col-6 col-md-2 form-group d-flex flex-column justify-content-center pl-2 pr-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded" ngbTooltip="Visualizza esercizi default di sistema, custom di atleta/coach o tutti" placement="top" >
             <label for="filterExerciseType" class="col-form-label col-form-label-sm p-0 text-muted">Default/Custom</label>
             <select [(ngModel)]="filters.type" class="form-control form-control-sm cursor-pointer" id="filterExerciseType" name="filterExerciseType" (change)="filterExercises($event)" [disabled]="bLoading">
                 <option [value]="''">Tutti</option>
@@ -22,28 +25,28 @@
                 <option [value]="'default'">Default</option>
             </select>
         </div>
-        <div class="col-2 d-flex flex-column justify-content-center form-group pl-2 pr-1 m-0">
+        <div class="col-6 col-md-2 d-flex flex-column justify-content-center form-group pl-2 pr-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Nome</label>
             <div class="input-group">
                 <input type="text" [(ngModel)]="filters.name" class="form-control form-control-sm" (keyup)="filterExercises($event)"
                     id="filterName" name="filterName" placeholder="Nome..." [disabled]="bLoading">
             </div>
         </div>
-        <div class="col-2 d-flex flex-column justify-content-center form-group pl-2 pr-1 m-0">
-            <label class="col-form-label col-form-label-sm p-0 text-muted">Variante (nome)</label>
+        <div class="col-6 col-md-2 d-flex flex-column justify-content-center form-group pl-2 pr-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">
+            <label class="col-form-label col-form-label-sm p-0 text-muted">Variante</label>
             <div class="input-group">
                 <input type="text" [(ngModel)]="filters.variant.name" class="form-control form-control-sm" (keyup)="filterExercises($event)"
                     id="filterVariantName" name="filterVariantName" placeholder="Nome variante..." [disabled]="bLoading">
             </div>
         </div>
-        <div class="col-2 d-flex flex-column justify-content-center form-group pl-2 pr-1 m-0">
-            <label class="col-form-label col-form-label-sm p-0 text-muted">Variante (coefficiente)</label>
+        <div class="col-6 col-md-2 d-flex flex-column justify-content-center form-group pl-2 pr-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">
+            <label class="col-form-label col-form-label-sm p-0 text-muted">Coefficiente</label>
             <div class="input-group">
                 <input type="number" min=0.1 [(ngModel)]="filters.variant.intensityCoefficient" class="form-control form-control-sm" (keyup)="filterExercises($event)" (change)="filterExercises($event)"
                     id="filterVariantCoefficient" name="filterVariantCoefficient" placeholder="Coefficiente..." [disabled]="bLoading">
             </div>
         </div>
-        <div class="col-3 d-flex flex-column justify-content-center form-group pl-2 pr-1 m-0">
+        <div class="col-12 col-md-3 d-flex flex-column justify-content-center form-group pl-2 pr-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Descrizione</label>
             <div class="input-group">
                 <input type="text" [(ngModel)]="filters.description" class="form-control form-control-sm" (keyup)="filterExercises($event)"
@@ -53,27 +56,27 @@
     </div>
 
     <!-- MAIN CONTAINER -->
-    <div class="exercises__maincontainer card col-12 p-0 border border-secondary border position-relative">
-        <div class="maincontainer__header card-header pl-2 pr-3 border border-secondary border-top-0 border-left-0 border-right-0 d-flex flex-column bg-dark text-white">
+    <div class="exercises__maincontainer main-list-table card col-12 p-0 border border-secondary border">
+        <div class="maincontainer__header table-header card-header pl-2 pr-3 border-bottom border-secondary d-flex flex-column bg-dark text-white">
             <div class="col-12 row m-0 p-0 d-flex align-items-center justify-content-center">
-                <div class="col-2 d-flex align-items-center" (click)="sortListByFieldUI('name')" [ngClass]="{'cursor-pointer': !bLoading}">
+                <div class="col-5 col-md-3 d-flex align-items-center" (click)="sortListByFieldUI('name')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">Nome</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['name']==null, 'fa fa-long-arrow-down': sortListStatus['name']==false, 'fa fa-long-arrow-up': sortListStatus['name']==true}"></span></div>
                 </div>
-                <div class="col-4 d-flex align-items-center" (click)="sortListByFieldUI('variant')" [ngClass]="{'cursor-pointer': !bLoading}">
+                <div class="col-5 col-md-3 d-flex align-items-center px-2" (click)="sortListByFieldUI('variant')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">Variante</b><small class="d-block">Nome &bull; Coefficiente</small></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['variant']==null, 'fa fa-long-arrow-down': sortListStatus['variant']==false, 'fa fa-long-arrow-up': sortListStatus['variant']==true}"></span></div>
                 </div>
-                <div class="col-4 d-flex align-items-center" (click)="sortListByFieldUI('description')" [ngClass]="{'cursor-pointer': !bLoading}">
+                <div class="col-4 d-none d-md-flex align-items-center" (click)="sortListByFieldUI('description')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">Descrizione</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['description']==null, 'fa fa-long-arrow-down': sortListStatus['description']==false, 'fa fa-long-arrow-up': sortListStatus['description']==true}"></span></div>
                 </div>
-                <div class="col-2">
+                <div class="col-2 col-md-2 d-flex align-items-center justify-content-end px-2">
                     <b>Azioni</b>
                 </div>
             </div>
         </div>
-        <div class="maincontainer__body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2">
+        <div class="maincontainer__body table-body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2">
             <div class="h-100 w-100 d-flex flex-column align-items-center justify-content-center" *ngIf="exerciseList.length == 0">
                 <img src="assets/icons/misc/alert.svg" style="width:40px; height:auto;">
                 <span class="badge badge-light mt-2">Nessun esercizio presente nella piattaforma</span>
@@ -86,20 +89,38 @@
                     </div>
                 </div>
             </div>
-            <div class="body__element list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1" *ngFor="let elem of exerciseList; index as exerciseIndex">
-                <div class="col-2">
-                    <span>{{elem.name}}</span>
-                </div>
-                <div class="col-4">
-                    <span>{{elem.variant.name}} &bull; {{elem.variant.intensityCoefficient}}</span>
-                </div>
-                <div class="col-4"><span>{{elem.description}}</span></div>
-                <div class="col-2 d-flex">
-                    <a [routerLink]="['/exercises', elem._id]" routerLinkActive="active" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></a>
-                    <a *ngIf="(account.user.userType=='both' || account.user.userType == 'coach')" [routerLink]="['/exercises', elem._id]" routerLinkActive="active" class="ml-2 image-button" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></a>
-                    <a *ngIf="account.role == Role.Admin"(click)="deleteExercise(elem._id, exerciseIndex)" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></a>
-                </div>
-            </div>
+            <!-- Content -->
+            <ngb-accordion #a="ngbAccordion" [closeOthers]="true" class="table-body-accordion w-100 text-dark">
+                <ngb-panel id="custom-panel-{{exerciseIndex}}" *ngFor="let elem of exerciseList; index as exerciseIndex">
+                    <ng-template ngbPanelHeader let-opened="opened" class="p-0">
+                        <div class="body__element row list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1  m-0">
+                            <div class="col-5 col-md-3"><span>{{elem.name}}</span></div>
+                            <div class="col-5 col-md-3 px-2"><span>{{elem.variant.name}} &bull; {{elem.variant.intensityCoefficient}}</span></div>
+                            <div class="d-none d-md-inline col-md-4"><span>{{elem.description}}</span></div>
+                            <div class="col-2 col-md-2 d-flex justify-content-end px-2 px-md-2">
+                                <a [routerLink]="['/exercises', elem._id]" routerLinkActive="active" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></a>
+                                <a *ngIf="(account.user.userType=='both' || account.user.userType == 'coach')" [routerLink]="['/exercises', elem._id]" routerLinkActive="active" class="ml-2 image-button d-none d-md-inline" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></a>
+                                <a *ngIf="account.role == Role.Admin"(click)="deleteExercise(elem._id, exerciseIndex)" class="ml-2 image-button d-none d-md-inline" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></a>
+                                <div class="d-inline d-md-none ml-2 image-button" ngbTooltip="{{opened ? 'Nascondi Dettagli' : 'Mostra Dettagli'}}" placement="left"><button ngbPanelToggle class="btn btn-transparent"><span class="fa text-dark" [ngClass]="{'fa-arrow-circle-up': opened, 'fa-arrow-circle-down': !opened}"></span></button></div>
+                            </div>
+                        </div>
+                    </ng-template>
+                    <ng-template class="d-block d-md-none" ngbPanelContent>
+                        <div class="row m-0">
+                            <div class="col-4 text-muted">Descrizione</div>
+                            <div class="col-8">{{elem.description != '' ? elem.description : 'N.D.'}}</div>
+                        </div>
+                        <div class="row m-0 mt-2">
+                            <div class="col-4 text-muted">Azioni</div>
+                            <div class="col-8 d-flex">
+                                <div><a [routerLink]="['/exercises', elem._id]" routerLinkActive="active" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></a></div>
+                                <div><a *ngIf="(account.user.userType=='both' || account.user.userType == 'coach')" [routerLink]="['/exercises', elem._id]" routerLinkActive="active" class="ml-2 image-button" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></a></div>
+                                <div><a *ngIf="account.role == Role.Admin"(click)="deleteExercise(elem._id, exerciseIndex)" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></a></div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </ngb-panel>
+            </ngb-accordion>
             <app-exercise-modal (onClose)="createExercise()" *ngIf="!bLoading && (account.user.userType=='both' || account.user.userType == 'coach')"  [(newExercise)] = "newExercise" style="position: absolute; right: 15px; bottom: 15px">
                 <div class="image-button-big cursor-pointer" ngbTooltip="Nuovo" placement="top"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></div>
             </app-exercise-modal>

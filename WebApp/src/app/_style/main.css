@@ -1133,6 +1133,11 @@ ngb-carousel .picsum-img-wrapper > img {
   font-size: 0.75rem;
 }
 
+.avatar-sm {
+  width: 30px;
+  height: 30px;
+}
+
 .avatar {
   margin-top: -15px;
   margin-bottom: -15px;
