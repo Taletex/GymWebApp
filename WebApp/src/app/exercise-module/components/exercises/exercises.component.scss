@@ -2,10 +2,21 @@
 
     .exercises__filters {
         font-size: 0.8rem;
-        height: 60px;
+        min-height: 60px;
         box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
         border-radius: 4px;
         background-color: white !important;
+
+        transition: min-height 1s;
+
+        &.min-height-60 {
+            min-height: 60px;
+            transition: all 1s;
+        }
+        &.min-height-200 {
+            min-height: 200px;
+            transition: all 1s;
+        }
     }
 
     .exercises__maincontainer {

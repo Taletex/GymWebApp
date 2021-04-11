@@ -52,7 +52,7 @@
 
     <!-- MAIN CONTAINER -->
     <div class="notifications__maincontainer main-list-table card col-12 p-0 border border-secondary border">
-        <div class="maincontainer__header table-header card-header pl-2 pr-3 border border-secondary border-top-0 border-left-0 border-right-0 d-flex flex-column bg-dark text-white">
+        <div class="maincontainer__header table-header card-header pl-2 pr-3 border-bottom border-secondary d-flex flex-column bg-dark text-white">
             <div class="col-12 row m-0 p-0 d-flex align-items-center justify-content-center">
                 <div class="col-1 d-none d-md-flex align-items-center" (click)="sortListByFieldUI('bConsumed')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">Nuova</b></div>
@@ -74,7 +74,7 @@
                     <div><b class="d-block">Messaggio</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['message']==null, 'fa fa-long-arrow-down': sortListStatus['message']==false, 'fa fa-long-arrow-up': sortListStatus['message']==true}"></span></div>
                 </div>
-                <div class="col-4 col-md-2 d-flex align-items-center justify-content-end px-2 px-md-2"  [ngClass]="{'cursor-pointer': !bLoading}">
+                <div class="col-4 col-md-2 d-flex align-items-center justify-content-end px-2"  [ngClass]="{'cursor-pointer': !bLoading}">
                     <div class="dropdown">
                         <button class="btn p-0 text-white" type="button" id="dropdownActionMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" [disabled]="bLoading">
                             <b>Azioni</b><img src="assets/icons/actions/menu-button.svg" style="width:15px; height:auto;" class="ml-2 mb-1">
@@ -94,7 +94,7 @@
             </div>
         </div>
         
-        <div class="maincontainer__body table-body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2 position-relative">
+        <div class="maincontainer__body table-body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2">
             <div class="h-100 w-100 d-flex flex-column align-items-center justify-content-center" *ngIf="notificationList.length == 0">
                 <img src="assets/icons/misc/alert.svg" style="width:40px; height:auto;">
                 <div [hidden]="filters.filterNotListType != 'notConsumed'" class="badge badge-light mt-2"><h6>Non hai nessuna nuova notifica!</h6></div>
@@ -108,49 +108,47 @@
                     </div>
                 </div>
             </div>
-
             <!-- Content -->
-            
             <ngb-accordion #a="ngbAccordion" [closeOthers]="true" class="table-body-accordion w-100 text-dark">
                 <ngb-panel id="custom-panel-{{notificationIndex}}" *ngFor="let elem of notificationList; index as notificationIndex">
-                  <ng-template ngbPanelHeader let-opened="opened" class="p-0">
-                    <div class="body__element row list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1 m-0" 
-                    [ngClass]="{'list-group-item-cyan': !elem.bConsumed, 'bg-custom-lightgray': elem.bConsumed}">
-                        <!-- <div class="d-inline d-md-none col-2"><img src="assets/icons/actions/plus.svg" class="table-icon-md"></div> -->
-                        <div class="d-none d-md-inline col-md-1"><img [hidden]="elem.bConsumed" src="assets/icons/misc/dot.svg" class="table-icon-lg"></div>
-                        <div class="d-none d-md-inline col-md-2"><span>{{elem.type}}</span></div>
-                        <div class="d-none d-md-inline col-md-2"><span>{{elem.creationDate | date:'HH:mm:ss - dd/MM/yyyy'}}</span></div>
-                        <div class="d-none d-md-inline col-md-2"><span>{{elem.from.name != null ? elem.from.name : ''}} {{elem.from.surname != null ? elem.from.surname : elem.from}}</span></div>
-                        <div class="col-9 col-md-3" [innerHTML]="elem.message"></div>
-                        <div class="col-3 col-md-2 d-flex justify-content-end px-2 px-md-2">
-                            <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.COACH_REQUEST || elem.type == NOTIFICATION_TYPE.ATHLETE_REQUEST)" (click)="acceptRequest(elem)" class="ml-2 image-button" ngbTooltip="Accetta Richiesta" placement="left"><img src="assets/icons/actions/confirm.svg" style="width:20px; height:auto;"></div>
-                            <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.COACH_REQUEST || elem.type == NOTIFICATION_TYPE.ATHLETE_REQUEST)" (click)="refuseRequest(elem)" class="ml-2 image-button" ngbTooltip="Rifiuta Richiesta" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>
-                            <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.DISMISS || elem.type == NOTIFICATION_TYPE.REQUEST_SUCCESS || elem.type == NOTIFICATION_TYPE.REQUEST_REFUSE || elem.type == NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK || elem.type == NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK || elem.type == NOTIFICATION_TYPE.TRAINING_CREATED || elem.type == NOTIFICATION_TYPE.TRAINING_MODIFIED)" (click)="dismissNotification(elem)" class="ml-2 image-button" ngbTooltip="Visualizza Richiesta" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
-                            <div *ngIf="elem.bConsumed" (click)="cancelNotification(elem)" class="ml-2 image-button" ngbTooltip="Cancella Notifica" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
-                            <div class="d-inline d-md-none ml-2 image-button" ngbTooltip="{{opened ? 'Nascondi Dettagli' : 'Mostra Dettagli'}}" placement="left"><button ngbPanelToggle class="btn btn-transparent"><span class="fa text-dark" [ngClass]="{'fa-arrow-circle-up': opened, 'fa-arrow-circle-down': !opened}"></span></button></div>
+                    <ng-template ngbPanelHeader let-opened="opened" class="p-0">
+                        <div class="body__element row list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1 m-0" 
+                        [ngClass]="{'list-group-item-cyan': !elem.bConsumed, 'bg-custom-lightgray': elem.bConsumed}">
+                            <!-- <div class="d-inline d-md-none col-2"><img src="assets/icons/actions/plus.svg" class="table-icon-md"></div> -->
+                            <div class="d-none d-md-inline col-md-1"><img [hidden]="elem.bConsumed" src="assets/icons/misc/dot.svg" class="table-icon-lg"></div>
+                            <div class="d-none d-md-inline col-md-2"><span>{{elem.type}}</span></div>
+                            <div class="d-none d-md-inline col-md-2"><span>{{elem.creationDate | date:'HH:mm:ss - dd/MM/yyyy'}}</span></div>
+                            <div class="d-none d-md-inline col-md-2"><span>{{elem.from.name != null ? elem.from.name : ''}} {{elem.from.surname != null ? elem.from.surname : elem.from}}</span></div>
+                            <div class="col-9 col-md-3" [innerHTML]="elem.message"></div>
+                            <div class="col-3 col-md-2 d-flex justify-content-end px-2 px-md-2">
+                                <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.COACH_REQUEST || elem.type == NOTIFICATION_TYPE.ATHLETE_REQUEST)" (click)="acceptRequest(elem)" class="ml-2 image-button" ngbTooltip="Accetta Richiesta" placement="left"><img src="assets/icons/actions/confirm.svg" style="width:20px; height:auto;"></div>
+                                <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.COACH_REQUEST || elem.type == NOTIFICATION_TYPE.ATHLETE_REQUEST)" (click)="refuseRequest(elem)" class="ml-2 image-button" ngbTooltip="Rifiuta Richiesta" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>
+                                <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.DISMISS || elem.type == NOTIFICATION_TYPE.REQUEST_SUCCESS || elem.type == NOTIFICATION_TYPE.REQUEST_REFUSE || elem.type == NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK || elem.type == NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK || elem.type == NOTIFICATION_TYPE.TRAINING_CREATED || elem.type == NOTIFICATION_TYPE.TRAINING_MODIFIED)" (click)="dismissNotification(elem)" class="ml-2 image-button" ngbTooltip="Visualizza Richiesta" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
+                                <div *ngIf="elem.bConsumed" (click)="cancelNotification(elem)" class="ml-2 image-button" ngbTooltip="Cancella Notifica" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
+                                <div class="d-inline d-md-none ml-2 image-button" ngbTooltip="{{opened ? 'Nascondi Dettagli' : 'Mostra Dettagli'}}" placement="left"><button ngbPanelToggle class="btn btn-transparent"><span class="fa text-dark" [ngClass]="{'fa-arrow-circle-up': opened, 'fa-arrow-circle-down': !opened}"></span></button></div>
+                            </div>
                         </div>
-                    </div>
-                  </ng-template>
-                  <ng-template class="d-block d-md-none" ngbPanelContent>
-                    <div class="row m-0">
-                        <div class="col-4 text-muted">Nuova</div>
-                        <div class="col-8">{{elem.bConsumed ? 'No' : 'Si'}}</div>
-                    </div>
-                    <div class="row m-0">
-                        <div class="col-4 text-muted">Tipo</div>
-                        <div class="col-8">{{elem.type}}</div>
-                    </div>
-                    <div class="row m-0">
-                        <div class="col-4 text-muted">Data</div>
-                        <div class="col-8">{{elem.creationDate | date:'HH:mm:ss - dd/MM/yyyy'}}</div>
-                    </div>
-                    <div class="row m-0">
-                        <div class="col-4 text-muted">Mittente</div>
-                        <div class="col-8">{{elem.from.name != null ? elem.from.name : ''}} {{elem.from.surname != null ? elem.from.surname : elem.from}}</div>
-                    </div>
-                  </ng-template>
+                    </ng-template>
+                    <ng-template class="d-block d-md-none" ngbPanelContent>
+                        <div class="row m-0">
+                            <div class="col-4 text-muted">Nuova</div>
+                            <div class="col-8">{{elem.bConsumed ? 'No' : 'Si'}}</div>
+                        </div>
+                        <div class="row m-0">
+                            <div class="col-4 text-muted">Tipo</div>
+                            <div class="col-8">{{elem.type}}</div>
+                        </div>
+                        <div class="row m-0">
+                            <div class="col-4 text-muted">Data</div>
+                            <div class="col-8">{{elem.creationDate | date:'HH:mm:ss - dd/MM/yyyy'}}</div>
+                        </div>
+                        <div class="row m-0">
+                            <div class="col-4 text-muted">Mittente</div>
+                            <div class="col-8">{{elem.from.name != null ? elem.from.name : ''}} {{elem.from.surname != null ? elem.from.surname : elem.from}}</div>
+                        </div>
+                    </ng-template>
                 </ngb-panel>
-              </ngb-accordion>
+            </ngb-accordion>
         </div>
     </div>
    

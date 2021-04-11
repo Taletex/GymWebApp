@@ -27,6 +27,8 @@ export class NotificationsComponent implements OnInit {
   public bWindowOverMd: boolean;
   private lastWindowWidth: number;
   private triggerWidth: number = 767.98;
+
+  
   constructor(private httpService: HttpService, private toastr: ToastrService, private accountService: AccountService) { 
 
     // Init account and notification list

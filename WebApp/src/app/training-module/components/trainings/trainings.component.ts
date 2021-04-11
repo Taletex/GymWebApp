@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { HttpService } from '@app/_services/http-service/http-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
@@ -26,6 +26,9 @@ export class TrainingsComponent implements OnInit {
   public PAGEMODE = PAGEMODE;
   public PAGES = PAGES;
   public sortListStatus: any;
+  public bWindowOverMd: boolean;
+  private lastWindowWidth: number;
+  private triggerWidth: number = 767.98;
   
   // Account information
   public account = this.accountService.accountValue;
@@ -42,6 +45,10 @@ export class TrainingsComponent implements OnInit {
     // Init filters and sort status
     this.resetFilters();
     this.resetSortStatus();
+    
+    // Init responsiveness aux
+    this.lastWindowWidth = window.innerWidth;
+    this.initFiltersExpandability();
   }
 
   ngOnInit() {
@@ -178,6 +185,32 @@ export class TrainingsComponent implements OnInit {
   sortListByFieldUI(field: string) {
     if(!this.bLoading)
       this.sortListByField(field);
+  }
+
+  /* responsiveness FUNCTIONS */
+  initFiltersExpandability() {
+    if(this.lastWindowWidth >= this.triggerWidth)
+      this.filters.bExpanded = true;
+    else if(this.lastWindowWidth < this.triggerWidth)
+      this.filters.bExpanded = false;
+
+    this.bWindowOverMd = this.filters.bExpanded;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  @HostListener('fullscreenchange', ['$event'])
+  @HostListener('webkitfullscreenchange', ['$event'])
+  @HostListener('mozfullscreenchange', ['$event'])
+  @HostListener('MSFullscreenChange', ['$event'])
+  onResize(event) {
+    let currentWidth = event.target.innerWidth;
+
+    if(currentWidth < this.triggerWidth && this.lastWindowWidth >= this.triggerWidth)
+      this.filters.bExpanded = this.bWindowOverMd = false;
+    else if(currentWidth >= this.triggerWidth && this.lastWindowWidth < this.triggerWidth)
+      this.filters.bExpanded = this.bWindowOverMd = true;
+
+    this.lastWindowWidth = currentWidth;
   }
 
 }
