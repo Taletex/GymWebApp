@@ -1,7 +1,7 @@
 <ng-template #exerciseModal let-modal>
     <div class="exercisemodal__container">
         <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">Crea Esercizio</h4>
+            <h4 class="modal-title h4" id="modal-basic-title">Crea Esercizio</h4>
             <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -11,17 +11,17 @@
                 <div class="card-body h-100">
                     <form>
                         <div class="form-row m-0">
-                            <div class="col-4 form-group">
+                            <div class="col-12 form-group">
                                 <label for="exerciseName" class="col-form-label col-form-label-sm text-muted">Nome</label>
                                 <input type="text" required [(ngModel)]="newExercise.name" class="form-control form-control-sm"
                                     id="exerciseName" name="exerciseName">
                             </div>
-                            <div class="col-4 form-group">
+                            <div class="col-12 col-md-6 form-group">
                                 <label for="exerciseVariantName" class="col-form-label col-form-label-sm text-muted">Nome Variante</label>
                                 <input type="text" [(ngModel)]="newExercise.variant.name" class="form-control form-control-sm"
                                     id="exerciseVariantName" name="exerciseVariantName">
                             </div>
-                            <div class="col-4 form-group">
+                            <div class="col-12 col-md-6 form-group">
                                 <label for="exerciseVariantCoefficient" class="col-form-label col-form-label-sm text-muted">Coefficente di intensità</label>
                                 <input type="number" min=0.1 [(ngModel)]="newExercise.variant.intensityCoefficient" class="form-control form-control-sm"
                                     id="exerciseVariantCoefficient" name="exerciseVariantCoefficient">

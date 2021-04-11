@@ -328,6 +328,12 @@ $custom-lightgray: rgb(179 179 179 / 15%);
   }
 }
 
+.tooltip-inner {
+  @media (max-width: 991.98px) { 
+    font-size: .7rem !important;
+  }
+}
+
 /* DIV STYLE */
 @for $i from 1 through 10 {
   .opacity-#{$i} {
@@ -492,6 +498,10 @@ $custom-lightgray: rgb(179 179 179 / 15%);
     font-size: .8rem;
 
     .table-body-accordion {
+      .card {
+        overflow: visible !important;
+      }
+
       .card-header {
         padding: 0px !important;
       }
@@ -810,6 +820,21 @@ ngb-carousel .picsum-img-wrapper>img {
 }
 
 /* MEDIA QUERIES */
+@for $i from 0 through 100 {
+  .w-sm-#{$i} {
+    @media (max-width: 575.98px) { 
+      width: $i*1% !important;
+    }
+  }
+}
+@for $i from 0 through 100 {
+  .h-sm-#{$i} {
+    @media (max-width: 575.98px) { 
+      height: $i*1% !important;
+    }
+  }
+}
+
 .h-vh-fixed {
   @media (max-width: 767.98px) {
     height: 100% !important;
@@ -854,6 +879,15 @@ ngb-carousel .picsum-img-wrapper>img {
   border: 0px !important;
   &:focus {
     box-shadow: none !important;
+  }
+}
+
+.btn-sm-sm {
+  @media (max-width: 575.98px) { 
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.875rem !important;
+    line-height: 1.5 !important;
+    border-radius: 0.2rem !important;
   }
 }
 

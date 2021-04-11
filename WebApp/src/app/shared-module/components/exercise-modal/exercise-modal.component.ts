@@ -19,7 +19,7 @@ export class ExerciseModalComponent implements OnInit {
   }
 
   public openExerciseModal(content) {
-    this.modalService.open(content, { size: "lg", centered: true, scrollable: true, backdrop: "static" }).result.then((result) => {
+    this.modalService.open(content, { centered: true, scrollable: true, backdrop: "static" }).result.then((result) => {
       this.onClose.emit(null);
     }, (reason) => {
       this.onAbort.emit(null);

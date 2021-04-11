@@ -7,7 +7,6 @@ import { AccountService } from '@app/_services/account-service/account-service.s
 import { Account, Role } from '@app/_models';
 import { NOTIFICATION_TYPE, NOTIFICATION_ONLY_DISMISS } from '@app/_services/general-service/general-service.service';
 import * as _ from "lodash";
-import { trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-notifications',
@@ -225,10 +224,6 @@ export class NotificationsComponent implements OnInit {
   
   canCancelAllNotifications():boolean {
     return (_.find(this.account.user.notifications, function(n) { return n.bConsumed; }) != undefined);
-  }
-
-  toggleRow(elem) {
-    console.log("TODO");
   }
 
 

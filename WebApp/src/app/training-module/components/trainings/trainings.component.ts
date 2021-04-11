@@ -69,10 +69,11 @@ export class TrainingsComponent implements OnInit {
       .subscribe(
         (data: any) => {
           this.originalTrainingList = data.trainings;
-          this.trainingList = _.cloneDeep(this.originalTrainingList);
+          this.trainingList = _.cloneDeep(_.orderBy(this.originalTrainingList, ['startDate', 'type'], ['desc', 'asc']));
           console.log("Training List", this.trainingList);
           
           this.resetFilters();
+          this.initFiltersExpandability();
 
           this.athleteList = _.cloneDeep(this.account.user.athletes);
           this.athleteList.push(this.account.user);
@@ -95,7 +96,7 @@ export class TrainingsComponent implements OnInit {
         (data: any) => {
           this.bLoading = false;
           this.originalTrainingList.push(data) 
-          this.trainingList = _.cloneDeep(this.originalTrainingList);
+          this.trainingList = _.cloneDeep(_.orderBy(this.originalTrainingList, ['startDate', 'type'], ['desc', 'asc']));
           this.resetFilters();
 
           this.initNewTraining();
@@ -115,7 +116,7 @@ export class TrainingsComponent implements OnInit {
         (data: any) => {
           this.bLoading = false;
           this.originalTrainingList.splice(index, 1);
-          this.trainingList = _.cloneDeep(this.originalTrainingList);
+          this.trainingList = _.cloneDeep(_.orderBy(this.originalTrainingList, ['startDate', 'type'], ['desc', 'asc']));
           this.filterTrainings(null);
           this.toastr.success('Training successfully deleted.');
         },
@@ -157,7 +158,7 @@ export class TrainingsComponent implements OnInit {
   }
 
   resetFilters() {
-    this.filters = { author: { name: '', surname: '' }, creationDate: '', startDate: '', athlete: { name: '', surname: '' }, type: '' };
+    this.filters = { bExpanded: true, author: { name: '', surname: '' }, creationDate: '', startDate: '', athlete: { name: '', surname: '' }, type: '' };
   }
 
   cancelFilters() {

@@ -26,7 +26,7 @@
                     id="filterAuthorSurname" name="filterAuthorSurname" placeholder="Cognome..." [disabled]="bLoading">
             </div>
         </div>
-        <div class="col-12 col-md-3 d-flex flex-column justify-content-center form-group px-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">
+        <div class="col-12 col-md-3 d-flex flex-column justify-content-center form-group pl-2 pr-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Atleta</label>
             <div class="input-group">
                 <input type="text" [(ngModel)]="filters.athlete.name" class="form-control form-control-sm" (keyup)="filterTrainings($event)"
@@ -35,17 +35,17 @@
                     id="filterAtleteSurname" name="filterAtleteSurname" placeholder="Cognome..." [disabled]="bLoading">
             </div>
         </div>
-        <div class="col-6 col-md-1 d-flex flex-column justify-content-center form-group px-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">
+        <div class="col-6 col-md-1 d-flex flex-column justify-content-center form-group pl-2 pr-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">
             <label for="filterType" class="col-form-label col-form-label-sm p-0 text-muted">Tipo</label>
             <input type="text" [(ngModel)]="filters.type" class="form-control form-control-sm" id="filterType" (keyup)="filterTrainings($event)"
                 name="filterType" placeholder="Tipo..." [disabled]="bLoading">
         </div>
-        <div class="col-6 col-md-2 d-flex flex-column justify-content-center form-group px-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">
+        <div class="col-6 col-md-2 d-flex flex-column justify-content-center form-group pl-2 pr-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">
             <label for="filterCreationDate" class="col-form-label col-form-label-sm p-0 text-muted">Creazione</label>
             <input type="date" [(ngModel)]="filters.creationDate" class="form-control form-control-sm" (keyup)="filterTrainings($event)" (change)="filterTrainings($event)"
                 id="filterCreationDate" name="filterCreationDate" [disabled]="bLoading">
         </div>
-        <div class="col-6 col-md-2 d-flex flex-column justify-content-center form-group px-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">
+        <div class="col-6 col-md-2 d-flex flex-column justify-content-center form-group pl-2 pr-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">
             <label for="filterStartDate" class="col-form-label col-form-label-sm p-0 text-muted">Inizio</label>
             <input type="date" [(ngModel)]="filters.startDate" class="form-control form-control-sm" (keyup)="filterTrainings($event)" (change)="filterTrainings($event)"
                 id="filterStartDate" name="filterStartDate" [disabled]="bLoading">
@@ -56,27 +56,27 @@
     <div class="trainings__maincontainer main-list-table card col-12 p-0 border border-secondary border position-relative">
         <div class="maincontainer__header table-header card-header pl-2 pr-3 border-bottom border-secondary d-flex flex-column bg-dark text-white">
             <div class="col-12 row m-0 p-0 d-flex align-items-center justify-content-center">
-                <div class="col-2 d-none d-md-flex align-items-center" (click)="sortListByFieldUI('author')" [ngClass]="{'cursor-pointer': !bLoading}">
-                    <div><b class="d-block">Autore</b><small class="d-block">Data creazione</small></div>
+                <div class="col-md-2 d-none d-md-flex align-items-center" (click)="sortListByFieldUI('author')" [ngClass]="{'cursor-pointer': !bLoading}">
+                    <div><b class="d-block">Autore</b><small class="d-block">Creato il</small></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['author']==null, 'fa fa-long-arrow-down': sortListStatus['author']==false, 'fa fa-long-arrow-up': sortListStatus['author']==true}"></span></div>
                 </div>
-                <div class="col-2 d-none d-md-flex align-items-center" (click)="sortListByFieldUI('athletes')" [ngClass]="{'cursor-pointer': !bLoading}">
+                <div class="col-md-2 d-none d-md-flex align-items-center" (click)="sortListByFieldUI('athletes')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">Atleta</b><small class="d-block">YoB &bull; bw</small></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['athletes']==null, 'fa fa-long-arrow-down': sortListStatus['athletes']==false, 'fa fa-long-arrow-up': sortListStatus['athletes']==true}"></span></div>
                 </div>
-                <div class="col-3 col-md-2 d-flex align-items-center" (click)="sortListByFieldUI('type')" [ngClass]="{'cursor-pointer': !bLoading}">
+                <div class="col-5 col-md-2 d-flex align-items-center" (click)="sortListByFieldUI('type')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b>Tipo</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['type']==null, 'fa fa-long-arrow-down': sortListStatus['type']==false, 'fa fa-long-arrow-up': sortListStatus['type']==true}"></span></div>
                 </div>
-                <div class="col-3 col-md-1 d-flex align-items-center" (click)="sortListByFieldUI('startDate')" [ngClass]="{'cursor-pointer': !bLoading}">
+                <div class="col-4 col-md-1 d-flex align-items-center px-md-0" (click)="sortListByFieldUI('startDate')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">Inizio</b><small class="d-block">Fine</small></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['startDate']==null, 'fa fa-long-arrow-down': sortListStatus['startDate']==false, 'fa fa-long-arrow-up': sortListStatus['startDate']==true}"></span></div>
                 </div>
-                <div class="col-3 col-md-1 d-flex align-items-center" (click)="sortListByFieldUI('state')" [ngClass]="{'cursor-pointer': !bLoading}">
+                <div class="col-md-1 d-none d-md-flex align-items-center" (click)="sortListByFieldUI('state')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b class="d-block">Stato</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['state']==null, 'fa fa-long-arrow-down': sortListStatus['state']==false, 'fa fa-long-arrow-up': sortListStatus['state']==true}"></span></div>
                 </div>
-                <div class="col-2 d-none d-md-flex align-items-center" (click)="sortListByFieldUI('comment')" [ngClass]="{'cursor-pointer': !bLoading}">
+                <div class="col-md-2 d-none d-md-flex align-items-center" (click)="sortListByFieldUI('comment')" [ngClass]="{'cursor-pointer': !bLoading}">
                     <div><b>Commento</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['comment']==null, 'fa fa-long-arrow-down': sortListStatus['comment']==false, 'fa fa-long-arrow-up': sortListStatus['comment']==true}"></span></div>
                 </div>
@@ -102,7 +102,7 @@
             <ngb-accordion #a="ngbAccordion" [closeOthers]="true" class="table-body-accordion w-100 text-dark">
                 <ngb-panel id="custom-panel-{{trainingIndex}}" *ngFor="let training of trainingList; index as trainingIndex; first as bFirstTraining">
                     <ng-template ngbPanelHeader let-opened="opened" class="p-0">
-                        <div class="body__element row list-group-item list-group-item-action list-group-item-light d-flex align-items-center overflow-visible px-0 py-1 m-0">
+                        <div class="body__element row list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1 m-0 text-dark">
                             <div class="d-none d-md-inline col-md-2">
                                 <span class="d-block">{{training.author.name}} {{training.author.surname}}</span>
                                 <small>{{training.creationDate | date:'dd/MM/yyyy'}}</small>
@@ -126,21 +126,24 @@
                                     </div>
                                 </ng-template>
                             </div>
-                            <div class="col-3 col-md-2"><span class="text-capitalize">{{training.type}}</span></div>
-                            <div class="col-3 col-md-1">
-                                <span class="d-block">{{training.startDate | date:'dd/MM/yyyy'}}</span>
+                            <div class="col-5 col-md-2">
+                                <div class="text-capitalize truncate-fullwidth" ngbTooltip="{{training.type}}">{{training.type}}</div>
+                            </div>
+                            <div class="col-4 col-md-1 p-md-0 truncate-fullwidth" ngbTooltip="{{training.startDate | date:'dd/MM/yyyy'}} - {{training.endDate | date:'dd/MM/yyyy'}}">
+                                <div class="truncate-fullwidth">{{training.startDate | date:'dd/MM/yyyy'}}</div>
                                 <small>{{training.endDate | date:'dd/MM/yyyy'}}</small>
                             </div>
-                            <div class="col-3 col-md-1">
+                            <div class="d-none d-md-flex col-md-1">
                                 <span class="text-uppercase badge" [ngClass]="{'badge-info': training.state == TRAINING_STATES.NEW, 'badge-primary': training.state == TRAINING_STATES.STARTED, 'badge-success': training.state == TRAINING_STATES.COMPLETED, 'badge-danger': training.state == TRAINING_STATES.ABORTED, 'badge-warning': training.state == TRAINING_STATES.PARTIAL_COMPLETED}">{{training.state}}</span>
                             </div>
-                            <div class="d-none d-md-inline col-md-2"><span>{{training.comment != "" ? training.comment : "Nessun Commento"}}</span></div>
+                            <div class="d-none d-md-inline col-md-2" ngbTooltip="{{training.comment != '' ? training.comment : 'Nessun Commento'}}"><div class="truncate-fullwidth">{{training.comment != "" ? training.comment : "Nessun Commento"}}</div></div>
                             <div class="col-3 col-md-2 d-flex justify-content-end">
                                 <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.TRAININGS, training._id)" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
-                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="openPageWithMode(PAGEMODE.WRITE, PAGES.TRAININGS, training._id)" class="ml-2 image-button" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></div>
-                                <div (click)="openPageWithMode(PAGEMODE.STATS, PAGES.TRAININGS, training._id)" class="ml-2 image-button" ngbTooltip="Statistiche" placement="left"><img src="assets/icons/actions/graph.svg" style="width:20px; height:auto;"></div>
-                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="exportTraining(elem)" class="ml-2 image-button" ngbTooltip="Esporta Allenamento" placement="left"><img src="assets/icons/actions/export.svg" style="width:20px; height:auto;"></div>
-                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="deleteTraining(training._id, trainingIndex)" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
+                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="openPageWithMode(PAGEMODE.WRITE, PAGES.TRAININGS, training._id)" class="ml-2 image-button d-none d-md-inline" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></div>
+                                <div (click)="openPageWithMode(PAGEMODE.STATS, PAGES.TRAININGS, training._id)" class="ml-2 image-button d-none d-md-inline" ngbTooltip="Statistiche" placement="left"><img src="assets/icons/actions/graph.svg" style="width:20px; height:auto;"></div>
+                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="exportTraining(elem)" class="ml-2 image-button d-none d-md-inline" ngbTooltip="Esporta Allenamento" placement="left"><img src="assets/icons/actions/export.svg" style="width:20px; height:auto;"></div>
+                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="deleteTraining(training._id, trainingIndex)" class="ml-2 image-button d-none d-md-inline" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
+                                <div class="d-inline d-md-none ml-2 image-button" ngbTooltip="{{opened ? 'Nascondi Dettagli' : 'Mostra Dettagli'}}" placement="left"><button ngbPanelToggle class="btn btn-transparent"><span class="fa text-dark" [ngClass]="{'fa-arrow-circle-up': opened, 'fa-arrow-circle-down': !opened}"></span></button></div>
                             </div>
                         </div>
                     </ng-template>
@@ -150,7 +153,7 @@
                             <div class="col-8">{{training.author.name}} {{training.author.surname}}</div>
                         </div>
                         <div class="row m-0">
-                            <div class="col-4 text-muted">Data Creazione</div>
+                            <div class="col-4 text-muted">Creato il</div>
                             <div class="col-8">{{training.creationDate | date:'dd/MM/yyyy'}}</div>
                         </div>
                         <div class="row m-0">
@@ -167,6 +170,16 @@
                         <div class="row m-0">
                             <div class="col-4 text-muted">Commento</div>
                             <div class="col-8">{{training.comment != "" ? training.comment : "Nessun Commento"}}</div>
+                        </div>
+                        <div class="row m-0 mt-2">
+                            <div class="col-4 text-muted">Azioni</div>
+                            <div class="col-8 d-flex">
+                                <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.TRAININGS, training._id)" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
+                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="openPageWithMode(PAGEMODE.WRITE, PAGES.TRAININGS, training._id)" class="ml-2 image-button" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></div>
+                                <div (click)="openPageWithMode(PAGEMODE.STATS, PAGES.TRAININGS, training._id)" class="ml-2 image-button" ngbTooltip="Statistiche" placement="left"><img src="assets/icons/actions/graph.svg" style="width:20px; height:auto;"></div>
+                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="exportTraining(elem)" class="ml-2 image-button" ngbTooltip="Esporta Allenamento" placement="left"><img src="assets/icons/actions/export.svg" style="width:20px; height:auto;"></div>
+                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="deleteTraining(training._id, trainingIndex)" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
+                            </div>
                         </div>
                     </ng-template>
                 </ngb-panel>

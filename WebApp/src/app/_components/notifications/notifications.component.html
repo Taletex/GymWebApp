@@ -89,7 +89,7 @@
                                 <span class="ml-2">Cancella tutto</span>
                             </button>
                         </div>
-                      </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -112,7 +112,7 @@
             <ngb-accordion #a="ngbAccordion" [closeOthers]="true" class="table-body-accordion w-100 text-dark">
                 <ngb-panel id="custom-panel-{{notificationIndex}}" *ngFor="let elem of notificationList; index as notificationIndex">
                     <ng-template ngbPanelHeader let-opened="opened" class="p-0">
-                        <div class="body__element row list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1 m-0" 
+                        <div class="body__element row list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1 m-0 text-dark" 
                         [ngClass]="{'list-group-item-cyan': !elem.bConsumed, 'bg-custom-lightgray': elem.bConsumed}">
                             <!-- <div class="d-inline d-md-none col-2"><img src="assets/icons/actions/plus.svg" class="table-icon-md"></div> -->
                             <div class="d-none d-md-inline col-md-1"><img [hidden]="elem.bConsumed" src="assets/icons/misc/dot.svg" class="table-icon-lg"></div>

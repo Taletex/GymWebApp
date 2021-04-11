@@ -1,9 +1,9 @@
 <ng-template #sessionModal let-modal>
     <div id="sessionModal" class="sessionmodal__container">
         <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title" *ngIf="training != null && options.currentViewType == VIEW_TYPES.TRAINING">Allenamento <a class="badge badge-info" href="trainings/{{training._id}}">{{training._id}}</a></h4>
-            <h4 class="modal-title" id="modal-basic-title" *ngIf="week != null && options.currentViewType == VIEW_TYPES.WEEK">Settimana {{weekIndex+1}} - Allenamento <a class="badge badge-info" href="trainings/{{training._id}}">{{training._id}}</a></h4>
-            <h4 class="modal-title" id="modal-basic-title" *ngIf="session != null && options.currentViewType == VIEW_TYPES.SESSION">Sessione {{session.name}} (Sessione {{sessionIndex+1}} - Settimana {{weekIndex+1}} - Allenamento <a class="badge badge-info" href="trainings/{{training._id}}">{{training._id}}</a>)</h4>
+            <h4 class="modal-title h4" id="modal-basic-title" *ngIf="training != null && options.currentViewType == VIEW_TYPES.TRAINING">Allenamento <a class="badge badge-info" href="trainings/{{training._id}}">{{training._id}}</a></h4>
+            <h4 class="modal-title h4" id="modal-basic-title" *ngIf="week != null && options.currentViewType == VIEW_TYPES.WEEK"><span class="d-block d-sm-inline mr-sm-2">Settimana {{weekIndex+1}}</span> <small>Allenamento <a class="badge badge-info" href="trainings/{{training._id}}">{{training._id}}</a></small></h4>
+            <h4 class="modal-title h4" id="modal-basic-title" *ngIf="session != null && options.currentViewType == VIEW_TYPES.SESSION"><span class="d-block d-md-inline mr-sm-2">Sessione {{session.name}}</span> <small>(<span class="d-none d-sm-inline">Sessione</span> <span class="d-inline d-sm-none">Sess. </span> {{sessionIndex+1}} - <span class="d-none d-sm-inline">Settimana</span> <span class="d-inline d-sm-none">Sett. </span> {{weekIndex+1}} - <span class="d-none d-md-inline">Allenamento</span> <a class="badge badge-info ml-md-2" href="trainings/{{training._id}}">{{training._id}}</a>)</small></h4>
             <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -14,9 +14,9 @@
             <app-session-view *ngIf="session != null && options.currentViewType == VIEW_TYPES.SESSION" [session]="session" [(options)]="options"></app-session-view>
         </div>
         <div class="modal-footer">
-            <div class="position-relative d-flex">
-                <div class="dropdown dropup">
-                    <button class="btn btn-secondary dropdown-toggle text-capitalize" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <div class="position-relative d-flex flex-column flex-sm-row w-sm-100">
+                <div class="dropdown dropup w-sm-100">
+                    <button class="btn btn-sm-sm btn-secondary dropdown-toggle text-capitalize w-sm-100" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       {{options.currentViewType}}
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -25,8 +25,8 @@
                       <button class="dropdown-item" (click)="setView(VIEW_TYPES.TRAINING)" *ngIf="training != null" [ngClass]="{'active': options.currentViewType == VIEW_TYPES.TRAINING}">Allenamento</button>
                     </div>
                 </div>
-                <div class="dropdown dropup ml-2">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="formatDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" (click)="initOptions()">
+                <div class="dropdown dropup w-sm-100 ml-0 ml-sm-2 mt-1 mt-sm-0">
+                    <button class="btn btn-sm-sm btn-secondary dropdown-toggle w-sm-100" type="button" id="formatDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" (click)="initOptions()">
                       Formattazione
                     </button>
                     <div class="dropdown-menu" aria-labelledby="formatDropdownMenuButton">
@@ -40,7 +40,7 @@
                       <a class="dropdown-item cursor-pointer" (click)="setDefaultoptions()">Ripristina originale</a>
                     </div>
                 </div>
-                <button class="btn btn-info ml-2" (click)="printSession()">Stampa</button>
+                <button class="btn btn-sm-sm btn-info w-sm- ml-0 ml-sm-2 mt-1 mt-sm-0" (click)="printSession()">Stampa</button>
                 <!-- <button class="btn btn-success ml-2" ngbAutofocus (click)="downloadSession()">Scarica</button> -->
             </div>
         </div>
