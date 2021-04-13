@@ -106,10 +106,10 @@
         <div class="maincontainer__body table-body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2">
             <div class="h-100 w-100 d-flex flex-column align-items-center justify-content-center" *ngIf="userList.length == 0">
                 <img src="assets/icons/misc/alert.svg" style="width:40px; height:auto;">
-                <span class="badge badge-light mt-2" [hidden]="filters.filterUserListType == 'links'">Nessun utente presente nella piattaforma</span>
-                <div class="badge badge-light mt-2" [hidden]="filters.filterUserListType == 'all'">
-                    <h6>Non hai nessun collegamento attivo!</h6>
-                    <h6>Clicca qui sotto per visualizzare gli utenti del sistema e iniziare a collegarti con loro!</h6>
+                <span class="badge badge-light mt-2 white-space-initial" [hidden]="filters.filterUserListType == 'links'">Nessun utente presente nella piattaforma</span>
+                <div class="badge badge-light mt-2 white-space-initial" [hidden]="filters.filterUserListType == 'all'">
+                    <span class="d-block font-size-10">Non hai nessun collegamento attivo!</span>
+                    <span class="d-block font-size-9 mt-2">Clicca qui sotto per visualizzare gli utenti del sistema e iniziare a collegarti con loro!</span>
                 </div>
                 <button class="btn btn-sm btn-outline-info mt-2" [hidden]="filters.filterUserListType == 'all'" (click)="filters.filterUserListType = 'all'; setUserList(null);">Mostra Utenti</button>
             </div>

@@ -462,7 +462,17 @@ $custom-lightgray: rgb(179 179 179 / 15%);
   }
 }
 
+@for $i from 1 through 30 {
+  .font-size-#{$i} {
+    font-size: 0.1rem * $i;
+  }
+}
+
 /* TEXT STYLE */
+.white-space-initial {
+  white-space: initial !important;
+}
+
 .truncate {
   width: 250px;
   white-space: nowrap;

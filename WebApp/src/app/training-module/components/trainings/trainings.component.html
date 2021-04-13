@@ -88,7 +88,9 @@
         <div class="maincontainer__body table-body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2">
             <div class="h-100 w-100 d-flex flex-column align-items-center justify-content-center badge badge-light" *ngIf="trainingList.length == 0 && !bLoading">
                 <img src="assets/icons/misc/alert.svg" style="width:40px; height:auto;">
-                <h4>Nessun allenamento presente nella piattaforma</h4>
+                <div class="badge badge-light mt-2 white-space-initial">
+                    <span class="d-block font-size-10">Nessun allenamento presente nella piattaforma!</span>
+                </div>
             </div>
             <!-- Loader -->
             <div class='h-100 w-100' [hidden]="!bLoading">
