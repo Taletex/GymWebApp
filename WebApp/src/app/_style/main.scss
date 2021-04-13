@@ -532,6 +532,20 @@ $custom-lightgray: rgb(179 179 179 / 15%);
     border-radius: $i * 1px !important;
   }
 }
+@for $i from 0 through 9 {
+  .round-md-#{$i} {
+    @media (min-width: 768px) {
+      border-radius: $i * 1px !important;
+    }
+  }
+}
+@for $i from 0 through 9 {
+  .round-right-md-#{$i} {
+    @media (min-width: 768px) {
+      border-radius: 0 $i * 1px $i * 1px 0 !important;
+    }
+  }
+}
 
 .rounded-right {
   border-radius: 0rem 0.25rem 0.25rem 0rem !important;
@@ -846,10 +860,28 @@ ngb-carousel .picsum-img-wrapper>img {
   }
 }
 
+
+.h5 {
+  font-size: 1.25rem;
+  word-break: break-all;
+  @media (max-width: 767.98px) {
+    font-size: 1rem !important;
+  }
+}
+
 .h4 {
   font-size: 1.5rem;
+  word-break: break-all;
   @media (max-width: 767.98px) {
     font-size: 1.2rem !important;
+  }
+}
+
+.h2 {
+  font-size: 2rem;
+  word-break: break-all;
+  @media (max-width: 767.98px) {
+    font-size: 1.6rem !important;
   }
 }
 

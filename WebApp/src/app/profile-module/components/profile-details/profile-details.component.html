@@ -4,11 +4,11 @@
 
         <div class="maincontainer__header card-header px-0">
 
-            <div class="d-flex align-items-baseline">
-                <h2 class="m-0">{{account.user.name}} {{account.user.surname}}</h2>
+            <div class="d-flex align-items-center">
+                <h4 class="m-0 h4">{{account.user.name}} {{account.user.surname}}</h4>
                 <div class="d-flex input-group w-auto ml-auto">
-                    <div class="input-group-prepend"><span class="input-group-text">ACTIONS</span></div>
-                    <div class="d-flex align-items-center form-control">
+                    <div class="input-group-prepend d-none d-md-inline"><span class="input-group-text">ACTIONS</span></div>
+                    <div class="d-flex align-items-center form-control round-5 round-right-md-5">
                         <div (click)="changeMode(PAGEMODE.READONLY)" class="inverse-image-button"
                             [ngClass]="{'active': pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY}"
                             ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg"
@@ -30,7 +30,7 @@
                     <button class="btn btn-outline-dark w-100" type="button" data-toggle="collapse"
                         data-target="#userInformationContainer" aria-expanded="true"
                         aria-controls="userInformationContainer">
-                        <h5 class="m-0">Informazioni Utente</h5>
+                        <h5 class="m-0 h5">Informazioni Utente</h5>
                     </button>
                 </div>
                 <div class="col-12 form-row py-3 px-0 border round-5 m-0 round-top-0 collapse show " id="userInformationContainer">
@@ -156,7 +156,7 @@
                     <button class="btn btn-outline-dark w-100" type="button" data-toggle="collapse"
                         data-target="#prContainer" aria-expanded="true"
                         aria-controls="prContainer">
-                        <h5 class="m-0">Personal Records</h5>
+                        <h5 class="m-0 h5">Personal Records</h5>
                     </button>
                 </div>
                 <div class="col-12 form-row p-0 border round-5 m-0 round-top-0 collapse" id="prContainer">
@@ -214,9 +214,9 @@
                                             id="public_{{prIndex}}" name="public_{{prIndex}}">
                                     </div>
                                 </div>
-                                <div class="pl-lg-3 pr-0 mt-1 text-right" *ngIf="(pageStatus[PAGES.PROFILES] == PAGEMODE.WRITE)">
+                                <div class="pl-lg-3 pr-0 mt-1 text-right w-100" *ngIf="(pageStatus[PAGES.PROFILES] == PAGEMODE.WRITE)">
                                     <small>Azioni</small>
-                                    <div class="d-flex flex-row flex-lg-column align-items-center justify-content-end justify-content-lg-start ">
+                                    <div class="d-flex flex-row flex-lg-column align-items-center align-items-lg-end justify-content-end">
                                         <div class="image-button" ngbTooltip="Copia personal record" placement="top" (click)="copyPR(prIndex)"><img src="assets/icons/actions/copy.svg" style="width:15px; height:auto;"></div>
                                         <div class="ml-1 image-button" ngbTooltip="Incolla personal record" placement="top" (click)="pastePR(prIndex)"><img src="assets/icons/actions/contract.svg" style="width:15px; height:auto;"></div>
                                         <div class="ml-1 image-button" ngbTooltip="Reset personal record" placement="top" (click)="resetPR(prIndex)"><img src="assets/icons/actions/return.svg" style="width:15px; height:auto;"></div>
@@ -321,7 +321,7 @@
             <div class="row m-0 p-0 mt-3">
                 <div class="col-12 p-0">
                     <button class="btn btn-outline-dark w-100" type="button" data-toggle="collapse" data-target="#accountInformationContainer" aria-expanded="false" aria-controls="accountInformationContainer">
-                        <h5 class="m-0">Informazioni Account</h5>
+                        <h5 class="m-0 h5">Informazioni Account</h5>
                     </button>
                 </div>
                 <div class="col-12 form-row p-3 border round-5 m-0 round-top-0 collapse" id="accountInformationContainer">
