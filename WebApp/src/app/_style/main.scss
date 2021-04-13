@@ -468,6 +468,14 @@ $custom-lightgray: rgb(179 179 179 / 15%);
   }
 }
 
+@for $i from 1 through 30 {
+  .font-size-sm-#{$i} {
+    @media (max-width: 575.98px) { 
+      font-size: 0.1rem * $i;
+    }
+  }
+}
+
 /* TEXT STYLE */
 .white-space-initial {
   white-space: initial !important;
@@ -543,15 +551,21 @@ $custom-lightgray: rgb(179 179 179 / 15%);
   }
 }
 @for $i from 0 through 9 {
+  .round-right-#{$i} {
+    border-radius: 0 $i * 1px $i * 1px 0 !important;
+  }
+}
+
+@for $i from 0 through 9 {
   .round-md-#{$i} {
-    @media (min-width: 768px) {
+    @media (max-width: 767.98px) {
       border-radius: $i * 1px !important;
     }
   }
 }
 @for $i from 0 through 9 {
   .round-right-md-#{$i} {
-    @media (min-width: 768px) {
+    @media (max-width: 767.98px) {
       border-radius: 0 $i * 1px $i * 1px 0 !important;
     }
   }
