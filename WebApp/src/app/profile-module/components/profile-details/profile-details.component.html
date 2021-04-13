@@ -58,7 +58,7 @@
                                 </div>
 
                                 <!-- Date of Birth -->
-                                <div class="col-6 col-lg-3 form-group">
+                                <div class="col-12 col-md-6 col-lg-3 form-group">
                                     <label for="userDoB" class="col-form-label col-form-label-sm text-muted">Data di nascita</label>
                                     <input type="date" formControlName="dateOfBirth" min="01-01-1900" max="{{today}}" class="form-control form-control-sm"
                                         [ngClass]="{'is-invalid': userFormSubmitted && fu.dateOfBirth.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY)}"/>
