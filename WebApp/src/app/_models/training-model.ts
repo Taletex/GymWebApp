@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+
 export class Contacts {
     email: string;
     telephone: string;
@@ -181,6 +183,14 @@ export class Session {
         this.startDate = startDate;
         this.endDate = endDate;
         this.exercises = exercises;
+    }
+
+    copyFromSession(session: Session) {
+        this.name = session.name;
+        this.comment = session.comment;
+        this.startDate = session.startDate;
+        this.endDate = session.endDate;
+        this.exercises = _.cloneDeep(session.exercises);
     }
 }
 

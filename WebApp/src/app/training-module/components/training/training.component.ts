@@ -375,7 +375,10 @@ export class TrainingComponent implements OnInit {
       console.log('ERROR: pushing new series');
     }
   }
+
   resetSeries(exercise: any, index: number) {
+    this.blinkBtn("seriesRow"+index);
+    
     if (exercise && exercise.series != null && index < exercise.series.length) {
       exercise.series[index] = _.cloneDeep(new Series());
     } else {
@@ -392,6 +395,8 @@ export class TrainingComponent implements OnInit {
   }
 
   copySeries(exercise: any, index: number) {
+    this.blinkBtn("seriesRow"+index);
+
     if (exercise && exercise.series != null && index < exercise.series.length) {
       this.copiedSeries = _.cloneDeep(exercise.series[index]);
     } else {
@@ -400,6 +405,8 @@ export class TrainingComponent implements OnInit {
   }
 
   pasteSeries(exercise: any, index: number) {
+    this.blinkBtn("seriesRow"+index);
+
     if (exercise && exercise.series != null && index < exercise.series.length) {
       exercise.series[index] = _.cloneDeep(this.copiedSeries);
     } else {
@@ -408,6 +415,9 @@ export class TrainingComponent implements OnInit {
   }
 
   shiftSeries(exercise: any, index: number, shift: number) {
+    this.blinkBtn("seriesRow"+index);
+    this.blinkBtn("seriesRow"+(index+1));
+
     if (exercise && exercise.series != null && index < exercise.series.length) {
       if((shift==1 && index==(exercise.series.length-1)) || (shift==-1 && index==0)) {
         console.log('ERROR: shifting series of index ' + index);
@@ -488,48 +498,65 @@ export class TrainingComponent implements OnInit {
     event.preventDefault();
   }
 
-  resetSession(event: MouseEvent, week: any, index: number) {
+  resetSession(event: MouseEvent, week: any, index: number, bPrevent: boolean) {
+    this.blinkBtn("sessionNavBtn_"+index);
+
     if (week && week.sessions != null && index < week.sessions.length) {
-      week.sessions[index] = new Session();
+      week.sessions[index].copyFromSession(new Session());
     } else {
       console.log('ERROR: resetting session of index ' + index);
     }
-    event.preventDefault();
-    event.stopImmediatePropagation();
+    if(bPrevent) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
   }
 
-  deleteSession(event: MouseEvent, week: any, index: number, weekIndex: number) {
+  deleteSession(event: MouseEvent, week: any, index: number, weekIndex: number, bPrevent: boolean) {
     if (week && week.sessions != null && index < week.sessions.length) {
       week.sessions.splice(index, 1);
       this.activeSession[weekIndex] = 1;
     } else {
       console.log('ERROR: removing session of index ' + index);
     }
-    event.preventDefault();
-    event.stopImmediatePropagation();
+    if(bPrevent) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
   }
 
-  copySession(event: MouseEvent, week: any, index: number) {
+  copySession(event: MouseEvent, week: any, index: number, bPrevent: boolean) {
+    this.blinkBtn("sessionNavBtn_"+index);
+
     if (week && week.sessions != null && index < week.sessions.length) {
       this.copiedSession = _.cloneDeep(week.sessions[index]);
     } else {
       console.log('ERROR: copying session of index ' + index);
     }
-    event.preventDefault();
-    event.stopImmediatePropagation();
+    if(bPrevent) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
   }
 
-  pasteSession(event: MouseEvent, week: any, index: number) {
+  pasteSession(event: MouseEvent, week: any, index: number, bPrevent: boolean) {
+    this.blinkBtn("sessionNavBtn_"+index);
+
     if (week && week.sessions != null && index < week.sessions.length) {
-      week.sessions[index] = _.cloneDeep(this.copiedSession);
+      week.sessions[index].copyFromSession(this.copiedSession);
     } else {
       console.log('ERROR: pasting session of index ' + index);
     } 
-    event.preventDefault();
-    event.stopImmediatePropagation();
+    if(bPrevent) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
   }
 
-  shiftSession(event: MouseEvent, week: any, index: number, shift: number) {
+  shiftSession(event: MouseEvent, week: any, index: number, shift: number, bPrevent: boolean) {
+    this.blinkBtn("sessionNavBtn_"+index);
+    this.blinkBtn("sessionNavBtn_"+(index+1));
+
     if (week && week.sessions != null && index < week.sessions.length) {
       if((shift==1 && index==(week.sessions.length-1)) || (shift==-1 && index==0)) {
         console.log('ERROR: shifting session of index ' + index);
@@ -539,12 +566,14 @@ export class TrainingComponent implements OnInit {
       }
       
       let currentSession = _.cloneDeep(week.sessions[index]);
-      week.sessions[index] = _.cloneDeep(week.sessions[index+shift]);
-      week.sessions[index+shift] = currentSession;
+      week.sessions[index].copyFromSession(week.sessions[index+shift]);
+      week.sessions[index+shift].copyFromSession(currentSession);
     }
 
-    event.preventDefault();
-    event.stopImmediatePropagation();
+    if(bPrevent) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
   }
 
 
@@ -894,11 +923,13 @@ export class TrainingComponent implements OnInit {
 
     if(navbar.hasClass("closed")) {
       navbar.removeClass("closed").addClass("opened");
+      navbar.show("fast");
       navbarBtn.removeClass("open-btn").addClass("close-btn");
       navbarBtnIcon.removeClass("fa-arrow-circle-down").addClass("fa-arrow-circle-up");
     }
     else {
       navbar.removeClass("opened").addClass("closed");
+      navbar.hide("fast");
       navbarBtn.removeClass("close-btn").addClass("open-btn");
       navbarBtnIcon.removeClass("fa-arrow-circle-up").addClass("fa-arrow-circle-down");
     }

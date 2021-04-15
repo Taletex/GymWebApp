@@ -191,6 +191,12 @@
   border-color: rgba(0, 0, 0, 0.6) !important;
 }
 
+.bottom-right-fixed {
+  position: fixed;
+  right: 32px;
+  bottom: 15px;
+}
+
 .bottom-right-absolute {
   position: absolute;
   right: 15px;
