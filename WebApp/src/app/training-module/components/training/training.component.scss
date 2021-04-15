@@ -7,12 +7,97 @@
 
         .maincontainer__header {
             border: 0px !important;
+
+            .header-content {
+                .content-actions {
+                    .actions-title {
+                        @media (max-width: 1199.98px) { 
+                            display: flex;
+                            align-items: center;
+                            padding: 0.375rem 0.75rem;
+                            margin-bottom: 0;
+                            font-size: 1rem;
+                            font-weight: 400;
+                            line-height: 1.5;
+                            color: #495057;
+                            text-align: center;
+                            white-space: nowrap;
+                            background-color: #e9ecef;
+                            border: 1px solid #ced4da;
+                            border-radius: 0.25rem 0 0 0.25rem;
+                        }
+                    }  
+                    
+                    .actions-content {
+                        @media (max-width: 1199.98px) { 
+                            display: block;
+                            width: 100%;
+                            height: calc(1.5em + 0.75rem + 2px);
+                            padding: 0.375rem 0.75rem;
+                            font-size: 1rem;
+                            font-weight: 400;
+                            line-height: 1.5;
+                            color: #495057;
+                            background-color: #fff;
+                            background-clip: padding-box;
+                            border: 1px solid #ced4da;
+                            border-radius: 0 0.25rem 0.25rem 0;
+                            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+                        }
+
+                        @media (max-width: 767.98px) { 
+                            border-radius: 0.25rem;
+                        }
+
+                    }
+                }
+            }
         } 
 
         .maincontainer__body {
             overflow: auto;
             height: calc(100vh - 175px);
             border: 1px solid rgba(0, 0, 0, 0.125) !important;
+
+            .toggle-week-navbar-btn {
+                position: absolute;
+                left: -46px;
+                top: 30vh;
+                z-index: 11;
+                font-size: .9rem;
+                background-color: #d5d5d5 !important;
+                transform: rotate(-90deg);
+                box-shadow: -1px 1px 10px rgb(0 0 0 / 18%);
+
+                &.open-btn {
+                    left: -46px;
+                }
+                &.close-btn {
+                    left: 25px;
+                }
+            }
+
+            .week-navbar {
+                @media (max-width: 1199.98px) {
+                    position: absolute !important;
+                    z-index: 10;
+                    background-color: white;
+                    width: 0px;
+                    display: none;
+                    transition: all 1s;
+
+                    &.opened {
+                        display: initial;
+                        width: auto;
+                        transition: all 1s;
+                    }
+                    &.closed {
+                        display: none;
+                        width: 0px !important;
+                        transition: all 1s;
+                    }
+                }
+            }
 
             .week-tab {
                 .session-tab {

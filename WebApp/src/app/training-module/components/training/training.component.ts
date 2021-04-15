@@ -165,7 +165,6 @@ export class TrainingComponent implements OnInit {
 
     
   }
-
   
   ngOnInit() {
     this.dropdownSettings = {
@@ -361,6 +360,14 @@ export class TrainingComponent implements OnInit {
   }
 
   /* SERIES FUNCTIONS */
+  blinkBtn(btnId: string) {
+    $("#"+btnId).removeClass("whiteFlashBlink");
+    $("#"+btnId).addClass("whiteFlashBlink");
+    setTimeout(()=>{
+      $("#"+btnId).removeClass("whiteFlashBlink");
+    }, 1000)
+  }
+
   pushSeries(exercise: any) {
     if (exercise && exercise.series != null) {
       exercise.series.push(_.cloneDeep(new Series()));
@@ -547,48 +554,70 @@ export class TrainingComponent implements OnInit {
     event.preventDefault();
   }
 
-  resetWeek(event: MouseEvent, index: number) {
+  resetWeek(event: MouseEvent, index: number, bPrevent: boolean) {
+    this.blinkBtn("weekNavBtn_"+index);
+
     if (this.training.weeks != null && index < this.training.weeks.length) {
-      this.training.weeks[index] = _.cloneDeep(new Week());
+      let newWeek = new Week();
+      this.training.weeks[index].sessions = _.cloneDeep(newWeek.sessions);
+      this.training.weeks[index].comment = newWeek.comment;
     } else {
       console.log('ERROR: resetting week of index ' + index);
     }
-    event.preventDefault();
-    event.stopImmediatePropagation();
+    
+    if(bPrevent) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
   }
 
-  deleteWeek(event: MouseEvent, index: number) {
+  deleteWeek(event: MouseEvent, index: number, bPrevent: boolean) {
     if (this.training.weeks != null && index < this.training.weeks.length) {
       this.training.weeks.splice(index, 1);
       this.activeWeek = 1;
     } else {
       console.log('ERROR: removing week of index ' + index);
     }
-    event.preventDefault();
-    event.stopImmediatePropagation();
+    if(bPrevent) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
   }
 
-  copyWeek(event: MouseEvent, index: number) {
+  copyWeek(event: MouseEvent, index: number, bPrevent: boolean) {
+    this.blinkBtn("weekNavBtn_"+index);
+
     if (this.training.weeks != null && index < this.training.weeks.length) {
       this.copiedWeek = _.cloneDeep(this.training.weeks[index]);
     } else {
       console.log('ERROR: copying week of index ' + index);
     }
-    event.preventDefault();
-    event.stopImmediatePropagation();
+
+    if(bPrevent) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
   }
 
-  pasteWeek(event: MouseEvent, index: number) {
+  pasteWeek(event: MouseEvent, index: number, bPrevent: boolean) {
+    this.blinkBtn("weekNavBtn_"+index);
+
     if (this.training.weeks != null && index < this.training.weeks.length) {
-      this.training.weeks[index] = _.cloneDeep(this.copiedWeek);
+      this.training.weeks[index].sessions = _.cloneDeep(this.copiedWeek.sessions);
+      this.training.weeks[index].comment = this.copiedWeek.comment;
     } else {
       console.log('ERROR: pasting week of index ' + index);
     } 
-    event.preventDefault();
-    event.stopImmediatePropagation();
+    if(bPrevent) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
   }
 
-  shiftWeek(event: MouseEvent,index: number, shift: number) {
+  shiftWeek(event: MouseEvent,index: number, shift: number, bPrevent: boolean) {
+    this.blinkBtn("weekNavBtn_"+index);
+    this.blinkBtn("weekNavBtn_"+(index+shift));
+
     if (this.training.weeks != null && index < this.training.weeks.length) {
       if((shift==1 && index==(this.training.weeks.length-1)) || (shift==-1 && index==0)) {
         console.log('ERROR: shifting week of index ' + index);
@@ -598,12 +627,16 @@ export class TrainingComponent implements OnInit {
       }
       
       let currentWeek = _.cloneDeep(this.training.weeks[index]);
-      this.training.weeks[index] = _.cloneDeep(this.training.weeks[index+shift]);
-      this.training.weeks[index+shift] = currentWeek;
+      this.training.weeks[index].sessions = _.cloneDeep(this.training.weeks[index+shift].sessions);
+      this.training.weeks[index].comment = this.training.weeks[index+shift].comment;
+      this.training.weeks[index+shift].sessions = _.cloneDeep(currentWeek.sessions);
+      this.training.weeks[index+shift].comment = currentWeek.comment;
     }
 
-    event.preventDefault();
-    event.stopImmediatePropagation();
+    if(bPrevent) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
   }
 
 
@@ -851,6 +884,23 @@ export class TrainingComponent implements OnInit {
           this.toastr.error("Si è verificato un errore durante l'invio delle email agli atleti dell'allenamento. Verifica che gli utenti destinatari abbiano configurato una email.");
           console.log("sendTrainingEmails error", error.error.message);
         });
+    }
+  }
+
+  toggleWeekNavbar(){
+    let navbar = $(".week-navbar");
+    let navbarBtn = $("#toggle-week-navbar-btn");
+    let navbarBtnIcon = $("#toggle-week-navbar-btn-icon");
+
+    if(navbar.hasClass("closed")) {
+      navbar.removeClass("closed").addClass("opened");
+      navbarBtn.removeClass("open-btn").addClass("close-btn");
+      navbarBtnIcon.removeClass("fa-arrow-circle-down").addClass("fa-arrow-circle-up");
+    }
+    else {
+      navbar.removeClass("opened").addClass("closed");
+      navbarBtn.removeClass("close-btn").addClass("open-btn");
+      navbarBtnIcon.removeClass("fa-arrow-circle-up").addClass("fa-arrow-circle-down");
     }
   }
 }

@@ -1,79 +1,97 @@
 <div class="main__training row m-3" [ngClass]="{'w-100 h-100': !bUserAuthorized}">
     <div class="training__maincontainer card col-12 p-0" *ngIf="bUserAuthorized">
-        <div class="maincontainer__header card-header py-2 px-0">
-            <div class="d-flex align-items-baseline">
-                <h5 class="m-0 d-flex align-items-center text-uppercase">
-                    ALLENAMENTO {{training.type}} ({{training.startDate | date:'dd/MM/yyyy'}} - {{training.endDate | date:'dd/MM/yyyy'}})
-                    <span class="badge badge-info ml-2 text-uppercase mt-1" [ngClass]="{'badge-info': training.state == TRAINING_STATES.NEW, 'badge-primary': training.state == TRAINING_STATES.STARTED, 'badge-success': training.state == TRAINING_STATES.COMPLETED, 'badge-danger': training.state == TRAINING_STATES.ABORTED, 'badge-warning': training.state == TRAINING_STATES.PARTIAL_COMPLETED}">{{training.state}}</span>
-                    <img [hidden]="!bDirty" src="assets/icons/misc/alert.svg" style="width:24px; height:auto;" class="ml-2 mt-1" ngbTooltip="Modifiche non salvate" placement="top">
-                </h5>
-                <div class="d-flex input-group w-auto ml-auto">
-                    <div class="input-group-prepend"><span class="input-group-text">ACTIONS</span></div>
-                    <div class="d-flex align-items-center form-control">
-                        <div (click)="changeMode(PAGEMODE.READONLY)" class="inverse-image-button" [ngClass]="{'active': pageStatus[PAGES.TRAININGS] == PAGEMODE.READONLY}"  ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
-                        <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="changeMode(PAGEMODE.WRITE)" class="ml-2 inverse-image-button" [ngClass]="{'active': pageStatus[PAGES.TRAININGS] == PAGEMODE.WRITE}"  ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></div>
-                        <div (click)="changeMode(PAGEMODE.STATS)" class="ml-2 inverse-image-button" [ngClass]="{'active': pageStatus[PAGES.TRAININGS] == PAGEMODE.STATS}"  ngbTooltip="Statistiche" placement="left"><img src="assets/icons/actions/graph.svg" style="width:20px; height:auto;"></div>
-                        <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="deleteTraining()" class="ml-2 inverse-image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
+        <div class="maincontainer__header card-header pt-0 pb-2 px-0">
+            <div class="header-content d-flex flex-column-reverse flex-xl-row justify-content-center">
+                <!-- TRAINING INFOS -->
+                <div class="d-flex flex-column mt-2 mt-xl-0">
+                    <div class="d-flex flex-column flex-md-row">
+                        <h5 class="h5 d-flex align-items-center text-uppercase m-0 mr-2">
+                            ALLENAMENTO {{training.type}}
+                        </h5>
+                        <h5 class="h6 d-flex align-items-center m-0">
+                            <span class="d-none d-md-inline">({{training.startDate | date:'dd/MM/yyyy'}} - {{training.endDate | date:'dd/MM/yyyy'}})</span>
+                            <span class="d-inline d-md-none">Da {{training.startDate | date:'dd/MM/yyyy'}} a {{training.endDate | date:'dd/MM/yyyy'}})</span>
+                            <span class="badge badge-info ml-2 text-uppercase" [ngClass]="{'badge-info': training.state == TRAINING_STATES.NEW, 'badge-primary': training.state == TRAINING_STATES.STARTED, 'badge-success': training.state == TRAINING_STATES.COMPLETED, 'badge-danger': training.state == TRAINING_STATES.ABORTED, 'badge-warning': training.state == TRAINING_STATES.PARTIAL_COMPLETED}">{{training.state}}</span>
+                            <img [hidden]="!bDirty" src="assets/icons/misc/alert.svg" class="ml-2 standard-icon-md" ngbTooltip="Modifiche non salvate" placement="top">
+                        </h5>
                     </div>
+                    <h6 class="h6 truncate-fullwidth pb-1 m-0">
+                        <span *ngIf="account.user._id == training.author._id">Atleti 
+                            <span *ngFor="let athlete of training.athletes; last as lastAthlete">
+                                {{athlete.name}} {{athlete.surname}} ({{athlete.dateOfBirth | date:'dd/MM/yyyy'}} &bull; {{athlete.bodyWeight}} kg)<span [hidden]="lastAthlete">,</span>
+                            </span>
+                        </span>
+                        <span *ngIf="account.user._id != training.author._id">Atleta {{account.user.name}} {{account.user.surname}} ({{account.user.dateOfBirth | date:'dd/MM/yyyy'}} &bull; {{account.user.bodyWeight}} kg)</span>
+                    </h6>
                 </div>
-                <div class="d-flex input-group w-auto ml-2" *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)">
-                    <div class="d-flex align-items-center form-control">
-                        <div (click)="exportTraining()" class="image-button" ngbTooltip="Esporta Allenamento" placement="left"><img src="assets/icons/actions/export.svg" style="width:20px; height:auto;"></div>
-                        <div class="image-button ml-2" ngbTooltip="Importa Allenamento" placement="left">
-                            <label for="importTraining" class="m-0 p-0 cursor-pointer"><img src="assets/icons/actions/import.svg" style="width:20px; height:auto;"></label>
-                            <input type="file" [(ngModel)]="importedTraining" id="importTraining" name="importTraining" accept="application/json" style="opacity:0;" [hidden]="true" (change)="importTraining($event)">
-                        </div>
+                <!-- ACTIONS -->
+                <div class="d-flex ml-xl-auto content-actions">
+                    <div class="d-none d-md-flex d-xl-none align-items-center actions-title">
+                        AZIONI
                     </div>
-                </div>
-                <div class="d-flex input-group w-auto ml-2 overflow-visible" *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)">
-                    <div class="d-flex align-items-center form-control dropdown">
-                        <div class="opacity-3" *ngIf="training.oldVersions.length==0 && !bDraft">
-                            <img src="assets/icons/actions/history.svg" style="width:20px; height:auto;">
+                    <div class="d-flex w-100 align-items-center actions-content">
+                        <div class="d-flex input-group flex-nowrap w-auto">
+                            <div class="input-group-prepend d-none d-xl-inline">
+                                <span class="input-group-text-min-xl">AZIONI</span>
+                            </div>
+                            <div class="d-flex align-items-center form-control-min-xl round-right-5 round-md-5">
+                                <div (click)="changeMode(PAGEMODE.READONLY)" class="inverse-image-button d-flex align-items-center justify-content-center" [ngClass]="{'active': pageStatus[PAGES.TRAININGS] == PAGEMODE.READONLY}"  ngbTooltip="Visualizza" placement="top"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
+                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="changeMode(PAGEMODE.WRITE)" class="ml-2 inverse-image-button d-flex align-items-center justify-content-center" [ngClass]="{'active': pageStatus[PAGES.TRAININGS] == PAGEMODE.WRITE}"  ngbTooltip="Modifica" placement="top"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></div>
+                                <div (click)="changeMode(PAGEMODE.STATS)" class="ml-2 inverse-image-button d-flex align-items-center justify-content-center" [ngClass]="{'active': pageStatus[PAGES.TRAININGS] == PAGEMODE.STATS}"  ngbTooltip="Statistiche" placement="top"><img src="assets/icons/actions/graph.svg" style="width:20px; height:auto;"></div>
+                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="deleteTraining()" class="ml-2 inverse-image-button d-flex align-items-center justify-content-center" ngbTooltip="Elimina" placement="top"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
+                            </div>
                         </div>
-                        
-                        <div class="dropdown-toggle image-button" type="button" id="versioningDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" 
-                             aria-expanded="false" ngbTooltip="Ripristina versione precedente" placement="left" *ngIf="training.oldVersions.length > 0 || bDraft">
-                            <img src="assets/icons/actions/history.svg" style="width:20px; height:auto;">
+                        <div class="d-flex input-group w-auto ml-2" *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)">
+                            <div class="d-flex align-items-center form-control-min-xl">
+                                <div (click)="exportTraining()" class="image-button" ngbTooltip="Esporta Allenamento" placement="left"><img src="assets/icons/actions/export.svg" style="width:20px; height:auto;"></div>
+                                <div class="image-button ml-2" ngbTooltip="Importa Allenamento" placement="left">
+                                    <label for="importTraining" class="d-flex align-items-center justify-content-center m-0 p-0 cursor-pointer"><img src="assets/icons/actions/import.svg" style="width:20px; height:auto;"></label>
+                                    <input type="file" [(ngModel)]="importedTraining" id="importTraining" name="importTraining" accept="application/json" style="opacity:0;" [hidden]="true" (change)="importTraining($event)">
+                                </div>
+                            </div>
                         </div>
-                        <div class="dropdown-menu history-dropdownmenu-botton" aria-labelledby="versioningDropdownMenuButton" *ngIf="training.oldVersions.length > 0 || bDraft">
-                            <a class="dropdown-item cursor-pointer" *ngFor="let oldVer of training.oldVersions; index as oldVerIndex" (click)="openReplaceTrainingConfirmationModal(oldVer)">{{oldVerIndex+1}}) {{oldVer.updatedAt | date:'HH:mm:ss - dd/MM/yyyy'}}</a>
-                            <hr class="my-2" [hidden]="!bDraft || training.oldVersions.length == 0">
-                            <a class="dropdown-item cursor-pointer" *ngIf="bDraft" (click)="openReplaceTrainingConfirmationModal(draftTraining)">
-                                <span class="d-block">Ultima bozza non salvata</span>
-                                <span>{{draftTraining.updatedAt | date:'HH:mm:ss - dd/MM/yyyy'}}</span>
-                            </a>
+                        <div class="d-flex input-group w-auto ml-2 overflow-visible" *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)">
+                            <div class="d-flex align-items-center form-control-min-xl dropdown">
+                                <div class="opacity-3" *ngIf="training.oldVersions.length==0 && !bDraft">
+                                    <img src="assets/icons/actions/history.svg" style="width:20px; height:auto;">
+                                </div>
+                                
+                                <div class="dropdown-toggle image-button" type="button" id="versioningDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ngbTooltip="Ripristina versione precedente" placement="left" *ngIf="training.oldVersions.length > 0 || bDraft">
+                                    <img src="assets/icons/actions/history.svg" style="width:20px; height:auto;">
+                                </div>
+                                <div class="dropdown-menu history-dropdownmenu-botton" aria-labelledby="versioningDropdownMenuButton" *ngIf="training.oldVersions.length > 0 || bDraft">
+                                    <a class="dropdown-item cursor-pointer" *ngFor="let oldVer of training.oldVersions; index as oldVerIndex" (click)="openReplaceTrainingConfirmationModal(oldVer)">{{oldVerIndex+1}}) {{oldVer.updatedAt | date:'HH:mm:ss - dd/MM/yyyy'}}</a>
+                                    <hr class="my-2" [hidden]="!bDraft || training.oldVersions.length == 0">
+                                    <a class="dropdown-item cursor-pointer" *ngIf="bDraft" (click)="openReplaceTrainingConfirmationModal(draftTraining)">
+                                        <span class="d-block">Ultima bozza non salvata</span>
+                                        <span>{{draftTraining.updatedAt | date:'HH:mm:ss - dd/MM/yyyy'}}</span>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="d-flex input-group w-auto ml-2 overflow-visible" *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)">
-                    <div class="d-flex align-items-center form-control dropdown" [ngClass]="{'dropdown-no-arrow': !this.canNotificationBeSent()}">
-                        <div class="opacity-3" *ngIf="training.athletes.length == 0">
-                            <img src="assets/icons/actions/notification.svg" style="width:20px; height:auto;">
-                        </div>
-
-                        <div *ngIf="training.athletes.length > 0" id="messageDropdownMenuButton" class="dropdown-toggle image-button" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" 
-                            [ngClass]="{'disabled cursor-not-allowed opacity-3': !this.canNotificationBeSent()}" ngbTooltip="{{this.canNotificationBeSent() ? 'Notifica Atleti' : 'Per poter inviare una notifica devi attendere 30s da quando hai inviato la precedente!'}}" placement="left">
-                            <img src="assets/icons/actions/notification.svg" style="width:20px; height:auto;">
-                            <small *ngIf="!this.canNotificationBeSent()">{{timeLeft}}</small>
-                        </div>
-                        <div class="dropdown-menu history-dropdownmenu-botton" aria-labelledby="messageDropdownMenuButton" *ngIf="training.athletes.length > 0">
-                            <a class="dropdown-item cursor-pointer" (click)="sendNotifyVia(NOTIFY_MEDIUM_TYPE.MYTRAININGPLATFORM)">Via MyTrainingPlatform</a>
-                            <a class="dropdown-item cursor-pointer" (click)="sendNotifyVia(NOTIFY_MEDIUM_TYPE.EMAIL)">Via E-mail</a>
-                            <a class="dropdown-item cursor-pointer" (click)="sendNotifyVia(NOTIFY_MEDIUM_TYPE.TELEGRAM)">Via Telegram</a>
+                        <div class="d-flex input-group w-auto ml-2 overflow-visible" *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)">
+                            <div class="d-flex align-items-center form-control-min-xl dropdown" [ngClass]="{'dropdown-no-arrow': !this.canNotificationBeSent()}">
+                                <div class="opacity-3" *ngIf="training.athletes.length == 0">
+                                    <img src="assets/icons/actions/notification.svg" style="width:20px; height:auto;">
+                                </div>
+        
+                                <div *ngIf="training.athletes.length > 0" id="messageDropdownMenuButton" class="dropdown-toggle image-button" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" 
+                                    [ngClass]="{'disabled cursor-not-allowed opacity-3': !this.canNotificationBeSent()}" ngbTooltip="{{this.canNotificationBeSent() ? 'Notifica Atleti' : 'Per poter inviare una notifica devi attendere 30s da quando hai inviato la precedente!'}}" placement="left">
+                                    <img src="assets/icons/actions/notification.svg" style="width:20px; height:auto;">
+                                    <small *ngIf="!this.canNotificationBeSent()">{{timeLeft}}</small>
+                                </div>
+                                <div class="dropdown-menu history-dropdownmenu-botton" aria-labelledby="messageDropdownMenuButton" *ngIf="training.athletes.length > 0">
+                                    <a class="dropdown-item cursor-pointer" (click)="sendNotifyVia(NOTIFY_MEDIUM_TYPE.MYTRAININGPLATFORM)">Via MyTrainingPlatform</a>
+                                    <a class="dropdown-item cursor-pointer" (click)="sendNotifyVia(NOTIFY_MEDIUM_TYPE.EMAIL)">Via E-mail</a>
+                                    <a class="dropdown-item cursor-pointer" (click)="sendNotifyVia(NOTIFY_MEDIUM_TYPE.TELEGRAM)">Via Telegram</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <h6 class="m-0 truncate-fullwidth pb-1">
-                <span *ngIf="account.user._id == training.author._id">Atleti 
-                    <span *ngFor="let athlete of training.athletes; last as lastAthlete">
-                        {{athlete.name}} {{athlete.surname}} ({{athlete.dateOfBirth | date:'dd/MM/yyyy'}} &bull; {{athlete.bodyWeight}} kg)<span [hidden]="lastAthlete">,</span>
-                    </span>
-                </span>
-                <span *ngIf="account.user._id != training.author._id">Atleta {{account.user.name}} {{account.user.surname}} ({{account.user.dateOfBirth | date:'dd/MM/yyyy'}} &bull; {{account.user.bodyWeight}} kg)</span>
-            </h6>
         </div>
-        <div class="maincontainer__body card-body p-2">
+        <div class="maincontainer__body position-relative card-body h-vh-fixed p-2 font-size-sm-7 font-size-md-8">
 
             <!-- READ ONLY MODE CONTENT -->
             <div class="row m-0" *ngIf="pageStatus[PAGES.TRAININGS] == PAGEMODE.READONLY && !bLoading">
@@ -144,32 +162,22 @@
 
             <!-- WRITE MODE CONTENT -->
             <form class="d-flex" *ngIf="pageStatus[PAGES.TRAININGS] == PAGEMODE.WRITE && !bLoading">
-                <div class="dropdown position-absolute" style="right: .5rem;">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="optionsDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Opzioni
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="optionsDropdownMenuButton">
-                        <a class="dropdown-item cursor-pointer">
-                            <button (click)="options.format.seriesFormat = 'seriesxrep'" class="btn btn-sm btn-outline-secondary">Serie x Rep</button>
-                            <button (click)="options.format.seriesFormat = 'repxseries'" class="btn btn-sm btn-outline-secondary ml-2">Rep x Series</button>
-                        </a>
-                    </div>
-                </div>
-
+                
+                <div (click)="toggleWeekNavbar()" id="toggle-week-navbar-btn" class="d-block d-xl-none toggle-week-navbar-btn bg-custom-lightgray px-2 border"><span>SETTIMANE</span><span id="toggle-week-navbar-btn-icon" class="toggle-week-navbar-btn-icon fa fa-arrow-circle-down ml-2"></span></div>
+                
                 <!-- WEEKS -->
-                <ul ngbNav #nav="ngbNav" [(activeId)]="activeWeek" class="nav-pills mt-2 mr-2 nav flex-column border border-left-0 border-top-0 border-bottom-0" orientation="vertical">
+                <ul ngbNav #nav="ngbNav" [(activeId)]="activeWeek" class="nav-pills week-navbar mt-2 mr-2 nav flex-column border-right closed" orientation="vertical">
                     <li ngbNavItem="0">
-                        <a ngbNavLink class="d-flex">INFO&nbsp;<img [hidden]="activeWeek != 0" src="assets/icons/actions/info-light.svg" style="width:15px; height:auto;"><img [hidden]="activeWeek == 0" src="assets/icons/actions/info-dark.svg" style="width:15px; height:auto;"></a>
+                        <a ngbNavLink class="d-flex"><span class="d-none d-xl-inline">INFO&nbsp;</span><img [hidden]="activeWeek != 0" src="assets/icons/actions/info-light.svg" style="width:15px; height:auto;"><img [hidden]="activeWeek == 0" src="assets/icons/actions/info-dark.svg" style="width:15px; height:auto;"></a>
                         <ng-template ngbNavContent class="w-100">
                             <div class="form-row m-0">
-                                <div class="col-12 form-group">Allenamento creato da {{training.author.name}} {{training.author.surname}} il {{training.creationDate | date:'dd/MM/yyyy'}}</div>
-                                <div class="col-2 form-group">
+                                <div class="col-12 col-md-6 col-xl-3 form-group">
                                     <label for="trainingState" class="col-form-label col-form-label-sm text-muted">Stato</label>
                                     <select [(ngModel)]="training.state" class="form-control form-control-sm cursor-pointer" id="trainingState" name="trainingState">
                                         <option *ngFor="let state of TRAINING_STATES | keyvalue" [value]="state.value" class="text-capitalize">{{state.value}}</option>
                                     </select>
                                 </div>
-                                <div class="col-2 form-group">
+                                <div class="col-12 col-md-6 col-xl-3 form-group">
                                     <label for="trainingType" class="col-form-label col-form-label-sm text-muted">Disciplina</label>
                                     <select [(ngModel)]="training.type" class="form-control form-control-sm cursor-pointer" id="trainingType" name="trainingType"
                                         *ngIf="(training.type==TRAINING_TYPES.POWERLIFTING || training.type==TRAINING_TYPES.WEIGHTLIFTING || training.type==TRAINING_TYPES.CROSSFIT || training.type==TRAINING_TYPES.BODYBUILDING || training.type==TRAINING_TYPES.SALA)">
@@ -180,7 +188,17 @@
                                         <div (click)="training.type=TRAINING_TYPES.POWERLIFTING" style="position:absolute; right: 3px; top: 0px;">&times;</div>
                                     </div>
                                 </div>
-                                <div class="col-4 form-group">
+                                <div class="col-12 col-md-6 col-xl-3 form-group">
+                                    <label for="trainingStartDate" class="col-form-label col-form-label-sm text-muted">Data inizio</label>
+                                    <input type="date"  [ngModel] ="training.startDate | date:'yyyy-MM-dd'" (ngModelChange)="training.startDate = $event" class="form-control form-control-sm"
+                                        id="trainingStartDate" name="trainingStartDate">
+                                </div>
+                                <div class="col-12 col-md-6 col-xl-3 form-group">
+                                    <label for="trainingEndDate" class="col-form-label col-form-label-sm text-muted">Data fine</label>
+                                    <input type="date" [ngModel] ="training.endDate | date:'yyyy-MM-dd'" (ngModelChange)="training.endDate = $event" class="form-control form-control-sm"
+                                        id="trainingEndDate" name="trainingEndDate">
+                                </div>
+                                <div class="col-12 form-group">
                                     <label for="newTrainingAthletes"
                                         class="col-form-label col-form-label-sm text-muted">Atleti</label>
                                     <ng-multiselect-dropdown 
@@ -206,37 +224,50 @@
                                         </ng-template>
                                     </ng-multiselect-dropdown>
                                 </div>
-                                <div class="col-2 form-group">
-                                    <label for="trainingStartDate" class="col-form-label col-form-label-sm text-muted">Data inizio</label>
-                                    <input type="date"  [ngModel] ="training.startDate | date:'yyyy-MM-dd'" (ngModelChange)="training.startDate = $event" class="form-control form-control-sm"
-                                        id="trainingStartDate" name="trainingStartDate">
-                                </div>
-                                <div class="col-2 form-group">
-                                    <label for="trainingEndDate" class="col-form-label col-form-label-sm text-muted">Data fine</label>
-                                    <input type="date" [ngModel] ="training.endDate | date:'yyyy-MM-dd'" (ngModelChange)="training.endDate = $event" class="form-control form-control-sm"
-                                        id="trainingEndDate" name="trainingEndDate">
-                                </div>
                                 <div class="col-12 form-group">
                                     <label for="trainingcomment" class="col-form-label col-form-label-sm text-muted">Commento</label>
                                     <textarea [(ngModel)]="training.comment" class="form-control form-control-sm"
                                         id="trainingcomment" name="trainingcomment" placeholder="Commento..."></textarea>
                                 </div>
+                                <div class="col-12 form-group">Allenamento creato da {{training.author.name}} {{training.author.surname}} il {{training.creationDate | date:'dd/MM/yyyy'}}</div>
                             </div>
                         </ng-template>  
                     </li>
                     <li *ngFor="let week of training.weeks; index as weekIndex; first as bFirstWeek; last as bLastWeek" [ngbNavItem]="weekIndex+1">
-                        <a ngbNavLink class="d-flex">
-                            <span>WEEK&nbsp;{{weekIndex+1}}</span>
-                            <span class="ml-2 image-button" ngbTooltip="Copia Settimana" placement="top" (click)="copyWeek($event, weekIndex)"><img [hidden]="activeWeek != weekIndex+1" src="assets/icons/actions/copy-light.svg" style="width:15px; height:auto;"><img [hidden]="activeWeek == weekIndex+1" src="assets/icons/actions/copy.svg" style="width:15px; height:auto;"></span>
-                            <span class="ml-1 image-button" ngbTooltip="Incolla Settimana" placement="top" (click)="pasteWeek($event, weekIndex)"><img [hidden]="activeWeek != weekIndex+1" src="assets/icons/actions/contract-light.svg" style="width:15px; height:auto;"><img [hidden]="activeWeek == weekIndex+1" src="assets/icons/actions/contract.svg" style="width:15px; height:auto;"></span>
-                            <span class="ml-1 image-button" ngbTooltip="Reset Settimana" placement="top" (click)="resetWeek($event, weekIndex)"><img [hidden]="activeWeek != weekIndex+1" src="assets/icons/actions/return-light.svg" style="width:15px; height:auto;"><img [hidden]="activeWeek == weekIndex+1" src="assets/icons/actions/return.svg" style="width:15px; height:auto;"></span>
-                            <span class="ml-1 image-button" ngbTooltip="Elimina Settimana" placement="top" (click)="deleteWeek($event, weekIndex)" [hidden]="training.weeks.length == 1"><img [hidden]="activeWeek != weekIndex+1" src="assets/icons/actions/garbage-can-light.svg" style="width:15px; height:auto;"><img [hidden]="activeWeek == weekIndex+1" src="assets/icons/actions/garbage-can.svg" style="width:15px; height:auto;"></span>
-                            <span class="ml-1 image-button" ngbTooltip="Sposta Settimana su" placement="top" (click)="shiftWeek($event, weekIndex, -1)" [hidden]="(training.weeks.length == 1 || bFirstWeek)"><img src="assets/icons/actions/arrow-up.svg" style="width:15px; height:auto;"></span>
-                            <span class="ml-1 image-button" ngbTooltip="Sposta Settimana giù" placement="top" (click)="shiftWeek($event, weekIndex, 1)" [hidden]="(training.weeks.length == 1 || bLastWeek)"><img src="assets/icons/actions/arrow-down.svg" style="width:15px; height:auto;"></span>
+                        <!-- Week left navbar button -->
+                        <a ngbNavLink>
+                            <div id="weekNavBtn_{{weekIndex}}" class="d-flex">
+                                <div>
+                                    <span class="d-none d-xl-inline">SETTIMANA&nbsp;</span>
+                                    <span class="d-inline d-xl-none">S</span>
+                                    <span>{{weekIndex+1}}</span>
+                                </div>
+                                <div class="d-none d-xl-flex ml-xl-2">
+                                    <span class="image-button" ngbTooltip="Copia Settimana" placement="top" (click)="copyWeek($event, weekIndex, true)"><img [hidden]="activeWeek != weekIndex+1" src="assets/icons/actions/copy-light.svg" style="width:15px; height:auto;"><img [hidden]="activeWeek == weekIndex+1" src="assets/icons/actions/copy.svg" style="width:15px; height:auto;"></span>
+                                    <span class="ml-1 image-button" ngbTooltip="Incolla Settimana" placement="top" (click)="pasteWeek($event, weekIndex, true)"><img [hidden]="activeWeek != weekIndex+1" src="assets/icons/actions/contract-light.svg" style="width:15px; height:auto;"><img [hidden]="activeWeek == weekIndex+1" src="assets/icons/actions/contract.svg" style="width:15px; height:auto;"></span>
+                                    <span class="ml-1 image-button" ngbTooltip="Reset Settimana" placement="top" (click)="resetWeek($event, weekIndex, true)"><img [hidden]="activeWeek != weekIndex+1" src="assets/icons/actions/return-light.svg" style="width:15px; height:auto;"><img [hidden]="activeWeek == weekIndex+1" src="assets/icons/actions/return.svg" style="width:15px; height:auto;"></span>
+                                    <span class="ml-1 image-button" ngbTooltip="Elimina Settimana" placement="top" (click)="deleteWeek($event, weekIndex, true)" [hidden]="training.weeks.length == 1"><img [hidden]="activeWeek != weekIndex+1" src="assets/icons/actions/garbage-can-light.svg" style="width:15px; height:auto;"><img [hidden]="activeWeek == weekIndex+1" src="assets/icons/actions/garbage-can.svg" style="width:15px; height:auto;"></span>
+                                    <span class="ml-1 image-button" ngbTooltip="Sposta Settimana su" placement="top" (click)="shiftWeek($event, weekIndex, -1, true)" [hidden]="(training.weeks.length == 1 || bFirstWeek)"><span class="fa fa-arrow-circle-up" [ngClass]="{'text-dark': activeWeek != weekIndex+1}"></span></span>
+                                    <span class="ml-1 image-button" ngbTooltip="Sposta Settimana giù" placement="top" (click)="shiftWeek($event, weekIndex, 1, true)" [hidden]="(training.weeks.length == 1 || bLastWeek)"><span class="fa fa-arrow-circle-down" [ngClass]="{'text-dark': activeWeek != weekIndex+1}"></span></span>
+                                </div>
+                                <div class="dropdown d-xl-none d-flex align-items-center ml-2">
+                                    <div class="dropdown-toggle image-button h-100" type="button" id="dropdownMenuButtonWeek{{weekIndex}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      <span class="fa fa-bars"></span>
+                                    </div>
+                                    <div class="dropdown-menu py-1" aria-labelledby="dropdownMenuButtonWeek{{weekIndex}}">
+                                        <div class="px-2 py-1 d-flex font-size-8" (click)="copyWeek($event, weekIndex, false)"><span class="image-button"><img src="assets/icons/actions/copy.svg" style="width:15px; height:auto;"></span> <span class="ml-2">Copia</span></div>
+                                        <div class="px-2 py-1 d-flex font-size-8" (click)="pasteWeek($event, weekIndex, false)"><span class="image-button"><img src="assets/icons/actions/contract.svg" style="width:15px; height:auto;"></span> <span class="ml-2">Incolla</span></div>
+                                        <div class="px-2 py-1 d-flex font-size-8" (click)="resetWeek($event, weekIndex, false)"><span class="image-button"><img src="assets/icons/actions/return.svg" style="width:15px; height:auto;"></span> <span class="ml-2">Reset</span></div>
+                                        <div class="px-2 py-1 d-flex font-size-8" [hidden]="training.weeks.length == 1" (click)="deleteWeek($event, weekIndex, true)"><span class="image-button"><img src="assets/icons/actions/garbage-can.svg" style="width:15px; height:auto;"></span> <span class="ml-2">Cancella</span></div>
+                                        <div class="px-2 py-1 d-flex font-size-8" [hidden]="(training.weeks.length == 1 || bFirstWeek)" (click)="shiftWeek($event, weekIndex, -1, false)"><span class="image-button"><span class="fa fa-arrow-circle-up"></span></span> <span class="ml-2">Sposta Su</span></div>
+                                        <div class="px-2 py-1 d-flex font-size-8" [hidden]="(training.weeks.length == 1 || bLastWeek)" (click)="shiftWeek($event, weekIndex, 1, false)"><span class="image-button"><span class="fa fa-arrow-circle-down"></span></span> <span class="ml-2">Sposta Giu</span> </div>
+                                    </div>
+                                </div>
+                            </div>
                         </a>
+                        <!-- Week Content -->
                         <ng-template ngbNavContent>
-                        
-                            <!-- SESSIONS -->
+                            <!-- Session -->
                             <ul ngbNav #nav="ngbNav" [(activeId)]="activeSession[weekIndex]" class="nav-tabs">
                                 <li [ngbNavItem]="0">
                                     <a ngbNavLink class="d-flex">INFO&nbsp;<img src="assets/icons/actions/info-dark.svg" style="width:15px; height:auto;"></a>
@@ -251,7 +282,7 @@
                                     </ng-template>
                                 </li>
                                 <li *ngFor="let session of week.sessions; index as sessionIndex; first as bFirstSession; last as bLastSession" [ngbNavItem]="sessionIndex+1">
-                                    <a ngbNavLink class="d-flex align-items-baseline">
+                                    <a ngbNavLink class="d-flex align-items-center">
                                         <span>Sessione {{sessionIndex+1}}</span>
                                         <span class="ml-2 image-button" ngbTooltip="Copia Sessione" placement="top" (click)="copySession($event, week, sessionIndex)"><img src="assets/icons/actions/copy.svg" style="width:15px; height:auto;"></span>
                                         <span class="ml-1 image-button" ngbTooltip="Incolla Sessione" placement="top" (click)="pasteSession($event, week, sessionIndex)"><img src="assets/icons/actions/contract.svg" style="width:15px; height:auto;"></span>
@@ -262,31 +293,31 @@
                                     </a>
                                     <ng-template ngbNavContent>
                                         <div class="form-row m-0">
-                                            <div class="col-2 form-group pl-0">
+                                            <div class="col-12 col-lg-6 col-xl-3 form-group px-0 pr-lg-2 mb-0 mb-lg-2">
                                                 <label for="trainingName_{{weekIndex}}" class="col-form-label col-form-label-sm text-muted">Nome sessione</label>
                                                 <input type="text" [(ngModel)]="session.name" class="form-control form-control-sm"
                                                     id="trainingName_{{weekIndex}}" name="trainingName_{{weekIndex}}" placeholder="Nome sessione...">
                                             </div>
-                                            <div class="col-2 form-group">
+                                            <div class="col-12 col-lg-6 col-xl-3 form-group px-0 pr-xl-2 mb-0 mb-lg-2">
                                                 <label for="sessionStartDate" class="col-form-label col-form-label-sm text-muted">Data inizio</label>
                                                 <input type="datetime-local"  [ngModel] ="session.startDate | date:'yyyy-MM-ddTHH:mm'" (ngModelChange)="session.startDate = $event" class="form-control form-control-sm"
                                                     id="sessionStartDate" name="sessionStartDate">
                                             </div>
-                                            <div class="col-2 form-group">
+                                            <div class="col-12 col-lg-6 col-xl-3 form-group px-0 pr-lg-2 mb-0 mb-lg-2">
                                                 <label for="sessionEndDate" class="col-form-label col-form-label-sm text-muted">Data Fine</label>
                                                 <input type="datetime-local"  [ngModel] ="session.endDate | date:'yyyy-MM-ddTHH:mm'" [min]="session.startDate | date:'yyyy-MM-ddTHH:mm'" (ngModelChange)="session.endDate = $event" class="form-control form-control-sm"
                                                     id="sessionEndDate" name="sessionEndDate">
                                             </div>
-                                            <div class="col-6 form-group pr-0">
+                                            <div class="col-12 col-lg-6 col-xl-3 form-group px-0">
                                                 <label for="trainingComment_{{weekIndex}}" class="col-form-label col-form-label-sm text-muted">Commento</label>
                                                 <input type="text" [(ngModel)]="session.comment" class="form-control form-control-sm"
                                                     id="trainingComment_{{weekIndex}}" name="trainingComment_{{weekIndex}}" placeholder="Commento...">
                                             </div>
                                         </div>
                                         <div class="form-row m-0 position-relative border" *ngFor="let exercise of session.exercises; index as exerciseIndex; first as bFirstExercise; last as bLastExercise">
-                                            <div class="col-4 d-flex m-0 px-3 h-100">
+                                            <div class="col-12 col-xl-4 d-flex flex-column flex-lg-row m-0 px-3 h-100">
                                                 <div class="row m-0 w-100">
-                                                    <div class="col-6 form-group pl-0 pr-1 m-0">
+                                                    <div class="col-12 col-md-6 form-group pl-0 pr-0 pr-md-1 m-0">
                                                         <label for="exercise_{{exerciseIndex}}" class="col-form-label col-form-label-sm text-muted">Esercizio</label>
                                                         <input id="exercise_{{exerciseIndex}}" name="exercise_{{exerciseIndex}}" type="text" class="form-control form-control-sm"
                                                             [ngModel]="exercise.exercise.name"
@@ -299,7 +330,7 @@
                                                                 <ngb-highlight [result]="r.name + ' (' + r.variant.name + ')'" [term]="t"></ngb-highlight>
                                                             </ng-template>
                                                     </div>
-                                                    <div class="col-6 form-group pl-1 pr-0 m-0">
+                                                    <div class="col-12 col-md-6 form-group pl-0 pl-md-1 pr-0 m-0">
                                                         <label for="tipo_{{exerciseIndex}}" class="col-form-label col-form-label-sm text-muted">Tipo</label>
                                                         <input type="text" [(ngModel)]="exercise.exercise.variant.name" class="form-control form-control-sm"
                                                             id="tipo_{{exerciseIndex}}" name="tipo_{{exerciseIndex}}" placeholder="Tipo esercizio..." disabled>
@@ -310,37 +341,37 @@
                                                             id="description_{{exerciseIndex}}" name="description_{{exerciseIndex}}" placeholder="Descrizione esercizio..." disabled>
                                                     </div>
                                                 </div>
-                                                <div class="pl-3 pr-0 d-flex flex-column align-items-center mt-1">
-                                                    <span style="font-size: 0.875rem;">Azioni</span>
-                                                    <div class="d-flex">
+                                                <div class="d-flex flex-row flex-lg-column align-items-center px-0 pl-lg-3 mb-2 mt-0 mt-lg-1">
+                                                    <span class="font-size-8 mr-2 mr-lg-0 mb-lg-2">Azioni</span>
+                                                    <div class="d-flex mb-lg-1">
                                                         <div class="image-button" ngbTooltip="Copia esercizio" placement="top" (click)="copyExercise(session, exerciseIndex)"><img src="assets/icons/actions/copy.svg" style="width:15px; height:auto;"></div>
                                                         <div class="ml-1 image-button" ngbTooltip="Incolla esercizio" placement="top" (click)="pasteExercise(session, exerciseIndex)"><img src="assets/icons/actions/contract.svg" style="width:15px; height:auto;"></div>
                                                     </div>
-                                                    <div class="d-flex">
+                                                    <div class="d-flex mb-lg-1">
                                                         <div class="image-button" ngbTooltip="Reset esercizio" placement="top" (click)="resetExercise(session, exerciseIndex)"><img src="assets/icons/actions/return.svg" style="width:15px; height:auto;"></div>
                                                         <div class="ml-1 image-button" ngbTooltip="Elimina esercizio" placement="top" (click)="deleteExercise(session, exerciseIndex)" [hidden]="session.exercises.length == 1"><img src="assets/icons/actions/garbage-can.svg" style="width:15px; height:auto;"></div>
                                                     </div>
-                                                    <div class="d-flex">
+                                                    <div class="d-flex mb-lg-1">
                                                         <div class="image-button" ngbTooltip="Sposta esercizio su" placement="top" (click)="shiftExercise(session, exerciseIndex, -1)" [hidden]="(session.exercises.length == 1 || bFirstExercise)"><img src="assets/icons/actions/arrow-up.svg" style="width:15px; height:auto;"></div>
                                                         <div class="ml-1 image-button" ngbTooltip="Sposta esercizio giù" placement="top" (click)="shiftExercise(session, exerciseIndex, 1)" [hidden]="(session.exercises.length == 1 || bLastExercise)"><img src="assets/icons/actions/arrow-down.svg" style="width:15px; height:auto;"></div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-8 pr-3 pl-3 border border-right-0 border-top-0 border-bottom-0">
+                                            <div class="col-12 col-xl-8 pr-3 pl-3 border-left-xl">
                                                 <div class="form-row m-0" *ngFor="let elem of exercise.series; first as bFirstSeries; last as bLastSeries; index as seriesIndex">
                                                     <!-- Series x Rep inputs -->
-                                                    <div class="col-2 form-group" *ngIf="options.format.seriesFormat == 'seriesxrep'">
+                                                    <div class="col-2 pl-0 pl-xl-2 form-group" *ngIf="options.format.seriesFormat == 'seriesxrep'">
                                                         <label for="serie_{{exerciseIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
                                                             [hidden]="!bFirstSeries">Serie</label>
                                                         <input type="number" min="1" [(ngModel)]="elem.seriesNumber"
-                                                            class="form-control form-control-sm" id="serie_{{exerciseIndex}}_{{seriesIndex}}"
+                                                            class="form-control form-control-sm form-control-sm-max-md" id="serie_{{exerciseIndex}}_{{seriesIndex}}"
                                                             name="serie_{{exerciseIndex}}_{{seriesIndex}}" placeholder="Serie...">
                                                     </div>
                                                     <div class="col-2 form-group" *ngIf="options.format.seriesFormat == 'seriesxrep'">
                                                         <label for="rep_{{exerciseIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
                                                             [hidden]="!bFirstSeries">Rep</label>
                                                         <input type="number" min="1" [(ngModel)]="elem.repNumber"
-                                                            class="form-control form-control-sm" id="rep_{{exerciseIndex}}_{{seriesIndex}}"
+                                                            class="form-control form-control-sm form-control-sm-max-md" id="rep_{{exerciseIndex}}_{{seriesIndex}}"
                                                             name="rep_{{exerciseIndex}}_{{seriesIndex}}" placeholder="Rep...">
                                                     </div>
                                                     <!-- Rep x Series inputs -->
@@ -348,14 +379,14 @@
                                                         <label for="rep_{{exerciseIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
                                                             [hidden]="!bFirstSeries">Rep</label>
                                                         <input type="number" min="1" [(ngModel)]="elem.repNumber"
-                                                            class="form-control form-control-sm" id="rep_{{exerciseIndex}}_{{seriesIndex}}"
+                                                            class="form-control form-control-sm form-control-sm-max-md" id="rep_{{exerciseIndex}}_{{seriesIndex}}"
                                                             name="rep_{{exerciseIndex}}_{{seriesIndex}}" placeholder="Rep...">
                                                     </div>
                                                     <div class="col-2 form-group" *ngIf="options.format.seriesFormat == 'repxseries'">
                                                         <label for="serie_{{exerciseIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
                                                             [hidden]="!bFirstSeries">Serie</label>
                                                         <input type="number" min="1" [(ngModel)]="elem.seriesNumber"
-                                                            class="form-control form-control-sm" id="serie_{{exerciseIndex}}_{{seriesIndex}}"
+                                                            class="form-control form-control-sm form-control-sm-max-md" id="serie_{{exerciseIndex}}_{{seriesIndex}}"
                                                             name="serie_{{exerciseIndex}}_{{seriesIndex}}" placeholder="Serie...">
                                                     </div>
 
@@ -364,14 +395,14 @@
                                                         <label for="peso_{{exerciseIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
                                                             [hidden]="!bFirstSeries">Peso</label>
                                                         <input type="number" min="0" [(ngModel)]="elem.weight"
-                                                            class="form-control form-control-sm" id="peso_{{exerciseIndex}}_{{seriesIndex}}"
+                                                            class="form-control form-control-sm form-control-sm-max-md" id="peso_{{exerciseIndex}}_{{seriesIndex}}"
                                                             name="peso_{{exerciseIndex}}_{{seriesIndex}}" placeholder="Peso...">
                                                     </div>
                                                     <div class="col-2 d-flex">
                                                         <div class="form-group w-100">
                                                             <label for="misura_{{exerciseIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
                                                             [hidden]="!bFirstSeries">Misura</label>
-                                                            <select [(ngModel)]="elem.measure" class="form-control form-control-sm" *ngIf="(elem.measure=='kg' || elem.measure=='lbs' || elem.measure=='%' || elem.measure=='RPE' || elem.measure=='Low Effort' || elem.measure=='Med Effort' || elem.measure=='Max Effort')"
+                                                            <select [(ngModel)]="elem.measure" class="form-control form-control-sm form-control-sm-max-md" *ngIf="(elem.measure=='kg' || elem.measure=='lbs' || elem.measure=='%' || elem.measure=='RPE' || elem.measure=='Low Effort' || elem.measure=='Med Effort' || elem.measure=='Max Effort')"
                                                                 id="misuraSelect_{{exerciseIndex}}_{{seriesIndex}}" name="misuraSelect_{{exerciseIndex}}_{{seriesIndex}}">
                                                                 <option [value]="'kg'">kg</option>
                                                                 <option [value]="'lbs'">lbs</option>
@@ -383,7 +414,7 @@
                                                                 <option [value]="'custom'">(+)</option>
                                                             </select>
                                                             <div class="position-relative" *ngIf="!(elem.measure=='kg' || elem.measure=='lbs' || elem.measure=='%' || elem.measure=='RPE' || elem.measure=='Low Effort' || elem.measure=='Med Effort' || elem.measure=='Max Effort')">
-                                                                <input type="text" [(ngModel)]="elem.measure" class="form-control form-control-sm"
+                                                                <input type="text" [(ngModel)]="elem.measure" class="form-control form-control-sm form-control-sm-max-md"
                                                                 id="misuraText_{{exerciseIndex}}_{{seriesIndex}}" name="misuraText_{{exerciseIndex}}_{{seriesIndex}}">
                                                                 <div (click)="elem.measure='%'" style="position:absolute; right: 3px; top: 0px;">&times;</div>
                                                             </div>
@@ -397,7 +428,7 @@
                                                         <label for="rest_{{exerciseIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
                                                             [hidden]="!bFirstSeries">Recupero</label>
                                                         <input type="number" min="0" [(ngModel)]="elem.rest" 
-                                                            class="form-control form-control-sm" id="rest_{{exerciseIndex}}_{{seriesIndex}}" 
+                                                            class="form-control form-control-sm form-control-sm-max-md" id="rest_{{exerciseIndex}}_{{seriesIndex}}" 
                                                             name="rest_{{exerciseIndex}}_{{seriesIndex}}">
                                                     </div>
                                                     <div class="col-2 form-group m-0 p-0 pl-2">
@@ -421,18 +452,33 @@
                                     </ng-template>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href (click)="pushSession($event, week)">Aggiungi <img src="assets/icons/actions/plus.svg" style="width:15px; height:auto;"></a>
+                                    <a class="nav-link d-flex align-items-center" href (click)="pushSession($event, week)"><span>Aggiungi</span> <img src="assets/icons/actions/plus.svg" style="width:15px; height:auto;" class="ml-1"></a>
                                 </li>
                             </ul>
                             <div [ngbNavOutlet]="nav" class="mt-2 session-tab"></div>
                         </ng-template>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex" href (click)="pushWeek($event)">Aggiungi&nbsp;<img src="assets/icons/actions/plus.svg" style="width:15px; height:auto;"></a>
+                        <a class="nav-link d-flex" href (click)="pushWeek($event)"><span class="d-none d-xl-inline">Aggiungi&nbsp;</span><img src="assets/icons/actions/plus.svg" style="width:15px; height:auto;"></a>
                     </li>
                 </ul>
                 <div [ngbNavOutlet]="nav" class="mt-2 week-tab w-100"></div>
-                <button type="submit" (click)="saveTraining()" class="bottom-right-absolute btn btn-success" [disabled]="!canTrainingBeSaved()">SALVA</button>
+                
+                <!-- Botton Buttons -->
+                <div class="bottom-right-absolute">
+                    <div class="dropdown d-inline mr-1" style="right: .5rem;">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="optionsDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Opzioni
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="optionsDropdownMenuButton">
+                            <a class="dropdown-item cursor-pointer">
+                                <button (click)="options.format.seriesFormat = 'seriesxrep'" class="btn btn-sm btn-outline-secondary">Serie x Rep</button>
+                                <button (click)="options.format.seriesFormat = 'repxseries'" class="btn btn-sm btn-outline-secondary ml-2">Rep x Series</button>
+                            </a>
+                        </div>
+                    </div>
+                    <button type="submit" (click)="saveTraining()" class="btn btn-success" [disabled]="!canTrainingBeSaved()">SALVA</button>
+                </div>
             </form>
 
             <!-- STATS MODE CONTENT -->
