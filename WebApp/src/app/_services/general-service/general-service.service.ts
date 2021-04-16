@@ -279,6 +279,14 @@ export class GeneralService {
     date = new Date(date);
     return (date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear());
   }
+
+  copyObjectWithoutId(s1: any, s2: any) {
+    for(const [key, value] of Object.entries(s2)) {
+        if(key!='_id' && s1[key]!=undefined) {
+            s1[key] = _.cloneDeep(s2[key])
+        }
+    }
+}
 }
 
 

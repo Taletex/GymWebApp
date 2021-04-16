@@ -282,7 +282,7 @@
                                     </ng-template>
                                 </li>
                                 <li *ngFor="let session of week.sessions; index as sessionIndex; first as bFirstSession; last as bLastSession" [ngbNavItem]="sessionIndex+1">
-                                    <a ngbNavLink>
+                                    <a ngbNavLink class="nav-link session-nav-link">
                                         <div id="sessionNavBtn_{{sessionIndex}}" class="d-flex align-items-center">
                                             <span>Sessione {{sessionIndex+1}}</span>
                                             <div class="d-none d-xl-flex">
@@ -331,7 +331,7 @@
                                                     id="trainingComment_{{weekIndex}}" name="trainingComment_{{weekIndex}}" placeholder="Commento...">
                                             </div>
                                         </div>
-                                        <div class="form-row m-0 position-relative border" *ngFor="let exercise of session.exercises; index as exerciseIndex; first as bFirstExercise; last as bLastExercise">
+                                        <div id="exerciseContainer{{exerciseIndex}}" class="form-row m-0 position-relative border" *ngFor="let exercise of session.exercises; index as exerciseIndex; first as bFirstExercise; last as bLastExercise">
                                             <div class="col-12 col-xl-3 d-flex flex-column flex-lg-row m-0 px-3 h-100">
                                                 <div class="row m-0 w-100">
                                                     <div class="col-12 col-md-6 col-xl-12 form-group pl-0 pr-0 pr-md-1 pr-xl-0 m-0">
@@ -448,7 +448,7 @@
                                                             name="rest_{{exerciseIndex}}_{{seriesIndex}}">
                                                     </div>
                                                     <div class="col-1 col-xl-2 form-group m-0 p-0 pl-2">
-                                                        <label class="col-form-label col-form-label-sm" [hidden]="!bFirstSeries">Azioni</label>
+                                                        <label class="col-form-label col-form-label-sm" [hidden]="!bFirstSeries"><span class="v-hidden v-initial-sm">Azioni</span></label>
                                                         <div class="d-none d-xl-flex">
                                                             <div class="image-button" ngbTooltip="Copia" placement="top" (click)="copySeries(exercise, seriesIndex)"><img src="assets/icons/actions/copy.svg" style="width:15px; height:auto;"></div>
                                                             <div class="ml-1 image-button" ngbTooltip="Incolla" placement="top" (click)="pasteSeries(exercise, seriesIndex)"><img src="assets/icons/actions/contract.svg" style="width:15px; height:auto;"></div>
@@ -462,7 +462,7 @@
                                                             <div class="dropdown-toggle image-button h-100" type="button" id="dropdownMenuButtonSeries{{seriesIndex}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                               <span class="fa fa-bars"></span>
                                                             </div>
-                                                            <div class="dropdown-menu py-1" aria-labelledby="dropdownMenuButtonSeries{{seriesIndex}}">
+                                                            <div class="dropdown-menu py-1 cursor-pointer" aria-labelledby="dropdownMenuButtonSeries{{seriesIndex}}">
                                                                 <div class="px-2 py-1 d-flex font-size-8" ngbTooltip="Aggiungi serie" placement="top" (click)="pushSeries(exercise)"><span class="image-button"><img src="assets/icons/actions/plus2.svg" style="width:15px; height:auto;"></span> <span class="ml-2">Aggiungi</span></div>
                                                                 <div class="px-2 py-1 d-flex font-size-8" ngbTooltip="Copia serie" placement="top" (click)="copySeries(exercise, seriesIndex)"><span class="image-button"><img src="assets/icons/actions/copy.svg" style="width:15px; height:auto;"></span> <span class="ml-2">Copia</span></div>
                                                                 <div class="px-2 py-1 d-flex font-size-8" ngbTooltip="Incolla serie" placement="top" (click)="pasteSeries(exercise, seriesIndex)"><span class="image-button"><img src="assets/icons/actions/contract.svg" style="width:15px; height:auto;"></span> <span class="ml-2">Incolla</span></div>
@@ -483,11 +483,11 @@
                                         </div>
                                     </ng-template>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link d-flex align-items-center" href (click)="pushSession($event, week)"><span>Aggiungi</span> <img src="assets/icons/actions/plus.svg" style="width:15px; height:auto;" class="ml-1"></a>
+                                <li class="nav-item d-flex align-items-center justify-content-center">
+                                    <a class="nav-link d-flex align-items-center justify-content-center" href (click)="pushSession($event, week)"><span class="d-none d-xl-inline">Aggiungi&nbsp;</span> <img src="assets/icons/actions/plus.svg" style="width:15px; height:auto;" class="ml-0 ml-xl-1"></a>
                                 </li>
                             </ul>
-                            <div [ngbNavOutlet]="nav" class="mt-2 session-tab"></div>
+                            <div [ngbNavOutlet]="nav" class="mt-2 session-tab" style="box-shadow: 2px 2px 10px rgb(0 0 0 / 20%);"></div>
                         </ng-template>
                     </li>
                     <li class="nav-item">

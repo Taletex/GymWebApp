@@ -120,7 +120,7 @@ export class TrainingComponent implements OnInit {
     this.bLoading = true;
     this.httpService.getTraining(trainingId)
       .subscribe(
-        (data: any) => {
+        (data: Training) => {
           this.bLoading = false;
 
           this.bUserAuthorized = this.trainingService.isUserAuthorOrAthleteOfTraining(this.account.user._id, data) || this.account.role == Role.Admin;
@@ -380,7 +380,7 @@ export class TrainingComponent implements OnInit {
     this.blinkBtn("seriesRow"+index);
     
     if (exercise && exercise.series != null && index < exercise.series.length) {
-      exercise.series[index] = _.cloneDeep(new Series());
+      this.generalService.copyObjectWithoutId(exercise.series[index], new Series());
     } else {
       console.log('ERROR: resetting series of index ' + index);
     }
@@ -408,7 +408,7 @@ export class TrainingComponent implements OnInit {
     this.blinkBtn("seriesRow"+index);
 
     if (exercise && exercise.series != null && index < exercise.series.length) {
-      exercise.series[index] = _.cloneDeep(this.copiedSeries);
+      this.generalService.copyObjectWithoutId(exercise.series[index], this.copiedSeries);
     } else {
       console.log('ERROR: pasting series of index ' + index);
     }
@@ -416,7 +416,7 @@ export class TrainingComponent implements OnInit {
 
   shiftSeries(exercise: any, index: number, shift: number) {
     this.blinkBtn("seriesRow"+index);
-    this.blinkBtn("seriesRow"+(index+1));
+    this.blinkBtn("seriesRow"+(index+shift));
 
     if (exercise && exercise.series != null && index < exercise.series.length) {
       if((shift==1 && index==(exercise.series.length-1)) || (shift==-1 && index==0)) {
@@ -425,8 +425,8 @@ export class TrainingComponent implements OnInit {
       }
       
       let currentSeries = _.cloneDeep(exercise.series[index]);
-      exercise.series[index] = _.cloneDeep(exercise.series[index+shift]);
-      exercise.series[index+shift] = currentSeries;
+      this.generalService.copyObjectWithoutId(exercise.series[index], exercise.series[index+shift]);
+      this.generalService.copyObjectWithoutId(exercise.series[index+shift], currentSeries);
     }
   }
 
@@ -441,8 +441,10 @@ export class TrainingComponent implements OnInit {
   }
 
   resetExercise(session: Session, index: number) {
+    this.blinkBtn("exerciseContainer"+index);
+
     if (session && session.exercises != null && index < session.exercises.length) {
-      session.exercises[index] = _.cloneDeep(new SessionExercise());
+      this.generalService.copyObjectWithoutId(session.exercises[index], new SessionExercise());
     } else {
       console.log('ERROR: resetting exercise of index ' + index);
     }
@@ -457,6 +459,8 @@ export class TrainingComponent implements OnInit {
   }
 
   copyExercise(session: Session, index: number) {
+    this.blinkBtn("exerciseContainer"+index);
+
     if (session && session.exercises != null && index < session.exercises.length) {
       this.copiedExercise = _.cloneDeep(session.exercises[index]);
     } else {
@@ -465,14 +469,19 @@ export class TrainingComponent implements OnInit {
   }
 
   pasteExercise(session: Session, index: number) {
+    this.blinkBtn("exerciseContainer"+index);
+
     if (session && session.exercises != null && index < session.exercises.length) {
-      session.exercises[index] = _.cloneDeep(this.copiedExercise);
+      this.generalService.copyObjectWithoutId(session.exercises[index], this.copiedExercise);
     } else {
       console.log('ERROR: pasting exercise of index ' + index);
     }
   }
 
   shiftExercise(session: Session, index: number, shift: number) {
+    this.blinkBtn("exerciseContainer"+index);
+    this.blinkBtn("exerciseContainer"+(index+shift));
+
     if (session && session.exercises != null && index < session.exercises.length) {
       if((shift==1 && index==(session.exercises.length-1)) || (shift==-1 && index==0)) {
         console.log('ERROR: shifting exercise of index ' + index);
@@ -480,8 +489,8 @@ export class TrainingComponent implements OnInit {
       }
       
       let currentExercise = _.cloneDeep(session.exercises[index]);
-      session.exercises[index] = _.cloneDeep(session.exercises[index+shift]);
-      session.exercises[index+shift] = currentExercise;
+      this.generalService.copyObjectWithoutId(session.exercises[index], session.exercises[index+shift]);
+      this.generalService.copyObjectWithoutId(session.exercises[index+shift], currentExercise);
     } else {
       console.log('ERROR: shifting exercise of index ' + index);
     }
@@ -489,7 +498,7 @@ export class TrainingComponent implements OnInit {
 
 
   /* SESSIONS FUNCTIONS */
-  pushSession(event: MouseEvent, week: any) {
+  pushSession(event: MouseEvent, week: Week) {
     if (week && week.sessions != null) {
       week.sessions.push(new Session());
     } else {
@@ -498,11 +507,11 @@ export class TrainingComponent implements OnInit {
     event.preventDefault();
   }
 
-  resetSession(event: MouseEvent, week: any, index: number, bPrevent: boolean) {
+  resetSession(event: MouseEvent, week: Week, index: number, bPrevent: boolean) {
     this.blinkBtn("sessionNavBtn_"+index);
 
     if (week && week.sessions != null && index < week.sessions.length) {
-      week.sessions[index].copyFromSession(new Session());
+      this.generalService.copyObjectWithoutId(week.sessions[index], new Session());
     } else {
       console.log('ERROR: resetting session of index ' + index);
     }
@@ -512,7 +521,7 @@ export class TrainingComponent implements OnInit {
     }
   }
 
-  deleteSession(event: MouseEvent, week: any, index: number, weekIndex: number, bPrevent: boolean) {
+  deleteSession(event: MouseEvent, week: Week, index: number, weekIndex: number, bPrevent: boolean) {
     if (week && week.sessions != null && index < week.sessions.length) {
       week.sessions.splice(index, 1);
       this.activeSession[weekIndex] = 1;
@@ -525,7 +534,7 @@ export class TrainingComponent implements OnInit {
     }
   }
 
-  copySession(event: MouseEvent, week: any, index: number, bPrevent: boolean) {
+  copySession(event: MouseEvent, week: Week, index: number, bPrevent: boolean) {
     this.blinkBtn("sessionNavBtn_"+index);
 
     if (week && week.sessions != null && index < week.sessions.length) {
@@ -539,11 +548,11 @@ export class TrainingComponent implements OnInit {
     }
   }
 
-  pasteSession(event: MouseEvent, week: any, index: number, bPrevent: boolean) {
+  pasteSession(event: MouseEvent, week: Week, index: number, bPrevent: boolean) {
     this.blinkBtn("sessionNavBtn_"+index);
 
     if (week && week.sessions != null && index < week.sessions.length) {
-      week.sessions[index].copyFromSession(this.copiedSession);
+      this.generalService.copyObjectWithoutId(week.sessions[index], this.copiedSession);
     } else {
       console.log('ERROR: pasting session of index ' + index);
     } 
@@ -553,9 +562,9 @@ export class TrainingComponent implements OnInit {
     }
   }
 
-  shiftSession(event: MouseEvent, week: any, index: number, shift: number, bPrevent: boolean) {
+  shiftSession(event: MouseEvent, week: Week, index: number, shift: number, bPrevent: boolean) {
     this.blinkBtn("sessionNavBtn_"+index);
-    this.blinkBtn("sessionNavBtn_"+(index+1));
+    this.blinkBtn("sessionNavBtn_"+(index+shift));
 
     if (week && week.sessions != null && index < week.sessions.length) {
       if((shift==1 && index==(week.sessions.length-1)) || (shift==-1 && index==0)) {
@@ -566,8 +575,8 @@ export class TrainingComponent implements OnInit {
       }
       
       let currentSession = _.cloneDeep(week.sessions[index]);
-      week.sessions[index].copyFromSession(week.sessions[index+shift]);
-      week.sessions[index+shift].copyFromSession(currentSession);
+      this.generalService.copyObjectWithoutId(week.sessions[index], week.sessions[index+shift]);
+      this.generalService.copyObjectWithoutId(week.sessions[index+shift], currentSession);
     }
 
     if(bPrevent) {
@@ -588,8 +597,7 @@ export class TrainingComponent implements OnInit {
 
     if (this.training.weeks != null && index < this.training.weeks.length) {
       let newWeek = new Week();
-      this.training.weeks[index].sessions = _.cloneDeep(newWeek.sessions);
-      this.training.weeks[index].comment = newWeek.comment;
+      this.generalService.copyObjectWithoutId(this.training.weeks[index], newWeek);
     } else {
       console.log('ERROR: resetting week of index ' + index);
     }
@@ -632,8 +640,7 @@ export class TrainingComponent implements OnInit {
     this.blinkBtn("weekNavBtn_"+index);
 
     if (this.training.weeks != null && index < this.training.weeks.length) {
-      this.training.weeks[index].sessions = _.cloneDeep(this.copiedWeek.sessions);
-      this.training.weeks[index].comment = this.copiedWeek.comment;
+      this.generalService.copyObjectWithoutId(this.training.weeks[index], this.copiedWeek);
     } else {
       console.log('ERROR: pasting week of index ' + index);
     } 
@@ -656,10 +663,8 @@ export class TrainingComponent implements OnInit {
       }
       
       let currentWeek = _.cloneDeep(this.training.weeks[index]);
-      this.training.weeks[index].sessions = _.cloneDeep(this.training.weeks[index+shift].sessions);
-      this.training.weeks[index].comment = this.training.weeks[index+shift].comment;
-      this.training.weeks[index+shift].sessions = _.cloneDeep(currentWeek.sessions);
-      this.training.weeks[index+shift].comment = currentWeek.comment;
+      this.generalService.copyObjectWithoutId(this.training.weeks[index], this.training.weeks[index+shift]);
+      this.generalService.copyObjectWithoutId(this.training.weeks[index+shift], currentWeek);
     }
 
     if(bPrevent) {

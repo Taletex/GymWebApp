@@ -72,6 +72,38 @@
   }
 }
 /* MISCELLANEOUS */
+.v-hidden {
+  visibility: hidden;
+}
+
+.v-initial {
+  visibility: initial;
+}
+
+@media (min-width: 576px) {
+  .v-initial-sm {
+    visibility: initial !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .v-initial-md {
+    visibility: initial !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .v-initial-lg {
+    visibility: initial !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .v-initial-xl {
+    visibility: initial !important;
+  }
+}
+
 .standard-icon-lg {
   width: 24px;
   height: auto;
@@ -194,7 +226,7 @@
 .bottom-right-fixed {
   position: fixed;
   right: 32px;
-  bottom: 15px;
+  bottom: 38px;
 }
 
 .bottom-right-absolute {

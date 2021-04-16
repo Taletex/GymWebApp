@@ -191,4 +191,32 @@ export class TrainingService {
     isUserAuthorOrAthleteOfTraining(userId: string, training: Training): boolean {
         return (training.author._id == userId || (_.find(training.athletes, function(a) { return a._id == userId }) != undefined));
     }
+
+
+    /* COPY FUNCTIONS */
+    copyWeek(w1: Week, w2: Week) {
+        w1.comment = w2.comment;
+        w1.sessions = _.cloneDeep(w2.sessions);
+    }
+
+    copySession(s1: Session, s2: Session) {
+        s1.name = s2.name;
+        s1.comment = s2.comment;
+        s1.startDate = s2.startDate;
+        s1.endDate = s2.endDate;
+        s1.exercises = _.cloneDeep(s2.exercises);
+    }
+
+    copySessionExercise(se1: SessionExercise, se2: SessionExercise) {
+        se1.exercise = _.cloneDeep(se2.exercise);
+        se1.series = _.cloneDeep(se2.series);
+    }
+
+    copyExercise(e1: Exercise, e2: Exercise) {
+        e1.name = e2.name;
+        e1.variant = _.cloneDeep(e2.variant);
+        e1.description = e2.description;
+        e1.creator = _.cloneDeep(e2.creator);
+    }
+    
 }

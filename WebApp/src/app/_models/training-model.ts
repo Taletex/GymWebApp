@@ -197,9 +197,9 @@ export class Session {
 
 export class Week {
     comment: string;
-    sessions: [Session];
+    sessions: Session[];
 
-    constructor(comment: string = "", sessions: [Session] = [new Session()]) {
+    constructor(comment: string = "", sessions: Session[] = [new Session()]) {
         this.comment = comment;
         this.sessions = sessions;
     }
