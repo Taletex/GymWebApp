@@ -23,7 +23,6 @@ export class AccountComponent implements OnInit {
     account: Account = new Account();
     form: FormGroup;
     id: string;
-    userId: string;
     bLoading = false;
     submitted = false;
 
@@ -83,7 +82,6 @@ export class AccountComponent implements OnInit {
                         email: x.email,
                         role: x.role
                     });
-                    this.userId = x.user._id;
                 }
             );
     }
@@ -104,8 +102,7 @@ export class AccountComponent implements OnInit {
 
     private updateAccount() {
         // set user value to send to backend
-        let user = new User(this.form.value.name, this.form.value.surname, this.form.value.dateOfBirth, this.form.value.sex, this.form.value.bodyWeight, this.form.value.userType, this.form.value.yearsOfExperience, new Contacts(this.form.value.userEmail, this.form.value.telephone), new Residence(this.form.value.residenceState, this.form.value.residenceCity, this.form.value.residenceAddress));
-        user._id = this.userId;
+        this.assignFormValuesToUser();
        
         // set account value to send to backend
         let account = _.omit(this.form.value, ['name', 'surname', 'dateOfBirth', 'sex', 'userType', 'bodyWeight', 'yearsOfExperience', 'userEmail', 'telephone', 'residenceState', 'residenceCity', 'residenceAddress']);
@@ -118,7 +115,7 @@ export class AccountComponent implements OnInit {
                 next: () => {
                     this.toastr.success('Account information updated successfully');
 
-                    this.httpService.updateUser(this.userId, user)
+                    this.httpService.updateUser(this.account.user._id, this.account.user)
                     .subscribe(
                         (data: any) => {
                             this.bLoading = false;
@@ -154,5 +151,20 @@ export class AccountComponent implements OnInit {
                 this.toastr.error('An error occurred while deleting the account!');
                 console.log(error.error.message);
             });
+    }
+
+    assignFormValuesToUser() {
+        this.account.user.name = this.form.value.name;
+        this.account.user.surname = this.form.value.surname;
+        this.account.user.dateOfBirth = this.form.value.dateOfBirth;
+        this.account.user.sex = this.form.value.sex;
+        this.account.user.bodyWeight = this.form.value.bodyWeight;
+        this.account.user.userType = this.form.value.userType;
+        this.account.user.yearsOfExperience = this.form.value.yearsOfExperience;
+        this.account.user.contacts.email = this.form.value.userEmail;
+        this.account.user.contacts.telephone = this.form.value.telephone;
+        this.account.user.residence.state = this.form.value.residenceState;
+        this.account.user.residence.city = this.form.value.residenceCity;
+        this.account.user.residence.address = this.form.value.residenceAddress;
     }
 }

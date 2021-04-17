@@ -321,11 +321,12 @@ export class ProfileDetailsComponent {
         if (this.userForm.invalid) {
             return;
         }
+        
+        // set user value to send to backend
+        this.assignFormValuesToUser();
 
         this.bLoading = true;
-        let newUser = new User(this.userForm.value.name, this.userForm.value.surname, this.userForm.value.dateOfBirth, this.userForm.value.sex, this.userForm.value.bodyWeight, this.userForm.value.userType, this.userForm.value.yearsOfExperience, new Contacts(this.userForm.value.userEmail, this.userForm.value.telephone), new Residence(this.userForm.value.residenceState, this.userForm.value.residenceCity, this.userForm.value.residenceAddress), this.personalRecordList);
-        newUser._id = this.account.user._id;
-        this.httpService.updateUser(this.account.user._id, newUser)
+        this.httpService.updateUser(this.account.user._id, this.account.user)
             .subscribe(
                 (data: any) => {
                     this.bLoading = false;
@@ -373,4 +374,19 @@ export class ProfileDetailsComponent {
         return true;
     }
 
+
+    assignFormValuesToUser() {
+        this.account.user.name = this.userForm.value.name;
+        this.account.user.surname = this.userForm.value.surname;
+        this.account.user.dateOfBirth = this.userForm.value.dateOfBirth;
+        this.account.user.sex = this.userForm.value.sex;
+        this.account.user.bodyWeight = this.userForm.value.bodyWeight;
+        this.account.user.userType = this.userForm.value.userType;
+        this.account.user.yearsOfExperience = this.userForm.value.yearsOfExperience;
+        this.account.user.contacts.email = this.userForm.value.userEmail;
+        this.account.user.contacts.telephone = this.userForm.value.telephone;
+        this.account.user.residence.state = this.userForm.value.residenceState;
+        this.account.user.residence.city = this.userForm.value.residenceCity;
+        this.account.user.residence.address = this.userForm.value.residenceAddress;
+    }
 }

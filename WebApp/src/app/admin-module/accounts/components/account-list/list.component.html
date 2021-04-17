@@ -84,7 +84,7 @@
             </div>
             <!-- Content -->
             <ngb-accordion #a="ngbAccordion" [closeOthers]="true" class="table-body-accordion w-100 text-dark">
-                <ngb-panel id="custom-panel-{{accountIndex}}" *ngFor="let elem of accountList; index as accountIndex">
+                <ngb-panel id="custom-panel-{{accountIndex}}"  *ngFor="let elem of accountList; index as accountIndex">
                     <ng-template ngbPanelHeader let-opened="opened" class="p-0">
                         <div class="body__element row list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1  m-0">
                             <div class="col-5 col-md-3"><span>{{elem.user.name}} {{elem.user.surname}}</span></div>
@@ -92,7 +92,7 @@
                             <div class="d-none d-md-inline col-md-3"><span class="badge p-1" [ngClass]="{'badge-primary': elem.role == Role.Admin, 'badge-secondary': elem.role == Role.User}">{{elem.role}}</span></div>
                             <div class="col-2 col-md-2 d-flex justify-content-end px-2 px-md-2">
                                 <a routerLink="{{elem.id}}" routerLinkActive="active" class="image-button" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></a>
-                                <a *ngIf="account.role == Role.Admin" (click)="deleteAccount(elem._id)" class="ml-2 image-button d-none d-md-flex align-items-center justify-content-center" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></a>
+                                <a (click)="deleteAccount(elem.id, accountIndex)" class="ml-2 image-button d-none d-md-flex align-items-center justify-content-center" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></a>
                                 <div class="d-inline d-md-none ml-2 image-button" ngbTooltip="{{opened ? 'Nascondi Dettagli' : 'Mostra Dettagli'}}" placement="left"><button ngbPanelToggle class="btn btn-transparent"><span class="fa text-dark" [ngClass]="{'fa-arrow-circle-up': opened, 'fa-arrow-circle-down': !opened}"></span></button></div>
                             </div>
                         </div>
@@ -106,7 +106,7 @@
                             <div class="col-4 text-muted">Azioni</div>
                             <div class="col-8 d-flex">
                                 <a routerLink="{{elem.id}}" routerLinkActive="active" class="image-button" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></a>
-                                <a *ngIf="elem.role == Role.Admin" (click)="deleteAccount(elem._id, accountIndex)" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></a>
+                                <a (click)="deleteAccount(elem.id, accountIndex)" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></a>
                             </div>
                         </div>
                     </ng-template>

@@ -76,7 +76,7 @@
                 
                                 <!-- Password -->
                                 <div class="form-group col-12 col-sm-6">
-                                    <label class="col-form-label col-form-label-sm text-muted">Conferma Password</label>
+                                    <label class="col-form-label col-form-label-sm text-muted">Password</label>
                                     <input type="password" formControlName="password" maxlength="30" class="form-control form-control-sm" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
                                     <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
                                         <div *ngIf="f.password.errors.required">Password obbligatoria</div>
@@ -98,7 +98,7 @@
             <div class="modal-footer overflow-visible">
                 <div class="form-group d-flex align-items-center justify-content-end">
                     <button [disabled]="bLoading" class="btn btn-sm-sm btn-secondary" (click)="modal.dismiss('Cancel')"><span *ngIf="bLoading" class="spinner-border spinner-border-sm mr-1"></span>Annulla</button>
-                    <button [disabled]="bLoading" class="btn btn-sm-sm btn-primary ml-2"><span *ngIf="bLoading" class="spinner-border spinner-border-sm mr-1"></span>Salva</button>
+                    <button [disabled]="bLoading" ngbAutofocus class="btn btn-sm-sm btn-primary ml-2"><span *ngIf="bLoading" class="spinner-border spinner-border-sm mr-1"></span>Salva</button>
                 </div>
             </div>
         </form>
