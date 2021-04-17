@@ -9,6 +9,8 @@ import { Session } from '@app/_models/training-model';
 export class SessionViewComponent implements OnInit {
 
   @Input() session: Session;
+  @Input() sessionIndex: number;
+  @Input() weekIndex: number;
   @Input() options: any;
 
   constructor() { }

@@ -98,9 +98,9 @@
                 <div class="card w-100 border-0" [hidden]="bTinyMCEEditorOpen">
                     <div class="card-header d-flex border bg-dark text-white" style="border-radius: 5px !important;">
                         <div>
-                            <h5 class="text-uppercase">ALLENAMENTO {{readOnlyTraining.type}} {{readOnlyTraining._id}}</h5>
-                            <h6 class="m-0">Allenamento creato da {{readOnlyTraining.author.name}} {{readOnlyTraining.author.surname}} il {{readOnlyTraining.creationDate | date:'dd/MM/yyyy'}}, durata dal {{readOnlyTraining.startDate | date:'dd/MM/yyyy'}} al {{readOnlyTraining.endDate | date:'dd/MM/yyyy'}}</h6>
-                            <h6 class="m-0">
+                            <h5 class="h5 text-uppercase">ALLENAMENTO {{readOnlyTraining.type}} {{readOnlyTraining._id}}</h5>
+                            <h6 class="h6 m-0">Creato da {{readOnlyTraining.author.name}} {{readOnlyTraining.author.surname}} il {{readOnlyTraining.creationDate | date:'dd/MM/yyyy'}}, durata dal {{readOnlyTraining.startDate | date:'dd/MM/yyyy'}} al {{readOnlyTraining.endDate | date:'dd/MM/yyyy'}}</h6>
+                            <h6 class="h6 m-0">
                                 <span *ngIf="account.user._id == training.author._id">Atleti 
                                     <span *ngFor="let athlete of readOnlyTraining.athletes; last as lastAthlete">
                                         {{athlete.name}} {{athlete.surname}} ({{athlete.dateOfBirth | date:'dd/MM/yyyy'}} &bull; {{athlete.bodyWeight}} kg)<span [hidden]="lastAthlete">,</span>

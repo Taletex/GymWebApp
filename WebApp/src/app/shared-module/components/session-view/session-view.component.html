@@ -1,13 +1,14 @@
-<div id="sessionContainer" class="card">
+<div id="sessionContainer_{{weekIndex}}_{{sessionIndex}}" class="card" style="box-shadow: 0px 2px 0px rgba(0,0,0,.5); border-radius: 0px !important;" >
     <div class="card-header m-0 px-0 text-white" style="background-color: rgba(0, 0, 0, 0.6) !important;">
+        <h6 class="h6 m-0 px-3">Sessione <span *ngIf="sessionIndex!=null">{{sessionIndex+1}}</span> <span *ngIf="session.name!=null && session.name!=''">- {{session.name}}</span></h6>
         <div class="row m-0 px-3 py-0" style="font-size: small; font-style: italic;">
             <div class="col-4 px-0">
                 <span>Esercizio (variante)</span>
             </div>
             <div class="col-8 pr-0">
                 <div class="row m-0 d-flex">
-                    <span *ngIf="options.format.seriesFormat == 'seriesxrep'">Serie &times; Ripetizioni</span>
-                    <span *ngIf="options.format.seriesFormat == 'repxseries'">Ripetizioni &times; Serie</span>
+                    <span *ngIf="options.format.seriesFormat == 'seriesxrep'">Serie &times; <span class="d-sm-none">Rip.</span> <span class="d-none d-sm-inline">Ripetizioni</span></span>
+                    <span *ngIf="options.format.seriesFormat == 'repxseries'"><span class="d-sm-none">Rip.</span> <span class="d-none d-sm-inline">Ripetizioni</span> &times; Serie</span>
                     <span class="ml-auto">Riposo</span>
                 </div>
             </div>
@@ -17,7 +18,7 @@
         <div *ngFor="let exercise of session.exercises; index as exerciseIndex" class="row m-0 px-3 py-1 border border-left-0 border-right-0 border-top-0">
             <div class="col-4 px-0">
                 <div><span>{{exercise.exercise.name}} ({{exercise.exercise.variant.name}})</span></div>
-                <div><small>({{exercise.exercise.description}})</small></div>
+                <div><small>{{exercise.exercise.description}}</small></div>
             </div>
             <div class="col-8 pr-0">
                 <div *ngFor="let series of exercise.series; index as seriesIndex" class="row m-0 d-flex">
@@ -28,7 +29,7 @@
             </div>
         </div>
     </div>
-    <div class="card-footer border-0 bg-white px-3">
+    <div class="card-footer border-0 bg-white px-3 d-flex">
         <span>{{(session.comment == null || session.comment == '') ? 'Nessun commento' : ('Commento: ' + session.comment)}}</span>
     </div>
 </div>

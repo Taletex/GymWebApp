@@ -1,40 +1,13 @@
-<div class="card-body border-0 p-0 bg-dark">
-    <div *ngFor="let session of week.sessions; index as sessionIndex" class="card border-0" style="box-shadow: 0px 2px 0px rgba(0,0,0,.5); border-radius: 0px !important;" id="sessionContainer_{{weekIndex}}_{{sessionIndex}}">
-        <div class="card-header m-0 px-0 border-0 text-white" style="background-color: rgba(0, 0, 0, 0.6) !important; border-radius: 0px !important;">
-            <h6 class="m-0 px-3">Sessione {{sessionIndex+1}} - {{session.name}}</h6>
-            <div class="row m-0 px-3 py-0" style="font-size: small; font-style: italic;">
-                <div class="col-4 px-0">
-                    <span>Esercizio (variante)</span>
-                </div>
-                <div class="col-8 pr-0">
-                    <div class="row m-0 d-flex">
-                        <span *ngIf="options.format.seriesFormat == 'seriesxrep'">Serie &times; Ripetizioni</span>
-                        <span *ngIf="options.format.seriesFormat == 'repxseries'">Ripetizioni &times; Serie</span>
-                        <span class="ml-auto">Riposo</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card-body p-0">
-            <div *ngFor="let exercise of session.exercises; index as exerciseIndex" class="row m-0 px-3 py-1 border border-left-0 border-right-0 border-top-0">
-                <div class="col-4 px-0">
-                    <div><span>{{exercise.exercise.name}} ({{exercise.exercise.variant.name}})</span></div>
-                    <div><small>({{exercise.exercise.description}})</small></div>
-                </div>
-                <div class="col-8 pr-0">
-                    <div *ngFor="let series of exercise.series; index as seriesIndex" class="row m-0 d-flex">
-                        <span *ngIf="options.format.seriesFormat == 'seriesxrep'">{{series.seriesNumber}} &times; {{series.repNumber}} @ {{series.weight}} {{series.measure}}</span>
-                        <span *ngIf="options.format.seriesFormat == 'repxseries'">{{series.repNumber}} &times; {{series.seriesNumber}} @ {{series.weight}} {{series.measure}}</span>
-                        <span class="ml-auto">{{series.rest}}''</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card-footer border-0 bg-white px-3">
-            <span>{{(session.comment == null || session.comment == '') ? 'Nessun commento' : ('Commento: ' + session.comment)}}</span>
+<div class="card my-3 p-0" style="border-color: rgba(0, 0, 0, 0.6) !important;">
+    <div class="card-header border border-dark bg-dark text-white">
+        <h6 class="h6 m-0">WEEK <span *ngIf="weekIndex!=null">{{weekIndex+1}}</span></h6>
+    </div>
+    <div class="card-body border-0 p-0">
+        <div *ngFor="let session of week.sessions; index as sessionIndex">
+            <app-session-view [session]="session" [sessionIndex]="sessionIndex" [weekIndex]="weekIndex" [(options)]="options"></app-session-view>
         </div>
     </div>
-</div>
-<div class="card-footer text-white bg-dark border-0">
-    <span [hidden]="(week.comment == null || week.comment == '')">Commento: {{week.comment}}</span>
+    <div class="card-footer text-white bg-dark border-0">
+        <span [hidden]="(week.comment == null || week.comment == '')">Commento: {{week.comment}}</span>
+    </div>
 </div>

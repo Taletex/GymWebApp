@@ -9,6 +9,7 @@ import { Week } from '@app/_models/training-model';
 export class WeekViewComponent implements OnInit {
 
   @Input() week: Week;
+  @Input() weekIndex: number;
   @Input() options: any;
 
   constructor() { }
