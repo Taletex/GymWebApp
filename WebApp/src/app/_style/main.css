@@ -227,12 +227,14 @@
   position: fixed;
   right: 32px;
   bottom: 38px;
+  z-index: 15;
 }
 
 .bottom-right-absolute {
   position: absolute;
   right: 15px;
   bottom: 15px;
+  z-index: 15;
 }
 
 [hidden] {

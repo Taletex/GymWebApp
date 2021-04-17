@@ -87,6 +87,45 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="d-flex input-group w-auto ml-2 overflow-visible" *ngIf="pageStatus[PAGES.TRAININGS] == PAGEMODE.READONLY && !bLoading">
+                            <div class="d-flex align-items-center form-control-min-xl dropdown">
+                                <div id="readOnlyTrainingOptionsDropdown" class="dropdown-toggle image-button" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ngbTooltip="Opzioni visualizzazione allenamento" placement="left">
+                                    <span class="fa fa-gear"></span>
+                                </div>
+                                <div class="dropdown-menu" aria-labelledby="readOnlyTrainingOptionsDropdown">
+                                    <h6 class="h6 dropdown-header">Conversione</h6>
+                                    <a class="dropdown-item cursor-pointer" (click)="convertPercentage('kg')">Converti % in kg</a>
+                                    <a class="dropdown-item cursor-pointer" (click)="convertPercentage('lbs')">Converti % in lbs</a>
+                                    <a class="dropdown-item cursor-pointer" (click)="convertLbsToKg()">Converti lbs in kg</a>
+                                    <a class="dropdown-item cursor-pointer" (click)="convertKgToLbs()">Converti kg in lbs</a>
+                                    <a class="dropdown-item cursor-pointer" (click)="convertPercentage()">Ripristina originale</a>
+                                    <div class="dropdown-divider"></div>
+                                    <h6 class="h6 dropdown-header">Formattazione</h6>
+                                    <a class="dropdown-item cursor-pointer d-flex align-items-center justify-content-center">
+                                        <span>Settimane per riga: </span><input type="number" class="ml-2" [(ngModel)]="options.format.weeksForRow" min="1" max="8" (ngModelChange)="clampWeeksForRowValue()">
+                                    </a>
+                                    <a class="dropdown-item cursor-pointer">
+                                        <button (click)="options.format.seriesFormat = 'seriesxrep'" class="btn btn-sm btn-outline-secondary">Serie x Rep</button>
+                                        <button (click)="options.format.seriesFormat = 'repxseries'" class="btn btn-sm btn-outline-secondary ml-2">Rep x Series</button>
+                                    </a>
+                                    <a class="dropdown-item cursor-pointer" (click)="setDefaultoptions()">Ripristina originale</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex input-group w-auto ml-2 overflow-visible" *ngIf="pageStatus[PAGES.TRAININGS] == PAGEMODE.WRITE && !bLoading">
+                            <div class="d-flex align-items-center form-control-min-xl dropdown">
+                                <div id="writeTrainingOptionsDropdown" class="dropdown-toggle image-button" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ngbTooltip="Opzioni visualizzazione allenamento" placement="left">
+                                    <span class="fa fa-gear"></span>
+                                </div>
+                                <div class="dropdown-menu" aria-labelledby="readOnlyTrainingOptionsDropdown">
+                                    <h6 class="h6 dropdown-header">Formattazione</h6>
+                                    <a class="dropdown-item cursor-pointer">
+                                        <button (click)="options.format.seriesFormat = 'seriesxrep'" class="btn btn-sm btn-outline-secondary">Serie x Rep</button>
+                                        <button (click)="options.format.seriesFormat = 'repxseries'" class="btn btn-sm btn-outline-secondary ml-2">Rep x Series</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -94,12 +133,12 @@
         <div class="maincontainer__body position-relative card-body h-vh-fixed p-2 font-size-sm-7 font-size-md-8">
 
             <!-- READ ONLY MODE CONTENT -->
-            <div class="row m-0" *ngIf="pageStatus[PAGES.TRAININGS] == PAGEMODE.READONLY && !bLoading">
+            <div class="row m-0 position-relative" *ngIf="pageStatus[PAGES.TRAININGS] == PAGEMODE.READONLY && !bLoading">
                 <div class="card w-100 border-0" [hidden]="bTinyMCEEditorOpen">
                     <div class="card-header d-flex border bg-dark text-white" style="border-radius: 5px !important;">
                         <div>
                             <h5 class="h5 text-uppercase">ALLENAMENTO {{readOnlyTraining.type}} {{readOnlyTraining._id}}</h5>
-                            <h6 class="h6 m-0">Creato da {{readOnlyTraining.author.name}} {{readOnlyTraining.author.surname}} il {{readOnlyTraining.creationDate | date:'dd/MM/yyyy'}}, durata dal {{readOnlyTraining.startDate | date:'dd/MM/yyyy'}} al {{readOnlyTraining.endDate | date:'dd/MM/yyyy'}}</h6>
+                            <h6 class="h6">Creato da {{readOnlyTraining.author.name}} {{readOnlyTraining.author.surname}} il {{readOnlyTraining.creationDate | date:'dd/MM/yyyy'}}, durata dal {{readOnlyTraining.startDate | date:'dd/MM/yyyy'}} al {{readOnlyTraining.endDate | date:'dd/MM/yyyy'}}</h6>
                             <h6 class="h6 m-0">
                                 <span *ngIf="account.user._id == training.author._id">Atleti 
                                     <span *ngFor="let athlete of readOnlyTraining.athletes; last as lastAthlete">
@@ -109,38 +148,6 @@
                                 <span *ngIf="account.user._id != training.author._id">Atleta {{account.user.name}} {{account.user.surname}} ({{account.user.dateOfBirth | date:'dd/MM/yyyy'}} &bull; {{account.user.bodyWeight}} kg)</span>
                             </h6>
                             <span [hidden]="(readOnlyTraining.comment == null || readOnlyTraining.comment == '')">Commento: {{readOnlyTraining.comment}}</span>
-                        </div>
-                        <div class="ml-auto d-flex ">
-                            <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="conversionDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  Conversione
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="conversionDropdownMenuButton">
-                                  <a class="dropdown-item cursor-pointer" (click)="convertPercentage('kg')">Converti % in kg</a>
-                                  <a class="dropdown-item cursor-pointer" (click)="convertPercentage('lbs')">Converti % in lbs</a>
-                                  <a class="dropdown-item cursor-pointer" (click)="convertLbsToKg()">Converti lbs in kg</a>
-                                  <a class="dropdown-item cursor-pointer" (click)="convertKgToLbs()">Converti kg in lbs</a>
-                                  <a class="dropdown-item cursor-pointer" (click)="convertPercentage()">Ripristina originale</a>
-                                </div>
-                            </div>
-                            <div class="dropdown ml-2">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="formatDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  Formattazione
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="formatDropdownMenuButton">
-                                  <a class="dropdown-item cursor-pointer d-flex align-items-center justify-content-center">
-                                    <span>Settimane per riga: </span><input type="number" class="ml-2" [(ngModel)]="options.format.weeksForRow" min="1" max="8" (ngModelChange)="clampWeeksForRowValue()">
-                                  </a>
-                                  <a class="dropdown-item cursor-pointer">
-                                      <button (click)="options.format.seriesFormat = 'seriesxrep'" class="btn btn-sm btn-outline-secondary">Serie x Rep</button>
-                                      <button (click)="options.format.seriesFormat = 'repxseries'" class="btn btn-sm btn-outline-secondary ml-2">Rep x Series</button>
-                                  </a>
-                                  <a class="dropdown-item cursor-pointer" (click)="setDefaultoptions()">Ripristina originale</a>
-                                </div>
-                            </div>
-                            <div> 
-                                <button class="btn btn-primary ml-2" ngbTooltip="Apri in Editor di testo" placement="left" (click)="openTinyMCEEditor()">Apri Editor</button>
-                            </div>
                         </div>
                     </div>
 
@@ -152,11 +159,12 @@
                     </div>
                 </div>
                 <div [hidden]="!bTinyMCEEditorOpen" class="w-100 h-100 tiniMCE-container position-relative">
-                    <div class="button-container">
-                        <button class="btn btn-sm btn-primary" ngbTooltip="Chiudi Editor di testo" placement="left" (click)="closeTinyMCEEditor()">Chiudi Editor</button>
-                        <button class="btn btn-sm btn-primary ml-1" ngbTooltip="Crea pdf dal testo dell'editor" placement="left" (click)="createPdfFromEditor()">Crea PDF</button>
-                    </div>
                     <editor class="w-100 h-100" apiKey="nezikf86u3tkn42uasu6wth68lb9qcfa2dszno3h7anr94qq" initialValue={{editorContent}} [(ngModel)]="editorContent" [init]=tinyMCEoptions name="tinymceeditor" ngDefaultControl></editor>
+                </div>
+                <div class="bottom-right-fixed"> 
+                    <button [hidden]="bTinyMCEEditorOpen" class="btn btn-primary ml-2" ngbTooltip="Apri in Editor di testo" placement="left" (click)="openTinyMCEEditor()">Apri Editor</button>
+                    <button [hidden]="!bTinyMCEEditorOpen" class="btn btn-primary" ngbTooltip="Chiudi Editor di testo" placement="left" (click)="closeTinyMCEEditor()">Chiudi Editor</button>
+                    <button [hidden]="!bTinyMCEEditorOpen" class="btn btn-primary ml-1" ngbTooltip="Crea pdf dal testo dell'editor" placement="left" (click)="createPdfFromEditor()">Crea PDF</button>
                 </div>
             </div>
 
@@ -498,17 +506,6 @@
                 
                 <!-- Botton Buttons -->
                 <div class="bottom-right-fixed">
-                    <div class="dropup d-inline mr-1" style="right: .5rem;">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="optionsDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          Opzioni
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="optionsDropdownMenuButton">
-                            <a class="dropdown-item cursor-pointer">
-                                <button (click)="options.format.seriesFormat = 'seriesxrep'" class="btn btn-sm btn-outline-secondary">Serie x Rep</button>
-                                <button (click)="options.format.seriesFormat = 'repxseries'" class="btn btn-sm btn-outline-secondary ml-2">Rep x Series</button>
-                            </a>
-                        </div>
-                    </div>
                     <button type="submit" (click)="saveTraining()" class="btn btn-success" [disabled]="!canTrainingBeSaved()">SALVA</button>
                 </div>
             </form>
