@@ -12,13 +12,18 @@ import { ToastrService } from 'ngx-toastr';
 import { Contacts, Residence, User } from '@app/_models/training-model';
 import { HttpService } from '@app/_services/http-service/http-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Account } from '@app/_models';
 
-@Component({ templateUrl: 'add-edit.component.html' })
-export class AddEditComponent implements OnInit {
+@Component({ 
+    templateUrl: 'account.component.html',
+    styleUrls: ['./account.component.scss']
+ })
+
+export class AccountComponent implements OnInit {
+    account: Account = new Account();
     form: FormGroup;
     id: string;
     userId: string;
-    isAddMode: boolean;
     bLoading = false;
     submitted = false;
 
@@ -33,7 +38,6 @@ export class AddEditComponent implements OnInit {
 
     ngOnInit() {
         this.id = this.route.snapshot.params['id'];
-        this.isAddMode = !this.id;
 
         this.form = this.formBuilder.group({
             name: ['', Validators.required],
@@ -50,38 +54,38 @@ export class AddEditComponent implements OnInit {
             residenceAddress: [''],
             email: ['', [Validators.required, Validators.email]],
             role: ['', Validators.required],
-            password: ['', [Validators.minLength(6), this.isAddMode ? Validators.required : Validators.nullValidator]],
+            password: ['', [Validators.minLength(6), Validators.nullValidator]],
             confirmPassword: ['']
         }, {
             validator: MustMatch('password', 'confirmPassword')
         });
 
-        if (!this.isAddMode) {
-            this.accountService.getById(this.id)
-                .pipe(first())
-                .subscribe(x => 
+        this.accountService.getById(this.id)
+            .pipe(first())
+            .subscribe(x => 
+                {
+                    this.account = x;
+
+                    this.form.patchValue(
                     {
-                        this.form.patchValue(
-                        {
-                            name: x.user.name,
-                            surname: x.user.surname,
-                            dateOfBirth: moment(x.user.dateOfBirth).format('yyyy-MM-DD'),
-                            sex: x.user.sex,
-                            userType: x.user.userType,
-                            bodyWeight: x.user.bodyWeight,
-                            yearsOfExperience: x.user.yearsOfExperience,
-                            userEmail: x.user.contacts.email,
-                            telephone: x.user.contacts.telephone,
-                            residenceState: x.user.residence.state,
-                            residenceCity: x.user.residence.city,
-                            residenceAddress: x.user.residence.address,
-                            email: x.email,
-                            role: x.role
-                        });
-                        this.userId = x.user._id;
-                    }
-                );
-        }
+                        name: x.user.name,
+                        surname: x.user.surname,
+                        dateOfBirth: moment(x.user.dateOfBirth).format('yyyy-MM-DD'),
+                        sex: x.user.sex,
+                        userType: x.user.userType,
+                        bodyWeight: x.user.bodyWeight,
+                        yearsOfExperience: x.user.yearsOfExperience,
+                        userEmail: x.user.contacts.email,
+                        telephone: x.user.contacts.telephone,
+                        residenceState: x.user.residence.state,
+                        residenceCity: x.user.residence.city,
+                        residenceAddress: x.user.residence.address,
+                        email: x.email,
+                        role: x.role
+                    });
+                    this.userId = x.user._id;
+                }
+            );
     }
 
     // convenience getter for easy access to form fields
@@ -95,28 +99,7 @@ export class AddEditComponent implements OnInit {
             return;
         }
 
-        this.bLoading = true;
-        if (this.isAddMode) {
-            this.createAccount();
-        } else {
-            this.updateAccount();
-        }
-    }
-
-    private createAccount() {
-        this.accountService.create(this.form.value)
-            .pipe(first())
-            .subscribe({
-                next: () => {
-                    this.router.navigate(['../'], { relativeTo: this.route }).then(() => {
-                        this.toastr.success('Account created successfully');
-                    });
-                },
-                error: error => {
-                    this.toastr.error(error);
-                    this.bLoading = false;
-                }
-            });
+        this.updateAccount();
     }
 
     private updateAccount() {
@@ -128,6 +111,7 @@ export class AddEditComponent implements OnInit {
         let account = _.omit(this.form.value, ['name', 'surname', 'dateOfBirth', 'sex', 'userType', 'bodyWeight', 'yearsOfExperience', 'userEmail', 'telephone', 'residenceState', 'residenceCity', 'residenceAddress']);
 
         // Update account then user
+        this.bLoading = true;
         this.accountService.update(this.id, account)
             .pipe(first())
             .subscribe({
@@ -138,7 +122,7 @@ export class AddEditComponent implements OnInit {
                     .subscribe(
                         (data: any) => {
                             this.bLoading = false;
-                            this.router.navigate(['../../'], { relativeTo: this.route }).then(() => {
+                            this.router.navigate(['../'], { relativeTo: this.route }).then(() => {
                                 this.toastr.success('User information updated successfully!');
                             });
                         },
@@ -152,6 +136,23 @@ export class AddEditComponent implements OnInit {
                     this.toastr.error(error);
                     this.bLoading = false;
                 }
+            });
+    }
+
+    deleteAccount() {
+        this.bLoading = true;
+        this.accountService.delete(this.account.id)
+            .pipe(first())
+            .subscribe(() => {
+                this.bLoading = false;
+                this.router.navigate(['../'], { relativeTo: this.route }).then(() => {
+                    this.toastr.success('Account successfully deleted!');
+                });
+            },
+            (error: HttpErrorResponse) => {
+                this.bLoading = false;
+                this.toastr.error('An error occurred while deleting the account!');
+                console.log(error.error.message);
             });
     }
 }

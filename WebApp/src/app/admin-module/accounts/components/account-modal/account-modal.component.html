@@ -76,7 +76,7 @@
                 
                                 <!-- Password -->
                                 <div class="form-group col-12 col-sm-6">
-                                    <label class="col-form-label col-form-label-sm text-muted">Conferma Password<span [hidden]="isAddMode">(Lasciare bianco per mantenere la stessa password)</span></label>
+                                    <label class="col-form-label col-form-label-sm text-muted">Conferma Password</label>
                                     <input type="password" formControlName="password" maxlength="30" class="form-control form-control-sm" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
                                     <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
                                         <div *ngIf="f.password.errors.required">Password obbligatoria</div>
@@ -84,7 +84,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group col-12 col-sm-6">
-                                    <label class="col-form-label col-form-label-sm text-muted">Conferma Password <span [hidden]="isAddMode">(Lasciare bianco per mantenere la stessa password)</span></label>
+                                    <label class="col-form-label col-form-label-sm text-muted">Conferma Password</label>
                                     <input type="password" formControlName="confirmPassword" maxlength="30" class="form-control form-control-sm" [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" />
                                     <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback">
                                         <div *ngIf="f.confirmPassword.errors.required">Conferma Password obbligatoria</div>

@@ -1,0 +1,19 @@
+.main__account {
+
+    .account__maincontainer {
+
+        border: 0px !important;
+
+        .maincontainer__header {
+            border: 0px !important;
+        }
+        
+        .maincontainer__body {
+            height: calc(100vh - 161px);
+            overflow: auto;
+            border: 1px solid rgba(0, 0, 0, 0.125) !important;
+        }
+
+    }
+    
+}

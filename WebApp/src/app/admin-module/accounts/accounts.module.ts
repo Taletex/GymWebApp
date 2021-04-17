@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 
 import { AccountsRoutingModule } from './accounts-routing.module';
 import { ListComponent } from './components/account-list/list.component';
-import { AddEditComponent } from './components/add-edit/add-edit.component';
+import { AccountComponent } from './components/account/account.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AccountModalComponent } from './components/account-modal/account-modal.component';
 
@@ -18,7 +18,7 @@ import { AccountModalComponent } from './components/account-modal/account-modal.
     ],
     declarations: [
         ListComponent,
-        AddEditComponent,
+        AccountComponent,
         AccountModalComponent
     ]
 })
