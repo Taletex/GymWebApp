@@ -949,6 +949,10 @@ ngb-carousel .picsum-img-wrapper>img {
 }
 
 /* BOOTSTRAP RE-DEFINITION */
+.modal-dialog-scrollable .modal-content {
+  overflow-y: auto !important;
+}
+
 .form-control-sm {
   height: calc(1.2em + 0.5rem + 2px) !important;
   padding: 0.15rem 0.4rem !important;

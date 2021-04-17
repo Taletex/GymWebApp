@@ -36,11 +36,10 @@
         <div class="col-6 col-md-2 d-flex flex-column justify-content-center form-group pl-2 pr-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded && account.user.userType=='both'">
             <label for="filterType" class="col-form-label col-form-label-sm p-0 text-muted">Tipo</label>
             <select [(ngModel)]="filters.userType" class="form-control form-control-sm cursor-pointer" placeholder="Tipo utente..." id="filterType" name="filterType" (change)="filterUsers($event)" [disabled]="bLoading">
-                <option value="" disabled selected>Tipo...</option>
+                <option [value]="''">Tutti</option>
                 <option [value]="'athlete'">Atleta</option>
                 <option [value]="'coach'">Coach</option>
                 <option [value]="'both'">Entrambi</option>
-                <option [value]="''">Tutti</option>
             </select>
         </div>
         <div class="col-6 col-md-2 d-flex flex-column justify-content-center form-group pl-2 pr-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">

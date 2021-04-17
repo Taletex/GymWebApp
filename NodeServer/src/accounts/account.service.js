@@ -218,10 +218,7 @@ async function getById(id) {
 
 async function create(params) {
     // validate
-    if (await db.Account.findOne({ email: params.email }).populate({ path: 'user', populate: {path: 'personalRecords', populate: {path: 'exercise'}}})
-                                                            .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}, populate: {path: 'from'}}})
-                                                            .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}, populate: {path: 'destination'}}})
-                                                            .populate({ path: 'user', populate: 'coaches'}).populate({ path: 'user', populate: 'athletes'})) {
+    if (await db.Account.findOne({ email: params.email })) {
         throw 'Email "' + params.email + '" is already registered';
     }
 
@@ -262,7 +259,8 @@ async function create(params) {
     // save account
     await account.save();
 
-    return basicDetails(account);
+    let retAccount = await db.Account.findOne({ email: params.email }).populate({ path: 'user'});
+    return basicDetails(retAccount);
 }
 
 async function update(id, params) {

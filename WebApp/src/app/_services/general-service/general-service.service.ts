@@ -2,6 +2,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Series, Session, SessionExercise, Training, Week } from '@app/_models/training-model';
+import * as _ from 'lodash';
 
 export enum PAGEMODE{
   READONLY = "readonly",
