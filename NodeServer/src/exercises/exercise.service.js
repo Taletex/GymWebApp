@@ -17,7 +17,10 @@ exports.createExercise = (req, res) => {
         name: req.body.name,
         variant: req.body.variant,
         description: req.body.description,
-        creator: (req.body.creator != "") ? req.body.creator : null
+        creator: (req.body.creator != "") ? req.body.creator : null,
+        images: [],  // todo: push images path after saving them in local storage
+        disciplines: req.body.disciplines,
+        groups: req.body.groups
     });
 
     // Save Exercise in the database
@@ -145,7 +148,10 @@ exports.updateExercise = (req, res) => {
         name: req.body.name,
         variant: req.body.variant,
         description: req.body.description,
-        creator: (req.body.creator != "") ? req.body.creator : null
+        creator: (req.body.creator != "") ? req.body.creator : null,
+        images: [],  // todo: push images path after saving them in local storage
+        disciplines: req.body.disciplines,
+        groups: req.body.groups
     }, {new: true})
     .then(exercise => {
         if(!exercise) {

@@ -69,7 +69,6 @@ export enum VIEW_TYPES {
   TRAINING = 'allenamento'
 };
 
-
 @Injectable({
   providedIn: 'root'
 })

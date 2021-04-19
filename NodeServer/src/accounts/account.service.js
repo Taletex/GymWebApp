@@ -103,7 +103,10 @@ async function register(params, origin) {
         sex: "M",
         contacts: new db.Contacts({email: params.email, telephone: ''}),
         residence: new db.Residence({state: '', city: '', address: ''}),
-        personalRecords: []
+        personalRecords: [],
+        biography: "",
+        socials: [],
+        profilePicture: ""
     });
 
     const data = await user.save()
@@ -118,6 +121,9 @@ async function register(params, origin) {
     delete params.sex;
     delete params.contacts;
     delete params.residence;
+    delete params.biography;
+    delete params.socials;
+    delete params.profilePicture;
     params.user = data._id;
 
     const account = new db.Account(params);
@@ -233,7 +239,10 @@ async function create(params) {
         sex: "M",
         contacts: new db.Contacts({email: params.email, telephone: ''}),
         residence: new db.Residence({state: '', city: '', address: ''}),
-        personalRecords: []
+        personalRecords: [],
+        biography: "",
+        socials: [],
+        profilePicture: ""
     });
 
     const data = await user.save()
@@ -248,6 +257,9 @@ async function create(params) {
     delete params.sex;
     delete params.contacts;
     delete params.residence;
+    delete params.biography;
+    delete params.socials;
+    delete params.profilePicture;
     params.user = data._id;
 
     const account = new db.Account(params);

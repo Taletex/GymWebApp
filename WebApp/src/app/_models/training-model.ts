@@ -97,10 +97,14 @@ export class User {
     notifications: Notification[];
     coaches: string[];          // ONLY ID: Don't need to get the whole user, just need the id (ti reduces the communication volume)
     athletes: string[];         // ONLY ID: Don't need to get the whole user, just need the id (ti reduces the communication volume)
+    biography: string;
+    socials: any[];
+    profilePicture: string;
 
     constructor(name: string = "", surname: string = "", dateOfBirth: Date = null, sex: string = "M", bodyWeight: number = 80,
                 userType: string = "athlete", yearsOfExperience: number = 0, contacts: Contacts = new Contacts(), residence: Residence = new Residence(), 
-                personalRecords: PersonalRecord[] = <PersonalRecord[]>[], notifications: Notification[] = <Notification[]>[], coaches: string[] = <string[]>[], athletes: string[] = <string[]>[]) {
+                personalRecords: PersonalRecord[] = <PersonalRecord[]>[], notifications: Notification[] = <Notification[]>[], coaches: string[] = <string[]>[], 
+                athletes: string[] = <string[]>[], biography: string = "", socials: [] = []) {
         this.name = name;
         this.surname = surname;
         this.dateOfBirth = dateOfBirth;
@@ -114,6 +118,9 @@ export class User {
         this.notifications = notifications;
         this.coaches = coaches;
         this.athletes = athletes;
+        this.biography = biography;
+        this.socials = socials;
+        this.profilePicture = this.profilePicture;
     }
 }
 
@@ -152,11 +159,18 @@ export class Exercise {
     variant: Variant;
     description: string;
     creator: string         // ONLY ID: Don't need to get the whole user, just need the id (ti reduces the communication volume)
-    constructor(name: string = "", variant: Variant = new Variant(), description: string = "", creator: string = "") {
+    disciplines: string[];
+    groups: string[];
+    images: string[];
+
+    constructor(name: string = "", variant: Variant = new Variant(), description: string = "", creator: string = "", disciplines: string[] = [], groups: string[] = [], images: string[] = []) {
         this.name = name;
         this.variant = variant;
         this.description = description;
         this.creator = creator;
+        this.disciplines = disciplines;
+        this.groups = groups;
+        this.images = images;
     }
 }
 
@@ -254,4 +268,17 @@ export enum TRAINING_TYPES {
     BODYBUILDING = "bodybuilding",
     SALA = "sala attrezzi",
     CUSTOM = "custom"
+}
+
+export enum EXERCISE_GROUPS {
+    ARMS = "braccia",
+    LEGS = "gambe",
+    CORE = "addome",
+    BICEPS = "bicipiti",
+    TRICEPS = "tricipiti",
+    QUADRICEPS = "quadricipiti",
+    ARMISTRINGS = "bicipiti femorali",
+    NECK = "collo",
+    HEAD = "testa",
+    CALVES = "polpacci"
 }

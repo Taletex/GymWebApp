@@ -41,6 +41,58 @@
                             <textarea [(ngModel)]="exercise.description" class="form-control form-control-sm"
                                 [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)}" id="exerciseDescription" name="exerciseDescription"></textarea>
                         </div>
+                        <div class="col-12 col-xl-6 form-group">
+                            <label for="exerciseGroups" class="col-form-label col-form-label-sm text-muted">Gruppi</label>
+                            <ng-multiselect-dropdown 
+                                [disabled]="(pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)"
+                                class="w-100 small" 
+                                id="exerciseGroups" 
+                                name="exerciseGroups" 
+                                ngDefaultControl
+                                [placeholder]="'Gruppi'" 
+                                [settings]="groupDropdownSettings" 
+                                [data]="exerciseGroupsList"
+                                [(ngModel)]="exercise.groups"
+                                [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)}">
+                                <ng-template #optionsTemplate let-item let-option="option" let-id="id" let-isSelected="isSelected">
+                                    <div>
+                                        <label style="color: #333; min-width: 130px; font-weight: normal;" class="m-0 text-capitalize"
+                                            [ngStyle]="{ 'font-weight': isSelected? 'bold':' normal','color': getGroupItems[id].isDisabled? 'lightgrey': ''}">{{getGroupItems[id]}}</label>
+                                    </div>
+                                </ng-template>
+                                <ng-template #optionSelectedTemplate let-option="option" let-id="id">
+                                    <div class="text-capitalize">
+                                        {{getGroupItems[id]}}
+                                    </div>
+                                </ng-template>
+                            </ng-multiselect-dropdown>
+                        </div>
+                        <div class="col-12 col-xl-6 form-group">
+                            <label for="exerciseDisciplines" class="col-form-label col-form-label-sm text-muted">Discipline</label>
+                            <ng-multiselect-dropdown 
+                                [disabled]="(pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)"
+                                class="w-100 small" 
+                                id="exerciseDisciplines" 
+                                name="exerciseDisciplines" 
+                                ngDefaultControl
+                                [placeholder]="'Discipline'" 
+                                [settings]="disciplineDropdownSettings" 
+                                [data]="exerciseDisciplinesList"
+                                [(ngModel)]="exercise.disciplines"
+                                [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)}">
+                                <ng-template #optionsTemplate let-item let-option="option" let-id="id" let-isSelected="isSelected">
+                                    <div>
+                                        <label style="color: #333; min-width: 130px; font-weight: normal;" class="m-0 text-capitalize"
+                                            [ngStyle]="{ 'font-weight': isSelected? 'bold':' normal','color': getDisciplineItems[id].isDisabled? 'lightgrey': ''}">{{getDisciplineItems[id]}}</label>
+                                    </div>
+                                </ng-template>
+                                <ng-template #optionSelectedTemplate let-option="option" let-id="id">
+                                    <div class="text-capitalize">
+                                        {{getDisciplineItems[id]}}
+                                    </div>
+                                </ng-template>
+                            </ng-multiselect-dropdown>
+                        </div>
                     </div>
                 </fieldset>
             </form>

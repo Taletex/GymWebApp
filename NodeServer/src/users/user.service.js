@@ -49,7 +49,10 @@ module.exports = (io, clientSocketList) => {
             personalRecords: [],
             notifications: [],
             coaches: [],
-            athletes: []
+            athletes: [],
+            biography: req.body.biography,
+            socials: req.body.socials,
+            profilePicture: req.body.profilePicture
         });
 
         // Save User in the database
@@ -156,7 +159,10 @@ module.exports = (io, clientSocketList) => {
             personalRecords: req.body.personalRecords,
             notifications: _.orderBy(req.body.notifications, ['bConsumed', 'creationDate'], ['asc', 'desc']),
             coaches: req.body.coaches,
-            athletes: req.body.athletes
+            athletes: req.body.athletes,
+            biography: req.body.biography,
+            socials: req.body.socials,
+            profilePicture: req.body.profilePicture
         }, { new: true })
             .then(user => {
                 if (!user) {

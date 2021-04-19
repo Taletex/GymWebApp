@@ -120,10 +120,10 @@
                         [ngClass]="{'list-group-item-cyan': !elem.bConsumed, 'bg-custom-lightgray': elem.bConsumed}">
                             <!-- <div class="d-inline d-md-none col-2"><img src="assets/icons/actions/plus.svg" class="table-icon-md"></div> -->
                             <div class="d-none d-md-inline col-md-1"><img [hidden]="elem.bConsumed" src="assets/icons/misc/dot.svg" class="table-icon-lg"></div>
-                            <div class="d-none d-md-inline col-md-2"><span>{{elem.type}}</span></div>
-                            <div class="d-none d-md-inline col-md-2"><span>{{elem.creationDate | date:'HH:mm:ss - dd/MM/yyyy'}}</span></div>
-                            <div class="d-none d-md-inline col-md-2"><span>{{elem.from.name != null ? elem.from.name : ''}} {{elem.from.surname != null ? elem.from.surname : elem.from}}</span></div>
-                            <div class="col-9 col-md-3" [innerHTML]="elem.message"></div>
+                            <div class="d-none d-md-inline col-md-2 truncate-fullwidth"><span>{{elem.type}}</span></div>
+                            <div class="d-none d-md-inline col-md-2 truncate-fullwidth"><span>{{elem.creationDate | date:'HH:mm:ss - dd/MM/yyyy'}}</span></div>
+                            <div class="d-none d-md-inline col-md-2 truncate-fullwidth"><span>{{elem.from.name != null ? elem.from.name : ''}} {{elem.from.surname != null ? elem.from.surname : elem.from}}</span></div>
+                            <div class="col-9 col-md-3"><div [innerHTML]="elem.message"></div></div>
                             <div class="col-3 col-md-2 d-flex justify-content-end px-2 px-md-2">
                                 <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.COACH_REQUEST || elem.type == NOTIFICATION_TYPE.ATHLETE_REQUEST)" (click)="acceptRequest(elem)" class="ml-2 image-button" ngbTooltip="Accetta Richiesta" placement="left"><img src="assets/icons/actions/confirm.svg" style="width:20px; height:auto;"></div>
                                 <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.COACH_REQUEST || elem.type == NOTIFICATION_TYPE.ATHLETE_REQUEST)" (click)="refuseRequest(elem)" class="ml-2 image-button" ngbTooltip="Rifiuta Richiesta" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>

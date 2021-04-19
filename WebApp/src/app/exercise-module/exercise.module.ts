@@ -9,6 +9,7 @@ import { LayoutComponent } from './layout.component';
 import { ExerciseComponent } from './components/exercise/exercise.component';
 import { ExercisesComponent } from './components/exercises/exercises.component';
 import { SharedModule } from '@app/shared-module/shared.module';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 @NgModule({
     imports: [
@@ -17,7 +18,8 @@ import { SharedModule } from '@app/shared-module/shared.module';
         ReactiveFormsModule,
         NgbModule,
         ExerciseRoutingModule,
-        SharedModule
+        SharedModule,
+        NgMultiSelectDropDownModule
     ],
     declarations: [
         LayoutComponent,

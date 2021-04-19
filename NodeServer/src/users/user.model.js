@@ -72,7 +72,10 @@ const UserSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: false
-    }]
+    }],
+    biography: String,
+    socials: Array,
+    profilePicture: String,
 });
 
 const userSchema =  mongoose.model('User', UserSchema);

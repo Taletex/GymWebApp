@@ -564,6 +564,30 @@ $custom-lightgray: rgb(179 179 179 / 15%);
   text-overflow: ellipsis; 
 }
 
+.truncate-list-elem-overflow {
+  position: relative;
+  max-height: 75px;
+  overflow: hidden;
+  padding-right: 1rem; /* space for ellipsis */
+  background-color: inherit;
+}
+.truncate-list-elem-overflow::before {
+  position: absolute;
+  content: "...";
+  inset-block-end: 0; /* "bottom" */
+  inset-inline-end: 0; /* "right" */
+  font-size: .9rem !important;
+}
+.truncate-list-elem-overflow::after {
+  content: "";
+  position: absolute;
+  inset-inline-end: 0; /* "right" */
+  width: 1rem;
+  height: 1rem;
+  background-color: inherit;
+  font-size: .9rem !important;
+}
+
 .text-decoration-none {
   text-decoration: none;
 }
@@ -951,6 +975,15 @@ ngb-carousel .picsum-img-wrapper>img {
 }
 
 /* BOOTSTRAP RE-DEFINITION */
+.multiselect-dropdown {
+  .disabled {
+    .dropdown-btn {
+      background-color: white !important;
+      border: 0 !important;
+    }
+  }
+}
+
 .modal-dialog-scrollable .modal-content {
   overflow-y: auto !important;
 }

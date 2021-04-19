@@ -13,7 +13,10 @@ const ExerciseSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: false
-    }
+    },
+    disciplines: [String],
+    groups: [String],
+    images: [String]
 }, {
     timestamps: true
 });

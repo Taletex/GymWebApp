@@ -2,7 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { HttpService } from '@app/_services/http-service/http-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
-import { Exercise } from '@app/_models/training-model';
+import { Exercise, EXERCISE_GROUPS, TRAINING_TYPES } from '@app/_models/training-model';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { Account, Role } from '@app/_models';
 import * as _ from "lodash";
@@ -24,8 +24,11 @@ export class ExercisesComponent implements OnInit {
   public bWindowOverMd: boolean;
   private lastWindowWidth: number;
   private triggerWidth: number = 767.98;
+  
+  public TRAINING_TYPES = TRAINING_TYPES;
+  public EXERCISE_GROUPS = EXERCISE_GROUPS;
 
-
+  
   constructor(private httpService: HttpService, private toastr: ToastrService, private accountService: AccountService) { 
     this.accountService.account.subscribe(x => this.account = x);
     
@@ -123,13 +126,15 @@ export class ExercisesComponent implements OnInit {
         (filters.variant.intensityCoefficient != null ? (e.variant.intensityCoefficient == filters.variant.intensityCoefficient) : true) &&
         (filters.description != '' ? e.description.toLowerCase().includes(filters.description.toLowerCase()) : true) &&
         (filters.type == 'custom' ? (user.coaches.includes(e.creator) || user._id == e.creator) : 
-         (filters.type == 'default' ? !(user.coaches.includes(e.creator) || user._id == e.creator) : true) )
+         (filters.type == 'default' ? !(user.coaches.includes(e.creator) || user._id == e.creator) : true) ) &&
+        (filters.groups != '' ? (_.find(e.groups, function(g) { return g.toLowerCase().includes(filters.groups.toLowerCase()) }) != undefined) : true) &&
+        (filters.disciplines != '' ? (_.find(e.disciplines, function(d) { return d.toLowerCase().includes(filters.disciplines.toLowerCase()) }) != undefined) : true)
       );
     });
   }
 
   resetFilters() {
-    this.filters = { bExpanded: true, type: '', name: '', variant: {name: '', intensityCoefficient: null}, description: ''};
+    this.filters = { bExpanded: true, type: '', name: '', variant: {name: '', intensityCoefficient: null}, description: '', groups: '', disciplines: ''};
     this.initFiltersExpandability();
   }
 
@@ -140,7 +145,7 @@ export class ExercisesComponent implements OnInit {
   }
 
   areFiltersDirty(): boolean {
-    return (this.filters.type != '' || this.filters.name != '' || this.filters.variant.name != '' || this.filters.variant.intensityCoefficient != null || this.filters.description != '');
+    return (this.filters.type != '' || this.filters.name != '' || this.filters.variant.name != '' || this.filters.variant.intensityCoefficient != null || this.filters.description != '' || this.filters.groups != '' || this.filters.disciplines != '');
   }
   
   resetSortStatus() {

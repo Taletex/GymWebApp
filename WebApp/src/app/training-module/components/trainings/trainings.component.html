@@ -105,7 +105,7 @@
                 <ngb-panel id="custom-panel-{{trainingIndex}}" *ngFor="let training of trainingList; index as trainingIndex; first as bFirstTraining">
                     <ng-template ngbPanelHeader let-opened="opened" class="p-0">
                         <div class="body__element row list-group-item list-group-item-action list-group-item-light d-flex align-items-center px-0 py-1 m-0 text-dark">
-                            <div class="d-none d-md-inline col-md-2">
+                            <div class="d-none d-md-inline col-md-2 truncate-list-elem-overflow">
                                 <span class="d-block">{{training.author.name}} {{training.author.surname}}</span>
                                 <small>{{training.creationDate | date:'dd/MM/yyyy'}}</small>
                             </div>
@@ -138,13 +138,13 @@
                             <div class="d-none d-md-flex col-md-1">
                                 <span class="text-uppercase badge" [ngClass]="{'badge-info': training.state == TRAINING_STATES.NEW, 'badge-primary': training.state == TRAINING_STATES.STARTED, 'badge-success': training.state == TRAINING_STATES.COMPLETED, 'badge-danger': training.state == TRAINING_STATES.ABORTED, 'badge-warning': training.state == TRAINING_STATES.PARTIAL_COMPLETED}">{{training.state}}</span>
                             </div>
-                            <div class="d-none d-md-inline col-md-2" ngbTooltip="{{training.comment != '' ? training.comment : 'Nessun Commento'}}"><div class="truncate-fullwidth">{{training.comment != "" ? training.comment : "Nessun Commento"}}</div></div>
+                            <div class="d-none d-md-inline col-md-2 truncate-list-elem-overflow" ngbTooltip="{{training.comment != '' ? training.comment : 'Nessun Commento'}}">{{training.comment != "" ? training.comment : "Nessun Commento"}}</div>
                             <div class="col-3 col-md-2 d-flex justify-content-end">
                                 <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.TRAININGS, training._id)" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
-                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="openPageWithMode(PAGEMODE.WRITE, PAGES.TRAININGS, training._id)" class="ml-2 image-button d-none d-md-inline" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></div>
-                                <div (click)="openPageWithMode(PAGEMODE.STATS, PAGES.TRAININGS, training._id)" class="ml-2 image-button d-none d-md-inline" ngbTooltip="Statistiche" placement="left"><img src="assets/icons/actions/graph.svg" style="width:20px; height:auto;"></div>
-                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="exportTraining(elem)" class="ml-2 image-button d-none d-md-inline" ngbTooltip="Esporta Allenamento" placement="left"><img src="assets/icons/actions/export.svg" style="width:20px; height:auto;"></div>
-                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="deleteTraining(training._id, trainingIndex)" class="ml-2 image-button d-none d-md-inline" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
+                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="openPageWithMode(PAGEMODE.WRITE, PAGES.TRAININGS, training._id)" class="ml-2 image-button d-none d-md-flex align-items-center" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></div>
+                                <div (click)="openPageWithMode(PAGEMODE.STATS, PAGES.TRAININGS, training._id)" class="ml-2 image-button d-none d-md-flex align-items-center" ngbTooltip="Statistiche" placement="left"><img src="assets/icons/actions/graph.svg" style="width:20px; height:auto;"></div>
+                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="exportTraining(elem)" class="ml-2 image-button d-none d-md-flex align-items-center" ngbTooltip="Esporta Allenamento" placement="left"><img src="assets/icons/actions/export.svg" style="width:20px; height:auto;"></div>
+                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="deleteTraining(training._id, trainingIndex)" class="ml-2 image-button d-none d-md-flex align-items-center" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
                                 <div class="d-inline d-md-none ml-2 image-button" ngbTooltip="{{opened ? 'Nascondi Dettagli' : 'Mostra Dettagli'}}" placement="left"><button ngbPanelToggle class="btn btn-transparent"><span class="fa text-dark" [ngClass]="{'fa-arrow-circle-up': opened, 'fa-arrow-circle-down': !opened}"></span></button></div>
                             </div>
                         </div>
