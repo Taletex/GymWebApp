@@ -22,12 +22,12 @@ import { HomepageComponent } from './_components/homepage/homepage.component';
 import { PageNotFoundComponent } from './_components/page-not-found/page-not-found.component';
 import { SidebarComponent } from './_components/sidebar/sidebar.component';
 import { SharedModule } from '@app/shared-module/shared.module';
-
-import { JwtInterceptor, ErrorInterceptor, appInitializer } from './_helpers';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { NotificationsComponent } from './_components/notifications/notifications.component';
-import { environment } from '@environments/environment';
 import { TrainingCalendarComponent } from './_components/training-calendar/training-calendar.component';
+
+import { JwtInterceptor, ErrorInterceptor, appInitializer } from './_helpers';
+import { environment } from '@environments/environment';
 
 @NgModule({
   imports: [

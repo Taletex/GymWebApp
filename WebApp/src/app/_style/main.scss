@@ -61,6 +61,7 @@ $custom-lightgray: rgb(179 179 179 / 15%);
     width: 15px;
   }
 }
+
 .standard-icon-md {
   width: 24px;
   height: auto;
@@ -330,7 +331,7 @@ $custom-lightgray: rgb(179 179 179 / 15%);
   }
 
   &:hover {
-    opacity: 75%;
+    opacity: .75;
   }
 }
 

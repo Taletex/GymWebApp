@@ -1,0 +1,51 @@
+.uploadfilecontainer {
+    background-repeat: no-repeat;
+    background-size: 100px;
+    background-position: center;
+    height: 200px;
+    width: 80%;
+    margin: 20px auto;
+    border: 2px dashed #1C8ADB;
+    border-radius: 10px;
+  }
+  
+  .uploadfilecontainer {
+    &:hover {
+      cursor: pointer;
+      background-color: #cae9ff !important;
+      opacity: 0.8 !important;
+    }
+  }
+
+  .uploadfilecontainer-disabled {
+    cursor: not-allowed !important;
+      background-color: rgb(245, 252, 255) !important;
+      opacity: 1 !important;
+    &:hover {
+      cursor: not-allowed !important;
+      background-color: rgb(245, 252, 255) !important;
+      opacity: 1 !important;
+    }
+  }
+  
+  .files-list {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    margin: 10px auto;
+    background: #ffffff;
+    border: 1px dashed;
+    border-radius: 12px;
+    padding: 5px;
+    color: #1c8adb;
+  }
+  
+  .files-list .delete-file {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  .upload-text {
+    color: #1C8ADB;
+  }

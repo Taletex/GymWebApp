@@ -13,6 +13,8 @@ import { SessionModalComponent } from './components/session-modal/session-modal.
 import { WeekViewComponent } from './components/week-view/week-view.component';
 import { SessionViewComponent } from './components/session-view/session-view.component';
 import { TrainingViewComponent } from './components/training-view/training-view.component';
+import { UploadFilesComponent } from './components/upload-files/upload-files.component';
+import { DragDropDirective } from './directives/drag-drop.directives'
 
 export { TrainingModalComponent } from './components/training-modal/training-modal.component';
 export { ExerciseModalComponent } from './components/exercise-modal/exercise-modal.component';
@@ -20,6 +22,8 @@ export { UserModalComponent } from './components/user-modal/user-modal.component
 export { ConfirmationModalComponent } from './components/confirmation-modal/confirmation-modal.component';
 export { SessionModalComponent } from './components/session-modal/session-modal.component';
 export { PageNotAuthorizedComponent } from './components/page-not-authorized/page-not-authorized.component';
+export { UploadFilesComponent } from './components/upload-files/upload-files.component';
+export { DragDropDirective } from './directives/drag-drop.directives'
 
 @NgModule({
     imports: [
@@ -38,7 +42,9 @@ export { PageNotAuthorizedComponent } from './components/page-not-authorized/pag
         SessionModalComponent,
         WeekViewComponent,
         SessionViewComponent,
-        TrainingViewComponent
+        TrainingViewComponent,
+        UploadFilesComponent,
+        DragDropDirective
     ],
     exports: [
         TrainingModalComponent,
@@ -49,7 +55,9 @@ export { PageNotAuthorizedComponent } from './components/page-not-authorized/pag
         SessionModalComponent,
         WeekViewComponent,
         SessionViewComponent,
-        TrainingViewComponent
+        TrainingViewComponent,
+        UploadFilesComponent,
+        DragDropDirective
     ]
 })
 export class SharedModule { }

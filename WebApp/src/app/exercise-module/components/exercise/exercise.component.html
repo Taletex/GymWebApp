@@ -93,6 +93,10 @@
                                 </ng-template>
                             </ng-multiselect-dropdown>
                         </div>
+                        <div class="col-12 form-group">
+                            <label for="exerciseImages" class="col-form-label col-form-label-sm text-muted">Immagini (limite 3)</label>
+                            <app-upload-files id="exerciseImages" [imgInputDisabled]="!(pageStatus[PAGES.EXERCISES] == PAGEMODE.WRITE)"></app-upload-files>
+                        </div>
                     </div>
                 </fieldset>
             </form>

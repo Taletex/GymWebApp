@@ -31,7 +31,7 @@ export class ExerciseComponent implements OnInit {
   public EXERCISE_GROUPS = EXERCISE_GROUPS;
   public exerciseGroupsList = Object.values(this.EXERCISE_GROUPS);
   public exerciseDisciplinesList = Object.values(this.TRAINING_TYPES);
-
+  public imgInputDisabled: boolean = false;
   
   constructor(private generalService: GeneralService, private router: Router, private httpService: HttpService, private toastr: ToastrService, private accountService: AccountService) {
     let exerciseId = (this.router.url).split('/')[2];
@@ -72,6 +72,9 @@ export class ExerciseComponent implements OnInit {
     };
   }
 
+  /**
+   * get for groups input select elements
+   */
   get getGroupItems() {
     return this.exerciseGroupsList.reduce((acc, curr) => {
       acc[curr] = curr;
@@ -79,6 +82,9 @@ export class ExerciseComponent implements OnInit {
     }, {});
   }
 
+  /**
+   * get for discipline input select elements
+   */
   get getDisciplineItems() {
     return this.exerciseDisciplinesList.reduce((acc, curr) => {
       acc[curr] = curr;

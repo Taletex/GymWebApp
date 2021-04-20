@@ -398,7 +398,7 @@
   }
 }
 .image-button-big:hover {
-  opacity: 75%;
+  opacity: 0.75;
 }
 
 .link-image-fontawesome {
