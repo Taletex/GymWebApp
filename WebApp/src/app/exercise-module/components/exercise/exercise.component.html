@@ -17,7 +17,7 @@
             </div>
         </div>
 
-        <div class="maincontainer__body card-body">
+        <div class="maincontainer__body card-body h-vh-fixed">
             <form>
                 <fieldset class="form-row m-0" [disabled]="(pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)">
                     <div class="col-12 form-row m-0 p-0">
@@ -93,9 +93,24 @@
                                 </ng-template>
                             </ng-multiselect-dropdown>
                         </div>
-                        <div class="col-12 form-group">
+                        <div class="col-12 form-group" [hidden]="(pageStatus[PAGES.EXERCISES] != PAGEMODE.WRITE)">
                             <label for="exerciseImages" class="col-form-label col-form-label-sm text-muted">Immagini (limite 3)</label>
-                            <app-upload-files id="exerciseImages" [imgInputDisabled]="!(pageStatus[PAGES.EXERCISES] == PAGEMODE.WRITE)"></app-upload-files>
+                            <app-upload-files id="exerciseImages" [(fileInputOptions)]="fileInputOptions" [(fileList)]="fileList" [(imgList)]="imgList"></app-upload-files>
+                        </div>
+                        <div class="col-12 form-group" [hidden]="(pageStatus[PAGES.EXERCISES] == PAGEMODE.WRITE)">
+                            <label for="exerciseImages" class="col-form-label col-form-label-sm text-muted">Immagini (limite 3)</label>
+                            <div class="row m-0 p-3" *ngIf="!fileInputOptions.bImgInputDirty">
+                                <div class="col-12 col-lg mb-3 mb-lg-0 d-flex align-items-center justify-content-center" *ngFor="let img of exercise.images">
+                                    <img src="{{img}}" style="width: 100px; height: auto;">
+                                </div>
+                                <div [hidden]="exercise.images.length > 0" class="font-size-9">Nessuna immagine disponibile</div>
+                            </div>
+                            <div class="row m-0 p-3" *ngIf="fileInputOptions.bImgInputDirty">
+                                <div class="col-12 col-lg mb-3 mb-lg-0 d-flex align-items-center justify-content-center" *ngFor="let img of imgList">
+                                    <img src="{{img.src}}" alt="{{img.title}}" style="width: 100px; height: auto;">
+                                </div>
+                                <div [hidden]="imgList.length > 0" class="font-size-9">Nessuna immagine disponibile</div>
+                            </div>
                         </div>
                     </div>
                 </fieldset>

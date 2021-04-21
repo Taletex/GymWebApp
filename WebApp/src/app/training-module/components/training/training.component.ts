@@ -297,7 +297,7 @@ export class TrainingComponent implements OnInit {
     this.httpService.getExercisesForUser(this.account.user._id)
     .subscribe(
       (data: Array<Exercise>) => {
-        this.exerciseList = data;
+        this.exerciseList = _.sortBy(data, ['name', 'variant.name']);;
         console.log(this.exerciseList);
         this.bLoading = false;
       },

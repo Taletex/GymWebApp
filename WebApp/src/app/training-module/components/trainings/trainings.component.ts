@@ -108,13 +108,13 @@ export class TrainingsComponent implements OnInit {
         });
   }
 
-  deleteTraining(id: string, index: number) {
+  deleteTraining(id: string) {
     this.bLoading = true;
     this.httpService.deleteTraining(id)
       .subscribe(
         (data: any) => {
           this.bLoading = false;
-          this.originalTrainingList.splice(index, 1);
+          this.originalTrainingList.splice(this.originalTrainingList.findIndex((t) => { return t._id == id; }), 1);
           this.trainingList = _.cloneDeep(_.orderBy(this.originalTrainingList, ['startDate', 'type'], ['desc', 'asc']));
           this.filterTrainings(null);
           this.toastr.success('Training successfully deleted.');
@@ -180,7 +180,10 @@ export class TrainingsComponent implements OnInit {
     this.resetSortStatus();
     this.sortListStatus[field] = currentFieldStatus == null ? true : !currentFieldStatus;
 
-    this.trainingList = _.orderBy(this.trainingList, field, this.sortListStatus[field] ? 'asc' : 'desc');
+    if(field=='author')
+      this.trainingList = _.orderBy(this.trainingList, ['author.name', 'author.surname'], this.sortListStatus[field] ? 'asc' : 'desc');
+    else
+      this.trainingList = _.orderBy(this.trainingList, field, this.sortListStatus[field] ? 'asc' : 'desc');
   }
 
   sortListByFieldUI(field: string) {

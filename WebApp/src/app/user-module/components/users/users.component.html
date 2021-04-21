@@ -143,6 +143,7 @@
                             <div class="col-3 col-md-2 d-flex justify-content-end">
                                 <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.USERS, elem._id)" *ngIf="elem._id != account.user._id" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
                                 <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.PROFILES)" *ngIf="elem._id == account.user._id" class="image-button" ngbTooltip="Profilo" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
+                                <div *ngIf="account.role == Role.Admin" (click)="openPageWithMode(PAGEMODE.WRITE, PAGES.USERS, elem._id)" class="ml-2 d-none d-md-flex align-items-center image-button" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></div>
             
                                 <!-- Athlete-Coach Link Requests -->
                                 <div (click)="sendNotification(NOTIFICATION_TYPE.COACH_REQUEST, elem)" *ngIf="canCoachRequestBeSent(elem)" class="image-button ml-2 d-none d-md-flex align-items-center" ngbTooltip="Richiesta segui coach" placement="left"><img src="assets/icons/actions/add-friend.svg" style="width:20px; height:auto;" ></div>
@@ -151,9 +152,6 @@
                                 <div (click)="cancelAthleteCoachLink(NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK, elem)" *ngIf="canCancelCoachToAthleteLinkBeSent(elem)" class="image-button ml-2 d-none d-md-flex align-items-center" ngbTooltip="Elimina collegamento con Atleta" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>
                                 <div (click)="cancelAthleteCoachLinkRequest(NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK_REQUEST, elem)" *ngIf="canCancelAthleteToCoachLinkRequestBeSent(elem)" class="image-button ml-2 d-none d-md-flex align-items-center" ngbTooltip="Elimina richiesta di collegamento con Coach" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>
                                 <div (click)="cancelAthleteCoachLinkRequest(NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK_REQUEST, elem)" *ngIf="canCancelCoachToAthleteLinkRequestBeSent(elem)" class="image-button ml-2 d-none d-md-flex align-items-center" ngbTooltip="Elimina richiesta di collegamento con Atleta" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>
-                                <!-- <div *ngIf="account.role == Role.Admin" (click)="openPageWithMode(PAGEMODE.WRITE, PAGES.USERS, elem._id)" class="ml-2 image-button" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></div>
-                                <div *ngIf="account.role == Role.Admin" (click)="deleteTraining(elem._id, trainingIndex)" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
-                                -->
                             
                                 <div class="d-inline d-md-none ml-2 image-button" ngbTooltip="{{opened ? 'Nascondi Dettagli' : 'Mostra Dettagli'}}" placement="left"><button ngbPanelToggle class="btn btn-transparent"><span class="fa text-dark" [ngClass]="{'fa-arrow-circle-up': opened, 'fa-arrow-circle-down': !opened}"></span></button></div>
                             </div>
@@ -181,6 +179,7 @@
                             <div class="col-8 d-flex">
                                 <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.USERS, elem._id)" *ngIf="elem._id != account.user._id" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
                                 <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.PROFILES)" *ngIf="elem._id == account.user._id" class="image-button" ngbTooltip="Profilo" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
+                                <div *ngIf="account.role == Role.Admin" (click)="openPageWithMode(PAGEMODE.WRITE, PAGES.USERS, elem._id)" class="ml-2 image-button ml-2" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></div>
             
                                 <!-- Athlete-Coach Link Requests -->
                                 <div (click)="sendNotification(NOTIFICATION_TYPE.COACH_REQUEST, elem)" *ngIf="canCoachRequestBeSent(elem)" class="image-button ml-2" ngbTooltip="Richiesta segui coach" placement="left"><img src="assets/icons/actions/add-friend.svg" style="width:20px; height:auto;" ></div>

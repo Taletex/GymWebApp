@@ -8,6 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 
 import * as _ from 'lodash';
 import { HttpErrorResponse } from '@angular/common/http';
+import { GeneralService, PAGEMODE, PAGES } from '@app/_services/general-service/general-service.service';
 
 @Component({ templateUrl: 'list.component.html', styleUrls: ['./list.component.scss'] })
 export class ListComponent implements OnInit {
@@ -24,7 +25,10 @@ export class ListComponent implements OnInit {
     private lastWindowWidth: number;
     private triggerWidth: number = 767.98;
 
-    constructor(private accountService: AccountService, private toastr: ToastrService) {
+    public PAGEMODE = PAGEMODE;
+    public PAGES = PAGES;
+
+    constructor(private accountService: AccountService, private toastr: ToastrService, private generalService: GeneralService) {
         this.accountService.account.subscribe(x => this.account = x);
 
         // Init account list 
@@ -44,6 +48,13 @@ export class ListComponent implements OnInit {
 
     ngOnInit() {
     }
+
+    
+    // From services
+    openPageWithMode(mode: PAGEMODE, page: PAGES, id?: string) {
+        this.generalService.openPageWithMode(mode, page, id);
+    } 
+
 
     getAccounts() {
         this.bLoading = true;
@@ -86,14 +97,14 @@ export class ListComponent implements OnInit {
       }
 
 
-    deleteAccount(id: string, index: number) {
+    deleteAccount(id: string) {
         this.bLoading = true;
         this.accountService.delete(id)
             .pipe(first())
             .subscribe(() => {
                 this.bLoading = false;
 
-                this.originalAccountList.splice(index, 1);
+                this.originalAccountList.splice(this.originalAccountList.findIndex((a) => { return a.id == id; }), 1);
                 this.accountList = _.cloneDeep(_.sortBy(this.originalAccountList, ['role', 'user.name', 'user.surname']));
                 this.filterAccounts(null);
 

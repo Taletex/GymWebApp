@@ -161,8 +161,8 @@
                 </div>
                 <div class="col-12 form-row p-0 border round-5 m-0 round-top-0 collapse" id="prContainer">
                     <fieldset class="col-12 row m-0 p-0" [disabled]="(pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY)">
-                        <div class="col-12 form-row m-0 p-0" *ngIf="personalRecordList.length==0">
-                            <div class="alert alert-info w-100">Nessun Personal Record presente</div>
+                        <div class="col-12 form-row m-0" *ngIf="personalRecordList.length==0">
+                            <div class="px-2 py-4">Nessun Personal Record presente</div>
                         </div>
 
                         <div class="col-12 form-row m-0 p-0 position-relative border" *ngFor="let pr of personalRecordList; index as prIndex; first as prFirst">
@@ -191,12 +191,12 @@
                                         <input type="text" [(ngModel)]="pr.exercise.variant.name" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY)}"
                                             id="tipo_{{prIndex}}" name="tipo_{{prIndex}}" placeholder="Tipo esercizio..." disabled>
                                     </div>
-                                    <div class="col-12 col-xl-8 form-group pl-0 pr-1">
+                                    <div class="col-12 col-xl-6 form-group pl-0 pr-1">
                                         <label for="description_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">Descrizione</label>
                                         <input type="text" [(ngModel)]="pr.exercise.description" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY)}"
                                             id="description_{{prIndex}}" name="description_{{prIndex}}" placeholder="Descrizione esercizio..." disabled>
                                     </div>
-                                    <div class="col-12 col-xl-3 form-group px-0 px-lg-1">
+                                    <div class="col-12 col-xl-5 form-group px-0 px-lg-1">
                                         <label for="oneRepPR_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">1RM</label>
                                         <div class="d-flex">
                                             <input type="number" min="0" [(ngModel)]="pr.oneRepPR.weight" class="form-control form-control-sm w-100" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.PROFILES] == PAGEMODE.READONLY)}"
@@ -214,7 +214,7 @@
                                             id="public_{{prIndex}}" name="public_{{prIndex}}">
                                     </div>
                                 </div>
-                                <div class="pl-lg-3 pr-0 mt-1 text-right w-100" *ngIf="(pageStatus[PAGES.PROFILES] == PAGEMODE.WRITE)">
+                                <div class="pl-lg-3 pr-0 mt-1 text-right ml-auto" *ngIf="(pageStatus[PAGES.PROFILES] == PAGEMODE.WRITE)">
                                     <small>Azioni</small>
                                     <div class="d-flex flex-row flex-lg-column align-items-center align-items-lg-end justify-content-end">
                                         <div class="image-button" ngbTooltip="Copia personal record" placement="top" (click)="copyPR(prIndex)"><img src="assets/icons/actions/copy.svg" style="width:15px; height:auto;"></div>

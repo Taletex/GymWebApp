@@ -6,6 +6,7 @@ import { Exercise, EXERCISE_GROUPS, TRAINING_TYPES } from '@app/_models/training
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { Account, Role } from '@app/_models';
 import * as _ from "lodash";
+import { GeneralService, PAGEMODE, PAGES } from '@app/_services/general-service/general-service.service';
 
 @Component({
   selector: 'app-exercises',
@@ -27,9 +28,12 @@ export class ExercisesComponent implements OnInit {
   
   public TRAINING_TYPES = TRAINING_TYPES;
   public EXERCISE_GROUPS = EXERCISE_GROUPS;
+  
+  public PAGEMODE = PAGEMODE;
+  public PAGES = PAGES;
 
   
-  constructor(private httpService: HttpService, private toastr: ToastrService, private accountService: AccountService) { 
+  constructor(private httpService: HttpService, private toastr: ToastrService, private accountService: AccountService, private generalService: GeneralService) { 
     this.accountService.account.subscribe(x => this.account = x);
     
     // Init exercise list 
@@ -49,6 +53,11 @@ export class ExercisesComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+  // From services
+  openPageWithMode(mode: PAGEMODE, page: PAGES, id?: string) {
+    this.generalService.openPageWithMode(mode, page, id);
+  } 
 
   getExercises() {
     this.bLoading = true;
@@ -90,14 +99,14 @@ export class ExercisesComponent implements OnInit {
         });
   }
 
-  deleteExercise(id: string, index: number) {
+  deleteExercise(id: string) {
     this.bLoading = true;
     this.httpService.deleteExercise(id)
       .subscribe(
         (data: any) => {
           this.bLoading = false;
 
-          this.originalExerciseList.splice(index, 1);
+          this.originalExerciseList.splice(this.originalExerciseList.findIndex((e) => { return e._id == id; }), 1);
           this.exerciseList = _.cloneDeep(_.sortBy(this.originalExerciseList, ['name', 'variant.name']));
           this.filterExercises(null);
 

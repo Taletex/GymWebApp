@@ -108,7 +108,7 @@ export class ProfileDetailsComponent {
     getExercises() {
         this.bLoading = true;
 
-        this.httpService.getExercises()
+        this.httpService.getExercisesForUser(this.account.user._id)
             .subscribe(
                 (data: Array<Exercise>) => {
                     for(let i=0; i<this.personalRecordList.length; i++) {
@@ -118,7 +118,7 @@ export class ProfileDetailsComponent {
                         })
                     }
 
-                    this.exerciseList = data;
+                    this.exerciseList = _.sortBy(data, ['name', 'variant.name']);
                     console.log(this.exerciseList);
                     this.bLoading = false;
                 },

@@ -29,10 +29,15 @@ export class ExerciseComponent implements OnInit {
   public disciplineDropdownSettings = {};
   public TRAINING_TYPES = TRAINING_TYPES;
   public EXERCISE_GROUPS = EXERCISE_GROUPS;
+
+  // Input aux attributes
   public exerciseGroupsList = Object.values(this.EXERCISE_GROUPS);
   public exerciseDisciplinesList = Object.values(this.TRAINING_TYPES);
-  public imgInputDisabled: boolean = false;
-  
+  public bImgInputDisabled: boolean = false;
+  public fileList: File[] = [];
+  public imgList: any = [];
+  public fileInputOptions: any = {bImgInputDisabled: (this.pageStatus[PAGES.EXERCISES] != PAGEMODE.WRITE), bImgInputDirty: false};
+
   constructor(private generalService: GeneralService, private router: Router, private httpService: HttpService, private toastr: ToastrService, private accountService: AccountService) {
     let exerciseId = (this.router.url).split('/')[2];
     this.accountService.account.subscribe(x => this.account = x);
@@ -46,6 +51,7 @@ export class ExerciseComponent implements OnInit {
           console.log(this.exercise);
 
           this.pageStatus = this.generalService.getPageStatus();
+          this.initVariableAttributes();
           console.log(this.pageStatus);
         },
         (error: HttpErrorResponse) => {
@@ -72,6 +78,10 @@ export class ExerciseComponent implements OnInit {
     };
   }
 
+  initVariableAttributes() {
+    this.fileInputOptions.bImgInputDisabled = (this.pageStatus[PAGES.EXERCISES] != PAGEMODE.WRITE);
+  }
+
   /**
    * get for groups input select elements
    */
@@ -95,6 +105,7 @@ export class ExerciseComponent implements OnInit {
   changeMode(mode: PAGEMODE) {
     this.pageStatus[PAGES.EXERCISES] = mode;
     this.generalService.setPageStatus(mode, PAGES.EXERCISES);
+    this.initVariableAttributes();
   }
 
   saveExercise() {
@@ -127,6 +138,10 @@ export class ExerciseComponent implements OnInit {
           this.toastr.error('An error occurred while deleting the exercise!');
           console.log(error.error.message);
         });
+  }
+
+  initFileInputOptions() {
+    this.fileInputOptions = {bImgInputDisabled: (this.pageStatus[PAGES.EXERCISES] != PAGEMODE.WRITE), bImgInputDirty: false};
   }
 
 }

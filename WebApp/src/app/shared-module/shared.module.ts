@@ -14,7 +14,8 @@ import { WeekViewComponent } from './components/week-view/week-view.component';
 import { SessionViewComponent } from './components/session-view/session-view.component';
 import { TrainingViewComponent } from './components/training-view/training-view.component';
 import { UploadFilesComponent } from './components/upload-files/upload-files.component';
-import { DragDropDirective } from './directives/drag-drop.directives'
+import { DragDropDirective } from './directives/drag-drop.directives';
+import { CropImageModalComponent } from './components/crop-image-modal/crop-image-modal.component'
 
 export { TrainingModalComponent } from './components/training-modal/training-modal.component';
 export { ExerciseModalComponent } from './components/exercise-modal/exercise-modal.component';
@@ -44,7 +45,8 @@ export { DragDropDirective } from './directives/drag-drop.directives'
         SessionViewComponent,
         TrainingViewComponent,
         UploadFilesComponent,
-        DragDropDirective
+        DragDropDirective,
+        CropImageModalComponent
     ],
     exports: [
         TrainingModalComponent,

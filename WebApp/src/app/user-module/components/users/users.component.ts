@@ -175,38 +175,6 @@ export class UsersComponent implements OnInit {
     else
       this.userList[_.findIndex(this.userList, function(u) { return u._id == user._id })] = _.cloneDeep(user);
   }
-  
-  /* createUser() {
-    this.bLoading = true;
-    this.httpService.createUser(this.newUser)
-      .subscribe(
-        (data: any) => {
-          this.bLoading = false;
-          this.userList.push(data);
-          this.toastr.success('User successfully created!');
-        },
-        (error: HttpErrorResponse) => {
-          this.bLoading = false;
-          this.toastr.error('An error occurred while creating the user!');
-          console.log(error);
-        });
-  } */
-
-  /* deleteUser(id: string, index: number) {
-    this.bLoading = true;
-    this.httpService.deleteUser(id)
-      .subscribe(
-        (data: any) => {
-          this.bLoading = false;
-          this.userList.splice(index, 1);
-          this.toastr.success('User successfully deleted!');
-        },
-        (error: HttpErrorResponse) => {
-          this.bLoading = false;
-          this.toastr.error('An error occurred while deleting the user!');
-          console.log(error);
-        });
-  } */
 
   /* FILTER FUNCTIONS */
   filterUsers(event: any) {

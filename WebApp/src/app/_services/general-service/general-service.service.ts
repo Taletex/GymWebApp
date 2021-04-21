@@ -14,7 +14,8 @@ export enum PAGES {
   TRAININGS = "trainings",
   EXERCISES = "exercises",
   USERS = "users",
-  PROFILES = "userprofile"
+  PROFILES = "userprofile",
+  ACCOUNTS = "accounts"
 }
 
 export class PageStatus {
@@ -22,12 +23,14 @@ export class PageStatus {
   public exercises: string;
   public users: string;
   public userprofile: string;
+  public accounts: string;
 
-  constructor(trainings: string = PAGEMODE.READONLY, exercises: string = PAGEMODE.READONLY, users: string = PAGEMODE.READONLY, userprofile: string = PAGEMODE.READONLY) {
+  constructor(trainings: string = PAGEMODE.READONLY, exercises: string = PAGEMODE.READONLY, users: string = PAGEMODE.READONLY, userprofile: string = PAGEMODE.READONLY, accounts: string = PAGEMODE.READONLY) {
     this.trainings = trainings;
     this.exercises = exercises;
     this.users = users;
     this.userprofile = userprofile;
+    this.accounts = accounts;
   }
 } 
 
@@ -83,11 +86,10 @@ export class GeneralService {
 
   openPageWithMode(mode: PAGEMODE, page: PAGES, id?: string) {
     this.setPageStatus(mode, page);
+    let fullPage = page == PAGES.ACCOUNTS ? ("admin/" + page) : page;
+    let options = id ? ([fullPage, id]) : [fullPage];
 
-    if(id)
-      this.router.navigate([page, id]);
-    else
-      this.router.navigate([page]);
+    this.router.navigate(options);
 
     return;
   }

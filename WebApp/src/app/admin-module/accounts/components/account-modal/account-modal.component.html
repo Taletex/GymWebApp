@@ -97,8 +97,8 @@
             </div>
             <div class="modal-footer overflow-visible">
                 <div class="form-group d-flex align-items-center justify-content-end">
+                    <button [disabled]="bLoading" ngbAutofocus class="btn btn-sm-sm btn-primary mr-2"><span *ngIf="bLoading" class="spinner-border spinner-border-sm mr-1"></span>Salva</button>
                     <button [disabled]="bLoading" class="btn btn-sm-sm btn-secondary" (click)="modal.dismiss('Cancel')"><span *ngIf="bLoading" class="spinner-border spinner-border-sm mr-1"></span>Annulla</button>
-                    <button [disabled]="bLoading" ngbAutofocus class="btn btn-sm-sm btn-primary ml-2"><span *ngIf="bLoading" class="spinner-border spinner-border-sm mr-1"></span>Salva</button>
                 </div>
             </div>
         </form>

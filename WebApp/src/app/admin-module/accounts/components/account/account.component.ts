@@ -13,6 +13,7 @@ import { Contacts, Residence, User } from '@app/_models/training-model';
 import { HttpService } from '@app/_services/http-service/http-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Account } from '@app/_models';
+import { GeneralService, PAGEMODE, PAGES, PageStatus } from '@app/_services/general-service/general-service.service';
 
 @Component({ 
     templateUrl: 'account.component.html',
@@ -26,14 +27,24 @@ export class AccountComponent implements OnInit {
     bLoading = false;
     submitted = false;
 
+    // Pagemode handling
+    public PAGEMODE = PAGEMODE;
+    public PAGES = PAGES;
+    public pageStatus: PageStatus = new PageStatus();
+
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
         private accountService: AccountService,
         private toastr: ToastrService,
-        private httpService: HttpService
-    ) {}
+        private httpService: HttpService,
+        private generalService: GeneralService
+    ) {
+        // Page status init
+        this.pageStatus = this.generalService.getPageStatus();
+        console.log(this.pageStatus);
+    }
 
     ngOnInit() {
         this.id = this.route.snapshot.params['id'];
@@ -82,8 +93,17 @@ export class AccountComponent implements OnInit {
                         email: x.email,
                         role: x.role
                     });
+
+                    this.pageStatus = this.generalService.getPageStatus();
+                    console.log(this.pageStatus);
                 }
             );
+    }
+
+    
+    changeMode(mode: PAGEMODE) {
+        this.pageStatus[PAGES.USERS] = mode;
+        this.generalService.setPageStatus(mode, PAGES.USERS);
     }
 
     // convenience getter for easy access to form fields
