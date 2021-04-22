@@ -94,13 +94,14 @@
                             </ng-multiselect-dropdown>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-6 form-row m-0" [disabled]="(pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)">
+                    <div class="col-12 col-lg-6 form-row m-0">
                         <div class="col-12 form-group" *ngIf="(pageStatus[PAGES.EXERCISES] == PAGEMODE.WRITE)">
-                            <label for="exerciseImages" class="col-form-label col-form-label-sm text-muted">Immagini (limite 3)</label>
+                            <label for="exerciseImages" class="col-form-label col-form-label-sm text-muted">Immagini </label>
+                            <label for="exerciseImages" class="d-block d-sm-inline ml-sm-1 col-form-label col-form-label-sm text-muted pt-0">(limiti: 2MB, .jpeg/.png, 3 immagini)</label>
                             <app-upload-files id="exerciseImages" [(fileInputOptions)]="fileInputOptions" [(fileList)]="fileList" [(imgList)]="imgList" [(exercise)]="exercise"></app-upload-files>
                         </div>
                         <div class="col-12 form-group" *ngIf="(pageStatus[PAGES.EXERCISES] != PAGEMODE.WRITE)">
-                            <label for="exerciseImages" class="col-form-label col-form-label-sm text-muted">Immagini (limite 3)</label>
+                            <label for="exerciseImages" class="col-form-label col-form-label-sm text-muted">Immagini</label>
                             <div class="row m-0 d-flex align-items-center justify-content-center" *ngIf="!fileInputOptions.bImgInputDirty">
                                 <ngb-carousel class="col-12 p-0 carousel-container-small">
                                     <ng-template ngbSlide *ngFor="let img of exercise.images">

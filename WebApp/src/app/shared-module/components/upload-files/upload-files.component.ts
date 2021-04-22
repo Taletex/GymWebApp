@@ -14,6 +14,8 @@ export class UploadFilesComponent implements OnInit {
 
   @Input() fileInputOptions: any = {bImgInputDisabled: false, bImgInputDirty: false};
   @Input() maxImageNumber: number = 3;
+  @Input() maxImageSize: number = 2;    //MB
+  @Input() acceptedFormats: string[] = ["image/png", "image/jpeg"];
   @Input() fileList: File[] = [];
   @Input() imgList: any = [];
   @Input() exercise: Exercise = new Exercise();
@@ -32,11 +34,17 @@ export class UploadFilesComponent implements OnInit {
     let imgList = this.imgList;
 
     for (let index = 0; index < event.length; index++) {
+      const element = event[index]; 
       if(this.fileList.length >= (this.maxImageNumber)) {
-        this.toastr.error("E' possibile caricare al più " + this.maxImageNumber + " immagini, quelle in eccesso sono state scartate");
+        this.toastr.warning("E' possibile caricare al più " + this.maxImageNumber + " immagini, quelle in eccesso sono state scartate");
+        break;
+      } else if(!this.acceptedFormats.includes(element.type)) {
+        this.toastr.warning("Le immmagini devono avere estensione .jpeg, .jpg o .png");
+        break;
+      } else if(Number((((element).size/1024)/1024).toFixed(4)) >= this.maxImageSize) {  // MB
+        this.toastr.warning("La dimensione massima delle immagini deve essere inferiore a " + this.maxImageSize + "MB");
         break;
       } else {
-        const element = event[index];
         let reader = new FileReader();
         this.fileList.push(element);
         
@@ -54,7 +62,7 @@ export class UploadFilesComponent implements OnInit {
   deleteAttachment(index) {
     this.fileInputOptions.bImgInputDirty = true;
 
-    document.getElementById("uploadImagesForm").reset();
+    (document.getElementById("uploadImagesForm") as HTMLFormElement).reset();
     this.fileList.splice(index, 1);
     this.imgList.splice(index, 1);
   }
