@@ -5,7 +5,7 @@ const router = express.Router();
 const corsOptions = {origin: '*', optionsSuccessStatus: 200}; 
 
 
-const exerciseService = require('src/exercises/exercise.service.js');
+const exerciseService = require('src/exercises/exercise.service.js')();
 
 /* ROUTES */
 

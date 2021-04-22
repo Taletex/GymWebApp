@@ -21,7 +21,7 @@ export class ExerciseComponent implements OnInit {
   public PAGES = PAGES;
   public pageStatus: PageStatus = new PageStatus();
 
-  public exercise: Exercise = new Exercise();
+  public exercise: any = new Exercise();
   public account: Account;
   public Role = Role;
 
@@ -38,6 +38,9 @@ export class ExerciseComponent implements OnInit {
   public imgList: any = [];
   public fileInputOptions: any = {bImgInputDisabled: (this.pageStatus[PAGES.EXERCISES] != PAGEMODE.WRITE), bImgInputDirty: false};
 
+  public baseServerUrl = this.httpService.baseServerUrl;
+
+  
   constructor(private generalService: GeneralService, private router: Router, private httpService: HttpService, private toastr: ToastrService, private accountService: AccountService) {
     let exerciseId = (this.router.url).split('/')[2];
     this.accountService.account.subscribe(x => this.account = x);
@@ -51,7 +54,7 @@ export class ExerciseComponent implements OnInit {
           console.log(this.exercise);
 
           this.pageStatus = this.generalService.getPageStatus();
-          this.initVariableAttributes();
+          this.initImageInputAuxVariables();
           console.log(this.pageStatus);
         },
         (error: HttpErrorResponse) => {
@@ -77,9 +80,27 @@ export class ExerciseComponent implements OnInit {
       allowSearchFilter: true
     };
   }
+  
+  initFileInputOptions() {
+    this.fileInputOptions = {bImgInputDisabled: (this.pageStatus[PAGES.EXERCISES] != PAGEMODE.WRITE), bImgInputDirty: false};
+  }
 
-  initVariableAttributes() {
+  initImginputDisabled() {
     this.fileInputOptions.bImgInputDisabled = (this.pageStatus[PAGES.EXERCISES] != PAGEMODE.WRITE);
+  }
+
+  initImageInputAuxVariables() {
+    this.fileList = [];
+    this.imgList = [];
+    if(this.exercise.images.length > 0) {
+      for(let img of this.exercise.images) {
+        let splittedImg = img.split("/");
+        this.fileList.push(new File([""], splittedImg[splittedImg.length-1]));
+        this.imgList.push({src: img, title: splittedImg[splittedImg.length-1], bNew: false});
+      }
+    }
+
+    this.initFileInputOptions();
   }
 
   /**
@@ -105,16 +126,23 @@ export class ExerciseComponent implements OnInit {
   changeMode(mode: PAGEMODE) {
     this.pageStatus[PAGES.EXERCISES] = mode;
     this.generalService.setPageStatus(mode, PAGES.EXERCISES);
-    this.initVariableAttributes();
+    this.initImginputDisabled();
   }
 
   saveExercise() {
     this.bLoading = true;
+
+    if(this.fileInputOptions.bImgInputDirty) {
+      this.exercise.images = this.imgList;
+      this.exercise.bNewImages = true;
+    }
+    
     this.httpService.updateExercise(this.exercise._id, this.exercise)
     .subscribe(
       (data: any) => {
         this.bLoading = false;
         this.exercise = data;
+        this.initImageInputAuxVariables();
         this.toastr.success('Exercise successfully updated!');
       },
       (error: HttpErrorResponse) => {
@@ -138,10 +166,6 @@ export class ExerciseComponent implements OnInit {
           this.toastr.error('An error occurred while deleting the exercise!');
           console.log(error.error.message);
         });
-  }
-
-  initFileInputOptions() {
-    this.fileInputOptions = {bImgInputDisabled: (this.pageStatus[PAGES.EXERCISES] != PAGEMODE.WRITE), bImgInputDirty: false};
   }
 
 }

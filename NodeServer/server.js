@@ -3,8 +3,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const fs = require('fs');
 const errorHandler = require('src/_middleware/error-handler');
 const _ = require('lodash');
+const fileDirPath = "/files";
 
 /* EXPRESS INITIALIZATION */
 // create express app
@@ -44,6 +46,11 @@ io.on('connection', (socket) => {
 });
 
 
+// Serve all static files  inside files directory.
+if (!fs.existsSync(fileDirPath))
+    fs.mkdirSync(fileDirPath);
+app.use(fileDirPath, express.static(__dirname + fileDirPath));
+
 /* ROUTES INITIALIZATION */
 app.get('/', (req, res) => { res.json({ "message": "Welcome to GymWebApp database application." }); });
 app.use('/trainings', require('src/trainings/training.controller')(io, clientSocketList));
@@ -56,6 +63,7 @@ app.use('/api-docs', require('src/_helpers/swagger'));
 
 // global error handler
 app.use(errorHandler);
+
 
 
 /* START SERVER */

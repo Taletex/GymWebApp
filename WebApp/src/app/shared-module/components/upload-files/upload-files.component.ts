@@ -1,6 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import Cropper from 'cropperjs';
+import { Exercise } from '@app/_models/training-model';
+import { HttpService } from '@app/_services/http-service/http-service.service';
+import { GeneralService } from '@app/_services/general-service/general-service.service';
 
 @Component({
   selector: 'app-upload-files',
@@ -13,8 +16,12 @@ export class UploadFilesComponent implements OnInit {
   @Input() maxImageNumber: number = 3;
   @Input() fileList: File[] = [];
   @Input() imgList: any = [];
+  @Input() exercise: Exercise = new Exercise();
+  public bInitialized: boolean = false;
+  public baseServerUrl = this.httpService.baseServerUrl;
 
-  constructor(private toastr: ToastrService) { }
+  constructor(private toastr: ToastrService, private httpService: HttpService, private generalService: GeneralService) { 
+  }
 
   ngOnInit(): void {
   }
@@ -35,7 +42,7 @@ export class UploadFilesComponent implements OnInit {
         
         reader.onload = function(e) {
           // document.getElementById("cropImageModalButton").click();
-          imgList.push({src: e.target.result, title: element.name});
+          imgList.push({src: e.target.result, title: element.name, bNew: true});
         }
         reader.readAsDataURL(element);    // convert to base64 string
   
@@ -45,8 +52,28 @@ export class UploadFilesComponent implements OnInit {
   }
 
   deleteAttachment(index) {
+    this.fileInputOptions.bImgInputDirty = true;
+
+    document.getElementById("uploadImagesForm").reset();
     this.fileList.splice(index, 1);
     this.imgList.splice(index, 1);
   }
 
+  shiftImg(index, shift) {
+    this.fileInputOptions.bImgInputDirty = true;
+    
+    this.generalService.blinkBtn("imgBtn"+index);
+    this.generalService.blinkBtn("imgBtn"+(index+shift));
+
+    if (this.imgList && index < this.imgList.length) {
+      if((shift==1 && index==(this.imgList.length-1)) || (shift==-1 && index==0)) {
+        console.log('ERROR: shifting img of index ' + index);
+        return;
+      }
+
+      // swap imgList and fileList array elements according to index and shift
+      [this.imgList[index], this.imgList[index+shift]] = [this.imgList[index+shift], this.imgList[index]];
+      [this.fileList[index], this.fileList[index+shift]] = [this.fileList[index+shift], this.fileList[index]];
+    }
+  }
 }

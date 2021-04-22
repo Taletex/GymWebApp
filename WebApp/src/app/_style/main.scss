@@ -54,19 +54,95 @@ $custom-lightgray: rgb(179 179 179 / 15%);
   }
 }
 
+// Action icon (for images used as icons inside buttons)
+.standard-action-icon {
+  width: 1.2rem;
+  height: auto;
+}
+.standard-action-icon-lg {
+  width: 1.2rem;
+  height: auto;
+  @media (max-width: 991.98px) {
+    width: 1rem !important;
+  }
+}
+.standard-action-icon-md {
+  width: 1.2rem;
+  height: auto;
+  @media (max-width: 767.98px) {
+    width: .9rem !important;
+  }
+}
+.standard-action-icon-sm {
+  width: 1.2rem;
+  height: auto;
+  @media (max-width: 575.98px) {
+    width: .8rem !important;
+  }
+}
+
+// Action icon (for images used buttons)
+.standard-action-icon-btn {
+  width: 1.2rem;
+  height: auto;
+  cursor: pointer;
+  
+  &:hover {
+    opacity: .8;
+  }
+}
+.standard-action-icon-btn-lg {
+  width: 1.2rem;
+  height: auto;
+  cursor: pointer;
+  
+  &:hover {
+    opacity: .8;
+  }
+
+  @media (max-width: 991.98px) {
+    width: 1rem !important;
+  }
+}
+.standard-action-icon-btn-md {
+  width: 1.2rem;
+  height: auto;
+  cursor: pointer;
+  
+  &:hover {
+    opacity: .8;
+  }
+
+  @media (max-width: 767.98px) {
+    width: .9rem !important;
+  }
+}
+.standard-action-icon-btn-sm {
+  width: 1.2rem;
+  height: auto;
+  cursor: pointer;
+  
+  &:hover {
+    opacity: .8;
+  }
+
+  @media (max-width: 575.98px) {
+    width: .8rem !important;
+  }
+}
+
 .standard-icon-lg {
   width: 24px;
   height: auto;
   @media (max-width: 991.98px) {
-    width: 15px;
+    width: 15px !important;
   }
 }
-
 .standard-icon-md {
   width: 24px;
   height: auto;
   @media (max-width: 767.98px) {
-    width: 15px;
+    width: 15px !important;
   }
 }
 
@@ -550,7 +626,7 @@ $custom-lightgray: rgb(179 179 179 / 15%);
 
 @for $i from 1 through 30 {
   .font-size-#{$i} {
-    font-size: 0.1rem * $i;
+    font-size: 0.1rem * $i !important;
   }
 }
 
@@ -1000,6 +1076,45 @@ ngb-carousel .picsum-img-wrapper>img {
 }
 
 /* BOOTSTRAP RE-DEFINITION */
+.carousel-container-small {
+  height: 50vh !important;
+  width: 50vh !important;
+  max-width: 50vh !important;
+  transition: all 1s;
+   
+  @media (max-width: 767.98px) { 
+    transition: all 1s;
+    height: 300px !important;
+    width: 300px !important;
+    max-width: 300px !important;
+  }
+
+  @media (max-width: 575.98px) { 
+    transition: all 1s;
+    height: 200px !important;
+    width: 200px !important;
+    max-width: 200px !important;
+  }
+
+  .carousel-inner {
+      height: 100% !important;
+      width: 100% !important;
+
+      .carousel-item {
+        height: 100% !important;
+
+        .picsum-img-wrapper {
+          height: 100% !important;
+        }
+      }
+  }
+
+  .carousel-img {
+      width: 100%;
+      height: 100%;
+  }
+}
+
 .multiselect-dropdown {
   .disabled {
     .dropdown-btn {

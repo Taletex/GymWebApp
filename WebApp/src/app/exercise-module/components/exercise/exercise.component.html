@@ -20,18 +20,18 @@
         <div class="maincontainer__body card-body h-vh-fixed">
             <form>
                 <fieldset class="form-row m-0" [disabled]="(pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)">
-                    <div class="col-12 form-row m-0 p-0">
-                        <div class="col-12 col-md-12 col-lg-4 form-group">
+                    <div class="col-12 col-lg-6 form-row m-0 p-0">
+                        <div class="col-12 col-md-12 col-lg-12 form-group">
                             <label for="exerciseName" class="col-form-label col-form-label-sm text-muted">Nome</label>
                             <input type="text" [(ngModel)]="exercise.name" class="form-control form-control-sm"
                                 [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)}" id="exerciseName" name="exerciseName">
                         </div>
-                        <div class="col-12 col-md-6 col-lg-4 form-group">
+                        <div class="col-12 col-md-6 col-lg-12 form-group">
                             <label for="exerciseVariantName" class="col-form-label col-form-label-sm text-muted">Nome Variante</label>
                             <input type="text" [(ngModel)]="exercise.variant.name" class="form-control form-control-sm"
                                 [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)}" id="exerciseVariantName" name="exerciseVariantName">
                         </div>
-                        <div class="col-12 col-md-6 col-lg-4 form-group">
+                        <div class="col-12 col-md-6 col-lg-12 form-group">
                             <label for="exerciseVariantCoefficient" class="col-form-label col-form-label-sm text-muted">Coefficente di intensità</label>
                             <input type="number" min=0.1 [(ngModel)]="exercise.variant.intensityCoefficient" class="form-control form-control-sm"
                                 [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)}" id="exerciseVariantCoefficient" name="exerciseVariantCoefficient">
@@ -41,7 +41,7 @@
                             <textarea [(ngModel)]="exercise.description" class="form-control form-control-sm"
                                 [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)}" id="exerciseDescription" name="exerciseDescription"></textarea>
                         </div>
-                        <div class="col-12 col-xl-6 form-group">
+                        <div class="col-12 form-group">
                             <label for="exerciseGroups" class="col-form-label col-form-label-sm text-muted">Gruppi</label>
                             <ng-multiselect-dropdown 
                                 [disabled]="(pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)"
@@ -67,7 +67,7 @@
                                 </ng-template>
                             </ng-multiselect-dropdown>
                         </div>
-                        <div class="col-12 col-xl-6 form-group">
+                        <div class="col-12 form-group">
                             <label for="exerciseDisciplines" class="col-form-label col-form-label-sm text-muted">Discipline</label>
                             <ng-multiselect-dropdown 
                                 [disabled]="(pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)"
@@ -93,22 +93,32 @@
                                 </ng-template>
                             </ng-multiselect-dropdown>
                         </div>
-                        <div class="col-12 form-group" [hidden]="(pageStatus[PAGES.EXERCISES] != PAGEMODE.WRITE)">
+                    </div>
+                    <div class="col-12 col-lg-6 form-row m-0" [disabled]="(pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)">
+                        <div class="col-12 form-group" *ngIf="(pageStatus[PAGES.EXERCISES] == PAGEMODE.WRITE)">
                             <label for="exerciseImages" class="col-form-label col-form-label-sm text-muted">Immagini (limite 3)</label>
-                            <app-upload-files id="exerciseImages" [(fileInputOptions)]="fileInputOptions" [(fileList)]="fileList" [(imgList)]="imgList"></app-upload-files>
+                            <app-upload-files id="exerciseImages" [(fileInputOptions)]="fileInputOptions" [(fileList)]="fileList" [(imgList)]="imgList" [(exercise)]="exercise"></app-upload-files>
                         </div>
-                        <div class="col-12 form-group" [hidden]="(pageStatus[PAGES.EXERCISES] == PAGEMODE.WRITE)">
+                        <div class="col-12 form-group" *ngIf="(pageStatus[PAGES.EXERCISES] != PAGEMODE.WRITE)">
                             <label for="exerciseImages" class="col-form-label col-form-label-sm text-muted">Immagini (limite 3)</label>
-                            <div class="row m-0 p-3" *ngIf="!fileInputOptions.bImgInputDirty">
-                                <div class="col-12 col-lg mb-3 mb-lg-0 d-flex align-items-center justify-content-center" *ngFor="let img of exercise.images">
-                                    <img src="{{img}}" style="width: 100px; height: auto;">
-                                </div>
+                            <div class="row m-0 d-flex align-items-center justify-content-center" *ngIf="!fileInputOptions.bImgInputDirty">
+                                <ngb-carousel class="col-12 p-0 carousel-container-small">
+                                    <ng-template ngbSlide *ngFor="let img of exercise.images">
+                                      <div class="picsum-img-wrapper d-flex align-items-center justify-content-center">
+                                        <img [src]="baseServerUrl + img" alt="Exercise img {{index}}" class="carousel-img">
+                                      </div>
+                                    </ng-template>
+                                </ngb-carousel>
                                 <div [hidden]="exercise.images.length > 0" class="font-size-9">Nessuna immagine disponibile</div>
                             </div>
-                            <div class="row m-0 p-3" *ngIf="fileInputOptions.bImgInputDirty">
-                                <div class="col-12 col-lg mb-3 mb-lg-0 d-flex align-items-center justify-content-center" *ngFor="let img of imgList">
-                                    <img src="{{img.src}}" alt="{{img.title}}" style="width: 100px; height: auto;">
-                                </div>
+                            <div class="row m-0 p-3 d-flex align-items-center justify-content-center" *ngIf="fileInputOptions.bImgInputDirty">
+                                <ngb-carousel class="col-12 p-0 carousel-container-small">
+                                    <ng-template ngbSlide *ngFor="let img of imgList">
+                                      <div class="picsum-img-wrapper">
+                                        <img [src]="img.bNew ? img.src : (baseServerUrl + img.src)" alt="{{img.title}}" class="carousel-img">
+                                      </div>
+                                    </ng-template>
+                                </ngb-carousel>
                                 <div [hidden]="imgList.length > 0" class="font-size-9">Nessuna immagine disponibile</div>
                             </div>
                         </div>

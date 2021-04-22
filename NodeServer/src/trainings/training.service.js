@@ -336,8 +336,10 @@ module.exports = (io, clientSocketList) => {
             if(athletes.length > 0) {
 
                 // 2. Prepare Training as PDF
-                let filePath = "./files/" + req.params._id + ".pdf";
-
+                let dirPath = "./files"
+                let filePath = dirPath + "/" + req.params._id + ".pdf";
+                if (!fs.existsSync(dirPath))
+                    fs.mkdirSync(dirPath);
                 await createTrainingAsPDF(req.body.trainingAsHTML, filePath);
 
                 // 3. Send emails to destination users

@@ -104,13 +104,99 @@
   }
 }
 
+.standard-action-icon {
+  width: 1.2rem;
+  height: auto;
+}
+
+.standard-action-icon-lg {
+  width: 1.2rem;
+  height: auto;
+}
+@media (max-width: 991.98px) {
+  .standard-action-icon-lg {
+    width: 1rem !important;
+  }
+}
+
+.standard-action-icon-md {
+  width: 1.2rem;
+  height: auto;
+}
+@media (max-width: 767.98px) {
+  .standard-action-icon-md {
+    width: 0.9rem !important;
+  }
+}
+
+.standard-action-icon-sm {
+  width: 1.2rem;
+  height: auto;
+}
+@media (max-width: 575.98px) {
+  .standard-action-icon-sm {
+    width: 0.8rem !important;
+  }
+}
+
+.standard-action-icon-btn {
+  width: 1.2rem;
+  height: auto;
+  cursor: pointer;
+}
+.standard-action-icon-btn:hover {
+  opacity: 0.8;
+}
+
+.standard-action-icon-btn-lg {
+  width: 1.2rem;
+  height: auto;
+  cursor: pointer;
+}
+.standard-action-icon-btn-lg:hover {
+  opacity: 0.8;
+}
+@media (max-width: 991.98px) {
+  .standard-action-icon-btn-lg {
+    width: 1rem !important;
+  }
+}
+
+.standard-action-icon-btn-md {
+  width: 1.2rem;
+  height: auto;
+  cursor: pointer;
+}
+.standard-action-icon-btn-md:hover {
+  opacity: 0.8;
+}
+@media (max-width: 767.98px) {
+  .standard-action-icon-btn-md {
+    width: 0.9rem !important;
+  }
+}
+
+.standard-action-icon-btn-sm {
+  width: 1.2rem;
+  height: auto;
+  cursor: pointer;
+}
+.standard-action-icon-btn-sm:hover {
+  opacity: 0.8;
+}
+@media (max-width: 575.98px) {
+  .standard-action-icon-btn-sm {
+    width: 0.8rem !important;
+  }
+}
+
 .standard-icon-lg {
   width: 24px;
   height: auto;
 }
 @media (max-width: 991.98px) {
   .standard-icon-lg {
-    width: 15px;
+    width: 15px !important;
   }
 }
 
@@ -120,7 +206,7 @@
 }
 @media (max-width: 767.98px) {
   .standard-icon-md {
-    width: 15px;
+    width: 15px !important;
   }
 }
 
@@ -784,123 +870,123 @@
 }
 
 .font-size-1 {
-  font-size: 0.1rem;
+  font-size: 0.1rem !important;
 }
 
 .font-size-2 {
-  font-size: 0.2rem;
+  font-size: 0.2rem !important;
 }
 
 .font-size-3 {
-  font-size: 0.3rem;
+  font-size: 0.3rem !important;
 }
 
 .font-size-4 {
-  font-size: 0.4rem;
+  font-size: 0.4rem !important;
 }
 
 .font-size-5 {
-  font-size: 0.5rem;
+  font-size: 0.5rem !important;
 }
 
 .font-size-6 {
-  font-size: 0.6rem;
+  font-size: 0.6rem !important;
 }
 
 .font-size-7 {
-  font-size: 0.7rem;
+  font-size: 0.7rem !important;
 }
 
 .font-size-8 {
-  font-size: 0.8rem;
+  font-size: 0.8rem !important;
 }
 
 .font-size-9 {
-  font-size: 0.9rem;
+  font-size: 0.9rem !important;
 }
 
 .font-size-10 {
-  font-size: 1rem;
+  font-size: 1rem !important;
 }
 
 .font-size-11 {
-  font-size: 1.1rem;
+  font-size: 1.1rem !important;
 }
 
 .font-size-12 {
-  font-size: 1.2rem;
+  font-size: 1.2rem !important;
 }
 
 .font-size-13 {
-  font-size: 1.3rem;
+  font-size: 1.3rem !important;
 }
 
 .font-size-14 {
-  font-size: 1.4rem;
+  font-size: 1.4rem !important;
 }
 
 .font-size-15 {
-  font-size: 1.5rem;
+  font-size: 1.5rem !important;
 }
 
 .font-size-16 {
-  font-size: 1.6rem;
+  font-size: 1.6rem !important;
 }
 
 .font-size-17 {
-  font-size: 1.7rem;
+  font-size: 1.7rem !important;
 }
 
 .font-size-18 {
-  font-size: 1.8rem;
+  font-size: 1.8rem !important;
 }
 
 .font-size-19 {
-  font-size: 1.9rem;
+  font-size: 1.9rem !important;
 }
 
 .font-size-20 {
-  font-size: 2rem;
+  font-size: 2rem !important;
 }
 
 .font-size-21 {
-  font-size: 2.1rem;
+  font-size: 2.1rem !important;
 }
 
 .font-size-22 {
-  font-size: 2.2rem;
+  font-size: 2.2rem !important;
 }
 
 .font-size-23 {
-  font-size: 2.3rem;
+  font-size: 2.3rem !important;
 }
 
 .font-size-24 {
-  font-size: 2.4rem;
+  font-size: 2.4rem !important;
 }
 
 .font-size-25 {
-  font-size: 2.5rem;
+  font-size: 2.5rem !important;
 }
 
 .font-size-26 {
-  font-size: 2.6rem;
+  font-size: 2.6rem !important;
 }
 
 .font-size-27 {
-  font-size: 2.7rem;
+  font-size: 2.7rem !important;
 }
 
 .font-size-28 {
-  font-size: 2.8rem;
+  font-size: 2.8rem !important;
 }
 
 .font-size-29 {
-  font-size: 2.9rem;
+  font-size: 2.9rem !important;
 }
 
 .font-size-30 {
-  font-size: 3rem;
+  font-size: 3rem !important;
 }
 
 @media (max-width: 767.98px) {
@@ -2063,6 +2149,43 @@ ngb-carousel .picsum-img-wrapper > img {
 }
 
 /* BOOTSTRAP RE-DEFINITION */
+.carousel-container-small {
+  height: 50vh !important;
+  width: 50vh !important;
+  max-width: 50vh !important;
+  transition: all 1s;
+}
+@media (max-width: 767.98px) {
+  .carousel-container-small {
+    transition: all 1s;
+    height: 300px !important;
+    width: 300px !important;
+    max-width: 300px !important;
+  }
+}
+@media (max-width: 575.98px) {
+  .carousel-container-small {
+    transition: all 1s;
+    height: 200px !important;
+    width: 200px !important;
+    max-width: 200px !important;
+  }
+}
+.carousel-container-small .carousel-inner {
+  height: 100% !important;
+  width: 100% !important;
+}
+.carousel-container-small .carousel-inner .carousel-item {
+  height: 100% !important;
+}
+.carousel-container-small .carousel-inner .carousel-item .picsum-img-wrapper {
+  height: 100% !important;
+}
+.carousel-container-small .carousel-img {
+  width: 100%;
+  height: 100%;
+}
+
 .multiselect-dropdown .disabled .dropdown-btn {
   background-color: white !important;
   border: 0 !important;

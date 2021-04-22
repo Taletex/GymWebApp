@@ -1,18 +1,22 @@
 <div class="uploadfilecontainer m-0 w-100" [ngClass]="{'uploadfilecontainer-disabled': fileInputOptions.bImgInputDisabled || fileList.length >= 3}" (click)="fileInput.click()" appDragDrop (onFileDropped)="uploadFile($event)">
-    <input hidden type="file" #fileInput (change)="uploadFile($event.target.files)" accept="image/*" multiple [disabled]="fileInputOptions.bImgInputDisabled || fileList.length >= 3">
+    <form id="uploadImagesForm">
+        <input hidden type="file" #fileInput (change)="uploadFile($event.target.files)" accept="image/*" multiple [disabled]="fileInputOptions.bImgInputDisabled || fileList.length >= 3">
+    </form>
     <div class="uploaded-img-container p-3 h-100 d-sm-flex flex-column flex-sm-row text-center overflow-auto align-items-center justify-content-center">
-        <img style="width:100px; height: auto;" class="mr-2 mt-2 mt-sm-0" *ngFor="let img of imgList; first as firstImg" src="{{img.src}}" alt="{{img.title}}">
+        <img *ngFor="let img of imgList; first as firstImg" src="{{img.bNew ? img.src : (baseServerUrl + img.src)}}" alt="{{img.title}}" style="width:100px; height: auto;" class="mr-2 mt-2 mt-sm-0" [ngClass]="{'border-danger': img.bNew}">
         <div class="d-flex flex-column align-items-center justify-content-center" *ngIf="imgList.length == 0">
             <img src="assets/icons/actions/upload.svg" width="100px" height="auto">
             <span class="upload-text">Trascina le immagini qui o clicca</span>
         </div>
     </div>
 </div>
-<div class="files-list mx-0 w-100 align-items-center" *ngFor="let file of fileList;index as i">
-    <div class="truncate-fullwidth font-size-sm-8">{{file.name}}</div>
-    <button class="delete-file" (click)="deleteAttachment(i)">
-        <img src="assets/icons/actions/garbage-can.svg" class="standard-icon-md">
-    </button>
+<div id="imgBtn{{i}}" class="files-list mx-0 w-100 align-items-center" *ngFor="let img of imgList;index as i; last as lastImg; first as firstImg">
+    <div class="truncate-fullwidth font-size-sm-8">{{img.title}}</div>
+    <div class="d-flex ml-auto align-items-center justify-content-center">
+        <span [hidden]="firstImg" (click)="shiftImg(i,-1)" class="fa fa-arrow-circle-up text-dark font-size-12 font-size-md-9 standard-action-icon-btn-md" ngbTooltip="Sposta su"></span>
+        <span [hidden]="lastImg" (click)="shiftImg(i,1)" class="fa fa-arrow-circle-down text-dark font-size-12 font-size-md-9 standard-action-icon-btn-md ml-1" ngbTooltip="Sposta giu"></span>
+        <img type="button" (click)="deleteAttachment(i)" src="assets/icons/actions/garbage-can.svg" class="standard-action-icon-btn-md ml-1" ngbTooltip="Cancella">
+    </div>
 </div>
 <!-- 
 <div>
