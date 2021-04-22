@@ -103,7 +103,7 @@
                         <div class="col-12 form-group" *ngIf="(pageStatus[PAGES.EXERCISES] != PAGEMODE.WRITE)">
                             <label for="exerciseImages" class="col-form-label col-form-label-sm text-muted">Immagini</label>
                             <div class="row m-0 d-flex align-items-center justify-content-center" *ngIf="!fileInputOptions.bImgInputDirty">
-                                <ngb-carousel class="col-12 p-0 carousel-container-small">
+                                <ngb-carousel [hidden]="exercise.images.length == 0" class="col-12 p-0 carousel-container-small">
                                     <ng-template ngbSlide *ngFor="let img of exercise.images">
                                       <div class="picsum-img-wrapper d-flex align-items-center justify-content-center">
                                         <img [src]="baseServerUrl + img" alt="Exercise img {{index}}" class="carousel-img">
@@ -113,7 +113,7 @@
                                 <div [hidden]="exercise.images.length > 0" class="font-size-9">Nessuna immagine disponibile</div>
                             </div>
                             <div class="row m-0 p-3 d-flex align-items-center justify-content-center" *ngIf="fileInputOptions.bImgInputDirty">
-                                <ngb-carousel class="col-12 p-0 carousel-container-small">
+                                <ngb-carousel [hidden]="imgList.length == 0" class="col-12 p-0 carousel-container-small">
                                     <ng-template ngbSlide *ngFor="let img of imgList">
                                       <div class="picsum-img-wrapper">
                                         <img [src]="img.bNew ? img.src : (baseServerUrl + img.src)" alt="{{img.title}}" class="carousel-img">

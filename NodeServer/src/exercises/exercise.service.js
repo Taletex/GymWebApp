@@ -2,6 +2,7 @@ const { Exercise } = require('src/exercises/exercise.model.js');
 const { User } = require('src/users/user.model.js')
 const _ = require('lodash');
 const fs = require('fs');
+var fileBaseDir = "./files/images";
 
 module.exports = () => {
 
@@ -160,7 +161,6 @@ module.exports = () => {
         let filePaths;
         let imagePromises;
         if (req.body.bNewImages) {
-            let fileBaseDir = "./files/images";
             let fileDir = fileBaseDir + "/" + req.params._id;
             if (!fs.existsSync(fileBaseDir))
                 fs.mkdirSync(fileBaseDir);
@@ -225,6 +225,13 @@ module.exports = () => {
                         message: "Exercise not found with id " + req.params._id
                     });
                 }
+
+                // delete image folder
+                let fileDir = fileBaseDir + "/" + req.params._id;
+                if (fs.existsSync(fileDir)) {
+                    fs.rmdirSync(fileDir, { recursive: true });
+                } 
+
                 res.send({ message: "Exercise deleted successfully!" });
             }).catch(err => {
                 if (err.kind === 'ObjectId' || err.name === 'NotFound') {
