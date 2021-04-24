@@ -82,6 +82,72 @@ export class Notification {
     }
 }
 
+export class Federation {
+    _id: string;
+    name: string;
+    description: string;
+    website: string;
+    state: string;
+    founded: Date;
+    logo: string;
+
+    constructor(_id: string = "", name: string = "", description: string = "", website: string = "", state: string = "", founded: Date = new Date(), logo: string = "") {
+        this._id = _id;
+        this.name = name;
+        this.description = description;
+        this.website = website;
+        this.state = state;
+        this.founded = founded;
+        this.logo = logo;
+    }
+}
+
+export class Activity {
+    _id: string;
+    type: string;
+    name: string;
+    disciplines: string[];
+    federation: Federation;
+    grade: string;
+    ageCategories: string[];
+    weightCategories: string[];
+    place: Residence;
+    startDate: Date;
+    endDate: Date;
+    description: string;
+    guests: string[];   // ONLY ID: Don't need to get the whole user, just need the id (it reduces the communication volume)
+    costs: string[];
+    prices: string[];
+    patreons: string[];
+    creator: string;    // ONLY ID: Don't need to get the whole user, just need the id (it reduces the communication volume)
+    bPublic: boolean;
+
+    constructor(_id: string = "", type: string = "", name: string = "", disciplines: string[] = [], federation: Federation = new Federation(), grade: string = "", ageCategories: string[] = [], weightCategories: string[]= [],
+                place: Residence = new Residence(), startDate: Date = new Date(), endDate: Date = new Date(), description: string = "", guests: string[] = [], costs: string[] = [], prices: string[] = [], patreons: string[] = [],
+                creator: string = "", bPublic: boolean = true) {
+        this._id = _id;
+        this.type = type;
+        this.name = name;
+        this.disciplines = disciplines;
+        this.federation = federation;
+        this.grade = grade;
+        this.ageCategories = ageCategories;
+        this.weightCategories = weightCategories;
+        this.place = place;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.description = description;
+        this.guests = guests;    
+        this.costs = costs;
+        this.prices = prices;
+        this.patreons = patreons;
+        this.patreons = patreons;
+        this.creator = creator;  
+        this.bPublic = bPublic;
+
+    }
+}
+
 export class User {
     _id: string;
     name: string;

@@ -1,17 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Exercise, PersonalRecord, PRSeries, User, Variant } from '@app/_models/training-model';
+import { Activity, Exercise, Federation, PersonalRecord, PRSeries, Residence, User, Variant } from '@app/_models/training-model';
 import { HttpService } from '@app/_services/http-service/http-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { Account, Role } from '@app/_models';
-import { GeneralService, PAGEMODE, PAGES, PageStatus } from '@app/_services/general-service/general-service.service';
+import { GeneralService, NOTIFICATION_TYPE, PAGEMODE, PAGES, PageStatus } from '@app/_services/general-service/general-service.service';
+import { UserService } from '@app/user-module/services/user-service/user-service.service';
+
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { Observable } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import * as _ from 'lodash';
+import { Socket } from 'ngx-socket-io';
 
 @Component({
   selector: 'app-user',
@@ -23,6 +26,7 @@ export class UserComponent implements OnInit {
   public bLoading: boolean = false;
 
   public user: User = new User();
+  public activityList: Activity[] = [];
 
   // Account information
   public account: Account;
@@ -46,7 +50,11 @@ export class UserComponent implements OnInit {
   public newExercise: Exercise = new Exercise();
   private currentExerciseIndex: number = 0;
 
-  constructor(private generalService: GeneralService, private accountService: AccountService, private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private toastr: ToastrService, private httpService: HttpService) {
+  // User service aux
+  public NOTIFICATION_TYPE = NOTIFICATION_TYPE;
+
+
+  constructor(public userService: UserService, private generalService: GeneralService, private accountService: AccountService, private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private toastr: ToastrService, private httpService: HttpService, private socket: Socket) {
     this.bLoading = true;
     this.accountService.account.subscribe(x => this.account = x);
     
@@ -57,6 +65,14 @@ export class UserComponent implements OnInit {
     // get user informations
     this.getUser((this.router.url).split('/')[2]);
 
+    // Socket events
+    let scope = this;
+    socket.on('userListUserUpdated', function(user) {
+      // Update user if page status is "READONLY"
+      if(user != null && scope.pageStatus[scope.PAGES.USERS] == scope.PAGEMODE.READONLY) {
+        scope.user = _.cloneDeep(user);
+      }
+    })
   }
 
   ngOnInit() {
@@ -69,6 +85,9 @@ export class UserComponent implements OnInit {
           this.user = data;
           this.bLoading = false;
           console.log(this.user);
+
+          this.activityList.push(new Activity('lasjd0123uasd', 'competition', 'Torneo Nazionale WPA', ['powerlifting'], new Federation("10892asjnd", "WPA"), 'nazionale', ['all'], ['all'], new Residence('italia', 'alimena', 'via della piovra 5'), new Date("05/22/2021"), new Date("05/23/2021"), "Gara nazionale WPA 2021, utile per le qualificazioni ai mondiali", [this.user._id], ["50 euro"], [], ["prozis"], this.user._id, true));
+          this.activityList.push(new Activity('123ouqnsidunq', 'competition', 'Torneo Nazionale FIPL', ['powerlifting'], new Federation("10892asjnd", "FIPL"), 'nazionale', ['all'], ['all'], new Residence('italia', 'san zenone al lambro', 'via delle rose 123'), new Date("10/06/2021"), new Date("10/08/2021"), "Gara nazionale FIPL 2021, utile per le qualificazioni ai mondiali", [this.user._id], ["50 euro"], ["100 euro primo posto", "50 euro secondo posto"], ["prozis"], this.user._id, true));
 
           this.postUserInitialization();
 
@@ -356,7 +375,6 @@ export class UserComponent implements OnInit {
     return true;
   }
 
-
   assignFormValuesToUser() {
     this.user.name = this.userForm.value.name;
     this.user.surname = this.userForm.value.surname;
@@ -371,9 +389,6 @@ export class UserComponent implements OnInit {
     this.user.residence.city = this.userForm.value.residenceCity;
     this.user.residence.address = this.userForm.value.residenceAddress;
   }
-
-
-
 
   areAllPrsHidden(): boolean {
     for (let i = 0; i < this.personalRecordList.length; i++) {
@@ -390,6 +405,50 @@ export class UserComponent implements OnInit {
 
   filterVisiblePRSeries(pr: PersonalRecord): PRSeries[] {
     return (this.account.role == Role.Admin ? pr.series : pr.series.filter(series => series.bPublic));
+  }
+
+
+  /* Notifications FUNCTIONS */
+  sendNotification(notificationType: NOTIFICATION_TYPE, destinationUser: User) {
+    this.bLoading = true;
+
+    this.userService.sendNotification(notificationType, destinationUser, this.account)
+    .then((data: any) => {
+      this.bLoading = false;
+      this.toastr.success('Richiesta correttamente inviata!');
+    })
+    .catch((error: any) => {
+      this.bLoading = false;
+      this.toastr.error("Si è verificato un errore durante l'invio della richiesta");
+    });
+  }
+  
+  cancelAthleteCoachLink(notificationType: NOTIFICATION_TYPE, destinationUser: User) {
+    this.bLoading = true;
+
+    this.userService.cancelAthleteCoachLink(notificationType, destinationUser, this.account)
+    .then((data: any) => {
+      this.bLoading = false;
+      this.toastr.success('Richiesta correttamente inviata!');
+    })
+    .catch((error: any) => {
+      this.bLoading = false;
+      this.toastr.error("Si è verificato un errore durante l'invio della richiesta");
+    });
+  }
+
+  cancelAthleteCoachLinkRequest(notificationType: NOTIFICATION_TYPE, destinationUser: User) {
+    this.bLoading = true;
+
+    this.userService.cancelAthleteCoachLinkRequest(notificationType, destinationUser)
+    .then((data: any) => {
+      this.bLoading = false;
+      this.toastr.success('Richiesta di collegamento correttamente eliminata!');
+    })
+    .catch((error: any) => {
+      this.bLoading = false;
+      this.toastr.error("Si è verificato un errore durante l'eliminazione della richiesta di collegamento!");
+    });
   }
 
 }

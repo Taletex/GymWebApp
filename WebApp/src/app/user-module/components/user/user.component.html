@@ -23,305 +23,538 @@
             </div>
         </div>
 
-        <div class="maincontainer__body card-body h-vh-fixed pt-3">
+        <div class="maincontainer__body card-body h-vh-fixed mt-3 pt-0 px-0">
 
-            <!-- USER INFORMATIONS -->
-            <div class="row m-0 p-0">
-                <div class="col-12 p-0">
-                    <button class="btn btn-outline-dark w-100" type="button" data-toggle="collapse"
-                        data-target="#userInformationContainer" aria-expanded="true"
-                        aria-controls="userInformationContainer">
-                        <h5 class="m-0 h5">Informazioni Utente</h5>
-                    </button>
-                </div>
-                <div *ngIf="!bLoading" class="col-12 form-row py-3 px-0 border round-5 m-0 round-top-0 collapse show " id="userInformationContainer">
-                    <form [formGroup]="userForm" (ngSubmit)="onSubmitUser()" class="col-12 row m-0 p-0">
-                        <fieldset class="col-12 row form-group m-0 p-0" [disabled]="(pageStatus[PAGES.USERS] == PAGEMODE.READONLY)">
-                            <div class="row col-12 m-0 p-0">
-                                <!-- Name -->
-                                <div class="col-12 col-md-6 col-lg-3 form-group">
-                                    <label for="userName" class="col-form-label col-form-label-sm text-muted">Nome</label>
-                                    <input type="text" formControlName="name" required maxlength="30" class="form-control form-control-sm"
-                                        [ngClass]="{'is-invalid': userFormSubmitted && fu.name.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                    <div *ngIf="userFormSubmitted && fu.name.errors" class="invalid-feedback">
-                                        <div *ngIf="fu.name.errors.required">Nome obbligatorio</div>
-                                    </div>
-                                </div>
-
-                                <!-- Surname -->
-                                <div class="col-12 col-md-6 col-lg-3 form-group">
-                                    <label for="userSurname" class="col-form-label col-form-label-sm text-muted">Cognome</label>
-                                    <input type="text" formControlName="surname" maxlength="30" required class="form-control form-control-sm"
-                                        [ngClass]="{'is-invalid': userFormSubmitted && fu.surname.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                    <div *ngIf="userFormSubmitted && fu.surname.errors" class="invalid-feedback">
-                                        <div *ngIf="fu.surname.errors.required">Cognome obbligatorio</div>
-                                    </div>
-                                </div>
-
-                                <!-- Date of Birth -->
-                                <div class="col-12 col-md-6 col-lg-3 form-group">
-                                    <label for="userDoB" class="col-form-label col-form-label-sm text-muted">Data di nascita</label>
-                                    <input type="date" formControlName="dateOfBirth" min="01-01-1900" max="{{today}}" class="form-control form-control-sm"
-                                        [ngClass]="{'is-invalid': userFormSubmitted && fu.dateOfBirth.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                </div>
-
-                                <!-- User Sex -->
-                                <div class="col-6 col-lg-3 form-group">
-                                    <label for="userSex" class="col-form-label col-form-label-sm text-muted">Sesso</label>
-                                    <select formControlName="sex" class="form-control form-control-sm" 
-                                        [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY), 'cursor-pointer': (pageStatus[PAGES.USERS] == PAGEMODE.WRITE), 'is-invalid': userFormSubmitted && fu.sex.errors}">
-                                        <option [value]="'M'">Uomo</option>
-                                        <option [value]="'F'">Donna</option>
-                                    </select>
-                                </div>
-
-                                <!-- User Type -->
-                                <div class="col-6 col-lg-4 form-group">
-                                    <label for="userType" class="col-form-label col-form-label-sm text-muted">Tipo</label>
-                                    <select formControlName="userType" required class="form-control form-control-sm cursor-pointer"
-                                        [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY), 'cursor-pointer': (pageStatus[PAGES.USERS] == PAGEMODE.WRITE), 'is-invalid': userFormSubmitted && fu.userType.errors}">
-                                        <option [value]="'athlete'">Atleta</option>
-                                        <option [value]="'coach'">Coach</option>
-                                        <option [value]="'both'">Both</option>
-                                    </select>
-                                    <div *ngIf="userFormSubmitted && fu.userType.errors" class="invalid-feedback">
-                                        <div *ngIf="fu.userType.errors.required">Tipo utente obbligatorio</div>
-                                    </div>
-                                </div>
-
-                                <!-- Body Weight -->
-                                <div class="col-6 col-lg-4 form-group">
-                                    <label for="userBw" class="col-form-label col-form-label-sm text-muted">Peso</label>
-                                    <input type="number" min=10 max=500 formControlName="bodyWeight" class="form-control form-control-sm"
-                                        [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY), 'is-invalid': userFormSubmitted && fu.bodyWeight.errors}">
-                                </div>
-
-                                <!-- Years of experience -->
-                                <div class="col-6 col-lg-4 form-group">
-                                    <label for="userYearsOfExperience" class="col-form-label col-form-label-sm text-muted">Esperienza (anni)</label>
-                                    <input type="number" min=0 max=100 formControlName="yearsOfExperience" class="form-control form-control-sm"
-                                        [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY), 'is-invalid': userFormSubmitted && fu.yearsOfExperience.errors }">
-                                </div>
-
-                                <!-- Email  -->
-                                <div class="col-12 col-lg-6 form-group">
-                                    <label for="userContactsEmail" class="col-form-label col-form-label-sm text-muted">Email</label>
-                                    <input type="email" formControlName="userEmail" required maxlength="100" class="form-control form-control-sm"
-                                        [ngClass]="{'is-invalid': userFormSubmitted && fu.userEmail.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                    <div *ngIf="userFormSubmitted && fu.userEmail.errors" class="invalid-feedback">
-                                        <div *ngIf="fu.userEmail.errors.email">Il campo email deve contenere un'email valida</div>
-                                    </div>
-                                </div>
-
-                                <!-- Telephone -->
-                                <div class="col-12 col-lg-6 form-group">
-                                    <label for="userContactsTelephone"
-                                        class="col-form-label col-form-label-sm text-muted">Telefono</label>
-                                    <input type="tel" maxlength="15" formControlName="telephone" class="form-control form-control-sm"
-                                        [ngClass]="{'is-invalid': userFormSubmitted && fu.telephone.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                </div>
-
-                                <!-- Residence State -->
-                                <div class="col-12 col-md-6 col-lg-4 form-group">
-                                    <label for="userResidenceState" class="col-form-label col-form-label-sm text-muted">Stato</label>
-                                    <input type="text" maxlength="50" formControlName="residenceState" class="form-control form-control-sm"
-                                        [ngClass]="{'is-invalid': userFormSubmitted && fu.residenceState.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                </div>
-
-                                <!-- Residence City -->
-                                <div class="col-12 col-md-6 col-lg-4 form-group">
-                                    <label for="userResidenceCity" class="col-form-label col-form-label-sm text-muted">Città</label>
-                                    <input type="text" maxlength="50" formControlName="residenceCity" class="form-control form-control-sm"
-                                        [ngClass]="{'is-invalid': userFormSubmitted && fu.residenceCity.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                </div>
-
-                                <!-- Residence Address -->
-                                <div class="col-12 col-md-6 col-lg-4 form-group">
-                                    <label for="userResidenceAddress" class="col-form-label col-form-label-sm text-muted">Indirizzo</label>
-                                    <input type="text" maxlength="150" formControlName="residenceAddress" class="form-control form-control-sm"
-                                        [ngClass]="{'is-invalid': userFormSubmitted && fu.residenceAddress.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                </div>
-
-                                <div class="form-group col-12 d-flex" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
-                                    <button type="submit" class="btn btn-primary ml-auto"><span *ngIf="bLoading" class="spinner-border spinner-border-sm mr-1"></span> Aggiorna</button>
-                                </div>
+            <!-- READ MODE PAGE -->
+            <div class="row m-0 body__readonly-content" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.READONLY)">
+                <!-- User Infos -->
+                <div class="col-lg-4 col-xl-3 px-0 pr-md-2">
+                    <div class="card mb-3">
+                        <div class="card-header bg-white border-0">
+                            <h5 class="card-title mb-0">Dettagli Profilo</h5>
+                        </div>
+                        <!-- picture, name, surname, biography, follow, message -->
+                        <div class="card-body text-center">
+                            <img src="{{user.profilePicture || 'assets/icons/misc/user.svg'}}" alt="{{user.name}} {{user.surname}}" class="avatar-xl img-fluid rounded-circle mb-2">
+                            <h5 class="card-title mb-0">{{user.name}} {{user.surname}}</h5>
+                            <div class="text-muted mb-2">{{user.userType=='both' ? 'Coach e Atleta' : (user.userType=='coach' ? 'Coach' : 'Atleta')}}</div>
+                            <div class="text-muted mb-2" [hidden]="!user.biography">{{user.biography}}</div>
+                            <div>
+                                <button type="button" (click)="sendNotification(NOTIFICATION_TYPE.COACH_REQUEST, user)" *ngIf="userService.canCoachRequestBeSent(user, account)" class="btn btn-sm btn-primary mr-2" ngbTooltip="Richiesta segui coach" placement="top"><span class="fa fa-user-plus standard-action-icon-btn-lg mr-1"></span><span>Collega Coach</span></button>
+                                <button type="button" (click)="cancelAthleteCoachLink(NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK, user)" *ngIf="userService.canCancelAthleteToCoachLinkBeSent(user, account)" class="btn btn-sm btn-danger mr-2" ngbTooltip="Elimina collegamento con Coach" placement="top"><span class="fa fa-times-circle standard-action-icon-btn-lg mr-1"></span><span>Scollega Coach</span></button>
+                                <button type="button" (click)="cancelAthleteCoachLinkRequest(NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK_REQUEST, user)" *ngIf="userService.canCancelAthleteToCoachLinkRequestBeSent(user, account)" class="btn btn-sm btn-warning mr-2" ngbTooltip="Elimina richiesta di collegamento con Coach" placement="top"><span class="fa fa-times-circle standard-action-icon-btn-lg mr-1"></span><span>Elimina Richiesta a Coach</span></button>
+                                <button type="button" (click)="sendNotification(NOTIFICATION_TYPE.ATHLETE_REQUEST, user)" *ngIf="userService.canAthleteRequestBeSent(user, account)" class="btn btn-sm btn-primary mr-2" ngbTooltip="Richiesta segui atleta" placement="top"><span class="fa fa-user-plus standard-action-icon-btn-lg mr-1"></span><span>Collega Atleta</span></button>
+                                <button type="button" (click)="cancelAthleteCoachLink(NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK, user)" *ngIf="userService.canCancelCoachToAthleteLinkBeSent(user, account)" class="btn btn-sm btn-danger mr-2" ngbTooltip="Elimina collegamento con Atleta" placement="top"><span class="fa fa-times-circle standard-action-icon-btn-lg mr-1"></span><span>Scollega Atleta</span></button>
+                                <button type="button" (click)="cancelAthleteCoachLinkRequest(NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK_REQUEST, user)" *ngIf="userService.canCancelCoachToAthleteLinkRequestBeSent(user, account)" class="btn btn-sm btn-warning mr-2" ngbTooltip="Elimina richiesta di collegamento con Atleta" placement="top"><span class="fa fa-times-circle standard-action-icon-btn-lg mr-1"></span><span>Elimina Richiesta a Atleta</span></button>
+                                <!-- <a class="btn btn-primary btn-sm ml-2 disabled"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="small-action-icon"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg> Message</a> -->
                             </div>
-                        </fieldset>
-                    </form>
+                        </div>
+                        <!-- disciplines -->
+                        <hr class="my-0" *ngIf="user.disciplines != null && user.disciplines.length > 0">
+                        <div class="card-body" *ngIf="user.disciplines != null && user.disciplines.length > 0">
+                            <h6 class="h6 card-title">Discipline</h6>
+                            <span class="badge badge-primari mr-1 my-1" *ngFor="let d of user.disciplines">{{d}}</span>
+                        </div>
+                        <!-- residence, gyms, pob -->
+                        <hr class="my-0" *ngIf="(user.residence.city && user.residence.state) || (user.gyms != null && user.gyms.length > 0) || (user.pob != null && (user.pob.city != null && user.pob.city != '') && (user.pob.state != null && user.pob.state != ''))">
+                        <div class="card-body" *ngIf="(user.residence.city && user.residence.state) || (user.gyms != null && user.gyms.length > 0) || (user.pob != null && (user.pob.city != null && user.pob.city != '') && (user.pob.state != null && user.pob.state != ''))">
+                            <h5 class="h6 card-title">Luoghi</h5>
+                            <ul class="list-unstyled mb-0">
+                                <li class="d-flex align-items-center mb-1" *ngIf="(user.residence.city != null && user.residence.city != '') && (user.residence.state != null && user.residence.state != '')">
+                                    <span class="fa fa-fw fa-home font-size-12 mr-1"></span>
+                                    <span class="fa-description">Vive a {{user.residence.city || ''}} ({{user.residence.state || ''}})</span>    
+                                </li>
+                                <li class="d-flex align-items-center mb-1" *ngIf="user.gyms != null && user.gyms.length > 0">
+                                    <span class="fa fa-fw fa-map-marker mr-1"></span>
+                                    <span class="fa-description">{{user.gyms.length == 1 ? 'Palestra' : 'Palestre'}}</span><span *ngFor="let gym of user.gyms; last as bLast">{{gym}} <span [hidden]="bLast">, </span></span>
+                                </li>
+                                <li class="d-flex align-items-center mb-1" *ngIf="user.pob != null && (user.pob.city != null && user.pob.city != '') && (user.pob.state != null && user.pob.state != '')"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="small-action-icon text-center mr-1"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> 
+                                    <span class="fa fa-fw fa-envelope mr-1"></span>
+                                    <span class="fa-description">Nato a {{user.pob.city || ''}} ({{user.pob.state || ''}}</span>    
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- contacts: email and telephone -->
+                        <hr class="my-0" *ngIf="(user.contacts.email || user.contacts.telephone)">
+                        <div class="card-body" *ngIf="(user.contacts.email || user.contacts.telephone)">
+                            <h5 class="h6 card-title">Contatti</h5>
+                            <ul class="list-unstyled mb-0">
+                                <li class="d-flex align-items-center mb-1" *ngIf="user.contacts.email">
+                                    <span class="fa fa-fw fa-envelope mr-1"></span>
+                                    <span class="fa-description">Email {{user.contacts.email}}</span>    
+                                </li>
+                                <li class="d-flex align-items-center mb-1" *ngIf="user.contacts.telephone">
+                                    <span class="fa fa-fw fa-phone-square mr-1"></span>
+                                    <span class="fa-description">Telefono {{user.contacts.telephone}}</span>    
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- Category infos -->
+                        <hr class="my-0" *ngIf="(user.dateOfBirth || user.sex || user.bodyWeight || user.yearsOfExperience)">
+                        <div class="card-body" *ngIf="(user.dateOfBirth || user.sex || user.bodyWeight || user.yearsOfExperience)">
+                            <h5 class="h6 card-title">Altro</h5>
+                            <ul class="list-unstyled mb-0">
+                                <li class="d-flex align-items-center mb-1" *ngIf="user.dateOfBirth">
+                                    <span class="fa fa-fw fa-birthday-cake mr-1"></span>
+                                    <span class="fa-description">Nato il {{user.dateOfBirth | date:'dd/MM/yyyy' }}</span>    
+                                </li>
+                                <li class="d-flex align-items-center mb-1" *ngIf="user.sex">
+                                    <span class="fa fa-fw fa-venus-mars mr-1"></span>
+                                    <span class="fa-description">Genere {{user.sex == 'M' ? 'Uomo' : 'Donna'}}</span>    
+                                </li>
+                                <li class="d-flex align-items-center mb-1" *ngIf="user.bodyWeight">
+                                    <span class="fa fa-fw fa-balance-scale mr-1"></span>
+                                    <span class="fa-description">Peso {{user.bodyWeight}}kg</span>    
+                                </li>
+                                <li class="d-flex align-items-center mb-1" *ngIf="user.sex">
+                                    <span class="fa fa-fw fa-universal-access mr-1"></span>
+                                    <span class="fa-description">Esperienza {{user.yearsOfExperience}} anni</span>    
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- socials -->
+                        <hr class="my-0" *ngIf="user.socials != null && (user.socials.facebook || user.socials.twitter || user.socials.instagram || user.socials.linkedin || user.socials.other)">
+                        <div class="card-body" *ngIf="user.socials != null && (user.socials.facebook || user.socials.twitter || user.socials.instagram || user.socials.linkedin || user.socials.other)">
+                            <h6 class="h6 card-title">Social</h6>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-1" [hidden]="user.socials.facebook == null || user.socials.facebook == ''"><span class="fa fa-facebook fa-fw mr-1"></span> <a href="{{user.socials.facebook}}">Facebook</a></li>
+                                <li class="mb-1" [hidden]="user.socials.twitter == null || user.socials.twitter == ''"><span class="fa fa-twitter fa-fw mr-1"></span> <a href="{{user.socials.twitter}}">Twitter</a></li>
+                                <li class="mb-1" [hidden]="user.socials.instagram == null || user.socials.instagram == ''"><span class="fa fa-instagram fa-fw mr-1"></span> <a href="{{user.socials.instagram}}">Instagram</a></li>
+                                <li class="mb-1" [hidden]="user.socials.linkedin == null || user.socials.linkedin == ''"><span class="fa fa-linkedin fa-fw mr-1"></span> <a href="{{user.socials.linkedin}}">LinkedIn</a></li>
+                                <li class="mb-1" [hidden]="user.socials.other == null || user.socials.other == ''"><span class="fa fa-globe fa-fw mr-1"></span> <a href="{{user.socials.other}}">Altro</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-8 col-xl-9 px-0 pl-md-2">
+                    <!-- Activity -->
+                    <div class="card">
+                        <div class="card-header user-expanded-card-header round-3">
+                            <!-- <div class="card-actions float-right">
+                                <div class="dropdown show">
+                                    <a href="#" data-toggle="dropdown" data-display="static">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal align-middle"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+                                    </a>
+
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a class="dropdown-item" href="#">Action</a>
+                                        <a class="dropdown-item" href="#">Another action</a>
+                                        <a class="dropdown-item" href="#">Something else here</a>
+                                    </div>
+                                </div>
+                            </div> -->
+                            
+                            <button class="btn btn-primary w-100 btn-transparent" type="button" data-toggle="collapse" data-target="#activitiesContainer" aria-expanded="false" aria-controls="activitiesContainer">
+                                <h5 class="card-title mb-0 text-left">Attività</h5>
+                            </button>
+                        </div>
+                        <div class="card-body collapse show" id="activitiesContainer">
+                            <div class="row m-0" *ngIf="activityList.length==0">
+                                <div class="px-2 py-4">Nessuna attività presente</div>
+                            </div>
+
+                            <div class="activity-container" *ngFor="let activity of activityList; index as activityIndex; last as bLast">
+                                <div class="media font-size-md-8">
+                                    <img src="{{activity.federation.logo || 'assets/icons/misc/event.svg'}}" class="rounded-circle large-action-icon" alt="{{activity.federation.name}}">
+                                    <div class="media-body ml-2">
+                                        <div>
+                                            <h6 class="h6 m-0"><span [hidden]="!activity.federation.name" class="mr-1">{{activity.federation.name}}</span><span [hidden]="!activity.name" class="mr-1">| {{activity.name}}</span> <span [hidden]="!activity.grade" class="mr-1"> (ordine {{activity.grade}})</span></h6>
+                                        </div>
+                                        <div class="mt-1">
+                                            <small [hidden]="!activity.startDate" class="mr-1">{{activity.startDate | date:'dd/MM/yyyy HH:mm'}}</small>
+                                            <small [hidden]="!activity.endDate" class="mr-1">- {{activity.endDate | date:'dd/MM/yyyy HH:mm'}}</small>
+                                            <small class="d-none d-lg-inline"> | </small>
+                                            <small [hidden]="!activity.place.address || !activity.place.city || !activity.place.state" class="d-block d-lg-inline text-capitalize">{{activity.place.address}}, {{activity.place.city}}, {{activity.place.state}}</small>
+                                        </div>
+                                        <div class="border text-sm text-muted p-2 mt-1" [hidden]="!activity.description && !activity.ageCategories && !activity.weightCategories && !activity.place && !activity.startDate && !activity.endDate">
+                                            <div [hidden]="!activity.description"><span>{{activity.description}}</span></div>
+                                            <ul class="pl-4 mb-0">
+                                                <li [hidden]="!activity.place.address || !activity.place.city || !activity.place.state" class="text-capitalize">Luogo: {{activity.place.address}}, {{activity.place.city}}, {{activity.place.state}}</li>
+                                                <li [hidden]="!activity.startDate">Inizio: {{activity.startDate | date:'dd/MM/yyyy HH:mm'}}</li>
+                                                <li [hidden]="!activity.endDate">Fine: {{activity.endDate | date:'dd/MM/yyyy HH:mm'}}</li>
+                                                <li [hidden]="!activity.ageCategories || activity.ageCategories.length == 0">Categorie Età: <span *ngFor="let c of activity.ageCategories; last as bLast">{{c}}<span [hidden]="bLast">, </span></span></li>
+                                                <li [hidden]="!activity.weightCategories || activity.weightCategories.length == 0">Categorie Peso: <span *ngFor="let c of activity.weightCategories; last as bLast">{{c}}<span [hidden]="bLast">, </span></span></li>
+                                                <li [hidden]="!activity.costs || activity.costs.length == 0">Costi: <span *ngFor="let c of activity.costs; last as bLast">{{c}}<span [hidden]="bLast">, </span></span></li>
+                                                <li [hidden]="!activity.prices || activity.prices.length == 0">Premi: <span *ngFor="let p of activity.prices; last as bLast">{{p}}<span [hidden]="bLast">, </span></span></li>
+                                            </ul>
+                                        </div>
+                                        <div class="mt-1" [hidden]="!activity.disciplines">
+                                            <span class="mr-1">Discipline</span> <span *ngFor="let d of activity.disciplines" class="badge badge-primary text-capitalize p-1 mr-1">{{d}}</span>
+                                        </div>
+                                        <div class="mt-1" [hidden]="!activity.patreons">
+                                            <span class="mr-1">Sponsor</span> <span *ngFor="let p of activity.patreons" class="badge badge-secondary text-capitalize p-1 mr-1">{{p}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr [hidden]="bLast">
+                            </div>
+					    </div>
+                    </div>
+
+                    <!-- Personal Records -->
+                    <div class="card mt-2">
+                        <div class="card-header user-expanded-card-header round-3">
+                            <!-- <div class="card-actions float-right">
+                                <div class="dropdown show">
+                                    <a href="#" data-toggle="dropdown" data-display="static">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal align-middle"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+                                    </a>
+
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a class="dropdown-item" href="#">Action</a>
+                                        <a class="dropdown-item" href="#">Another action</a>
+                                        <a class="dropdown-item" href="#">Something else here</a>
+                                    </div>
+                                </div>
+                            </div> -->
+                            
+                            <button class="btn btn-primary w-100 btn-transparent" type="button" data-toggle="collapse" data-target="#prContainer" aria-expanded="false" aria-controls="prContainer">
+                                <h5 class="card-title mb-0 text-left">Personal Records</h5>
+                            </button>
+                        </div>
+                        <div class="card-body collapse show" id="prContainer">
+                            <div class="row m-0" *ngIf="personalRecordList.length==0 || areAllPrsHidden()">
+                                <div class="px-2 py-4">Nessun Personal Record presente</div>
+                            </div>
+
+                            <ul class="list-group border font-size-8">
+                                <li class="list-group-item pr-container px-2" *ngFor="let pr of filterVisiblePR(); index as prIndex; first as prFirst">
+                                    <div class="media-body px-2">
+                                        <div class="font-size-md-8">
+                                            <h6 class="h6 m-0"><span>{{pr.exercise.name}} ({{pr.exercise.variant.name}})</span><span [hidden]="!pr.oneRepPR.weight">: {{pr.oneRepPR.weight}} {{pr.oneRepPR.measure}} (1RM)</span></h6>
+                                        </div>
+                                        <div class="mt-1">
+                                            <span [hidden]="!pr.exercise.description">{{pr.exercise.description}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="border font-size-sm-7 py-2 px-0 mx-2">
+                                        <div class="row m-0">
+                                            <div class="col-5 col-sm-4 text-muted small px-2 px-sm-3">Serie&times;Rep Peso</div>
+                                            <div class="col-3 col-sm-2 text-muted small px-2 px-sm-3"><span class="d-none d-xl-inline">Recupero</span><span class="d-xl-none">Rec</span></div>
+                                            <!-- <div class="col-2 text-muted small px-2 px-sm-3">Verificato</div> -->
+                                            <div class="col-4 col-sm-2 text-muted small text-center px-2 px-sm-3"><span class="d-none d-xl-inline">Competizione</span><span class="d-xl-none">Comp</span></div>
+                                            <div class="d-none d-sm-block col-sm-4 text-muted small px-2 px-sm-3">Note</div>
+                                        </div>
+                                        <div class="row m-0" *ngFor="let elem of filterVisiblePRSeries(pr); first as seriesFirst; last as seriesLast; index as seriesIndex">
+                                            <div class="col-5 col-sm-4 px-2 px-sm-3">{{elem.seriesNumber}}&times;{{elem.repNumber}} {{elem.weight}}{{elem.measure}}</div>
+                                            <div class="col-3 col-sm-2 px-2 px-sm-3">{{elem.rest}}s</div>
+                                            <!-- <div class="col-2 px-2 px-sm-3">{{elem.bVerified}}</div> -->
+                                            <div class="col-4 col-sm-2 px-2 px-sm-3 text-center"><span class="fa fa-check" [hidden]="!elem.bCompetition"></span><span class="fa fa-check" [hidden]="elem.bCompetition"></span></div>
+                                            <div class="col-sm-4 px-2 px-sm-3">{{elem.comment}}</div>
+                                        </div>
+                                    </div>
+                                    <div class="px-2 mt-1" [hidden]="!pr.exercise.disciplines">
+                                        <span *ngFor="let d of pr.exercise.disciplines" class="badge badge-primary text-capitalize p-1 mr-1">{{d}}</span>
+                                    </div>
+                                </li>
+                            </ul>  
+					    </div>
+                    </div>
+
                 </div>
             </div>
 
-            <!-- PERSONAL RECORDS -->
-            <div class="row m-0 p-0 mt-3">
-                <div class="col-12 p-0">
-                    <button class="btn btn-outline-dark w-100" type="button" data-toggle="collapse"
-                        data-target="#prContainer" aria-expanded="true"
-                        aria-controls="prContainer">
-                        <h5 class="m-0 h5">Personal Records</h5>
-                    </button>
+            <!-- WRITE MODE PAGE -->
+            <div class="row m-0 body__write-content" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
+                <!-- USER INFORMATIONS -->
+                <div class="col-12 row w-100 bg-white m-0 p-0"> 
+                    <div class="col-12 p-0">
+                        <button class="btn btn-outline-dark w-100" type="button" data-toggle="collapse"
+                            data-target="#userInformationContainer" aria-expanded="true"
+                            aria-controls="userInformationContainer">
+                            <h5 class="m-0 h5">Informazioni Utente</h5>
+                        </button>
+                    </div>
+                    <div *ngIf="!bLoading" class="col-12 form-row py-3 px-0 border round-5 m-0 round-top-0 collapse show " id="userInformationContainer">
+                        <form [formGroup]="userForm" (ngSubmit)="onSubmitUser()" class="col-12 row m-0 p-0">
+                            <fieldset class="col-12 row form-group m-0 p-0" [disabled]="(pageStatus[PAGES.USERS] == PAGEMODE.READONLY)">
+                                <div class="row col-12 m-0 p-0">
+                                    <!-- Name -->
+                                    <div class="col-12 col-md-6 col-lg-3 form-group">
+                                        <label for="userName" class="col-form-label col-form-label-sm text-muted">Nome</label>
+                                        <input type="text" formControlName="name" required maxlength="30" class="form-control form-control-sm"
+                                            [ngClass]="{'is-invalid': userFormSubmitted && fu.name.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                        <div *ngIf="userFormSubmitted && fu.name.errors" class="invalid-feedback">
+                                            <div *ngIf="fu.name.errors.required">Nome obbligatorio</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Surname -->
+                                    <div class="col-12 col-md-6 col-lg-3 form-group">
+                                        <label for="userSurname" class="col-form-label col-form-label-sm text-muted">Cognome</label>
+                                        <input type="text" formControlName="surname" maxlength="30" required class="form-control form-control-sm"
+                                            [ngClass]="{'is-invalid': userFormSubmitted && fu.surname.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                        <div *ngIf="userFormSubmitted && fu.surname.errors" class="invalid-feedback">
+                                            <div *ngIf="fu.surname.errors.required">Cognome obbligatorio</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Date of Birth -->
+                                    <div class="col-12 col-md-6 col-lg-3 form-group">
+                                        <label for="userDoB" class="col-form-label col-form-label-sm text-muted">Data di nascita</label>
+                                        <input type="date" formControlName="dateOfBirth" min="01-01-1900" max="{{today}}" class="form-control form-control-sm"
+                                            [ngClass]="{'is-invalid': userFormSubmitted && fu.dateOfBirth.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                    </div>
+
+                                    <!-- User Sex -->
+                                    <div class="col-6 col-lg-3 form-group">
+                                        <label for="userSex" class="col-form-label col-form-label-sm text-muted">Sesso</label>
+                                        <select formControlName="sex" class="form-control form-control-sm" 
+                                            [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY), 'cursor-pointer': (pageStatus[PAGES.USERS] == PAGEMODE.WRITE), 'is-invalid': userFormSubmitted && fu.sex.errors}">
+                                            <option [value]="'M'">Uomo</option>
+                                            <option [value]="'F'">Donna</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- User Type -->
+                                    <div class="col-6 col-lg-4 form-group">
+                                        <label for="userType" class="col-form-label col-form-label-sm text-muted">Tipo</label>
+                                        <select formControlName="userType" required class="form-control form-control-sm cursor-pointer"
+                                            [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY), 'cursor-pointer': (pageStatus[PAGES.USERS] == PAGEMODE.WRITE), 'is-invalid': userFormSubmitted && fu.userType.errors}">
+                                            <option [value]="'athlete'">Atleta</option>
+                                            <option [value]="'coach'">Coach</option>
+                                            <option [value]="'both'">Both</option>
+                                        </select>
+                                        <div *ngIf="userFormSubmitted && fu.userType.errors" class="invalid-feedback">
+                                            <div *ngIf="fu.userType.errors.required">Tipo utente obbligatorio</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Body Weight -->
+                                    <div class="col-6 col-lg-4 form-group">
+                                        <label for="userBw" class="col-form-label col-form-label-sm text-muted">Peso</label>
+                                        <input type="number" min=10 max=500 formControlName="bodyWeight" class="form-control form-control-sm"
+                                            [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY), 'is-invalid': userFormSubmitted && fu.bodyWeight.errors}">
+                                    </div>
+
+                                    <!-- Years of experience -->
+                                    <div class="col-6 col-lg-4 form-group">
+                                        <label for="userYearsOfExperience" class="col-form-label col-form-label-sm text-muted">Esperienza (anni)</label>
+                                        <input type="number" min=0 max=100 formControlName="yearsOfExperience" class="form-control form-control-sm"
+                                            [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY), 'is-invalid': userFormSubmitted && fu.yearsOfExperience.errors }">
+                                    </div>
+
+                                    <!-- Email  -->
+                                    <div class="col-12 col-lg-6 form-group">
+                                        <label for="userContactsEmail" class="col-form-label col-form-label-sm text-muted">Email</label>
+                                        <input type="email" formControlName="userEmail" required maxlength="100" class="form-control form-control-sm"
+                                            [ngClass]="{'is-invalid': userFormSubmitted && fu.userEmail.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                        <div *ngIf="userFormSubmitted && fu.userEmail.errors" class="invalid-feedback">
+                                            <div *ngIf="fu.userEmail.errors.email">Il campo email deve contenere un'email valida</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Telephone -->
+                                    <div class="col-12 col-lg-6 form-group">
+                                        <label for="userContactsTelephone"
+                                            class="col-form-label col-form-label-sm text-muted">Telefono</label>
+                                        <input type="tel" maxlength="15" formControlName="telephone" class="form-control form-control-sm"
+                                            [ngClass]="{'is-invalid': userFormSubmitted && fu.telephone.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                    </div>
+
+                                    <!-- Residence State -->
+                                    <div class="col-12 col-md-6 col-lg-4 form-group">
+                                        <label for="userResidenceState" class="col-form-label col-form-label-sm text-muted">Stato</label>
+                                        <input type="text" maxlength="50" formControlName="residenceState" class="form-control form-control-sm"
+                                            [ngClass]="{'is-invalid': userFormSubmitted && fu.residenceState.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                    </div>
+
+                                    <!-- Residence City -->
+                                    <div class="col-12 col-md-6 col-lg-4 form-group">
+                                        <label for="userResidenceCity" class="col-form-label col-form-label-sm text-muted">Città</label>
+                                        <input type="text" maxlength="50" formControlName="residenceCity" class="form-control form-control-sm"
+                                            [ngClass]="{'is-invalid': userFormSubmitted && fu.residenceCity.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                    </div>
+
+                                    <!-- Residence Address -->
+                                    <div class="col-12 col-md-6 col-lg-4 form-group">
+                                        <label for="userResidenceAddress" class="col-form-label col-form-label-sm text-muted">Indirizzo</label>
+                                        <input type="text" maxlength="150" formControlName="residenceAddress" class="form-control form-control-sm"
+                                            [ngClass]="{'is-invalid': userFormSubmitted && fu.residenceAddress.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                    </div>
+
+                                    <div class="form-group col-12 d-flex" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
+                                        <button type="submit" class="btn btn-primary ml-auto"><span *ngIf="bLoading" class="spinner-border spinner-border-sm mr-1"></span> Aggiorna</button>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
                 </div>
-                <div class="col-12 form-row p-0 border round-5 m-0 round-top-0 collapse show" id="prContainer">
-                    <fieldset class="col-12 row m-0 p-0" [disabled]="(pageStatus[PAGES.USERS] == PAGEMODE.READONLY)">
-                        <div class="col-12 form-row m-0" *ngIf="personalRecordList.length==0 || areAllPrsHidden()">
-                            <div class="px-2 py-4">Nessun Personal Record presente</div>
-                        </div>
 
-                        <div class="col-12 form-row m-0 p-0 position-relative border" *ngFor="let pr of filterVisiblePR(); index as prIndex; first as prFirst">
-                            <div class="col-6 col-lg-4 d-flex flex-column align-items-baseline flex-lg-row m-0 p-3">
-                                <div class="row m-0">
-                                    <div class="col-12 col-lg-6 form-group pl-0 pr-1 m-0">
-                                        <label for="pr_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">Esercizio</label>
-                                        <input id="pr_{{prIndex}}" name="pr_{{prIndex}}" type="text" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
-                                            [ngModel]="pr.exercise.name"
-                                            [ngbTypeahead]="search"
-                                            [resultTemplate]="rt"
-                                            [editable]='false'
-                                            (selectItem)="selectExercise($event, prIndex)">
-                                            
-                                            <ng-template #rt let-r="result" let-t="term">
-                                                <ngb-highlight [result]="r.name + ' (' + r.variant.name + ')'" [term]="t"></ngb-highlight>
-                                            </ng-template>
+                <!-- PERSONAL RECORDS -->
+                <div class="row m-0 w-100 bg-white p-0 mt-3">
+                    <div class="col-12 p-0">
+                        <button class="btn btn-outline-dark w-100" type="button" data-toggle="collapse"
+                            data-target="#prContainer" aria-expanded="true"
+                            aria-controls="prContainer">
+                            <h5 class="m-0 h5">Personal Records</h5>
+                        </button>
+                    </div>
+                    <div class="col-12 form-row p-0 border round-5 m-0 round-top-0 collapse show" id="prContainer">
+                        <fieldset class="col-12 row m-0 p-0" [disabled]="(pageStatus[PAGES.USERS] == PAGEMODE.READONLY)">
+                            <div class="col-12 form-row m-0" *ngIf="personalRecordList.length==0 || areAllPrsHidden()">
+                                <div class="px-2 py-4">Nessun Personal Record presente</div>
+                            </div>
 
-                                            <!-- Exercise Modal -->
-                                            <app-exercise-modal [hidden]="true" (onClose)="createExercise()" (onAbort)="abortCreateExercise()" [(newExercise)]="newExercise" style="position: absolute; right: 15px; bottom: 15px">
-                                                <button id="exerciseModalButton" class="image-button cursor-pointer" ngbTooltip="Nuovo" placement="top"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></button>
-                                            </app-exercise-modal>
-                                    </div>
-                                    <div class="col-12 col-lg-6 form-group pl-lg-1 px-0 m-0">
-                                        <label for="tipo_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">Tipo</label>
-                                        <input type="text" [(ngModel)]="pr.exercise.variant.name" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
-                                            id="tipo_{{prIndex}}" name="tipo_{{prIndex}}" placeholder="Tipo esercizio..." disabled>
-                                    </div>
-                                    <div class="col-12 col-xl-6 form-group pl-0 pr-1">
-                                        <label for="description_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">Descrizione</label>
-                                        <input type="text" [(ngModel)]="pr.exercise.description" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
-                                            id="description_{{prIndex}}" name="description_{{prIndex}}" placeholder="Descrizione esercizio..." disabled>
-                                    </div>
-                                    <div class="col-12 col-xl-5 form-group px-0 px-lg-1">
-                                        <label for="oneRepPR_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">1RM</label>
-                                        <div class="d-flex">
-                                            <input type="number" min="0" [(ngModel)]="pr.oneRepPR.weight" class="form-control form-control-sm w-100" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
-                                            id="oneRepPR_{{prIndex}}" name="oneRepPR_{{prIndex}}">
-                                            <select [(ngModel)]="pr.oneRepPR.measure" class="form-control form-control-sm cursor-pointer" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
-                                                id="oneRepPrMeasure_{{prIndex}}" name="oneRepPrMeasure_{{prIndex}}">
-                                                <option [value]="'kg'">kg</option>
-                                                <option [value]="'lbs'">lbs</option>
-                                            </select>
+                            <div class="col-12 form-row m-0 p-0 position-relative border" *ngFor="let pr of filterVisiblePR(); index as prIndex; first as prFirst">
+                                <div class="col-6 col-lg-4 d-flex flex-column align-items-baseline flex-lg-row m-0 p-3">
+                                    <div class="row m-0">
+                                        <div class="col-12 col-lg-6 form-group pl-0 pr-1 m-0">
+                                            <label for="pr_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">Esercizio</label>
+                                            <input id="pr_{{prIndex}}" name="pr_{{prIndex}}" type="text" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                [ngModel]="pr.exercise.name"
+                                                [ngbTypeahead]="search"
+                                                [resultTemplate]="rt"
+                                                [editable]='false'
+                                                (selectItem)="selectExercise($event, prIndex)">
+                                                
+                                                <ng-template #rt let-r="result" let-t="term">
+                                                    <ngb-highlight [result]="r.name + ' (' + r.variant.name + ')'" [term]="t"></ngb-highlight>
+                                                </ng-template>
+
+                                                <!-- Exercise Modal -->
+                                                <app-exercise-modal [hidden]="true" (onClose)="createExercise()" (onAbort)="abortCreateExercise()" [(newExercise)]="newExercise" style="position: absolute; right: 15px; bottom: 15px">
+                                                    <button id="exerciseModalButton" class="image-button cursor-pointer" ngbTooltip="Nuovo" placement="top"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></button>
+                                                </app-exercise-modal>
+                                        </div>
+                                        <div class="col-12 col-lg-6 form-group pl-lg-1 px-0 m-0">
+                                            <label for="tipo_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">Tipo</label>
+                                            <input type="text" [(ngModel)]="pr.exercise.variant.name" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                id="tipo_{{prIndex}}" name="tipo_{{prIndex}}" placeholder="Tipo esercizio..." disabled>
+                                        </div>
+                                        <div class="col-12 col-xl-6 form-group pl-0 pr-1">
+                                            <label for="description_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">Descrizione</label>
+                                            <input type="text" [(ngModel)]="pr.exercise.description" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                id="description_{{prIndex}}" name="description_{{prIndex}}" placeholder="Descrizione esercizio..." disabled>
+                                        </div>
+                                        <div class="col-12 col-xl-5 form-group px-0 px-lg-1">
+                                            <label for="oneRepPR_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">1RM</label>
+                                            <div class="d-flex">
+                                                <input type="number" min="0" [(ngModel)]="pr.oneRepPR.weight" class="form-control form-control-sm w-100" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                id="oneRepPR_{{prIndex}}" name="oneRepPR_{{prIndex}}">
+                                                <select [(ngModel)]="pr.oneRepPR.measure" class="form-control form-control-sm cursor-pointer" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                    id="oneRepPrMeasure_{{prIndex}}" name="oneRepPrMeasure_{{prIndex}}">
+                                                    <option [value]="'kg'">kg</option>
+                                                    <option [value]="'lbs'">lbs</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-xl-1 form-group d-flex flex-column align-items-center pl-1 pr-0">
+                                            <label for="public_{{prIndex}}" class="col-form-label col-form-label-sm">Pubblico</label>
+                                            <input type="checkbox" [(ngModel)]="pr.bPublic" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                id="public_{{prIndex}}" name="public_{{prIndex}}">
                                         </div>
                                     </div>
-                                    <div class="col-12 col-xl-1 form-group d-flex flex-column align-items-center pl-1 pr-0">
-                                        <label for="public_{{prIndex}}" class="col-form-label col-form-label-sm">Pubblico</label>
-                                        <input type="checkbox" [(ngModel)]="pr.bPublic" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
-                                            id="public_{{prIndex}}" name="public_{{prIndex}}">
+                                    <div class="pl-lg-3 pr-0 mt-1 text-right ml-auto" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
+                                        <small>Azioni</small>
+                                        <div class="d-flex flex-row flex-lg-column align-items-center align-items-lg-end justify-content-end">
+                                            <div class="image-button" ngbTooltip="Copia personal record" placement="top" (click)="copyPR(prIndex)"><img src="assets/icons/actions/copy.svg" style="width:15px; height:auto;"></div>
+                                            <div class="ml-1 image-button" ngbTooltip="Incolla personal record" placement="top" (click)="pastePR(prIndex)"><img src="assets/icons/actions/contract.svg" style="width:15px; height:auto;"></div>
+                                            <div class="ml-1 image-button" ngbTooltip="Reset personal record" placement="top" (click)="resetPR(prIndex)"><img src="assets/icons/actions/return.svg" style="width:15px; height:auto;"></div>
+                                            <div class="ml-1 image-button" ngbTooltip="Elimina personal record" placement="top" (click)="deletePR(prIndex)"><img src="assets/icons/actions/garbage-can.svg" style="width:15px; height:auto;"></div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="pl-lg-3 pr-0 mt-1 text-right ml-auto" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
-                                    <small>Azioni</small>
-                                    <div class="d-flex flex-row flex-lg-column align-items-center align-items-lg-end justify-content-end">
-                                        <div class="image-button" ngbTooltip="Copia personal record" placement="top" (click)="copyPR(prIndex)"><img src="assets/icons/actions/copy.svg" style="width:15px; height:auto;"></div>
-                                        <div class="ml-1 image-button" ngbTooltip="Incolla personal record" placement="top" (click)="pastePR(prIndex)"><img src="assets/icons/actions/contract.svg" style="width:15px; height:auto;"></div>
-                                        <div class="ml-1 image-button" ngbTooltip="Reset personal record" placement="top" (click)="resetPR(prIndex)"><img src="assets/icons/actions/return.svg" style="width:15px; height:auto;"></div>
-                                        <div class="ml-1 image-button" ngbTooltip="Elimina personal record" placement="top" (click)="deletePR(prIndex)"><img src="assets/icons/actions/garbage-can.svg" style="width:15px; height:auto;"></div>
+                                <div class="col-6 col-lg-8 p-3 border border-right-0 border-top-0 border-bottom-0">
+                                    <div class="form-row m-0" *ngFor="let elem of filterVisiblePRSeries(pr); first as seriesFirst; last as seriesLast; index as seriesIndex" [ngClass]="{'my-2': pr.series.length > 1 && !first && !last, 'border-bottom': pr.series.length > 1 && !last}">
+                                        <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group">
+                                            <label for="serie_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
+                                                [hidden]="!seriesFirst">Serie</label>
+                                            <input type="number" min="1" max="1000" [(ngModel)]="elem.seriesNumber" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                class="form-control form-control-sm" id="serie_{{prIndex}}_{{seriesIndex}}"
+                                                name="serie_{{prIndex}}_{{seriesIndex}}" placeholder="Serie...">
+                                        </div>
+                                        <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group">
+                                            <label for="rep_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
+                                                [hidden]="!seriesFirst">Rep</label>
+                                            <input type="number" min="1" max="9999" [(ngModel)]="elem.repNumber" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                class="form-control form-control-sm" id="rep_{{prIndex}}_{{seriesIndex}}"
+                                                name="rep_{{prIndex}}_{{seriesIndex}}" placeholder="Rep...">
+                                        </div>
+                                        <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group">
+                                            <label for="peso_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
+                                                [hidden]="!seriesFirst">Peso</label>
+                                            <input type="number" min="0" max="9999" [(ngModel)]="elem.weight" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                class="form-control form-control-sm" id="peso_{{prIndex}}_{{seriesIndex}}"
+                                                name="peso_{{prIndex}}_{{seriesIndex}}" placeholder="Peso...">
+                                        </div>
+                                        <div class="col-12 col-md-6 col-lg-3 col-xl-2 d-flex">
+                                            <div class="form-group">
+                                                <label for="misura_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
+                                                [hidden]="!seriesFirst">Misura</label>
+                                                <select [(ngModel)]="elem.measure" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                    id="misuraSelect_{{prIndex}}_{{seriesIndex}}" name="misuraSelect_{{prIndex}}_{{seriesIndex}}">
+                                                    <option [value]="'kg'">kg</option>
+                                                    <option [value]="'lbs'">lbs</option>
+                                                </select>
+                                            </div>
+                                            <div class="image-button ml-1" [ngClass]="{'d-flex align-items mt-3': seriesFirst}" *ngIf="!(pageStatus[PAGES.USERS] == PAGEMODE.READONLY)" ngbTooltip="Applica misura a tutti i personal record" placement="top" (click)="setPRlistMeasure(elem.measure)"><img src="assets/icons/actions/copy-secondary.svg" style="width:15px; height:auto;"></div>
+                                            <div class="image-button ml-1" [ngClass]="{'d-flex align-items mt-3': seriesFirst}" *ngIf="!(pageStatus[PAGES.USERS] == PAGEMODE.READONLY)" ngbTooltip="Applica misura a tutto il personal record" placement="top" (click)="setPRMeasure(pr, elem.measure)"><img src="assets/icons/actions/copy-secondary.svg" style="width:15px; height:auto;"></div>
+                                        </div>
+                                        <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group">
+                                            <label for="rest_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
+                                                [hidden]="!seriesFirst">Recupero</label>
+                                            <input type="number" min="0" max="9999" [(ngModel)]="elem.rest" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}" 
+                                                class="form-control form-control-sm" id="rest_{{prIndex}}_{{seriesIndex}}" 
+                                                name="rest_{{prIndex}}_{{seriesIndex}}">
+                                        </div>
+                                        <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group d-flex flex-column justify-content-center align-items-center">
+                                            <label for="verified_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
+                                            [hidden]="!seriesFirst">Verificato</label>
+                                            <input type="checkbox" [(ngModel)]="elem.bVerified" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                id="verified_{{prIndex}}_{{seriesIndex}}" name="verified_{{prIndex}}_{{seriesIndex}}">
+                                        </div>
+                                        <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group d-flex flex-column justify-content-center align-items-center">
+                                            <label for="competition_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
+                                            [hidden]="!seriesFirst">Comp.</label>
+                                            <input type="checkbox" [(ngModel)]="elem.bCompetition" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}" 
+                                                id="competition_{{prIndex}}_{{seriesIndex}}" name="competition_{{prIndex}}_{{seriesIndex}}">
+                                        </div>
+                                        <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group d-flex flex-column justify-content-center align-items-center">
+                                            <label for="public_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
+                                            [hidden]="!seriesFirst">Pubblico</label>
+                                            <input type="checkbox" [(ngModel)]="elem.bPublic" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                id="public_{{prIndex}}_{{seriesIndex}}" name="public_{{prIndex}}_{{seriesIndex}}">
+                                        </div>
+                                        <div class="col-12 col-lg-3 col-xl-1 form-group">
+                                            <label for="comment_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm" 
+                                                [hidden]="!seriesFirst">Commento</label>
+                                            <input type="text" max="200" [(ngModel)]="elem.comment" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                class="form-control form-control-sm" id="comment_{{prIndex}}_{{seriesIndex}}"
+                                                name="comment_{{prIndex}}_{{seriesIndex}}" placeholder="Commento...">
+                                        </div>
+                                        <div class="col-12 col-lg-3 col-xl-2 form-group m-0 p-0 pl-2 text-right" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
+                                            <label class="col-form-label col-form-label-sm" [hidden]="!seriesFirst"
+                                                [hidden]="!seriesFirst">Azioni</label>
+                                            <div class="d-flex justify-content-end">
+                                                <div class="image-button" ngbTooltip="Copia" placement="top" (click)="copySeries(pr, seriesIndex)"><img src="assets/icons/actions/copy.svg" style="width:15px; height:auto;"></div>
+                                                <div class="ml-1 image-button" ngbTooltip="Incolla" placement="top" (click)="pasteSeries(pr, seriesIndex)"><img src="assets/icons/actions/contract.svg" style="width:15px; height:auto;"></div>
+                                                <div class="ml-1 image-button" ngbTooltip="Reset" placement="top" (click)="resetSeries(pr, seriesIndex)"><img src="assets/icons/actions/return.svg" style="width:15px; height:auto;"></div>
+                                                <div class="ml-1 image-button" ngbTooltip="Elimina" placement="top" (click)="deleteSeries(pr, seriesIndex)" [hidden]="pr.series.length == 1"><img src="assets/icons/actions/garbage-can.svg" style="width:15px; height:auto;"></div>
+                                                <div class="ml-1 image-button" ngbTooltip="Aggiungi" placement="top" (click)="pushSeries(pr)" [hidden]="!seriesLast"><img src="assets/icons/actions/plus2.svg" style="width:15px; height:auto;"></div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-6 col-lg-8 p-3 border border-right-0 border-top-0 border-bottom-0">
-                                <div class="form-row m-0" *ngFor="let elem of filterVisiblePRSeries(pr); first as seriesFirst; last as seriesLast; index as seriesIndex" [ngClass]="{'my-2': pr.series.length > 1 && !first && !last, 'border-bottom': pr.series.length > 1 && !last}">
-                                    <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group">
-                                        <label for="serie_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
-                                            [hidden]="!seriesFirst">Serie</label>
-                                        <input type="number" min="1" max="1000" [(ngModel)]="elem.seriesNumber" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
-                                            class="form-control form-control-sm" id="serie_{{prIndex}}_{{seriesIndex}}"
-                                            name="serie_{{prIndex}}_{{seriesIndex}}" placeholder="Serie...">
-                                    </div>
-                                    <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group">
-                                        <label for="rep_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
-                                            [hidden]="!seriesFirst">Rep</label>
-                                        <input type="number" min="1" max="9999" [(ngModel)]="elem.repNumber" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
-                                            class="form-control form-control-sm" id="rep_{{prIndex}}_{{seriesIndex}}"
-                                            name="rep_{{prIndex}}_{{seriesIndex}}" placeholder="Rep...">
-                                    </div>
-                                    <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group">
-                                        <label for="peso_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
-                                            [hidden]="!seriesFirst">Peso</label>
-                                        <input type="number" min="0" max="9999" [(ngModel)]="elem.weight" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
-                                            class="form-control form-control-sm" id="peso_{{prIndex}}_{{seriesIndex}}"
-                                            name="peso_{{prIndex}}_{{seriesIndex}}" placeholder="Peso...">
-                                    </div>
-                                    <div class="col-12 col-md-6 col-lg-3 col-xl-2 d-flex">
-                                        <div class="form-group">
-                                            <label for="misura_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
-                                            [hidden]="!seriesFirst">Misura</label>
-                                            <select [(ngModel)]="elem.measure" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
-                                                id="misuraSelect_{{prIndex}}_{{seriesIndex}}" name="misuraSelect_{{prIndex}}_{{seriesIndex}}">
-                                                <option [value]="'kg'">kg</option>
-                                                <option [value]="'lbs'">lbs</option>
-                                            </select>
-                                        </div>
-                                        <div class="image-button ml-1" [ngClass]="{'d-flex align-items mt-3': seriesFirst}" *ngIf="!(pageStatus[PAGES.USERS] == PAGEMODE.READONLY)" ngbTooltip="Applica misura a tutti i personal record" placement="top" (click)="setPRlistMeasure(elem.measure)"><img src="assets/icons/actions/copy-secondary.svg" style="width:15px; height:auto;"></div>
-                                        <div class="image-button ml-1" [ngClass]="{'d-flex align-items mt-3': seriesFirst}" *ngIf="!(pageStatus[PAGES.USERS] == PAGEMODE.READONLY)" ngbTooltip="Applica misura a tutto il personal record" placement="top" (click)="setPRMeasure(pr, elem.measure)"><img src="assets/icons/actions/copy-secondary.svg" style="width:15px; height:auto;"></div>
-                                    </div>
-                                    <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group">
-                                        <label for="rest_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
-                                            [hidden]="!seriesFirst">Recupero</label>
-                                        <input type="number" min="0" max="9999" [(ngModel)]="elem.rest" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}" 
-                                            class="form-control form-control-sm" id="rest_{{prIndex}}_{{seriesIndex}}" 
-                                            name="rest_{{prIndex}}_{{seriesIndex}}">
-                                    </div>
-                                    <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group d-flex flex-column justify-content-center align-items-center">
-                                        <label for="verified_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
-                                        [hidden]="!seriesFirst">Verificato</label>
-                                        <input type="checkbox" [(ngModel)]="elem.bVerified" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
-                                            id="verified_{{prIndex}}_{{seriesIndex}}" name="verified_{{prIndex}}_{{seriesIndex}}">
-                                    </div>
-                                    <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group d-flex flex-column justify-content-center align-items-center">
-                                        <label for="competition_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
-                                        [hidden]="!seriesFirst">Comp.</label>
-                                        <input type="checkbox" [(ngModel)]="elem.bCompetition" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}" 
-                                            id="competition_{{prIndex}}_{{seriesIndex}}" name="competition_{{prIndex}}_{{seriesIndex}}">
-                                    </div>
-                                    <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group d-flex flex-column justify-content-center align-items-center">
-                                        <label for="public_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
-                                        [hidden]="!seriesFirst">Pubblico</label>
-                                        <input type="checkbox" [(ngModel)]="elem.bPublic" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
-                                            id="public_{{prIndex}}_{{seriesIndex}}" name="public_{{prIndex}}_{{seriesIndex}}">
-                                    </div>
-                                    <div class="col-12 col-lg-3 col-xl-1 form-group">
-                                        <label for="comment_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm" 
-                                            [hidden]="!seriesFirst">Commento</label>
-                                        <input type="text" max="200" [(ngModel)]="elem.comment" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
-                                            class="form-control form-control-sm" id="comment_{{prIndex}}_{{seriesIndex}}"
-                                            name="comment_{{prIndex}}_{{seriesIndex}}" placeholder="Commento...">
-                                    </div>
-                                    <div class="col-12 col-lg-3 col-xl-2 form-group m-0 p-0 pl-2 text-right" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
-                                        <label class="col-form-label col-form-label-sm" [hidden]="!seriesFirst"
-                                            [hidden]="!seriesFirst">Azioni</label>
-                                        <div class="d-flex justify-content-end">
-                                            <div class="image-button" ngbTooltip="Copia" placement="top" (click)="copySeries(pr, seriesIndex)"><img src="assets/icons/actions/copy.svg" style="width:15px; height:auto;"></div>
-                                            <div class="ml-1 image-button" ngbTooltip="Incolla" placement="top" (click)="pasteSeries(pr, seriesIndex)"><img src="assets/icons/actions/contract.svg" style="width:15px; height:auto;"></div>
-                                            <div class="ml-1 image-button" ngbTooltip="Reset" placement="top" (click)="resetSeries(pr, seriesIndex)"><img src="assets/icons/actions/return.svg" style="width:15px; height:auto;"></div>
-                                            <div class="ml-1 image-button" ngbTooltip="Elimina" placement="top" (click)="deleteSeries(pr, seriesIndex)" [hidden]="pr.series.length == 1"><img src="assets/icons/actions/garbage-can.svg" style="width:15px; height:auto;"></div>
-                                            <div class="ml-1 image-button" ngbTooltip="Aggiungi" placement="top" (click)="pushSeries(pr)" [hidden]="!seriesLast"><img src="assets/icons/actions/plus2.svg" style="width:15px; height:auto;"></div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="form-row m-0 d-flex justify-content-start" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
+                                <div class="btn btn-outline-info btn-sm-sm mt-2 ml-2" (click)="pushPR()">Aggiungi PR +</div>
                             </div>
-                        </div>
-                        <div class="form-row m-0 d-flex justify-content-start" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
-                            <div class="btn btn-outline-info btn-sm-sm mt-2 ml-2" (click)="pushPR()">Aggiungi PR +</div>
-                        </div>
 
-                        <div class="form-group col-12 d-flex p-0" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
-                            <button type="submit" class="btn btn-primary ml-auto mr-2" (click)="onSubmitPersonaRecords()" [disabled]="!isPersonalRecordFormValid()"><span *ngIf="bLoading" class="spinner-border spinner-border-sm mr-1"></span> Aggiorna</button>
-                        </div>
-                    </fieldset>
+                            <div class="form-group col-12 d-flex p-0" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
+                                <button type="submit" class="btn btn-primary ml-auto mr-2" (click)="onSubmitPersonaRecords()" [disabled]="!isPersonalRecordFormValid()"><span *ngIf="bLoading" class="spinner-border spinner-border-sm mr-1"></span> Aggiorna</button>
+                            </div>
+                        </fieldset>
+                    </div>
                 </div>
             </div>
 
         </div>
 
         <!-- Loader -->
-        <div class='h-100 w-100' [hidden]="!bLoading">
+        <div [hidden]="!bLoading">
             <div style="position:absolute; background-color:black; opacity:50%; right:0; top:0;" class="w-100 h-100">
                 <div class="container d-flex align-items-center justify-content-center w-100 h-100">
                     <div class="lds-ring">

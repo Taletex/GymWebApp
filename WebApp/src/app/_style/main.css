@@ -104,9 +104,67 @@
   }
 }
 
+.fa-fw {
+  text-align: center;
+  width: 1.2rem !important;
+  font-size: 1rem !important;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+  font-weight: 900;
+  font-family: Font Awesome\ 5 Free;
+}
+@media (max-width: 767.98px) {
+  .fa-fw {
+    font-size: 0.9rem !important;
+  }
+}
+@media (max-width: 575.98px) {
+  .fa-fw {
+    font-size: 0.8rem !important;
+  }
+}
+
+.fa-description {
+  word-break: break-all;
+}
+@media (max-width: 767.98px) {
+  .fa-description {
+    font-size: 0.9rem !important;
+  }
+}
+@media (max-width: 575.98px) {
+  .fa-description {
+    font-size: 0.8rem !important;
+  }
+}
+
+.small-action-icon {
+  width: 1rem;
+  height: auto;
+}
+
+.large-action-icon {
+  width: 1.5rem;
+  height: auto;
+}
+
 .standard-action-icon {
   width: 1.2rem;
   height: auto;
+}
+
+.standard-action-icon-xl {
+  width: 1.2rem;
+  height: auto;
+}
+@media (max-width: 1199.98px) {
+  .standard-action-icon-xl {
+    width: 1rem !important;
+  }
 }
 
 .standard-action-icon-lg {
@@ -143,6 +201,9 @@
   width: 1.2rem;
   height: auto;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  text-align: center;
 }
 .standard-action-icon-btn:hover {
   opacity: 0.8;
@@ -152,6 +213,9 @@
   width: 1.2rem;
   height: auto;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  text-align: center;
 }
 .standard-action-icon-btn-lg:hover {
   opacity: 0.8;
@@ -166,6 +230,9 @@
   width: 1.2rem;
   height: auto;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  text-align: center;
 }
 .standard-action-icon-btn-md:hover {
   opacity: 0.8;
@@ -180,6 +247,9 @@
   width: 1.2rem;
   height: auto;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  text-align: center;
 }
 .standard-action-icon-btn-sm:hover {
   opacity: 0.8;
@@ -251,11 +321,6 @@
 }
 .flex-fill {
   flex: 1 1 auto !important;
-}
-
-.media {
-  display: flex;
-  align-items: flex-start;
 }
 
 .media-body {
@@ -987,6 +1052,366 @@
 
 .font-size-30 {
   font-size: 3rem !important;
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-1 {
+    font-size: 0.1rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-2 {
+    font-size: 0.2rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-3 {
+    font-size: 0.3rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-4 {
+    font-size: 0.4rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-5 {
+    font-size: 0.5rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-6 {
+    font-size: 0.6rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-7 {
+    font-size: 0.7rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-8 {
+    font-size: 0.8rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-9 {
+    font-size: 0.9rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-10 {
+    font-size: 1rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-11 {
+    font-size: 1.1rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-12 {
+    font-size: 1.2rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-13 {
+    font-size: 1.3rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-14 {
+    font-size: 1.4rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-15 {
+    font-size: 1.5rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-16 {
+    font-size: 1.6rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-17 {
+    font-size: 1.7rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-18 {
+    font-size: 1.8rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-19 {
+    font-size: 1.9rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-20 {
+    font-size: 2rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-21 {
+    font-size: 2.1rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-22 {
+    font-size: 2.2rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-23 {
+    font-size: 2.3rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-24 {
+    font-size: 2.4rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-25 {
+    font-size: 2.5rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-26 {
+    font-size: 2.6rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-27 {
+    font-size: 2.7rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-28 {
+    font-size: 2.8rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-29 {
+    font-size: 2.9rem !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .font-size-xl-30 {
+    font-size: 3rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-1 {
+    font-size: 0.1rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-2 {
+    font-size: 0.2rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-3 {
+    font-size: 0.3rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-4 {
+    font-size: 0.4rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-5 {
+    font-size: 0.5rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-6 {
+    font-size: 0.6rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-7 {
+    font-size: 0.7rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-8 {
+    font-size: 0.8rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-9 {
+    font-size: 0.9rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-10 {
+    font-size: 1rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-11 {
+    font-size: 1.1rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-12 {
+    font-size: 1.2rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-13 {
+    font-size: 1.3rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-14 {
+    font-size: 1.4rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-15 {
+    font-size: 1.5rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-16 {
+    font-size: 1.6rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-17 {
+    font-size: 1.7rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-18 {
+    font-size: 1.8rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-19 {
+    font-size: 1.9rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-20 {
+    font-size: 2rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-21 {
+    font-size: 2.1rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-22 {
+    font-size: 2.2rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-23 {
+    font-size: 2.3rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-24 {
+    font-size: 2.4rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-25 {
+    font-size: 2.5rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-26 {
+    font-size: 2.6rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-27 {
+    font-size: 2.7rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-28 {
+    font-size: 2.8rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-29 {
+    font-size: 2.9rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .font-size-lg-30 {
+    font-size: 3rem !important;
+  }
 }
 
 @media (max-width: 767.98px) {
@@ -2054,6 +2479,11 @@ ngb-carousel .picsum-img-wrapper > img {
 .avatar-sm {
   width: 30px;
   height: 30px;
+}
+
+.avatar-xl {
+  width: 128px;
+  height: 128px;
 }
 
 .avatar {
