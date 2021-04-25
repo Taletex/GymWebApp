@@ -6,6 +6,7 @@ const emailHelper = require('src/_helpers/send-email');
 const db = require('src/_helpers/db');
 const Role = require('src/_helpers/role');
 const _ = require('lodash');
+const { Residence, UserOptions } = require('../users/user.model');
 
 module.exports = {
     authenticate,
@@ -94,36 +95,33 @@ async function register(params, origin) {
 
     // create user object to be associated to the account object
     const user = new db.User({
-        bodyWeight: 0,
-        userType: params.userType,
-        yearsOfExperience: 0,
         name: params.name,
         surname: params.surname,
         dateOfBirth: new Date(),
+        placeOfBirth: new Residence(),
         sex: "M",
-        contacts: new db.Contacts({email: params.email, telephone: ''}),
-        residence: new db.Residence({state: '', city: '', address: ''}),
+        userType: params.userType,
+        bodyWeight: 0,
+        yearsOfExperience: 0,
+        disciplines: [],
+        gyms: [],
+        coaches: [],
+        athletes: [],
         personalRecords: [],
+        contacts: new db.Contacts({email: params.email, telephone: ''}),
+        residence: new db.Residence(),
         biography: "",
-        socials: [],
-        profilePicture: ""
+        profilePicture: "",
+        notifications: [],
+        options: new UserOptions()
     });
 
     const data = await user.save()
 
     // create account object
-    delete params.bodyWeight;
-    delete params.userType;
-    delete params.yearsOfExperience;
     delete params.name;
     delete params.surname;
-    delete params.dateOfBirth;
-    delete params.sex;
-    delete params.contacts;
-    delete params.residence;
-    delete params.biography;
-    delete params.socials;
-    delete params.profilePicture;
+    delete params.userType;
     params.user = data._id;
 
     const account = new db.Account(params);
@@ -230,36 +228,33 @@ async function create(params) {
 
     // create user object to be associated to the account object
     const user = new db.User({
-        bodyWeight: 0,
-        userType: params.userType,
-        yearsOfExperience: 0,
         name: params.name,
         surname: params.surname,
         dateOfBirth: new Date(),
+        placeOfBirth: new Residence(),
         sex: "M",
-        contacts: new db.Contacts({email: params.email, telephone: ''}),
-        residence: new db.Residence({state: '', city: '', address: ''}),
+        userType: params.userType,
+        bodyWeight: 0,
+        yearsOfExperience: 0,
+        disciplines: [],
+        gyms: [],
+        coaches: [],
+        athletes: [],
         personalRecords: [],
+        contacts: new db.Contacts({email: params.email, telephone: ''}),
+        residence: new db.Residence(),
         biography: "",
-        socials: [],
-        profilePicture: ""
+        profilePicture: "",
+        notifications: [],
+        options: new UserOptions()
     });
 
     const data = await user.save()
 
     // create account object
-    delete params.bodyWeight;
-    delete params.userType;
-    delete params.yearsOfExperience;
     delete params.name;
     delete params.surname;
-    delete params.dateOfBirth;
-    delete params.sex;
-    delete params.contacts;
-    delete params.residence;
-    delete params.biography;
-    delete params.socials;
-    delete params.profilePicture;
+    delete params.userType;
     params.user = data._id;
 
     const account = new db.Account(params);

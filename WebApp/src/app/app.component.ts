@@ -5,6 +5,7 @@ import { AccountService } from '@app/_services/account-service/account-service.s
 import { Account, Role } from './_models';
 
 import { slideInAnimation } from '@app/animations';
+import { HttpService } from './_services/http-service/http-service.service';
 
 @Component({
   selector: 'app-root',
@@ -18,8 +19,9 @@ export class AppComponent {
   title = 'My Training Platform';
   Role = Role;
   account: Account;
+  baseServerUrl = this.httpService.baseServerUrl;
 
-  constructor(public router: Router, private accountService: AccountService) {
+  constructor(public router: Router, private accountService: AccountService, public httpService: HttpService) {
     this.accountService.account.subscribe(x => this.account = x);
   }
 

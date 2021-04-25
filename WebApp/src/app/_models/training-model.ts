@@ -1,269 +1,193 @@
+import { ca } from 'date-fns/locale';
 import * as _ from 'lodash';
 
-export class Contacts {
-    email: string;
-    telephone: string;
 
-    constructor(email: string = "", telephone: string = "") {
-        this.email = email;
-        this.telephone = telephone;
-    }
+/* === CLASSES === */
+export class Socials {
+    constructor(
+        public facebook: string = "", 
+        public twitter: string = "", 
+        public instagram: string = "", 
+        public linkedin: string = "", 
+        public other: string = ""
+    ) {}
+}
+
+export class Contacts {
+    constructor(
+        public email: string = "", 
+        public telephone: string = "", 
+        public socials: Socials = new Socials()
+    ) {}
 }
 
 
 export class Residence {
-    state: string;
-    city: string;
-    address: string;
-
-    constructor(state: string = "Italy", city: string = "", address: string = "") {
-        this.state = state;
-        this.city = city;
-        this.address = address;
-    }
+    constructor(
+        public state: string = "Italy", 
+        public province: string = "", 
+        public cap: string = "", 
+        public city: string = "", 
+        public address: string = ""
+    ) {}
 }
 
-export class PRSeries {
-    seriesNumber: number;
-    repNumber: number;
-    weight: number;
-    measure: string;
-    rest: number;
-    bCompetition: boolean;
-    bVerified: boolean;
-    bPublic: boolean;
-    comment: string;
 
-    constructor(seriesNumber: number = 1, repNumber: number = 1, weight: number = 50, measure: string = "kg", rest: number = 90, bCompetition: boolean = false, bVerified: boolean = false, bPublic: boolean = false, comment: string = "") {
-        this.seriesNumber = seriesNumber;
-        this.repNumber = repNumber;
-        this.weight = weight;
-        this.measure = measure;
-        this.rest = rest;
-        this.bCompetition = bCompetition;
-        this.bVerified = bVerified;
-        this.bPublic = bPublic;
-        this.comment = comment;
-    }
+export class UserOptions {
+    constructor(
+        public bShowActivities: OPTION_VISIBILITY = OPTION_VISIBILITY.ALL,
+        public bShowPrivateInfo: OPTION_VISIBILITY = OPTION_VISIBILITY.ALL, 
+        public bShowPublicInfo: OPTION_VISIBILITY = OPTION_VISIBILITY.ALL
+    ) {}
+}
+
+
+export class PRSeries {
+    constructor(
+        public seriesNumber: number = 1, 
+        public repNumber: number = 1, 
+        public weight: number = 50, 
+        public measure: string = "kg", 
+        public rest: number = 90, 
+        public bCompetition: boolean = false, 
+        public bVerified: boolean = false, 
+        public bPublic: boolean = false, 
+        public comment: string = ""
+    ) {}
 }
 
 export class PersonalRecord {
-    exercise: Exercise;
-    series: [PRSeries];
-    oneRepPR: PRSeries;
-    bPublic: boolean;
-
-    constructor(exercise: Exercise = new Exercise(), series: [PRSeries] = [new PRSeries()], oneRepPR: PRSeries = new PRSeries(), bPublic: boolean = false) {
-        this.exercise = exercise;
-        this.series = series;
-        this.oneRepPR = oneRepPR;
-        this.bPublic = bPublic;
-    }
+    constructor(
+        public exercise: Exercise = new Exercise(), 
+        public series: [PRSeries] = [new PRSeries()], 
+        public oneRepPR: PRSeries = new PRSeries(), 
+        public bPublic: boolean = false
+    ) {}
 }
 
-// Note: for convention, a notification is uniquely identified using type_from, because cannot be two equals notifications with the same type and from fields!
 export class Notification {
-    _id: string;
-    type: string;
-    from: string;           // ONLY ID: Don't need to get the whole user, just need the id (it reduces the communication volume)
-    destination: string;   // ONLY ID: Don't need to get the whole user, just need the id (it reduces the communication volume)
-    message: string;
-    bConsumed: boolean;
-    creationDate: Date;
-
-    constructor(_id: string = "", type: string = "", from: string = "", destination: string = "", message: string = "", bConsumed: boolean = false, creationDate: Date = new Date()) {
-        this._id = _id;
-        this.type = type;
-        this.from = from;
-        this.destination = destination;
-        this.message = message;
-        this.bConsumed = bConsumed;
-        this.creationDate = creationDate;
-    }
+    constructor(
+        public _id: string = "", 
+        public type: string = "", 
+        public from: string = "",            // ONLY ID: Don't need to get the whole user, just need the id (it reduces the communication volume)
+        public destination: string = "",     // ONLY ID: Don't need to get the whole user, just need the id (it reduces the communication volume)
+        public message: string = "", 
+        public bConsumed: boolean = false, 
+        public creationDate: Date = new Date()
+    ) {}
 }
 
 export class Federation {
-    _id: string;
-    name: string;
-    description: string;
-    website: string;
-    state: string;
-    founded: Date;
-    logo: string;
-
-    constructor(_id: string = "", name: string = "", description: string = "", website: string = "", state: string = "", founded: Date = new Date(), logo: string = "") {
-        this._id = _id;
-        this.name = name;
-        this.description = description;
-        this.website = website;
-        this.state = state;
-        this.founded = founded;
-        this.logo = logo;
-    }
+    constructor(
+        public _id: string = "", 
+        public name: string = "", 
+        public description: string = "", 
+        public website: string = "", 
+        public state: string = "", 
+        public founded: Date = new Date(), 
+        public logo: string = ""
+    ) {}
 }
 
 export class Activity {
-    _id: string;
-    type: string;
-    name: string;
-    disciplines: string[];
-    federation: Federation;
-    grade: string;
-    ageCategories: string[];
-    weightCategories: string[];
-    place: Residence;
-    startDate: Date;
-    endDate: Date;
-    description: string;
-    guests: string[];   // ONLY ID: Don't need to get the whole user, just need the id (it reduces the communication volume)
-    costs: string[];
-    prices: string[];
-    patreons: string[];
-    creator: string;    // ONLY ID: Don't need to get the whole user, just need the id (it reduces the communication volume)
-    bPublic: boolean;
-
-    constructor(_id: string = "", type: string = "", name: string = "", disciplines: string[] = [], federation: Federation = new Federation(), grade: string = "", ageCategories: string[] = [], weightCategories: string[]= [],
-                place: Residence = new Residence(), startDate: Date = new Date(), endDate: Date = new Date(), description: string = "", guests: string[] = [], costs: string[] = [], prices: string[] = [], patreons: string[] = [],
-                creator: string = "", bPublic: boolean = true) {
-        this._id = _id;
-        this.type = type;
-        this.name = name;
-        this.disciplines = disciplines;
-        this.federation = federation;
-        this.grade = grade;
-        this.ageCategories = ageCategories;
-        this.weightCategories = weightCategories;
-        this.place = place;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.description = description;
-        this.guests = guests;    
-        this.costs = costs;
-        this.prices = prices;
-        this.patreons = patreons;
-        this.patreons = patreons;
-        this.creator = creator;  
-        this.bPublic = bPublic;
-
-    }
+    constructor(
+        public _id: string = "", 
+        public type: string = "", 
+        public name: string = "", 
+        public disciplines: string[] = [], 
+        public federation: Federation = new Federation(), 
+        public grade: string = "", 
+        public ageCategories: string[] = [], 
+        public weightCategories: string[]= [],
+        public place: Residence = new Residence(), 
+        public startDate: Date = new Date(), 
+        public endDate: Date = new Date(), 
+        public description: string = "", 
+        public guests: string[] = [],                   // ONLY ID: Don't need to get the whole user, just need the id (it reduces the communication volume)
+        public costs: string[] = [], 
+        public prices: string[] = [], 
+        public patreons: string[] = [],
+        public creator: string = "",                    // ONLY ID: Don't need to get the whole user, just need the id (it reduces the communication volume)
+        public bPublic: boolean = true
+    ) {}
 }
 
 export class User {
-    _id: string;
-    name: string;
-    surname: string;
-    dateOfBirth: Date;
-    sex: string;
-    bodyWeight: number;
-    userType: string;           // athlete, coach, both
-    yearsOfExperience: number;
-    contacts: Contacts;
-    residence: Residence;
-    personalRecords: PersonalRecord[];
-    notifications: Notification[];
-    coaches: string[];          // ONLY ID: Don't need to get the whole user, just need the id (ti reduces the communication volume)
-    athletes: string[];         // ONLY ID: Don't need to get the whole user, just need the id (ti reduces the communication volume)
-    biography: string;
-    socials: any[];
-    profilePicture: string;
+    public _id: string;
 
-    constructor(name: string = "", surname: string = "", dateOfBirth: Date = null, sex: string = "M", bodyWeight: number = 80,
-                userType: string = "athlete", yearsOfExperience: number = 0, contacts: Contacts = new Contacts(), residence: Residence = new Residence(), 
-                personalRecords: PersonalRecord[] = <PersonalRecord[]>[], notifications: Notification[] = <Notification[]>[], coaches: string[] = <string[]>[], 
-                athletes: string[] = <string[]>[], biography: string = "", socials: [] = []) {
-        this.name = name;
-        this.surname = surname;
-        this.dateOfBirth = dateOfBirth;
-        this.sex = sex;
-        this.bodyWeight = bodyWeight;
-        this.userType = userType;
-        this.yearsOfExperience = yearsOfExperience;
-        this.contacts = contacts;
-        this.residence = residence;
-        this.personalRecords = personalRecords;
-        this.notifications = notifications;
-        this.coaches = coaches;
-        this.athletes = athletes;
-        this.biography = biography;
-        this.socials = socials;
-        this.profilePicture = this.profilePicture;
-    }
+    constructor(
+        public name: string = "", 
+        public surname: string = "", 
+        public dateOfBirth: Date = null, 
+        public placeOfBirth: Residence = new Residence(), 
+        public sex: string = "M",      
+        public userType: string = "athlete", 
+        public bodyWeight: number = 80, 
+        public yearsOfExperience: number = 0, 
+        public disciplines: string[] = [], 
+        public gyms: string[] = [], 
+        public coaches: string[] = <string[]>[],                            // ONLY ID: Don't need to get the whole user, just need the id (it reduces the communication volume)
+        public athletes: string[] = <string[]>[],                           // ONLY ID: Don't need to get the whole user, just need the id (it reduces the communication volume)
+        public personalRecords: PersonalRecord[] = <PersonalRecord[]>[],    
+        public contacts: Contacts = new Contacts(), 
+        public residence: Residence = new Residence(), 
+        public biography: string = "", 
+        public profilePicture: string = "",
+        public notifications: Notification[] = <Notification[]>[], 
+        public options: UserOptions = new UserOptions()
+    ) {}
 }
 
 
 export class Variant {
-    name: string;
-    intensityCoefficient: number;
-
-    constructor(name: string = "Standard", intensityCoefficient: number = 1) {
-        this.name = name;
-        this.intensityCoefficient = intensityCoefficient;
-    }
+    constructor(
+        public name: string = "Standard", 
+        public intensityCoefficient: number = 1
+    ) {}
 }
 
 
 export class Series {
-    seriesNumber: number;
-    repNumber: number;
-    weight: number;
-    measure: string;
-    rest: number;
-
-    constructor(seriesNumber: number = 1, repNumber: number = 1, weight: number = 50, measure: string = "%", rest: number = 90) {
-        this.seriesNumber = seriesNumber;
-        this.repNumber = repNumber;
-        this.weight = weight;
-        this.measure = measure;
-        this.rest = rest;
-    }
+    constructor(
+        public seriesNumber: number = 1, 
+        public repNumber: number = 1, 
+        public weight: number = 50, 
+        public measure: string = "%", 
+        public rest: number = 90
+    ) {}
 }
 
 
 export class Exercise {
     _id: string;
-    name: string;
-    variant: Variant;
-    description: string;
-    creator: string         // ONLY ID: Don't need to get the whole user, just need the id (ti reduces the communication volume)
-    disciplines: string[];
-    groups: string[];
-    images: string[];
 
-    constructor(name: string = "", variant: Variant = new Variant(), description: string = "", creator: string = "", disciplines: string[] = [], groups: string[] = [], images: string[] = []) {
-        this.name = name;
-        this.variant = variant;
-        this.description = description;
-        this.creator = creator;
-        this.disciplines = disciplines;
-        this.groups = groups;
-        this.images = images;
-    }
+    constructor(
+        public name: string = "", 
+        public variant: Variant = new Variant(), 
+        public description: string = "", 
+        public creator: string = "",                // ONLY ID: Don't need to get the whole user, just need the id (ti reduces the communication volume)
+        public disciplines: string[] = [], 
+        public groups: string[] = [], 
+        public images: string[] = []
+    ) {}
 }
 
 export class SessionExercise {
-    exercise: Exercise;
-    series: [Series];
-
-    constructor(exercise: Exercise = new Exercise(), series: [Series] = [new Series()]){
-        this.exercise = exercise;
-        this.series = series;
-    };
+    constructor(
+        public exercise: Exercise = new Exercise(), 
+        public series: [Series] = [new Series()]
+    ){}
 }
 
 export class Session {
-    name: string;
-    comment: string;
-    startDate: Date;
-    endDate: Date;
-    exercises: [SessionExercise];
 
-    constructor(name: string = "", comment: string = "", startDate: Date = new Date(), endDate: Date = new Date(), exercises: [SessionExercise] = [new SessionExercise()] ) {
-        this.name = name;
-        this.comment = comment;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.exercises = exercises;
-    }
+    constructor(
+        public name: string = "", 
+        public comment: string = "", 
+        public startDate: Date = new Date(), 
+        public endDate: Date = new Date(), 
+        public exercises: [SessionExercise] = [new SessionExercise()] 
+    ) {}
 
     copyFromSession(session: Session) {
         this.name = session.name;
@@ -276,49 +200,33 @@ export class Session {
 
 
 export class Week {
-    comment: string;
-    sessions: Session[];
-
-    constructor(comment: string = "", sessions: Session[] = [new Session()]) {
-        this.comment = comment;
-        this.sessions = sessions;
-    }
+    constructor(
+        public comment: string = "", 
+        public sessions: Session[] = [new Session()]
+    ) {}
 }
 
 
 export class Training {
     _id: string;
-    state: TRAINING_STATES;
-    author: User;
-    athletes: User[];
-    type: string;
-    creationDate: Date;
-    updatedAt: Date;
-    startDate: Date;
-    endDate: Date;
-    comment: string;
-    weeks: [Week];
-    oldVersions: string[];
 
-    constructor(author: User = new User(), athletes: User[] = <User[]>[], state: TRAINING_STATES = TRAINING_STATES.NEW, type: string = TRAINING_TYPES.POWERLIFTING, creationDate: Date = new Date(), updatedAt: Date = new Date(),
-                startDate: Date = new Date(), endDate: Date = new Date(), comment: string = "", weeks: [Week] = [new Week()], oldVersions: string[] = []) {
-        this.state = state;
-        this.author = author;
-        this.athletes = athletes;
-        this.type = type;
-        this.creationDate = creationDate;
-        this.updatedAt = updatedAt;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.comment = comment;
-        this.weeks = weeks;
-        this.oldVersions = oldVersions;
-    }
-
-    public trainingToString() {
-    }
+    constructor(
+        public author: User = new User(), 
+        public athletes: User[] = <User[]>[], 
+        public state: TRAINING_STATES = TRAINING_STATES.NEW, 
+        public type: string = TRAINING_TYPES.POWERLIFTING, 
+        public creationDate: Date = new Date(), 
+        public updatedAt: Date = new Date(),
+        public startDate: Date = new Date(),
+        public endDate: Date = new Date(), 
+        public comment: string = "", 
+        public weeks: [Week] = [new Week()], 
+        public oldVersions: string[] = []
+    ) {}
 }
 
+
+/* === ENUMS === */
 export enum TRAINING_STATES {
     NEW = "nuovo",
     STARTED = "in corso",
@@ -347,4 +255,10 @@ export enum EXERCISE_GROUPS {
     NECK = "collo",
     HEAD = "testa",
     CALVES = "polpacci"
+}
+
+export enum OPTION_VISIBILITY {
+    ALL = 0,
+    LINKS_ONLY = 1,
+    NONE = 2
 }

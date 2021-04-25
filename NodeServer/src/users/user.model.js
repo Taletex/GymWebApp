@@ -1,12 +1,24 @@
+const { number } = require('joi');
 const mongoose = require('mongoose');
+
+const SocialsSchema = mongoose.Schema ({
+    facebook: String,
+    twitter: String,
+    instagram: String,
+    linkedin: String,
+    other: String,
+}, { _id: false})
 
 const ContactsSchema = mongoose.Schema({
     email: String,
-    telephone: String
+    telephone: String,
+    socials: { type: SocialsSchema, required: false }
 }, { _id: false})
 
 const ResidenceSchema = mongoose.Schema({
     state: String,
+    province: String,
+    cap: String,
     city: String,
     address: String
 }, { _id: false})
@@ -51,18 +63,23 @@ const NotificationSchema = mongoose.Schema({
     creationDate: { type: Date, required: true }
 })
 
+const UserOptionsSchema = mongoose.Schema({
+    bShowActivities: Number,
+    bShowPrivateInfo: Number,
+    bShowPublicInfo: Number
+}, { _id: false})
+
 const UserSchema = mongoose.Schema({
     name: { type: String, required: true },
     surname: { type: String, required: true },
     dateOfBirth: { type: Date, required: false },
+    placeOfBirth: { type: ResidenceSchema, required: false },
     sex: { type: String, required: false },
-    contacts: { type: ContactsSchema, required: false },
-    residence: { type: ResidenceSchema, required: false },
     userType: { type: String, required: true },             // athlete, coach, both
     bodyWeight: Number,
     yearsOfExperience: Number,
-    personalRecords: { type: [PersonalRecordSchema], required: false },
-    notifications: { type: [NotificationSchema], required: false },
+    disciplines: { type: [String], required: false },
+    gyms: { type: [String], required: false },
     coaches: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -73,18 +90,26 @@ const UserSchema = mongoose.Schema({
         ref: 'User',
         required: false
     }],
+    personalRecords: { type: [PersonalRecordSchema], required: false },
+    contacts: { type: ContactsSchema, required: false },
+    residence: { type: ResidenceSchema, required: false },
     biography: String,
-    socials: Array,
     profilePicture: String,
+    notifications: { type: [NotificationSchema], required: false },
+    options: { type: UserOptionsSchema, required: false }
 });
 
 const userSchema =  mongoose.model('User', UserSchema);
 const contactsSchema = mongoose.model('Contacts', ContactsSchema);
 const residenceSchema = mongoose.model('Residence', ResidenceSchema);
 const notificationSchema = mongoose.model('Notification', NotificationSchema);
+const userOptionsSchema = mongoose.model('UserOptions', UserOptionsSchema);
+const socialsSchema = mongoose.model('Socials', SocialsSchema);
 
 module.exports = {User: userSchema, UserSchema: UserSchema, 
                   Contacts: contactsSchema, ContactsSchema: ContactsSchema, 
                   Residence: residenceSchema, ResidenceSchema: ResidenceSchema,
-                  Notification: notificationSchema, NotificationSchema: NotificationSchema
+                  Notification: notificationSchema, NotificationSchema: NotificationSchema,
+                  UserOptions: userOptionsSchema, UserOptionsSchema: UserOptionsSchema,
+                  SocialsSchema: socialsSchema, SocialsSchema: SocialsSchema
                 };

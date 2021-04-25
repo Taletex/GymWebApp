@@ -128,8 +128,7 @@
                             <div class="col-6 col-md-3">
                                 <div class="d-flex align-items-center">
                                     <div>
-                                        <img *ngIf="elem.profilePicture == null" src="assets/icons/misc/user.svg" class="avatar-sm img-fluid rounded-circle mr-1" alt="{{elem.name}} {{elem.surname}}"> 
-                                        <img *ngIf="elem.profilePicture != null" src="assets/icons/misc/user.svg" class="avatar-sm img-fluid rounded-circle mr-1" alt="{{elem.name}} {{elem.surname}}"> 
+                                        <img src="{{account.user.profilePicture ? (baseServerUrl + account.user.profilePicture) : 'assets/icons/misc/user.svg'}}" class="avatar-sm img-fluid rounded-circle mr-1" alt="{{elem.name}} {{elem.surname}}"> 
                                     </div>
                                     <div class="truncate-fullwidth"><span class="text-capitalize d-block">{{elem.name}}</span> <span class="text-capitalize">{{elem.surname}}</span></div>
                                 </div>

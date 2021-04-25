@@ -37,22 +37,25 @@ module.exports = (io, clientSocketList) => {
 
         // Create a User
         const user = new User({
-            bodyWeight: req.body.bodyWeight,
-            userType: req.body.userType,
-            yearsOfExperience: req.body.yearsOfExperience,
             name: req.body.name,
             surname: req.body.surname,
             dateOfBirth: req.body.dateOfBirth,
+            placeOfBirth: req.body.placeOfBirth,
             sex: req.body.sex,
-            contacts: req.body.contacts,
-            residence: req.body.residence,
-            personalRecords: [],
-            notifications: [],
+            userType: req.body.userType,
+            bodyWeight: req.body.bodyWeight,
+            yearsOfExperience: req.body.yearsOfExperience,
+            disciplines: req.body.disciplines,
+            gyms: req.body.gyms,
             coaches: [],
             athletes: [],
+            personalRecords: [],
+            contacts: req.body.contacts,
+            residence: req.body.residence,
             biography: req.body.biography,
-            socials: req.body.socials,
-            profilePicture: req.body.profilePicture
+            profilePicture: req.body.profilePicture,
+            notifications: [],
+            options: req.body.options || {}
         });
 
         // Save User in the database
@@ -147,22 +150,25 @@ module.exports = (io, clientSocketList) => {
 
         // Find user and update it with the request body
         User.findOneAndUpdate({ _id: req.params._id }, {
-            bodyWeight: req.body.bodyWeight,
-            userType: req.body.userType,
-            yearsOfExperience: req.body.yearsOfExperience,
             name: req.body.name,
             surname: req.body.surname,
             dateOfBirth: req.body.dateOfBirth,
+            placeOfBirth: req.body.placeOfBirth,
             sex: req.body.sex,
-            contacts: req.body.contacts,
-            residence: req.body.residence,
-            personalRecords: req.body.personalRecords,
-            notifications: _.orderBy(req.body.notifications, ['bConsumed', 'creationDate'], ['asc', 'desc']),
+            userType: req.body.userType,
+            bodyWeight: req.body.bodyWeight,
+            yearsOfExperience: req.body.yearsOfExperience,
+            disciplines: req.body.disciplines,
+            gyms: req.body.gyms,
             coaches: req.body.coaches,
             athletes: req.body.athletes,
+            personalRecords: req.body.personalRecords,
+            contacts: req.body.contacts,
+            residence: req.body.residence,
             biography: req.body.biography,
-            socials: req.body.socials,
-            profilePicture: req.body.profilePicture
+            profilePicture: req.body.profilePicture,
+            notifications: _.orderBy(req.body.notifications, ['bConsumed', 'creationDate'], ['asc', 'desc']),
+            options: req.body.options
         }, { new: true })
             .then(user => {
                 if (!user) {

@@ -226,8 +226,7 @@
               </svg>
             </a>
             <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-toggle="dropdown" aria-expanded="false">
-              <img *ngIf="account.user.profilePicture == null" src="assets/icons/misc/user.svg" class="avatar img-fluid rounded-circle mr-1" alt="{{account.user.name}} {{account.user.surname}}"> 
-              <img *ngIf="account.user.profilePicture != null" src="assets/icons/misc/user.svg" class="avatar img-fluid rounded-circle mr-1" alt="{{account.user.name}} {{account.user.surname}}"> 
+              <img src="{{account.user.profilePicture ? (baseServerUrl + account.user.profilePicture) : 'assets/icons/misc/user.svg'}}" class="avatar img-fluid rounded-circle mr-1" alt="{{account.user.name}} {{account.user.surname}}"> 
               <span class="d-none d-lg-inline">{{account.user.name}}</span>
             </a>
             <div class="dropdown-menu dropdown-menu-right">

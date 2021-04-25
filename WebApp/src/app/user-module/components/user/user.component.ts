@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Activity, Exercise, Federation, PersonalRecord, PRSeries, Residence, User, Variant } from '@app/_models/training-model';
+import { Activity, Contacts, Exercise, Federation, OPTION_VISIBILITY, PersonalRecord, PRSeries, Residence, Socials, User, Variant } from '@app/_models/training-model';
 import { HttpService } from '@app/_services/http-service/http-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
@@ -52,6 +52,10 @@ export class UserComponent implements OnInit {
 
   // User service aux
   public NOTIFICATION_TYPE = NOTIFICATION_TYPE;
+  public OPTION_VISIBILITY = OPTION_VISIBILITY;
+
+  // Others
+  public baseServerUrl: string = this.httpService.baseServerUrl
 
 
   constructor(public userService: UserService, private generalService: GeneralService, private accountService: AccountService, private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private toastr: ToastrService, private httpService: HttpService, private socket: Socket) {
@@ -86,9 +90,18 @@ export class UserComponent implements OnInit {
           this.bLoading = false;
           console.log(this.user);
 
-          this.activityList.push(new Activity('lasjd0123uasd', 'competition', 'Torneo Nazionale WPA', ['powerlifting'], new Federation("10892asjnd", "WPA"), 'nazionale', ['all'], ['all'], new Residence('italia', 'alimena', 'via della piovra 5'), new Date("05/22/2021"), new Date("05/23/2021"), "Gara nazionale WPA 2021, utile per le qualificazioni ai mondiali", [this.user._id], ["50 euro"], [], ["prozis"], this.user._id, true));
-          this.activityList.push(new Activity('123ouqnsidunq', 'competition', 'Torneo Nazionale FIPL', ['powerlifting'], new Federation("10892asjnd", "FIPL"), 'nazionale', ['all'], ['all'], new Residence('italia', 'san zenone al lambro', 'via delle rose 123'), new Date("10/06/2021"), new Date("10/08/2021"), "Gara nazionale FIPL 2021, utile per le qualificazioni ai mondiali", [this.user._id], ["50 euro"], ["100 euro primo posto", "50 euro secondo posto"], ["prozis"], this.user._id, true));
-
+          // For Test Purpose
+          this.activityList.push(new Activity('lasjd0123uasd', 'competition', 'Torneo Nazionale WPA', ['powerlifting'], new Federation("10892asjnd", "WPA"), 'nazionale', ['all'], ['all'], new Residence('italia', 'PA', '91000', 'alimena', 'via della piovra 5'), new Date("05/22/2021"), new Date("05/23/2021"), "Gara nazionale WPA 2021, utile per le qualificazioni ai mondiali", [this.user._id], ["50 euro"], [], ["prozis"], this.user._id, true));
+          this.activityList.push(new Activity('123ouqnsidunq', 'competition', 'Torneo Nazionale FIPL', ['powerlifting'], new Federation("10892asjnd", "FIPL"), 'nazionale', ['all'], ['all'], new Residence('italia', 'MI', '92000','san zenone al lambro', 'via delle rose 123'), new Date("10/06/2021"), new Date("10/08/2021"), "Gara nazionale FIPL 2021, utile per le qualificazioni ai mondiali", [this.user._id], ["50 euro"], ["100 euro primo posto", "50 euro secondo posto"], ["prozis"], this.user._id, true));
+          this.user.biography = "questa è la mia biografia fottesega tutti quanti ciaoooo";
+          this.user.residence = new Residence("Italia", "Catania", "95018", "Riposto", "Via Etna 83");
+          this.user.placeOfBirth = new Residence("Italia", "Catania", "95018", "Riposto", "Via Etna 83");
+          this.user.profilePicture = "/files/images/users/60508d3d2f05793f18fef46d/linkeding_photo.jpg"
+          this.user.gyms = ["Kobra Kai Fitness", "Sport Meeting Giarree asdasd "];
+          this.user.disciplines = ["Powerlifting", "Weightlifting", "Wrestling"];
+          this.user.contacts = new Contacts("martinafortuna2002@gmail.com", "3496799999", new Socials("https://angular.io/guide/router#router-links", "CIAO2", "CIAO3", "CIAO4", "CIAO5"));
+          // end test
+          
           this.postUserInitialization();
 
           this.pageStatus = this.generalService.getPageStatus();
@@ -109,13 +122,27 @@ export class UserComponent implements OnInit {
       name: [this.user.name, Validators.required],
       surname: [this.user.surname, Validators.required],
       dateOfBirth: [moment(this.user.dateOfBirth).format("yyyy-MM-DD")],
+      pobState: [this.user.placeOfBirth.state],
+      pobProvince: [this.user.placeOfBirth.province],
+      pobCap: [this.user.placeOfBirth.cap],
+      pobCity: [this.user.placeOfBirth.city],
+      pobAddress: [this.user.placeOfBirth.address],
       sex: [this.user.sex],
       userType: [this.user.userType, Validators.required],
       bodyWeight: [this.user.bodyWeight],
       yearsOfExperience: [this.user.yearsOfExperience],
+      disciplines: [this.user.disciplines],
+      gyms: [this.user.gyms],
       userEmail: [this.user.contacts.email, [Validators.email]],
       telephone: [this.user.contacts.telephone],
+      socialsFacebook: [this.user.contacts.socials.facebook],
+      socialsTwitter: [this.user.contacts.socials.twitter],
+      socialsInstagram: [this.user.contacts.socials.instagram],
+      socialsLinkedin: [this.user.contacts.socials.linkedin],
+      socialsOther: [this.user.contacts.socials.other],
       residenceState: [this.user.residence.state],
+      residenceProvince: [this.user.residence.province],
+      residenceCap: [this.user.residence.cap],
       residenceCity: [this.user.residence.city],
       residenceAddress: [this.user.residence.address],
       //To implement also personal record using dynamic forms you can follow this link: https://stackoverflow.com/questions/57425789/formgroup-in-formarray-containing-object-displaying-object-object 
@@ -379,13 +406,27 @@ export class UserComponent implements OnInit {
     this.user.name = this.userForm.value.name;
     this.user.surname = this.userForm.value.surname;
     this.user.dateOfBirth = this.userForm.value.dateOfBirth;
+    this.user.placeOfBirth.state = this.userForm.value.pobState;
+    this.user.placeOfBirth.province = this.userForm.value.pobProvince;
+    this.user.placeOfBirth.cap = this.userForm.value.pobCap;
+    this.user.placeOfBirth.city = this.userForm.value.pobCity;
+    this.user.placeOfBirth.address = this.userForm.value.pobAddress;
     this.user.sex = this.userForm.value.sex;
-    this.user.bodyWeight = this.userForm.value.bodyWeight;
     this.user.userType = this.userForm.value.userType;
+    this.user.bodyWeight = this.userForm.value.bodyWeight;
     this.user.yearsOfExperience = this.userForm.value.yearsOfExperience;
+    this.user.disciplines = this.userForm.value.disciplines;
+    this.user.gyms = this.userForm.value.gyms;
     this.user.contacts.email = this.userForm.value.userEmail;
     this.user.contacts.telephone = this.userForm.value.telephone;
+    this.user.contacts.socials.facebook = this.userForm.value.socialsFacebook;
+    this.user.contacts.socials.twitter = this.userForm.value.socialsTwitter;
+    this.user.contacts.socials.instagram = this.userForm.value.socialsInstagram;
+    this.user.contacts.socials.linkedin = this.userForm.value.socialsLinkedin;
+    this.user.contacts.socials.other = this.userForm.value.socialsOther;
     this.user.residence.state = this.userForm.value.residenceState;
+    this.user.residence.province = this.userForm.value.residenceProvince;
+    this.user.residence.cap = this.userForm.value.residenceCap;
     this.user.residence.city = this.userForm.value.residenceCity;
     this.user.residence.address = this.userForm.value.residenceAddress;
   }
