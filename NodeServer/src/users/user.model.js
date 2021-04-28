@@ -63,10 +63,10 @@ const NotificationSchema = mongoose.Schema({
     creationDate: { type: Date, required: true }
 })
 
-const UserOptionsSchema = mongoose.Schema({
-    bShowActivities: Number,
-    bShowPrivateInfo: Number,
-    bShowPublicInfo: Number
+const UserSettingsSchema = mongoose.Schema({
+    showActivities: Number,
+    showPrivateInfo: Number,
+    showPublicInfo: Number
 }, { _id: false})
 
 const UserSchema = mongoose.Schema({
@@ -96,20 +96,20 @@ const UserSchema = mongoose.Schema({
     biography: String,
     profilePicture: String,
     notifications: { type: [NotificationSchema], required: false },
-    options: { type: UserOptionsSchema, required: false }
+    settings: { type: UserSettingsSchema, required: false }
 });
 
 const userSchema =  mongoose.model('User', UserSchema);
 const contactsSchema = mongoose.model('Contacts', ContactsSchema);
 const residenceSchema = mongoose.model('Residence', ResidenceSchema);
 const notificationSchema = mongoose.model('Notification', NotificationSchema);
-const userOptionsSchema = mongoose.model('UserOptions', UserOptionsSchema);
+const userSettingsSchema = mongoose.model('UserSettings', UserSettingsSchema);
 const socialsSchema = mongoose.model('Socials', SocialsSchema);
 
 module.exports = {User: userSchema, UserSchema: UserSchema, 
                   Contacts: contactsSchema, ContactsSchema: ContactsSchema, 
                   Residence: residenceSchema, ResidenceSchema: ResidenceSchema,
                   Notification: notificationSchema, NotificationSchema: NotificationSchema,
-                  UserOptions: userOptionsSchema, UserOptionsSchema: UserOptionsSchema,
+                  UserSettings: userSettingsSchema, UserSettingsSchema: UserSettingsSchema,
                   SocialsSchema: socialsSchema, SocialsSchema: SocialsSchema
                 };

@@ -55,7 +55,7 @@ module.exports = (io, clientSocketList) => {
             biography: req.body.biography,
             profilePicture: req.body.profilePicture,
             notifications: [],
-            options: req.body.options || {}
+            options: req.body.settings || {}
         });
 
         // Save User in the database
@@ -168,7 +168,7 @@ module.exports = (io, clientSocketList) => {
             biography: req.body.biography,
             profilePicture: req.body.profilePicture,
             notifications: _.orderBy(req.body.notifications, ['bConsumed', 'creationDate'], ['asc', 'desc']),
-            options: req.body.options
+            options: req.body.settings
         }, { new: true })
             .then(user => {
                 if (!user) {

@@ -6,7 +6,7 @@ const emailHelper = require('src/_helpers/send-email');
 const db = require('src/_helpers/db');
 const Role = require('src/_helpers/role');
 const _ = require('lodash');
-const { Residence, UserOptions } = require('../users/user.model');
+const { Residence, UserSettings } = require('../users/user.model');
 
 module.exports = {
     authenticate,
@@ -113,7 +113,7 @@ async function register(params, origin) {
         biography: "",
         profilePicture: "",
         notifications: [],
-        options: new UserOptions()
+        options: new UserSettings()
     });
 
     const data = await user.save()
@@ -246,7 +246,7 @@ async function create(params) {
         biography: "",
         profilePicture: "",
         notifications: [],
-        options: new UserOptions()
+        options: new UserSettings()
     });
 
     const data = await user.save()

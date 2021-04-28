@@ -19,6 +19,12 @@ export enum PAGES {
     ACCOUNTS = "accounts"
 }
 
+export enum USERPROFILE_SECTIONS {
+    USER_INFORMATIONS = 0,
+    PERSONAL_RECORDS = 1,
+    SETTINGS = 2
+}
+
 export class PageStatus {
     public trainings: string;
     public exercises: string;

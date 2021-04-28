@@ -33,11 +33,11 @@ export class Residence {
 }
 
 
-export class UserOptions {
+export class UserSettings {
     constructor(
-        public bShowActivities: OPTION_VISIBILITY = OPTION_VISIBILITY.ALL,
-        public bShowPrivateInfo: OPTION_VISIBILITY = OPTION_VISIBILITY.ALL, 
-        public bShowPublicInfo: OPTION_VISIBILITY = OPTION_VISIBILITY.ALL
+        public showActivities: OPTION_VISIBILITY = OPTION_VISIBILITY.ALL,
+        public showPrivateInfo: OPTION_VISIBILITY = OPTION_VISIBILITY.ALL, 
+        public showPublicInfo: OPTION_VISIBILITY = OPTION_VISIBILITY.ALL
     ) {}
 }
 
@@ -134,7 +134,7 @@ export class User {
         public biography: string = "", 
         public profilePicture: string = "",
         public notifications: Notification[] = <Notification[]>[], 
-        public options: UserOptions = new UserOptions()
+        public settings: UserSettings = new UserSettings()
     ) {}
 }
 

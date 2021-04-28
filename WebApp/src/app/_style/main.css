@@ -2500,6 +2500,21 @@ ngb-carousel .picsum-img-wrapper > img {
 .img-fluid, .img-thumbnail {
   max-width: 100%;
   height: auto;
+  max-height: 128px;
+}
+
+.upload-image-label-container {
+  position: absolute;
+  top: 0px;
+  background-color: black;
+  opacity: 0;
+  cursor: pointer;
+}
+.upload-image-label-container img {
+  cursor: pointer;
+}
+.upload-image-label-container:hover {
+  opacity: 0.4;
 }
 
 .list-group a {
@@ -2579,6 +2594,27 @@ ngb-carousel .picsum-img-wrapper > img {
 }
 
 /* BOOTSTRAP RE-DEFINITION */
+.form-row-inner {
+  border-radius: 3px;
+  padding: 0px !important;
+  margin: 0px !important;
+}
+@media (min-width: 576px) {
+  .form-row-inner {
+    padding: 0.25rem !important;
+  }
+}
+@media (min-width: 768px) {
+  .form-row-inner {
+    padding: 0.5rem !important;
+  }
+}
+@media (min-width: 992px) {
+  .form-row-inner {
+    padding: 1rem !important;
+  }
+}
+
 .carousel-container-small {
   height: 50vh !important;
   width: 50vh !important;

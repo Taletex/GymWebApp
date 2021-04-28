@@ -4,7 +4,7 @@
 
         <div class="maincontainer__header card-header px-0">
 
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center col-12">
                 <h4 class="m-0 h4">{{user.name}} {{user.surname}}</h4>
                 <div class="d-flex input-group w-auto ml-auto">
                     <div class="input-group-prepend d-none d-md-inline"><span class="input-group-text">ACTIONS</span></div>
@@ -28,7 +28,7 @@
             <!-- READ MODE PAGE -->
             <div class="row m-0 body__readonly-content" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.READONLY)">
                 <!-- User Infos -->
-                <div class="col-lg-4 col-xl-3 px-0 pr-md-2">
+                <div class="col-xl-4 mb-3 mb-lg-0">
                     <div class="card mb-3">
                         <div class="card-header bg-white border-0">
                             <h5 class="card-title mb-0">Dettagli Profilo</h5>
@@ -127,7 +127,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-8 col-xl-9 px-0 pl-md-2">
+                <div class="col-xl-8">
                     <!-- Activity -->
                     <div class="card">
                         <div class="card-header user-expanded-card-header round-3">
@@ -257,394 +257,509 @@
 
             <!-- WRITE MODE PAGE -->
             <div class="row m-0 body__write-content" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
-                <!-- USER INFORMATIONS -->
-                <div class="col-12 row w-100 bg-white m-0 p-0"> 
-                    <div class="col-12 p-0">
-                        <button class="btn btn-outline-dark w-100" type="button" data-toggle="collapse"
-                            data-target="#userInformationContainer" aria-expanded="true"
-                            aria-controls="userInformationContainer">
-                            <h5 class="m-0 h5">Informazioni Utente</h5>
-                        </button>
-                    </div>
-                    <div *ngIf="!bLoading" class="col-12 form-row py-3 px-0 border round-5 m-0 round-top-0 collapse show " id="userInformationContainer">
-                        <form [formGroup]="userForm" (ngSubmit)="onSubmitUser()" class="col-12 row m-0 p-0">
-                            <fieldset class="col-12 row form-group m-0 p-0" [disabled]="(pageStatus[PAGES.USERS] == PAGEMODE.READONLY)">
-                                <div class="row col-12 m-0">
-                                    
-                                    <!-- Registry Infos -->
-                                    <div class="col-12 p-0"><h6 class="h6 text-primary">Anagrafica</h6></div>
-                                    <div class="form-row col-12 border border-primary round-3 m-0 p-0">
-                                        <!-- Name -->
-                                        <div class="col-12 col-md-6 col-lg-3 form-group">
-                                            <label for="userName" class="col-form-label col-form-label-sm text-muted">Nome</label>
-                                            <input type="text" formControlName="name" required maxlength="30" class="form-control form-control-sm"
-                                                [ngClass]="{'is-invalid': userFormSubmitted && fu.name.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                            <div *ngIf="userFormSubmitted && fu.name.errors" class="invalid-feedback">
-                                                <div *ngIf="fu.name.errors.required">Nome obbligatorio</div>
-                                            </div>
-                                        </div>
 
-                                        <!-- Surname -->
-                                        <div class="col-12 col-md-6 col-lg-3 form-group">
-                                            <label for="userSurname" class="col-form-label col-form-label-sm text-muted">Cognome</label>
-                                            <input type="text" formControlName="surname" maxlength="30" required class="form-control form-control-sm"
-                                                [ngClass]="{'is-invalid': userFormSubmitted && fu.surname.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                            <div *ngIf="userFormSubmitted && fu.surname.errors" class="invalid-feedback">
-                                                <div *ngIf="fu.surname.errors.required">Cognome obbligatorio</div>
-                                            </div>
-                                        </div>
-
-                                        <!-- User Sex -->
-                                        <div class="col-12 col-md-6 col-lg-3 form-group">
-                                            <label for="userSex" class="col-form-label col-form-label-sm text-muted">Sesso</label>
-                                            <select formControlName="sex" class="form-control form-control-sm" 
-                                                [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY), 'cursor-pointer': (pageStatus[PAGES.USERS] == PAGEMODE.WRITE), 'is-invalid': userFormSubmitted && fu.sex.errors}">
-                                                <option [value]="'M'">Uomo</option>
-                                                <option [value]="'F'">Donna</option>
-                                            </select>
-                                        </div>
-
-                                        <!-- Date of Birth -->
-                                        <div class="col-12 col-md-6 col-lg-3 form-group">
-                                            <label for="userDoB" class="col-form-label col-form-label-sm text-muted">Data di nascita</label>
-                                            <input type="date" formControlName="dateOfBirth" min="01-01-1900" max="{{today}}" class="form-control form-control-sm"
-                                                [ngClass]="{'is-invalid': userFormSubmitted && fu.dateOfBirth.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                        </div>
-
-                                        <!-- Place of Birth -->
-                                        <div class="col-12 col-md-6 col-lg-4 form-group">
-                                            <label for="pobState" class="col-form-label col-form-label-sm text-muted">Stato di Nascita</label>
-                                            <input type="text" maxlength="50" formControlName="pobState" class="form-control form-control-sm"
-                                                [ngClass]="{'is-invalid': userFormSubmitted && fu.pobState.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                        </div>
-                                        <div class="col-12 col-md-6 col-lg-4 form-group">
-                                            <label for="pobProvince" class="col-form-label col-form-label-sm text-muted">Provincia di Nascita</label>
-                                            <input type="text" maxlength="50" formControlName="pobProvince" class="form-control form-control-sm"
-                                                [ngClass]="{'is-invalid': userFormSubmitted && fu.pobProvince.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                        </div>
-                                        <!-- <div class="col-12 col-md-6 col-lg-4 form-group">
-                                            <label for="pobCap" class="col-form-label col-form-label-sm text-muted">CAP di Nascita</label>
-                                            <input type="text" maxlength="50" formControlName="pobCap" class="form-control form-control-sm"
-                                                [ngClass]="{'is-invalid': userFormSubmitted && fu.pobCap.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                        </div> -->
-                                        <div class="col-12 col-md-6 col-lg-4 form-group">
-                                            <label for="pobCity" class="col-form-label col-form-label-sm text-muted">Città di Nascita</label>
-                                            <input type="text" maxlength="50" formControlName="pobCity" class="form-control form-control-sm"
-                                                [ngClass]="{'is-invalid': userFormSubmitted && fu.pobCity.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                        </div>
-                                        <!-- <div class="col-12 col-md-6 col-lg-4 form-group">
-                                            <label for="pobAddress" class="col-form-label col-form-label-sm text-muted">Indirizzo di Nascita</label>
-                                            <input type="text" maxlength="150" formControlName="pobAddress" class="form-control form-control-sm"
-                                                [ngClass]="{'is-invalid': userFormSubmitted && fu.pobAddress.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                        </div> -->
-                                    </div>
-
-                                    <!-- GymRegistry Infos -->
-                                    <div class="col-12 p-0 mt-3"><h6 class="h6 text-danger">Sport</h6></div>
-                                    <div class="form-row col-12 border border-danger round-3 p-0 m-0">
-                                        <!-- User Type -->
-                                        <div class="col-12 col-md-6 col-lg-4 form-group">
-                                            <label for="userType" class="col-form-label col-form-label-sm text-muted">Tipo Utente</label>
-                                            <select formControlName="userType" required class="form-control form-control-sm cursor-pointer"
-                                                [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY), 'cursor-pointer': (pageStatus[PAGES.USERS] == PAGEMODE.WRITE), 'is-invalid': userFormSubmitted && fu.userType.errors}">
-                                                <option [value]="'athlete'">Atleta</option>
-                                                <option [value]="'coach'">Coach</option>
-                                                <option [value]="'both'">Both</option>
-                                            </select>
-                                            <div *ngIf="userFormSubmitted && fu.userType.errors" class="invalid-feedback">
-                                                <div *ngIf="fu.userType.errors.required">Tipo utente obbligatorio</div>
-                                            </div>
-                                        </div>
-
-                                        <!-- BodyWeight -->
-                                        <div class="col-12 col-sm-6 col-lg-4 form-group">
-                                            <label for="userBw" class="col-form-label col-form-label-sm text-muted">Peso (kg)</label>
-                                            <input type="number" min=10 max=500 formControlName="bodyWeight" class="form-control form-control-sm"
-                                                [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY), 'is-invalid': userFormSubmitted && fu.bodyWeight.errors}">
-                                        </div>
-
-                                        <!-- Years of experience -->
-                                        <div class="col-12 col-sm-6 col-lg-4 form-group">
-                                            <label for="userYearsOfExperience" class="col-form-label col-form-label-sm text-muted">Esperienza (anni)</label>
-                                            <input type="number" min=0 max=100 formControlName="yearsOfExperience" class="form-control form-control-sm"
-                                                [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY), 'is-invalid': userFormSubmitted && fu.yearsOfExperience.errors }">
-                                        </div>
-
-                                        <!-- Disciplines -->
-                                        <div class="col-12 col-md-6 col-lg-4 form-group">
-                                            <label for="userDisciplines" class="col-form-label col-form-label-sm text-muted">Discipline</label>
-                                            <input type="number" min=0 max=100 formControlName="disciplines" class="form-control form-control-sm"
-                                                [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY), 'is-invalid': userFormSubmitted && fu.disciplines.errors }">
-                                        </div>
-
-                                        <!-- Gyms -->
-                                        <div class="col-12 col-md-6 col-lg-4 form-group">
-                                            <label for="userGyms" class="col-form-label col-form-label-sm text-muted">Palestre</label>
-                                            <input type="number" min=0 max=100 formControlName="gyms" class="form-control form-control-sm"
-                                                [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY), 'is-invalid': userFormSubmitted && fu.gyms.errors }">
-                                        </div>
-                                    </div>
-
-                                    <!-- Contacts Infos -->
-                                    <div class="col-12 p-0 mt-3"><h6 class="h6 text-warning">Contatti</h6></div>
-                                    <div class="form-row col-12 border border-warning round-3 p-0 m-0">
-                                        <!-- Email  -->
-                                        <div class="col-12 col-lg-6 form-group">
-                                            <label for="userContactsEmail" class="col-form-label col-form-label-sm text-muted">Email</label>
-                                            <input type="email" formControlName="userEmail" required maxlength="100" class="form-control form-control-sm"
-                                                [ngClass]="{'is-invalid': userFormSubmitted && fu.userEmail.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                            <div *ngIf="userFormSubmitted && fu.userEmail.errors" class="invalid-feedback">
-                                                <div *ngIf="fu.userEmail.errors.email">Il campo email deve contenere un'email valida</div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Telephone -->
-                                        <div class="col-12 col-lg-6 form-group">
-                                            <label for="userContactsTelephone" class="col-form-label col-form-label-sm text-muted">Telefono</label>
-                                            <input type="tel" maxlength="15" formControlName="telephone" class="form-control form-control-sm"
-                                                [ngClass]="{'is-invalid': userFormSubmitted && fu.telephone.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                        </div>
-
-                                        <!-- Socials -->
-                                        <div class="col-12 col-lg-6 form-group">
-                                            <label for="userSocialsFacebook" class="col-form-label col-form-label-sm text-muted">Facebook</label>
-                                            <input type="url" maxlength="15" formControlName="socialsFacebook" class="form-control form-control-sm"
-                                                [ngClass]="{'is-invalid': userFormSubmitted && fu.socialsFacebook.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                        </div>
-                                        <div class="col-12 col-lg-6 form-group">
-                                            <label for="userSocialsTwitter" class="col-form-label col-form-label-sm text-muted">Twitter</label>
-                                            <input type="url" maxlength="15" formControlName="socialsTwitter" class="form-control form-control-sm"
-                                                [ngClass]="{'is-invalid': userFormSubmitted && fu.socialsTwitter.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                        </div>
-                                        <div class="col-12 col-lg-6 form-group">
-                                            <label for="userSocialsInstagram" class="col-form-label col-form-label-sm text-muted">Instagram</label>
-                                            <input type="url" maxlength="15" formControlName="socialsInstagram" class="form-control form-control-sm"
-                                                [ngClass]="{'is-invalid': userFormSubmitted && fu.socialsInstagram.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                        </div>
-                                        <div class="col-12 col-lg-6 form-group">
-                                            <label for="userSocialsLinkedin" class="col-form-label col-form-label-sm text-muted">Linkedin</label>
-                                            <input type="url" maxlength="15" formControlName="socialsLinkedin" class="form-control form-control-sm"
-                                                [ngClass]="{'is-invalid': userFormSubmitted && fu.socialsLinkedin.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                        </div>
-                                        <div class="col-12 col-lg-6 form-group">
-                                            <label for="userSocialsOther" class="col-form-label col-form-label-sm text-muted">Altro</label>
-                                            <input type="url" maxlength="15" formControlName="socialsOther" class="form-control form-control-sm"
-                                                [ngClass]="{'is-invalid': userFormSubmitted && fu.socialsOther.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                        </div>
-                                    </div>
-
-                                    <!-- Residenza Infos -->
-                                    <div class="col-12 p-0 mt-3"><h6 class="h6 text-secondary">Residenza</h6></div>
-                                    <div class="form-row col-12 border border-secondary round-3 p-0 m-0">
-                                        <!-- Residence State -->
-                                        <div class="col-12 col-md-6 col-lg-4 form-group">
-                                            <label for="residenceState" class="col-form-label col-form-label-sm text-muted">Stato</label>
-                                            <input type="text" maxlength="50" formControlName="residenceState" class="form-control form-control-sm"
-                                                [ngClass]="{'is-invalid': userFormSubmitted && fu.residenceState.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                        </div>
-
-                                        <!-- Residence Province -->
-                                        <div class="col-12 col-md-6 col-lg-4 form-group">
-                                            <label for="residenceProvince" class="col-form-label col-form-label-sm text-muted">Provincia</label>
-                                            <input type="text" maxlength="50" formControlName="residenceProvince" class="form-control form-control-sm"
-                                                [ngClass]="{'is-invalid': userFormSubmitted && fu.residenceProvince.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                        </div>
-
-                                        <!-- Residence CAP -->
-                                        <div class="col-12 col-md-6 col-lg-4 form-group">
-                                            <label for="residenceCap" class="col-form-label col-form-label-sm text-muted">CAP</label>
-                                            <input type="text" maxlength="50" formControlName="residenceCap" class="form-control form-control-sm"
-                                                [ngClass]="{'is-invalid': userFormSubmitted && fu.residenceCap.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                        </div>
-
-                                        <!-- Residence City -->
-                                        <div class="col-12 col-md-6 col-lg-4 form-group">
-                                            <label for="residenceCity" class="col-form-label col-form-label-sm text-muted">Città</label>
-                                            <input type="text" maxlength="50" formControlName="residenceCity" class="form-control form-control-sm"
-                                                [ngClass]="{'is-invalid': userFormSubmitted && fu.residenceCity.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                        </div>
-
-                                        <!-- Residence Address -->
-                                        <div class="col-12 col-md-6 col-lg-4 form-group">
-                                            <label for="residenceAddress" class="col-form-label col-form-label-sm text-muted">Indirizzo</label>
-                                            <input type="text" maxlength="150" formControlName="residenceAddress" class="form-control form-control-sm"
-                                                [ngClass]="{'is-invalid': userFormSubmitted && fu.residenceAddress.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-12 d-flex" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
-                                        <button type="submit" class="btn btn-primary ml-auto"><span *ngIf="bLoading" class="spinner-border spinner-border-sm mr-1"></span> Aggiorna</button>
-                                    </div>
-                                </div>
-                            </fieldset>
-                        </form>
+                <div class="col-xl-2 mb-3 mb-lg-0">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Profilo Utente</h5>
+                        </div>
+                        <div class="list-group list-group-flush" role="tablist">
+                            <a class="list-group-item list-group-item-action" data-toggle="list" href="#account" role="tab" aria-selected="false" 
+                               [ngClass]="{'active': currentProfileSection == USERPROFILE_SECTIONS.USER_INFORMATIONS}" (click)="currentProfileSection = USERPROFILE_SECTIONS.USER_INFORMATIONS">Informazioni Utente</a>
+                            <a class="list-group-item list-group-item-action" data-toggle="list" href="#password" role="tab" aria-selected="false" 
+                               [ngClass]="{'active': currentProfileSection == USERPROFILE_SECTIONS.PERSONAL_RECORDS}" (click)="currentProfileSection = USERPROFILE_SECTIONS.PERSONAL_RECORDS">Personal Records</a>
+                            <a class="list-group-item list-group-item-action" data-toggle="list" href="#password" role="tab" aria-selected="false" 
+                               [ngClass]="{'active': currentProfileSection == USERPROFILE_SECTIONS.SETTINGS}" (click)="currentProfileSection = USERPROFILE_SECTIONS.SETTINGS">Impostazioni</a>
+                        </div>
                     </div>
                 </div>
 
-                <!-- PERSONAL RECORDS -->
-                <div class="row m-0 w-100 bg-white p-0 mt-3">
-                    <div class="col-12 p-0">
-                        <button class="btn btn-outline-dark w-100" type="button" data-toggle="collapse"
-                            data-target="#prContainer" aria-expanded="true"
-                            aria-controls="prContainer">
-                            <h5 class="m-0 h5">Personal Records</h5>
-                        </button>
+                <div class="col-xl-10">
+                    <!-- USER INFORMATIONS -->
+                    <div class="card" *ngIf="currentProfileSection == USERPROFILE_SECTIONS.USER_INFORMATIONS"> 
+                        <div class="form-row p-3 m-0" id="userInformationContainer">
+                            <form [formGroup]="userForm" (ngSubmit)="onSubmitUser()" *ngIf="userForm" class="col-12 row m-0 p-0">
+                                <fieldset class="col-12 row form-group m-0 p-0" [disabled]="bLoading">
+                                    <div class="row col-12 m-0">
+
+                                        <!-- Photo and Biography -->
+                                        <div class="col-12 p-0"><h6 class="h6 text-success">Profilo</h6></div>
+                                        <div class="form-row form-row-inner col-12 border border-success">
+                                            <!-- Profile picture -->
+                                            <div class="col-12 col-md-4 form-group d-flex flex-column align-items-center justify-content-center">
+                                                <label for="userProfilePicture" class="col-form-label w-100 text-left col-form-label-sm text-muted">Immagine Profilo</label>
+                                                <div class="position-relative">
+                                                    <img *ngIf="fu.profilePicture.dirty" src="{{fu.profilePicture.value ? fu.profilePicture.value : 'assets/icons/misc/user.svg'}}" alt="{{user.name}} {{user.surname}}" class="avatar-xl img-fluid rounded-circle mb-2">
+                                                    <img [hidden]="fu.profilePicture.dirty" src="{{user.profilePicture ? (baseServerUrl+user.profilePicture) : 'assets/icons/misc/user.svg'}}" alt="{{user.name}} {{user.surname}}" class="avatar-xl img-fluid rounded-circle mb-2">
+                                                    <div class="avatar-xl img-fluid rounded-circle upload-image-label-container">
+                                                        <label for="profilePictureFileInput"><img src="assets/icons/actions/upload-2.svg" class="avatar-xl img-fluid"></label>
+                                                        <input hidden type="file" id="profilePictureFileInput" name="profilePictureFileInput" class="form-control form-control-sm" [ngClass]="{'is-invalid': userFormSubmitted && fu.profilePicture.errors}"
+                                                        (change)="onFileChange($event)" accept="image/png, image/jpeg"/>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex flex-column align-items-center text-center">
+                                                    <div><span id="imgUploadTitle"></span><span ngbTooltip="Elimina immagine" [hidden]="!fu.profilePicture.dirty" (click)="resetInputFile()" class="standard-action-icon-btn fa fa-times-circle text-danger ml-2"></span></div>
+                                                    <div><small class="font-size-7">È consigliabile caricare immagini quadrate di almeno 128px per 128px (massimo 2MB, formati .jpg, .jpeg o .png)</small></div>
+                                                    <input type="text" hidden formControlName="profilePicture">
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-8 form-group mb-5">
+                                                <label for="biography" class="col-form-label col-form-label-sm text-muted">Biografia</label>
+                                                <textarea formControlName="biography" class="form-control form-control-sm h-100"
+                                                    [ngClass]="{'is-invalid': userFormSubmitted && fu.profilePicture.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"></textarea>
+                                            </div>
+                                        </div>
+
+
+                                        <!-- Registry Infos -->
+                                        <div class="col-12 p-0 mt-4"><h6 class="h6 text-primary">Anagrafica</h6></div>
+                                        <div class="form-row form-row-inner col-12 border border-primary">
+                                            <!-- Name -->
+                                            <div class="col-12 col-md-6 col-lg-3 form-group">
+                                                <label for="userName" class="col-form-label col-form-label-sm text-muted">Nome</label>
+                                                <input type="text" formControlName="name" required maxlength="30" class="form-control form-control-sm"
+                                                    [ngClass]="{'is-invalid': userFormSubmitted && fu.name.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                                <div *ngIf="userFormSubmitted && fu.name.errors" class="invalid-feedback">
+                                                    <div *ngIf="fu.name.errors.required">Nome obbligatorio</div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Surname -->
+                                            <div class="col-12 col-md-6 col-lg-3 form-group">
+                                                <label for="userSurname" class="col-form-label col-form-label-sm text-muted">Cognome</label>
+                                                <input type="text" formControlName="surname" maxlength="30" required class="form-control form-control-sm"
+                                                    [ngClass]="{'is-invalid': userFormSubmitted && fu.surname.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                                <div *ngIf="userFormSubmitted && fu.surname.errors" class="invalid-feedback">
+                                                    <div *ngIf="fu.surname.errors.required">Cognome obbligatorio</div>
+                                                </div>
+                                            </div>
+
+                                            <!-- User Sex -->
+                                            <div class="col-12 col-md-6 col-lg-3 form-group">
+                                                <label for="userSex" class="col-form-label col-form-label-sm text-muted">Sesso</label>
+                                                <select formControlName="sex" class="form-control form-control-sm" 
+                                                    [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY), 'cursor-pointer': (pageStatus[PAGES.USERS] == PAGEMODE.WRITE), 'is-invalid': userFormSubmitted && fu.sex.errors}">
+                                                    <option [value]="'M'">Uomo</option>
+                                                    <option [value]="'F'">Donna</option>
+                                                </select>
+                                            </div>
+
+                                            <!-- Date of Birth -->
+                                            <div class="col-12 col-md-6 col-lg-3 form-group">
+                                                <label for="userDoB" class="col-form-label col-form-label-sm text-muted">Data di nascita</label>
+                                                <input type="date" formControlName="dateOfBirth" min="01-01-1900" max="{{today}}" class="form-control form-control-sm"
+                                                    [ngClass]="{'is-invalid': userFormSubmitted && fu.dateOfBirth.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                            </div>
+
+                                            <!-- Place of Birth -->
+                                            <div class="col-12 col-md-6 col-lg-4 form-group">
+                                                <label for="pobState" class="col-form-label col-form-label-sm text-muted">Stato di Nascita</label>
+                                                <input type="text" maxlength="50" formControlName="pobState" class="form-control form-control-sm"
+                                                    [ngClass]="{'is-invalid': userFormSubmitted && fu.pobState.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                            </div>
+                                            <div class="col-12 col-md-6 col-lg-4 form-group">
+                                                <label for="pobProvince" class="col-form-label col-form-label-sm text-muted">Provincia di Nascita</label>
+                                                <input type="text" maxlength="50" formControlName="pobProvince" class="form-control form-control-sm"
+                                                    [ngClass]="{'is-invalid': userFormSubmitted && fu.pobProvince.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                            </div>
+                                            <!-- <div class="col-12 col-md-6 col-lg-4 form-group">
+                                                <label for="pobCap" class="col-form-label col-form-label-sm text-muted">CAP di Nascita</label>
+                                                <input type="text" maxlength="50" formControlName="pobCap" class="form-control form-control-sm"
+                                                    [ngClass]="{'is-invalid': userFormSubmitted && fu.pobCap.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                            </div> -->
+                                            <div class="col-12 col-md-6 col-lg-4 form-group">
+                                                <label for="pobCity" class="col-form-label col-form-label-sm text-muted">Città di Nascita</label>
+                                                <input type="text" maxlength="50" formControlName="pobCity" class="form-control form-control-sm"
+                                                    [ngClass]="{'is-invalid': userFormSubmitted && fu.pobCity.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                            </div>
+                                            <!-- <div class="col-12 col-md-6 col-lg-4 form-group">
+                                                <label for="pobAddress" class="col-form-label col-form-label-sm text-muted">Indirizzo di Nascita</label>
+                                                <input type="text" maxlength="150" formControlName="pobAddress" class="form-control form-control-sm"
+                                                    [ngClass]="{'is-invalid': userFormSubmitted && fu.pobAddress.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                            </div> -->
+                                        </div>
+
+                                        <!-- GymRegistry Infos -->
+                                        <div class="col-12 p-0 mt-4"><h6 class="h6 text-danger">Sport</h6></div>
+                                        <div class="form-row form-row-inner col-12 border border-danger">
+                                            <!-- User Type -->
+                                            <div class="col-12 col-md-6 col-lg-4 form-group">
+                                                <label for="userType" class="col-form-label col-form-label-sm text-muted">Tipo Utente</label>
+                                                <select formControlName="userType" required class="form-control form-control-sm cursor-pointer"
+                                                    [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY), 'cursor-pointer': (pageStatus[PAGES.USERS] == PAGEMODE.WRITE), 'is-invalid': userFormSubmitted && fu.userType.errors}">
+                                                    <option [value]="'athlete'">Atleta</option>
+                                                    <option [value]="'coach'">Coach</option>
+                                                    <option [value]="'both'">Both</option>
+                                                </select>
+                                                <div *ngIf="userFormSubmitted && fu.userType.errors" class="invalid-feedback">
+                                                    <div *ngIf="fu.userType.errors.required">Tipo utente obbligatorio</div>
+                                                </div>
+                                            </div>
+
+                                            <!-- BodyWeight -->
+                                            <div class="col-12 col-sm-6 col-lg-4 form-group">
+                                                <label for="userBw" class="col-form-label col-form-label-sm text-muted">Peso (kg)</label>
+                                                <input type="number" min=10 max=500 formControlName="bodyWeight" class="form-control form-control-sm"
+                                                    [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY), 'is-invalid': userFormSubmitted && fu.bodyWeight.errors}">
+                                            </div>
+
+                                            <!-- Years of experience -->
+                                            <div class="col-12 col-sm-6 col-lg-4 form-group">
+                                                <label for="userYearsOfExperience" class="col-form-label col-form-label-sm text-muted">Esperienza (anni)</label>
+                                                <input type="number" min=0 max=100 formControlName="yearsOfExperience" class="form-control form-control-sm"
+                                                    [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY), 'is-invalid': userFormSubmitted && fu.yearsOfExperience.errors }">
+                                            </div>
+
+                                            <!-- Disciplines -->
+                                            <div class="col-12 col-xl-6 form-group">
+                                                <label for="userDisciplines" class="col-form-label col-form-label-sm text-muted">Discipline</label>
+                                                <ng-multiselect-dropdown 
+                                                    class="w-100 small" 
+                                                    id="userDisciplines" 
+                                                    name="userDisciplines" 
+                                                    ngDefaultControl
+                                                    [placeholder]="'Discipline'" 
+                                                    [settings]="dropdownSettings" 
+                                                    [data]="disciplinesList"
+                                                    formControlName="disciplines"
+                                                    [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY), 'is-invalid': userFormSubmitted && fu.disciplines.errors }">
+                                                </ng-multiselect-dropdown>
+                                            </div>
+
+                                            <!-- Gyms -->
+                                            <div class="col-12 col-xl-6 form-group">
+                                                <label for="userGyms" class="col-form-label col-form-label-sm text-muted">Palestre</label>
+                                                <div class="d-flex flex-column flex-md-row">
+                                                    <ng-multiselect-dropdown 
+                                                        [hidden]="gymsList.length == 0"
+                                                        class="w-100 small" 
+                                                        id="userGyms" 
+                                                        name="userGyms" 
+                                                        ngDefaultControl
+                                                        [placeholder]="'Palestre'" 
+                                                        [settings]="dropdownSettings" 
+                                                        [data]="gymsList"
+                                                        formControlName="gyms"
+                                                        [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY), 'is-invalid': userFormSubmitted && fu.gyms.errors }">
+                                                    </ng-multiselect-dropdown>
+                                                    <div class="d-flex align-items-baseline ml-0 ml-md-2">
+                                                        <input type="text" id="gymsAuxInput" placeholder="Palestra..." class="form-control form-control-sm">
+                                                        <span (click)="pushGym()" ngbTooltip="Aggiungi" class="standard-action-icon-btn fa fa-plus-circle text-success ml-2"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Contacts Infos -->
+                                        <div class="col-12 p-0 mt-4"><h6 class="h6 text-warning">Contatti</h6></div>
+                                        <div class="form-row form-row-inner col-12 border border-warning">
+                                            <!-- Email  -->
+                                            <div class="col-12 col-lg-6 form-group">
+                                                <label for="userContactsEmail" class="col-form-label col-form-label-sm text-muted">Email</label>
+                                                <input type="email" formControlName="email" required maxlength="100" class="form-control form-control-sm"
+                                                    [ngClass]="{'is-invalid': userFormSubmitted && fu.email.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                                <div *ngIf="userFormSubmitted && fu.email.errors" class="invalid-feedback">
+                                                    <div *ngIf="fu.email.errors.email">Il campo email deve contenere un'email valida</div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Telephone -->
+                                            <div class="col-12 col-lg-6 form-group">
+                                                <label for="userContactsTelephone" class="col-form-label col-form-label-sm text-muted">Telefono</label>
+                                                <input type="tel" maxlength="15" formControlName="telephone" class="form-control form-control-sm"
+                                                    [ngClass]="{'is-invalid': userFormSubmitted && fu.telephone.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                            </div>
+
+                                            <!-- Socials -->
+                                            <div class="col-12 col-lg-6 form-group">
+                                                <label for="userSocialsFacebook" class="col-form-label col-form-label-sm text-muted">Facebook</label>
+                                                <input type="url" maxlength="100" formControlName="socialsFacebook" class="form-control form-control-sm"
+                                                    [ngClass]="{'is-invalid': userFormSubmitted && fu.socialsFacebook.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                            </div>
+                                            <div class="col-12 col-lg-6 form-group">
+                                                <label for="userSocialsTwitter" class="col-form-label col-form-label-sm text-muted">Twitter</label>
+                                                <input type="url" maxlength="100" formControlName="socialsTwitter" class="form-control form-control-sm"
+                                                    [ngClass]="{'is-invalid': userFormSubmitted && fu.socialsTwitter.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                            </div>
+                                            <div class="col-12 col-lg-6 form-group">
+                                                <label for="userSocialsInstagram" class="col-form-label col-form-label-sm text-muted">Instagram</label>
+                                                <input type="url" maxlength="100" formControlName="socialsInstagram" class="form-control form-control-sm"
+                                                    [ngClass]="{'is-invalid': userFormSubmitted && fu.socialsInstagram.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                            </div>
+                                            <div class="col-12 col-lg-6 form-group">
+                                                <label for="userSocialsLinkedin" class="col-form-label col-form-label-sm text-muted">Linkedin</label>
+                                                <input type="url" maxlength="100" formControlName="socialsLinkedin" class="form-control form-control-sm"
+                                                    [ngClass]="{'is-invalid': userFormSubmitted && fu.socialsLinkedin.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                            </div>
+                                            <div class="col-12 col-lg-6 form-group">
+                                                <label for="userSocialsOther" class="col-form-label col-form-label-sm text-muted">Altro</label>
+                                                <input type="url" maxlength="100" formControlName="socialsOther" class="form-control form-control-sm"
+                                                    [ngClass]="{'is-invalid': userFormSubmitted && fu.socialsOther.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                            </div>
+                                        </div>
+
+                                        <!-- Residenza Infos -->
+                                        <div class="col-12 p-0 mt-4"><h6 class="h6 text-secondary">Residenza</h6></div>
+                                        <div class="form-row form-row-inner col-12 border border-secondary">
+                                            <!-- Residence State -->
+                                            <div class="col-12 col-md-6 col-lg-4 form-group">
+                                                <label for="residenceState" class="col-form-label col-form-label-sm text-muted">Stato</label>
+                                                <input type="text" maxlength="50" formControlName="residenceState" class="form-control form-control-sm"
+                                                    [ngClass]="{'is-invalid': userFormSubmitted && fu.residenceState.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                            </div>
+
+                                            <!-- Residence Province -->
+                                            <div class="col-12 col-md-6 col-lg-4 form-group">
+                                                <label for="residenceProvince" class="col-form-label col-form-label-sm text-muted">Provincia</label>
+                                                <input type="text" maxlength="50" formControlName="residenceProvince" class="form-control form-control-sm"
+                                                    [ngClass]="{'is-invalid': userFormSubmitted && fu.residenceProvince.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                            </div>
+
+                                            <!-- Residence CAP -->
+                                            <div class="col-12 col-md-6 col-lg-4 form-group">
+                                                <label for="residenceCap" class="col-form-label col-form-label-sm text-muted">CAP</label>
+                                                <input type="text" maxlength="50" formControlName="residenceCap" class="form-control form-control-sm"
+                                                    [ngClass]="{'is-invalid': userFormSubmitted && fu.residenceCap.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                            </div>
+
+                                            <!-- Residence City -->
+                                            <div class="col-12 col-md-6 col-lg-4 form-group">
+                                                <label for="residenceCity" class="col-form-label col-form-label-sm text-muted">Città</label>
+                                                <input type="text" maxlength="50" formControlName="residenceCity" class="form-control form-control-sm"
+                                                    [ngClass]="{'is-invalid': userFormSubmitted && fu.residenceCity.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                            </div>
+
+                                            <!-- Residence Address -->
+                                            <div class="col-12 col-md-6 col-lg-4 form-group">
+                                                <label for="residenceAddress" class="col-form-label col-form-label-sm text-muted">Indirizzo</label>
+                                                <input type="text" maxlength="150" formControlName="residenceAddress" class="form-control form-control-sm"
+                                                    [ngClass]="{'is-invalid': userFormSubmitted && fu.residenceAddress.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-12 d-flex p-0 mt-3 mb-0" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
+                                            <button type="submit" class="btn btn-primary ml-auto"><span *ngIf="bLoading" class="spinner-border spinner-border-sm mr-1"></span> Aggiorna</button>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
                     </div>
-                    <div class="col-12 form-row p-0 border round-5 m-0 round-top-0 collapse show" id="prContainer">
-                        <fieldset class="col-12 row m-0 p-0" [disabled]="(pageStatus[PAGES.USERS] == PAGEMODE.READONLY)">
-                            <div class="col-12 form-row m-0" *ngIf="personalRecordList.length==0 || areAllPrsHidden()">
-                                <div class="px-2 py-4">Nessun Personal Record presente</div>
-                            </div>
 
-                            <div class="col-12 form-row m-0 p-0 position-relative border" *ngFor="let pr of filterVisiblePR(); index as prIndex; first as prFirst">
-                                <div class="col-6 col-lg-4 d-flex flex-column align-items-baseline flex-lg-row m-0 p-3">
-                                    <div class="row m-0">
-                                        <div class="col-12 col-lg-6 form-group pl-0 pr-1 m-0">
-                                            <label for="pr_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">Esercizio</label>
-                                            <input id="pr_{{prIndex}}" name="pr_{{prIndex}}" type="text" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
-                                                [ngModel]="pr.exercise.name"
-                                                [ngbTypeahead]="search"
-                                                [resultTemplate]="rt"
-                                                [editable]='false'
-                                                (selectItem)="selectExercise($event, prIndex)">
-                                                
-                                                <ng-template #rt let-r="result" let-t="term">
-                                                    <ngb-highlight [result]="r.name + ' (' + r.variant.name + ')'" [term]="t"></ngb-highlight>
-                                                </ng-template>
-
-                                                <!-- Exercise Modal -->
-                                                <app-exercise-modal [hidden]="true" (onClose)="createExercise()" (onAbort)="abortCreateExercise()" [(newExercise)]="newExercise" style="position: absolute; right: 15px; bottom: 15px">
-                                                    <button id="exerciseModalButton" class="image-button cursor-pointer" ngbTooltip="Nuovo" placement="top"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></button>
-                                                </app-exercise-modal>
-                                        </div>
-                                        <div class="col-12 col-lg-6 form-group pl-lg-1 px-0 m-0">
-                                            <label for="tipo_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">Tipo</label>
-                                            <input type="text" [(ngModel)]="pr.exercise.variant.name" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
-                                                id="tipo_{{prIndex}}" name="tipo_{{prIndex}}" placeholder="Tipo esercizio..." disabled>
-                                        </div>
-                                        <div class="col-12 col-xl-6 form-group pl-0 pr-1">
-                                            <label for="description_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">Descrizione</label>
-                                            <input type="text" [(ngModel)]="pr.exercise.description" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
-                                                id="description_{{prIndex}}" name="description_{{prIndex}}" placeholder="Descrizione esercizio..." disabled>
-                                        </div>
-                                        <div class="col-12 col-xl-5 form-group px-0 px-lg-1">
-                                            <label for="oneRepPR_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">1RM</label>
-                                            <div class="d-flex">
-                                                <input type="number" min="0" [(ngModel)]="pr.oneRepPR.weight" class="form-control form-control-sm w-100" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
-                                                id="oneRepPR_{{prIndex}}" name="oneRepPR_{{prIndex}}">
-                                                <select [(ngModel)]="pr.oneRepPR.measure" class="form-control form-control-sm cursor-pointer" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
-                                                    id="oneRepPrMeasure_{{prIndex}}" name="oneRepPrMeasure_{{prIndex}}">
-                                                    <option [value]="'kg'">kg</option>
-                                                    <option [value]="'lbs'">lbs</option>
-                                                </select>
+                    <!-- PERSONAL RECORDS -->
+                    <div class="card" *ngIf="currentProfileSection == USERPROFILE_SECTIONS.PERSONAL_RECORDS">
+                        <div class="form-row p-3 m-0" id="prContainer">
+                            <fieldset class="col-12 row m-0 p-0" [disabled]="bLoading">
+                                <div class="row col-12 m-0">
+                                    <div class="col-12 form-row m-0" *ngIf="personalRecordList.length==0 || areAllPrsHidden()">
+                                        <div class="px-2 py-4">Nessun Personal Record presente</div>
+                                    </div>
+    
+                                    <div class="col-12 p-0"><h6 class="h6 text-success">Personal Records</h6></div>
+                                    <div class="form-row form-row-inner col-12 border border-success">
+                                        <div class="col-12 form-row m-0 p-0 position-relative mb-3" *ngFor="let pr of filterVisiblePR(); index as prIndex; first as prFirst">
+                                            <div class="col-6 col-lg-4 d-flex flex-column align-items-baseline flex-lg-row m-0 pr-3">
+                                                <div class="row m-0">
+                                                    <div class="col-12 col-lg-6 form-group pl-0 pr-1 m-0">
+                                                        <label for="pr_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">Esercizio</label>
+                                                        <input id="pr_{{prIndex}}" name="pr_{{prIndex}}" type="text" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                            [ngModel]="pr.exercise.name"
+                                                            [ngbTypeahead]="search"
+                                                            [resultTemplate]="rt"
+                                                            [editable]='false'
+                                                            (selectItem)="selectExercise($event, prIndex)">
+                                                            
+                                                            <ng-template #rt let-r="result" let-t="term">
+                                                                <ngb-highlight [result]="r.name + ' (' + r.variant.name + ')'" [term]="t"></ngb-highlight>
+                                                            </ng-template>
+        
+                                                            <!-- Exercise Modal -->
+                                                            <app-exercise-modal [hidden]="true" (onClose)="createExercise()" (onAbort)="abortCreateExercise()" [(newExercise)]="newExercise" style="position: absolute; right: 15px; bottom: 15px">
+                                                                <button id="exerciseModalButton" class="image-button cursor-pointer" ngbTooltip="Nuovo" placement="top"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></button>
+                                                            </app-exercise-modal>
+                                                    </div>
+                                                    <div class="col-12 col-lg-6 form-group pl-lg-1 px-0 m-0">
+                                                        <label for="tipo_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">Tipo</label>
+                                                        <input type="text" [(ngModel)]="pr.exercise.variant.name" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                            id="tipo_{{prIndex}}" name="tipo_{{prIndex}}" placeholder="Tipo esercizio..." disabled>
+                                                    </div>
+                                                    <div class="col-12 col-xl-6 form-group pl-0 pr-1">
+                                                        <label for="description_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">Descrizione</label>
+                                                        <input type="text" [(ngModel)]="pr.exercise.description" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                            id="description_{{prIndex}}" name="description_{{prIndex}}" placeholder="Descrizione esercizio..." disabled>
+                                                    </div>
+                                                    <div class="col-12 col-xl-5 form-group px-0 px-lg-1">
+                                                        <label for="oneRepPR_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">1RM</label>
+                                                        <div class="d-flex">
+                                                            <input type="number" min="0" [(ngModel)]="pr.oneRepPR.weight" class="form-control form-control-sm w-100" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                            id="oneRepPR_{{prIndex}}" name="oneRepPR_{{prIndex}}">
+                                                            <select [(ngModel)]="pr.oneRepPR.measure" class="form-control form-control-sm cursor-pointer" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                                id="oneRepPrMeasure_{{prIndex}}" name="oneRepPrMeasure_{{prIndex}}">
+                                                                <option [value]="'kg'">kg</option>
+                                                                <option [value]="'lbs'">lbs</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-xl-1 form-group d-flex flex-column align-items-center pl-1 pr-0">
+                                                        <label for="public_{{prIndex}}" class="col-form-label col-form-label-sm">Pubblico</label>
+                                                        <input type="checkbox" [(ngModel)]="pr.bPublic" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                            id="public_{{prIndex}}" name="public_{{prIndex}}">
+                                                    </div>
+                                                </div>
+                                                <div class="pl-lg-3 pr-0 mt-1 text-right ml-auto" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
+                                                    <small>Azioni</small>
+                                                    <div class="d-flex flex-row flex-lg-column align-items-center align-items-lg-end justify-content-end">
+                                                        <div class="image-button" ngbTooltip="Copia personal record" placement="top" (click)="copyPR(prIndex)"><img src="assets/icons/actions/copy.svg" style="width:15px; height:auto;"></div>
+                                                        <div class="ml-1 image-button" ngbTooltip="Incolla personal record" placement="top" (click)="pastePR(prIndex)"><img src="assets/icons/actions/contract.svg" style="width:15px; height:auto;"></div>
+                                                        <div class="ml-1 image-button" ngbTooltip="Reset personal record" placement="top" (click)="resetPR(prIndex)"><img src="assets/icons/actions/return.svg" style="width:15px; height:auto;"></div>
+                                                        <div class="ml-1 image-button" ngbTooltip="Elimina personal record" placement="top" (click)="deletePR(prIndex)"><img src="assets/icons/actions/garbage-can.svg" style="width:15px; height:auto;"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6 col-lg-8 border border-right-0 border-top-0 border-bottom-0 pl-3">
+                                                <div class="form-row m-0" *ngFor="let elem of filterVisiblePRSeries(pr); first as seriesFirst; last as seriesLast; index as seriesIndex" [ngClass]="{'my-2': pr.series.length > 1 && !first && !last, 'border-bottom': pr.series.length > 1 && !seriesLast}">
+                                                    <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group">
+                                                        <label for="serie_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
+                                                            [hidden]="!seriesFirst">Serie</label>
+                                                        <input type="number" min="1" max="1000" [(ngModel)]="elem.seriesNumber" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                            class="form-control form-control-sm" id="serie_{{prIndex}}_{{seriesIndex}}"
+                                                            name="serie_{{prIndex}}_{{seriesIndex}}" placeholder="Serie...">
+                                                    </div>
+                                                    <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group">
+                                                        <label for="rep_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
+                                                            [hidden]="!seriesFirst">Rep</label>
+                                                        <input type="number" min="1" max="9999" [(ngModel)]="elem.repNumber" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                            class="form-control form-control-sm" id="rep_{{prIndex}}_{{seriesIndex}}"
+                                                            name="rep_{{prIndex}}_{{seriesIndex}}" placeholder="Rep...">
+                                                    </div>
+                                                    <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group">
+                                                        <label for="peso_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
+                                                            [hidden]="!seriesFirst">Peso</label>
+                                                        <input type="number" min="0" max="9999" [(ngModel)]="elem.weight" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                            class="form-control form-control-sm" id="peso_{{prIndex}}_{{seriesIndex}}"
+                                                            name="peso_{{prIndex}}_{{seriesIndex}}" placeholder="Peso...">
+                                                    </div>
+                                                    <div class="col-12 col-md-6 col-lg-3 col-xl-2 d-flex">
+                                                        <div class="form-group">
+                                                            <label for="misura_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
+                                                            [hidden]="!seriesFirst">Misura</label>
+                                                            <select [(ngModel)]="elem.measure" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                                id="misuraSelect_{{prIndex}}_{{seriesIndex}}" name="misuraSelect_{{prIndex}}_{{seriesIndex}}">
+                                                                <option [value]="'kg'">kg</option>
+                                                                <option [value]="'lbs'">lbs</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="image-button ml-1" [ngClass]="{'d-flex align-items mt-3': seriesFirst}" *ngIf="!(pageStatus[PAGES.USERS] == PAGEMODE.READONLY)" ngbTooltip="Applica misura a tutti i personal record" placement="top" (click)="setPRlistMeasure(elem.measure)"><img src="assets/icons/actions/copy-secondary.svg" style="width:15px; height:auto;"></div>
+                                                        <div class="image-button ml-1" [ngClass]="{'d-flex align-items mt-3': seriesFirst}" *ngIf="!(pageStatus[PAGES.USERS] == PAGEMODE.READONLY)" ngbTooltip="Applica misura a tutto il personal record" placement="top" (click)="setPRMeasure(pr, elem.measure)"><img src="assets/icons/actions/copy-secondary.svg" style="width:15px; height:auto;"></div>
+                                                    </div>
+                                                    <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group">
+                                                        <label for="rest_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
+                                                            [hidden]="!seriesFirst">Recupero</label>
+                                                        <input type="number" min="0" max="9999" [(ngModel)]="elem.rest" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}" 
+                                                            class="form-control form-control-sm" id="rest_{{prIndex}}_{{seriesIndex}}" 
+                                                            name="rest_{{prIndex}}_{{seriesIndex}}">
+                                                    </div>
+                                                    <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group d-flex flex-column justify-content-center align-items-center">
+                                                        <label for="verified_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
+                                                        [hidden]="!seriesFirst">Verificato</label>
+                                                        <input type="checkbox" [(ngModel)]="elem.bVerified" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                            id="verified_{{prIndex}}_{{seriesIndex}}" name="verified_{{prIndex}}_{{seriesIndex}}">
+                                                    </div>
+                                                    <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group d-flex flex-column justify-content-center align-items-center">
+                                                        <label for="competition_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
+                                                        [hidden]="!seriesFirst">Comp.</label>
+                                                        <input type="checkbox" [(ngModel)]="elem.bCompetition" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}" 
+                                                            id="competition_{{prIndex}}_{{seriesIndex}}" name="competition_{{prIndex}}_{{seriesIndex}}">
+                                                    </div>
+                                                    <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group d-flex flex-column justify-content-center align-items-center">
+                                                        <label for="public_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
+                                                        [hidden]="!seriesFirst">Pubblico</label>
+                                                        <input type="checkbox" [(ngModel)]="elem.bPublic" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                            id="public_{{prIndex}}_{{seriesIndex}}" name="public_{{prIndex}}_{{seriesIndex}}">
+                                                    </div>
+                                                    <div class="col-12 col-lg-3 col-xl-1 form-group">
+                                                        <label for="comment_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm" 
+                                                            [hidden]="!seriesFirst">Commento</label>
+                                                        <input type="text" max="200" [(ngModel)]="elem.comment" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
+                                                            class="form-control form-control-sm" id="comment_{{prIndex}}_{{seriesIndex}}"
+                                                            name="comment_{{prIndex}}_{{seriesIndex}}" placeholder="Commento...">
+                                                    </div>
+                                                    <div class="col-12 col-lg-3 col-xl-2 form-group m-0 p-0 pl-2 text-right" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
+                                                        <label class="col-form-label col-form-label-sm" [hidden]="!seriesFirst"
+                                                            [hidden]="!seriesFirst">Azioni</label>
+                                                        <div class="d-flex justify-content-end">
+                                                            <div class="image-button" ngbTooltip="Copia" placement="top" (click)="copySeries(pr, seriesIndex)"><img src="assets/icons/actions/copy.svg" style="width:15px; height:auto;"></div>
+                                                            <div class="ml-1 image-button" ngbTooltip="Incolla" placement="top" (click)="pasteSeries(pr, seriesIndex)"><img src="assets/icons/actions/contract.svg" style="width:15px; height:auto;"></div>
+                                                            <div class="ml-1 image-button" ngbTooltip="Reset" placement="top" (click)="resetSeries(pr, seriesIndex)"><img src="assets/icons/actions/return.svg" style="width:15px; height:auto;"></div>
+                                                            <div class="ml-1 image-button" ngbTooltip="Elimina" placement="top" (click)="deleteSeries(pr, seriesIndex)" [hidden]="pr.series.length == 1"><img src="assets/icons/actions/garbage-can.svg" style="width:15px; height:auto;"></div>
+                                                            <div class="ml-1 image-button" ngbTooltip="Aggiungi" placement="top" (click)="pushSeries(pr)" [hidden]="!seriesLast"><img src="assets/icons/actions/plus2.svg" style="width:15px; height:auto;"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-xl-1 form-group d-flex flex-column align-items-center pl-1 pr-0">
-                                            <label for="public_{{prIndex}}" class="col-form-label col-form-label-sm">Pubblico</label>
-                                            <input type="checkbox" [(ngModel)]="pr.bPublic" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
-                                                id="public_{{prIndex}}" name="public_{{prIndex}}">
-                                        </div>
-                                    </div>
-                                    <div class="pl-lg-3 pr-0 mt-1 text-right ml-auto" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
-                                        <small>Azioni</small>
-                                        <div class="d-flex flex-row flex-lg-column align-items-center align-items-lg-end justify-content-end">
-                                            <div class="image-button" ngbTooltip="Copia personal record" placement="top" (click)="copyPR(prIndex)"><img src="assets/icons/actions/copy.svg" style="width:15px; height:auto;"></div>
-                                            <div class="ml-1 image-button" ngbTooltip="Incolla personal record" placement="top" (click)="pastePR(prIndex)"><img src="assets/icons/actions/contract.svg" style="width:15px; height:auto;"></div>
-                                            <div class="ml-1 image-button" ngbTooltip="Reset personal record" placement="top" (click)="resetPR(prIndex)"><img src="assets/icons/actions/return.svg" style="width:15px; height:auto;"></div>
-                                            <div class="ml-1 image-button" ngbTooltip="Elimina personal record" placement="top" (click)="deletePR(prIndex)"><img src="assets/icons/actions/garbage-can.svg" style="width:15px; height:auto;"></div>
+                                        <div class="form-row m-0 d-flex justify-content-start" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
+                                            <div class="btn btn-outline-info btn-sm-sm mt-2" (click)="pushPR()">Aggiungi PR +</div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-6 col-lg-8 p-3 border border-right-0 border-top-0 border-bottom-0">
-                                    <div class="form-row m-0" *ngFor="let elem of filterVisiblePRSeries(pr); first as seriesFirst; last as seriesLast; index as seriesIndex" [ngClass]="{'my-2': pr.series.length > 1 && !first && !last, 'border-bottom': pr.series.length > 1 && !last}">
-                                        <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group">
-                                            <label for="serie_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
-                                                [hidden]="!seriesFirst">Serie</label>
-                                            <input type="number" min="1" max="1000" [(ngModel)]="elem.seriesNumber" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
-                                                class="form-control form-control-sm" id="serie_{{prIndex}}_{{seriesIndex}}"
-                                                name="serie_{{prIndex}}_{{seriesIndex}}" placeholder="Serie...">
-                                        </div>
-                                        <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group">
-                                            <label for="rep_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
-                                                [hidden]="!seriesFirst">Rep</label>
-                                            <input type="number" min="1" max="9999" [(ngModel)]="elem.repNumber" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
-                                                class="form-control form-control-sm" id="rep_{{prIndex}}_{{seriesIndex}}"
-                                                name="rep_{{prIndex}}_{{seriesIndex}}" placeholder="Rep...">
-                                        </div>
-                                        <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group">
-                                            <label for="peso_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
-                                                [hidden]="!seriesFirst">Peso</label>
-                                            <input type="number" min="0" max="9999" [(ngModel)]="elem.weight" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
-                                                class="form-control form-control-sm" id="peso_{{prIndex}}_{{seriesIndex}}"
-                                                name="peso_{{prIndex}}_{{seriesIndex}}" placeholder="Peso...">
-                                        </div>
-                                        <div class="col-12 col-md-6 col-lg-3 col-xl-2 d-flex">
-                                            <div class="form-group">
-                                                <label for="misura_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
-                                                [hidden]="!seriesFirst">Misura</label>
-                                                <select [(ngModel)]="elem.measure" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
-                                                    id="misuraSelect_{{prIndex}}_{{seriesIndex}}" name="misuraSelect_{{prIndex}}_{{seriesIndex}}">
-                                                    <option [value]="'kg'">kg</option>
-                                                    <option [value]="'lbs'">lbs</option>
+
+                                <div class="form-group col-12 d-flex p-0 mt-3 mb-0" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
+                                    <button type="submit" class="btn btn-primary ml-auto" (click)="onSubmitPersonaRecords()" [disabled]="!isPersonalRecordFormValid()"><span *ngIf="bLoading" class="spinner-border spinner-border-sm mr-1"></span> Aggiorna</button>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    
+                    <!-- OPTIONS -->
+                    <div class="card" *ngIf="currentProfileSection == USERPROFILE_SECTIONS.SETTINGS">
+                        <div class="form-row p-3 m-0" id="optionsContainer">
+                            <form [formGroup]="settingsForm" (ngSubmit)="onSubmitOptions()" class="col-12 row m-0 p-0">
+                                <fieldset class="col-12 row form-group m-0 p-0" [disabled]="bLoading">
+                                    <div class="row col-12 m-0">
+
+                                        <!-- Privacy Options -->
+                                        <div class="col-12 p-0"><h6 class="h6 text-primary">Privacy</h6></div>
+                                        <div class="form-row form-row-inner col-12 border border-primary">
+                                            <!-- Activities -->
+                                            <div class="col-12 col-md-6 col-lg-3 form-group">
+                                                <label for="optionActivityPrivacy" class="col-form-label col-form-label-sm text-muted">Attività</label>
+                                                <select formControlName="showActivities" required class="form-control form-control-sm cursor-pointer" [ngClass]="{'is-invalid': settingsFormSubmitted && fo.showActivities.errors}">
+                                                    <option *ngFor="let o of optionsVisibilityList | keyvalue" [value]="o.key" class="text-capitalize">{{o.value}}</option>
                                                 </select>
+                                                <div *ngIf="settingsFormSubmitted && fo.showActivities.errors" class="invalid-feedback">
+                                                    <div *ngIf="fo.showActivities.errors.required">Campo obbligatorio</div>
+                                                </div>
                                             </div>
-                                            <div class="image-button ml-1" [ngClass]="{'d-flex align-items mt-3': seriesFirst}" *ngIf="!(pageStatus[PAGES.USERS] == PAGEMODE.READONLY)" ngbTooltip="Applica misura a tutti i personal record" placement="top" (click)="setPRlistMeasure(elem.measure)"><img src="assets/icons/actions/copy-secondary.svg" style="width:15px; height:auto;"></div>
-                                            <div class="image-button ml-1" [ngClass]="{'d-flex align-items mt-3': seriesFirst}" *ngIf="!(pageStatus[PAGES.USERS] == PAGEMODE.READONLY)" ngbTooltip="Applica misura a tutto il personal record" placement="top" (click)="setPRMeasure(pr, elem.measure)"><img src="assets/icons/actions/copy-secondary.svg" style="width:15px; height:auto;"></div>
-                                        </div>
-                                        <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group">
-                                            <label for="rest_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
-                                                [hidden]="!seriesFirst">Recupero</label>
-                                            <input type="number" min="0" max="9999" [(ngModel)]="elem.rest" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}" 
-                                                class="form-control form-control-sm" id="rest_{{prIndex}}_{{seriesIndex}}" 
-                                                name="rest_{{prIndex}}_{{seriesIndex}}">
-                                        </div>
-                                        <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group d-flex flex-column justify-content-center align-items-center">
-                                            <label for="verified_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
-                                            [hidden]="!seriesFirst">Verificato</label>
-                                            <input type="checkbox" [(ngModel)]="elem.bVerified" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
-                                                id="verified_{{prIndex}}_{{seriesIndex}}" name="verified_{{prIndex}}_{{seriesIndex}}">
-                                        </div>
-                                        <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group d-flex flex-column justify-content-center align-items-center">
-                                            <label for="competition_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
-                                            [hidden]="!seriesFirst">Comp.</label>
-                                            <input type="checkbox" [(ngModel)]="elem.bCompetition" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}" 
-                                                id="competition_{{prIndex}}_{{seriesIndex}}" name="competition_{{prIndex}}_{{seriesIndex}}">
-                                        </div>
-                                        <div class="col-12 col-md-6 col-lg-3 col-xl-1 form-group d-flex flex-column justify-content-center align-items-center">
-                                            <label for="public_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
-                                            [hidden]="!seriesFirst">Pubblico</label>
-                                            <input type="checkbox" [(ngModel)]="elem.bPublic" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
-                                                id="public_{{prIndex}}_{{seriesIndex}}" name="public_{{prIndex}}_{{seriesIndex}}">
-                                        </div>
-                                        <div class="col-12 col-lg-3 col-xl-1 form-group">
-                                            <label for="comment_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm" 
-                                                [hidden]="!seriesFirst">Commento</label>
-                                            <input type="text" max="200" [(ngModel)]="elem.comment" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
-                                                class="form-control form-control-sm" id="comment_{{prIndex}}_{{seriesIndex}}"
-                                                name="comment_{{prIndex}}_{{seriesIndex}}" placeholder="Commento...">
-                                        </div>
-                                        <div class="col-12 col-lg-3 col-xl-2 form-group m-0 p-0 pl-2 text-right" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
-                                            <label class="col-form-label col-form-label-sm" [hidden]="!seriesFirst"
-                                                [hidden]="!seriesFirst">Azioni</label>
-                                            <div class="d-flex justify-content-end">
-                                                <div class="image-button" ngbTooltip="Copia" placement="top" (click)="copySeries(pr, seriesIndex)"><img src="assets/icons/actions/copy.svg" style="width:15px; height:auto;"></div>
-                                                <div class="ml-1 image-button" ngbTooltip="Incolla" placement="top" (click)="pasteSeries(pr, seriesIndex)"><img src="assets/icons/actions/contract.svg" style="width:15px; height:auto;"></div>
-                                                <div class="ml-1 image-button" ngbTooltip="Reset" placement="top" (click)="resetSeries(pr, seriesIndex)"><img src="assets/icons/actions/return.svg" style="width:15px; height:auto;"></div>
-                                                <div class="ml-1 image-button" ngbTooltip="Elimina" placement="top" (click)="deleteSeries(pr, seriesIndex)" [hidden]="pr.series.length == 1"><img src="assets/icons/actions/garbage-can.svg" style="width:15px; height:auto;"></div>
-                                                <div class="ml-1 image-button" ngbTooltip="Aggiungi" placement="top" (click)="pushSeries(pr)" [hidden]="!seriesLast"><img src="assets/icons/actions/plus2.svg" style="width:15px; height:auto;"></div>
+                                            <!-- Private Info -->
+                                            <div class="col-12 col-md-6 col-lg-3 form-group">
+                                                <label for="optionPrivateInfoPrivacy" class="col-form-label col-form-label-sm text-muted">Informazioni Private</label>
+                                                <select formControlName="showPrivateInfo" required class="form-control form-control-sm cursor-pointer" [ngClass]="{'is-invalid': settingsFormSubmitted && fo.showPrivateInfo.errors}">
+                                                    <option *ngFor="let o of optionsVisibilityList | keyvalue" [value]="o.key" class="text-capitalize">{{o.value}}</option>
+                                                </select>
+                                                <div *ngIf="settingsFormSubmitted && fo.showPrivateInfo.errors" class="invalid-feedback">
+                                                    <div *ngIf="fo.showPrivateInfo.errors.required">Campo obbligatorio</div>
+                                                </div>
                                             </div>
+                                            <!-- Public Info -->
+                                            <div class="col-12 col-md-6 col-lg-3 form-group">
+                                                <label for="optionPublicInfoPrivacy" class="col-form-label col-form-label-sm text-muted">Informazioni Publiche</label>
+                                                <select formControlName="showPublicInfo" required class="form-control form-control-sm cursor-pointer" [ngClass]="{'is-invalid': settingsFormSubmitted && fo.showPublicInfo.errors}">
+                                                    <option *ngFor="let o of optionsVisibilityList | keyvalue" [value]="o.key" class="text-capitalize">{{o.value}}</option>
+                                                </select>
+                                                <div *ngIf="settingsFormSubmitted && fo.showPublicInfo.errors" class="invalid-feedback">
+                                                    <div *ngIf="fo.showPublicInfo.errors.required">Campo obbligatorio</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-12 d-flex p-0 mt-3 mb-0">
+                                            <button type="submit" class="btn btn-primary ml-auto"><span *ngIf="bLoading" class="spinner-border spinner-border-sm mr-1"></span> Aggiorna</button>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="form-row m-0 d-flex justify-content-start" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
-                                <div class="btn btn-outline-info btn-sm-sm mt-2 ml-2" (click)="pushPR()">Aggiungi PR +</div>
-                            </div>
-
-                            <div class="form-group col-12 d-flex p-0" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
-                                <button type="submit" class="btn btn-primary ml-auto mr-2" (click)="onSubmitPersonaRecords()" [disabled]="!isPersonalRecordFormValid()"><span *ngIf="bLoading" class="spinner-border spinner-border-sm mr-1"></span> Aggiorna</button>
-                            </div>
-                        </fieldset>
+                                </fieldset>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
