@@ -521,12 +521,18 @@ export class UserComponent implements OnInit {
     return true;
   }
 
+  /**
+   * If the current user is an admin or the user of this userpage and the page mode is WRITE, return the full personalRecordList, else return the personalRecordList filtered by bPublic attribute (set to true)
+   */
   filterVisiblePR(): PersonalRecord[] {
-    return (this.account.role == Role.Admin ? this.personalRecordList : this.personalRecordList.filter(pr => pr.bPublic));
+    return (((this.account.role == Role.Admin || this.account.user._id == this.user._id) && this.pageStatus[PAGES.USERS] == PAGEMODE.WRITE) ? this.personalRecordList : this.personalRecordList.filter(pr => pr.bPublic));
   }
 
+  /**
+   * If the current user is an admin or the user of this userpage and the page mode is WRITE, return the full pr.series, else return the pr.series filtered by bPublic attribute (set to true)
+   */
   filterVisiblePRSeries(pr: PersonalRecord): PRSeries[] {
-    return (this.account.role == Role.Admin ? pr.series : pr.series.filter(series => series.bPublic));
+    return (((this.account.role == Role.Admin || this.account.user._id == this.user._id) && this.pageStatus[PAGES.USERS] == PAGEMODE.WRITE) ? pr.series : pr.series.filter(series => series.bPublic));
   }
 
 

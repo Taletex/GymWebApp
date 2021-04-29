@@ -35,11 +35,36 @@
                 }
             }
 
-            // .body__write-content {
-            //     input {
-            //         background-color: transparent !important;
-            //     }
-            // }
+            .body__write-content {
+                .pr-container {
+                    background-color: #fbfef863;
+                    border: 1px solid #bddec4 !important;
+                    padding: 1rem;
+
+                    .pr-header {
+                        background-color: #ecf9e0;
+
+                        input, select, option {
+                            background-color: #fbfef863;
+    
+                            &:disabled {
+                                background-color: #ecf9e0 !important;
+                            }
+                        }
+                    }
+                    .pr-body {
+                        background-color: #fbfef863;
+                        
+                        input, select, option {
+                            background-color: #fbfef863;
+    
+                            &:disabled {
+                                background-color: #fbfef863 !important;
+                            }
+                        }
+                    }
+                }
+            }
 
             .card {
                 box-shadow: 0 0 0.875rem 0 rgb(41 48 66 / 8%);
