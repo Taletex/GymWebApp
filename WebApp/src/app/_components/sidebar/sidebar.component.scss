@@ -10,22 +10,18 @@ $menu-blue: #0f1042e6;
         transition: all 1s;
     }
 
-
-    @media (max-width: 991.98px) {
+    @media (max-width: 767.98px) { 
+        width: 0px;
         &.expanded {
-            width: 140px;
-        }
-
-        h5 {
-            font-size: 1rem;
+            width: 180px;
             transition: all 1s;
         }
+        &.not-expanded {
+            width: 0px;
+            transition: all 1s;
+        }  
     }
 
-    @media (max-width: 575.98px) {
-        width: 50px !important;
-        transition: all 1s;
-    }
 
     .sidebar__container {
         background-color: $menu-blue;

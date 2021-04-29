@@ -1,4 +1,4 @@
-<div class="main__sidebar row m-0 h-100 overflow-auto" [ngClass]="{'expanded': bExpandedSidebar, 'not-expanded': !bExpandedSidebar}">
+<div class="main__sidebar row m-0 h-100 overflow-auto" [ngClass]="{'expanded': options.bExpanded, 'not-expanded': !options.bExpanded}">
 
     <div class="sidebar__container col-12 d-flex flex-column p-0">
 
@@ -6,35 +6,35 @@
         <div class="container__header w-100">
             <button class="h-100 w-100 d-flex justify-content-center align-items-center cursor-pointer bg-transparent text-white btn border-0 p-0 btn-no-focus" (click)="toggleSidebar()">
                 <img  src="assets/icons/favicon-white.png" style="width:24px; height:auto;">
-                <h5 class="d-none d-sm-inline text-white m-0 menu-title" *ngIf="bExpandedSidebar" >My Training Platform</h5>
+                <h5 class="text-white m-0 menu-title" *ngIf="options.bExpanded">My Training Platform</h5>
             </button>
         </div>
 
         <!-- Sidebar Body (contains sidebar links) -->
         <div class="container__body">
-            <a routerLink="/homepage" routerLinkActive="active"
+            <a routerLink="/homepage" routerLinkActive="active" (click)="initExpandOption()"
                 class="sidebar__element link-button w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
                 [ngClass]="{'active': bActiveList.homepage}">
                 <img src="assets/icons/sidebar/home.svg" style="width:24px; height:auto;" class="ml-1 mr-2">
-                <span *ngIf="bExpandedSidebar" class="d-none d-sm-inline">Homepage</span>
+                <span *ngIf="options.bExpanded">Homepage</span>
             </a>
-            <a routerLink="/trainings" routerLinkActive="active"
+            <a routerLink="/trainings" routerLinkActive="active" (click)="initExpandOption()"
                 class="sidebar__element link-button w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
                 [ngClass]="{'active': bActiveList.trainings}">
                 <img src="assets/icons/sidebar/writing.svg" style="width:24px; height:auto;" class="ml-1 mr-2">
-                <span *ngIf="bExpandedSidebar" class="d-none d-sm-inline">Allenamenti</span>
+                <span *ngIf="options.bExpanded">Allenamenti</span>
             </a>
-            <a routerLink="/exercises" routerLinkActive="active"
+            <a routerLink="/exercises" routerLinkActive="active" (click)="initExpandOption()"
                 class="sidebar__element link-button w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
                 [ngClass]="{'active': bActiveList.exercises}">
                 <img src="assets/icons/sidebar/barbell.svg" style="width:24px; height:auto;" class="ml-1 mr-2">
-                <span *ngIf="bExpandedSidebar" class="d-none d-sm-inline">Esercizi</span>
+                <span *ngIf="options.bExpanded">Esercizi</span>
             </a>
-            <a routerLink="/users" routerLinkActive="active"
+            <a routerLink="/users" routerLinkActive="active" (click)="initExpandOption()"
                 class="sidebar__element link-button w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
                 [ngClass]="{'active': bActiveList.users}">
                 <img src="assets/icons/sidebar/athlete.svg" style="width:24px; height:auto;" class="ml-1 mr-2">
-                <span *ngIf="bExpandedSidebar" class="d-none d-sm-inline">
+                <span *ngIf="options.bExpanded">
                     <span [hidden]="account.user.userType != 'both'">Utenti</span>
                     <span [hidden]="account.user.userType != 'athlete'">Coach</span>
                     <span [hidden]="account.user.userType != 'coach'">Atleti</span>
@@ -44,19 +44,19 @@
                 class="sidebar__element link-button w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
                 [ngClass]="{'active': bActiveList.userprofile}">
                 <img src="assets/icons/sidebar/user.svg" style="width:24px; height:auto;" class="ml-1 mr-2">
-                <span *ngIf="bExpandedSidebar" class="d-none d-sm-inline">Profilo</span>
+                <span *ngIf="options.bExpanded">Profilo</span>
             </a>
-            <a routerLink="/notifications" routerLinkActive="active"
+            <a routerLink="/notifications" routerLinkActive="active" (click)="initExpandOption()"
                 class="sidebar__element link-button position-relative w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
                 [ngClass]="{'active': bActiveList.notifications}">
                 <img src="assets/icons/sidebar/bell.svg" style="width:24px; height:auto;" class="ml-1 mr-2"><small class="position-absolute" style="left: 32px; top: 0px; z-index:2;">{{unreadNotificationLength}}</small>
-                <span *ngIf="bExpandedSidebar" class="d-none d-sm-inline">Notifiche </span>
+                <span *ngIf="options.bExpanded">Notifiche </span>
             </a>
-            <a routerLink="/admin" routerLinkActive="active" *ngIf="account.role == Role.Admin"
+            <a routerLink="/admin" routerLinkActive="active" *ngIf="account.role == Role.Admin" (click)="initExpandOption()"
                 class="sidebar__element link-button w-100 d-flex align-items-center justify-content-start text-white cursor-pointer"
                 [ngClass]="{'active': bActiveList.admin}">
                 <img src="assets/icons/sidebar/support.svg" style="width:24px; height:auto;" class="ml-1 mr-2">
-                <span *ngIf="bExpandedSidebar" class="d-none d-sm-inline">Admin</span>
+                <span *ngIf="options.bExpanded">Admin</span>
             </a>
         </div>
 

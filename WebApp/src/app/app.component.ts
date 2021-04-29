@@ -20,6 +20,7 @@ export class AppComponent {
   Role = Role;
   account: Account;
   baseServerUrl = this.httpService.baseServerUrl;
+  sidebarOptions = {bExpanded: true};
 
   constructor(public router: Router, private accountService: AccountService, public httpService: HttpService) {
     this.accountService.account.subscribe(x => this.account = x);
@@ -31,5 +32,9 @@ export class AppComponent {
 
   prepareRoute(outlet: RouterOutlet) {
     return outlet && outlet.activatedRouteData && outlet.activatedRouteData.animation;
+  }
+
+  expandSidebar() {
+    this.sidebarOptions.bExpanded = true;
   }
 }

@@ -1,4 +1,4 @@
-﻿<div class="main__accounts row m-1 m-md-3">
+﻿<div class="main__accounts row m-3">
 
     <!-- FILTERS -->
     <div class="accounts__filters col-12 row d-flex align-items-center border mb-2 m-0 pr-2 py-2" [ngClass]="{'py-3 min-height-200': !bWindowOverMd && filters.bExpanded, 'min-height-60': bWindowOverMd}">
@@ -69,7 +69,7 @@
                 </div>
             </div>
         </div>
-        <div class="maincontainer__body table-body card-body row w-100 align-content-start m-0 pl-2 pr-0 py-2">
+        <div class="maincontainer__body table-body card-body row w-100 align-content-start m-0 p-2">
             <div class="h-100 w-100 d-flex flex-column align-items-center justify-content-center" *ngIf="accountList.length == 0">
                 <img src="assets/icons/misc/alert.svg" style="width:40px; height:auto;">
                 <span class="badge badge-light mt-2">Nessun account presente nella piattaforma</span>
