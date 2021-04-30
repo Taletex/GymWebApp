@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Activity, Contacts, Exercise, Federation, OPTION_VISIBILITY, PersonalRecord, PRSeries, Residence, Socials, TRAINING_TYPES, User, UserSettings, Variant } from '@app/_models/training-model';
+import { Activity, Contacts, Exercise, Federation, Notification, OPTION_VISIBILITY, PersonalRecord, PRSeries, Residence, Socials, TRAINING_TYPES, User, UserSettings, USER_TYPES, Variant } from '@app/_models/training-model';
 import { HttpService } from '@app/_services/http-service/http-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
@@ -25,7 +25,9 @@ export class UserComponent implements OnInit {
 
   public bLoading: boolean = false;
 
-  public user: User = new User();
+  public user: any = new User();
+  public userAccount: Account = new Account();
+  public notificationList: Notification[] = [];
   public activityList: Activity[] = [];
 
   // Account information
@@ -43,6 +45,7 @@ export class UserComponent implements OnInit {
 
   // User Form
   public userForm: FormGroup;
+  public userFormInitialValues: any;
   public userFormSubmitted = false;
   public today = new Date();
   public personalRecordList: PersonalRecord[] = <PersonalRecord[]>[];    // Aux array to store personal records from form
@@ -55,8 +58,9 @@ export class UserComponent implements OnInit {
   public maxImageSize: number = 2;    //MB
   public acceptedFormats: string[] = ["image/png", "image/jpeg"];
 
-  // Options Form
+  // Settings Form
   public settingsForm: FormGroup;
+  public settingsFormInitialValues: any;
   public settingsFormSubmitted = false;
   public optionsVisibilityList = Object.keys(OPTION_VISIBILITY).filter(key => isNaN(+key));
 
@@ -70,6 +74,8 @@ export class UserComponent implements OnInit {
 
   // Others
   public baseServerUrl: string = this.httpService.baseServerUrl
+  public USER_TYPES = USER_TYPES;
+  public personalRecordInitialValues: any;
 
 
   constructor(public userService: UserService, private generalService: GeneralService, private accountService: AccountService, private formBuilder: FormBuilder, private router: Router, private toastr: ToastrService, private httpService: HttpService, socket: Socket) {
@@ -95,15 +101,34 @@ export class UserComponent implements OnInit {
 
   ngOnInit() {
   }
+  
+  // From services
+  openPageWithMode(mode: PAGEMODE, page: PAGES, id?: string) {
+    this.generalService.openPageWithMode(mode, page, id);
+  } 
+
+  initPageInformations(data: any) {
+    this.initUserInformations(data);
+    this.initFormInitialValues();
+  }
+
+  initUserInformations(data: any) {
+    this.user = data;
+    this.userAccount.user = this.user;
+    this.notificationList = this.user.notifications.filter((n) => { return (n.type == NOTIFICATION_TYPE.COACH_REQUEST || n.type == NOTIFICATION_TYPE.ATHLETE_REQUEST) && !n.bConsumed });
+  }
+
+  initFormInitialValues() {
+    this.userFormInitialValues = _.cloneDeep(this.userForm.value);
+    this.settingsFormInitialValues = _.cloneDeep(this.settingsForm.value);
+    this.personalRecordInitialValues = _.cloneDeep(this.personalRecordList);
+  }
 
   getUser(userId: string) {
     this.httpService.getUser(userId)
       .subscribe(
         (data: any) => {
-          this.user = data;
-          this.bLoading = false;
-          console.log(this.user);
-
+          this.initUserInformations(data);
           // For Test Purpose
           this.activityList.push(new Activity('lasjd0123uasd', 'competition', 'Torneo Nazionale WPA', ['powerlifting'], new Federation("10892asjnd", "WPA"), 'nazionale', ['all'], ['all'], new Residence('italia', 'PA', '91000', 'alimena', 'via della piovra 5'), new Date("05/22/2021"), new Date("05/23/2021"), "Gara nazionale WPA 2021, utile per le qualificazioni ai mondiali", [this.user._id], ["50 euro"], [], ["prozis"], this.user._id, true));
           this.activityList.push(new Activity('123ouqnsidunq', 'competition', 'Torneo Nazionale FIPL', ['powerlifting'], new Federation("10892asjnd", "FIPL"), 'nazionale', ['all'], ['all'], new Residence('italia', 'MI', '92000','san zenone al lambro', 'via delle rose 123'), new Date("10/06/2021"), new Date("10/08/2021"), "Gara nazionale FIPL 2021, utile per le qualificazioni ai mondiali", [this.user._id], ["50 euro"], ["100 euro primo posto", "50 euro secondo posto"], ["prozis"], this.user._id, true));
@@ -115,8 +140,11 @@ export class UserComponent implements OnInit {
           this.user.contacts = new Contacts("martinafortuna2002@gmail.com", "3496799999", new Socials("https://angular.io/guide/router#router-links", "CIAO2", "CIAO3", "CIAO4", "CIAO5"));
           this.user.settings = new UserSettings();
           // end test
-          
           this.postUserInitialization();
+          this.initFormInitialValues();
+
+          this.bLoading = false;
+          console.log(this.user);
 
           this.pageStatus = this.generalService.getPageStatus();
           console.log(this.pageStatus);
@@ -189,6 +217,10 @@ export class UserComponent implements OnInit {
   // convenience getter for easy access to userForm fields
   get fu() { return this.userForm.controls; }
 
+  resetUserForm() {
+    this.userForm.reset(this.userFormInitialValues);
+  }
+
   // Multiselect aux
   pushGym() {
     let input = (document.querySelector("#gymsAuxInput") as HTMLInputElement);
@@ -253,7 +285,7 @@ export class UserComponent implements OnInit {
   assignFormValuesToUser() {
     let exceptions = ['pobState', 'pobProvince', 'pobCap', 'pobCity', 'pobAddress', 'socialsFacebook', 'socialsTwitter', 'socialsInstagram', 'socialsLinkedin', 'socialsOther', 
                       'residenceState', 'residenceProvince', 'residenceCap', 'residenceCity', 'residenceAddress'];
-    for (const [key, value] of Object.entries(this.settingsForm.value)) {
+    for (const [key, value] of Object.entries(this.userForm.value)) {
       if (!exceptions.includes(key) && this.user[key] != undefined) {
           this.user[key] = value;
       }
@@ -291,7 +323,7 @@ export class UserComponent implements OnInit {
       .subscribe(
         (data: any) => {
           this.bLoading = false;
-          this.user = data;
+          this.initPageInformations(data);
           this.toastr.success('User information successfully updated!');
         },
         (error: HttpErrorResponse) => {
@@ -303,6 +335,10 @@ export class UserComponent implements OnInit {
 
 
   /* === PR Form utilities === */
+  resetPRForm() {
+    this.personalRecordList = _.cloneDeep(this.personalRecordInitialValues);
+  }
+
   // Init exercise typeahead
   search = (text$: Observable<string>) =>
     text$.pipe(
@@ -493,7 +529,7 @@ export class UserComponent implements OnInit {
       .subscribe(
         (data: any) => {
           this.bLoading = false;
-          this.user = data;
+          this.initPageInformations(data);
           this.toastr.success('User information successfully updated!');
         },
         (error: HttpErrorResponse) => {
@@ -540,6 +576,10 @@ export class UserComponent implements OnInit {
   // convenience getter for easy access to settingsForm fields
   get fo() { return this.settingsForm.controls; }
 
+  resetSettingsForm() {
+    this.settingsForm.reset(this.settingsFormInitialValues);
+  }
+
   assignFormOptionsValueToUser() {
 
     for (const [key, value] of Object.entries(this.settingsForm.value)) {
@@ -565,7 +605,7 @@ export class UserComponent implements OnInit {
       .subscribe(
         (data: any) => {
           this.bLoading = false;
-          this.user = data;
+          this.initPageInformations(data);
           this.toastr.success('User information successfully updated!');
         },
         (error: HttpErrorResponse) => {
@@ -577,10 +617,10 @@ export class UserComponent implements OnInit {
 
 
   /* Notifications FUNCTIONS */
-  sendNotification(notificationType: NOTIFICATION_TYPE, destinationUser: User) {
+  sendNotification(notificationType: NOTIFICATION_TYPE, destinationUser: User, fromAccount: Account) {
     this.bLoading = true;
 
-    this.userService.sendNotification(notificationType, destinationUser, this.account)
+    this.userService.sendNotification(notificationType, destinationUser, fromAccount)
     .then(() => {
       this.bLoading = false;
       this.toastr.success('Richiesta correttamente inviata!');
@@ -591,11 +631,14 @@ export class UserComponent implements OnInit {
     });
   }
   
-  cancelAthleteCoachLink(notificationType: NOTIFICATION_TYPE, destinationUser: User) {
+  cancelAthleteCoachLink(notificationType: NOTIFICATION_TYPE, destinationUser: User, fromAccount: Account, bLinkAction: boolean) {
     this.bLoading = true;
 
-    this.userService.cancelAthleteCoachLink(notificationType, destinationUser, this.account)
+    this.userService.cancelAthleteCoachLink(notificationType, destinationUser, fromAccount)
     .then(() => {
+      // If this is an Admin link cancelAthleteCoachLink request we must update the link list manually since the socket will not receive any information
+      if(bLinkAction)
+        this.removeLink(notificationType, destinationUser._id); 
       this.bLoading = false;
       this.toastr.success('Richiesta correttamente inviata!');
     })
@@ -617,6 +660,59 @@ export class UserComponent implements OnInit {
       this.bLoading = false;
       this.toastr.error("Si è verificato un errore durante l'eliminazione della richiesta di collegamento!");
     });
+  }
+
+  removeLink(notificationType: NOTIFICATION_TYPE, userId: string) {
+    if(notificationType == NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK)
+      this.user.coaches.splice(this.user.coaches.findIndex((u)=>{return (u._id == userId)}), 1);
+    else if(notificationType == NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK) 
+      this.user.athletes.splice(this.user.athletes.findIndex((u)=>{return (u._id == userId)}), 1);
+  }
+
+  addLink(notificationType: string, user: any) {
+    if(notificationType == NOTIFICATION_TYPE.ATHLETE_REQUEST)
+      this.user.coaches.push(user);
+    else if(notificationType == NOTIFICATION_TYPE.COACH_REQUEST) 
+      this.user.athletes.push(user);
+  }
+
+  acceptRequest(notification: Notification) {
+    this.bLoading = true;
+    this.httpService.acceptRequest(this.user._id, notification)
+    .subscribe(
+      (data: any) => {
+        this.removeNotification(notification._id);            // MUST update notifications list since socket does not update it (or its user)
+        this.addLink(notification.type, notification.from);   // MUST update link list since socket does not update it (or its user)
+        this.bLoading = false;
+        console.log("acceptRequest result data", data);
+        this.toastr.success('Richiesta correttamente accettata!');
+      },
+      (error: HttpErrorResponse) => {
+        this.bLoading = false;
+        this.toastr.error("Si è verificato un errore durante l'invio di accettazione richiesta");
+        console.log("acceptRequest error", error);
+      });
+  }
+
+  refuseRequest(notification: Notification) {
+    this.bLoading = true;
+    this.httpService.refuseRequest(this.user._id, notification)
+    .subscribe(
+      (data: any) => {
+        this.removeNotification(notification._id);  // MUST update notifications list since socket does not update it (or its user)
+        this.bLoading = false;
+        console.log("refuseRequest result data", data);
+        this.toastr.success('Richiesta correttamente rifiutata!');
+      },
+      (error: HttpErrorResponse) => {
+        this.bLoading = false;
+        this.toastr.error("Si è verificato un errore durante l'invio di rifiuto richiesta");
+        console.log("refuseRequest error", error);
+      });
+  }
+
+  removeNotification(notificationId: string) {
+    this.notificationList.splice(this.notificationList.findIndex((n)=>{return (n._id == notificationId)}), 1);  
   }
   
 }

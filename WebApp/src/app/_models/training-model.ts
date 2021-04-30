@@ -262,3 +262,9 @@ export enum OPTION_VISIBILITY {
     LINKS_ONLY = 1,
     NONE = 2
 }
+
+export enum USER_TYPES {
+    ATHLETE = "athlete",
+    COACH = "coach",
+    BOTH = "both"
+}

@@ -3,22 +3,22 @@ $menu-blue: #0f1042e6;
 .main__sidebar {
     &.expanded {
         width: 180px;
-        transition: all 1s;
+        transition: all .5s;
     }
     &.not-expanded {
         width: 50px;
-        transition: all 1s;
+        transition: all .5s;
     }
 
     @media (max-width: 767.98px) { 
         width: 0px;
         &.expanded {
             width: 180px;
-            transition: all 1s;
+            transition: all .5s;
         }
         &.not-expanded {
             width: 0px;
-            transition: all 1s;
+            transition: all .5s;
         }  
     }
 

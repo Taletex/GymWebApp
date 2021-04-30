@@ -22,7 +22,8 @@ export enum PAGES {
 export enum USERPROFILE_SECTIONS {
     USER_INFORMATIONS = 0,
     PERSONAL_RECORDS = 1,
-    SETTINGS = 2
+    LINKS = 2,
+    SETTINGS = 3
 }
 
 export class PageStatus {
@@ -96,6 +97,10 @@ export class GeneralService {
         let fullPage = page == PAGES.ACCOUNTS ? ("admin/" + page) : page;
         let options = id ? ([fullPage, id]) : [fullPage];
 
+        this.router.navigate(options,{skipLocationChange: false});
+        // this.router.navigateByUrl(fullPage + (id ? ("/" + id) : ""), { skipLocationChange: true }).then(() => {
+        //     this.router.navigate(options);
+        // });
         this.router.navigate(options);
 
         return;

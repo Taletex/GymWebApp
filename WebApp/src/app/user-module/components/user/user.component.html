@@ -40,11 +40,11 @@
                             <div class="text-muted mb-2">{{user.userType=='both' ? 'Coach e Atleta' : (user.userType=='coach' ? 'Coach' : 'Atleta')}}</div>
                             <div class="text-muted mb-2" [hidden]="!user.biography">{{user.biography}}</div>
                             <div>
-                                <button type="button" (click)="sendNotification(NOTIFICATION_TYPE.COACH_REQUEST, user)" *ngIf="userService.canCoachRequestBeSent(user, account)" class="btn btn-sm btn-primary mr-2" ngbTooltip="Richiesta segui coach" placement="top"><span class="fa fa-user-plus standard-action-icon-btn-lg mr-1"></span><span>Collega Coach</span></button>
-                                <button type="button" (click)="cancelAthleteCoachLink(NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK, user)" *ngIf="userService.canCancelAthleteToCoachLinkBeSent(user, account)" class="btn btn-sm btn-danger mr-2" ngbTooltip="Elimina collegamento con Coach" placement="top"><span class="fa fa-times-circle standard-action-icon-btn-lg mr-1"></span><span>Scollega Coach</span></button>
+                                <button type="button" (click)="sendNotification(NOTIFICATION_TYPE.COACH_REQUEST, user, account)" *ngIf="userService.canCoachRequestBeSent(user, account)" class="btn btn-sm btn-primary mr-2" ngbTooltip="Richiesta segui coach" placement="top"><span class="fa fa-user-plus standard-action-icon-btn-lg mr-1"></span><span>Collega Coach</span></button>
+                                <button type="button" (click)="cancelAthleteCoachLink(NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK, user, account, false)" *ngIf="userService.canCancelAthleteToCoachLinkBeSent(user, account)" class="btn btn-sm btn-danger mr-2" ngbTooltip="Elimina collegamento con Coach" placement="top"><span class="fa fa-times-circle standard-action-icon-btn-lg mr-1"></span><span>Scollega Coach</span></button>
                                 <button type="button" (click)="cancelAthleteCoachLinkRequest(NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK_REQUEST, user)" *ngIf="userService.canCancelAthleteToCoachLinkRequestBeSent(user, account)" class="btn btn-sm btn-warning mr-2" ngbTooltip="Elimina richiesta di collegamento con Coach" placement="top"><span class="fa fa-times-circle standard-action-icon-btn-lg mr-1"></span><span>Elimina Richiesta a Coach</span></button>
-                                <button type="button" (click)="sendNotification(NOTIFICATION_TYPE.ATHLETE_REQUEST, user)" *ngIf="userService.canAthleteRequestBeSent(user, account)" class="btn btn-sm btn-primary mr-2" ngbTooltip="Richiesta segui atleta" placement="top"><span class="fa fa-user-plus standard-action-icon-btn-lg mr-1"></span><span>Collega Atleta</span></button>
-                                <button type="button" (click)="cancelAthleteCoachLink(NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK, user)" *ngIf="userService.canCancelCoachToAthleteLinkBeSent(user, account)" class="btn btn-sm btn-danger mr-2" ngbTooltip="Elimina collegamento con Atleta" placement="top"><span class="fa fa-times-circle standard-action-icon-btn-lg mr-1"></span><span>Scollega Atleta</span></button>
+                                <button type="button" (click)="sendNotification(NOTIFICATION_TYPE.ATHLETE_REQUEST, user, account, account)" *ngIf="userService.canAthleteRequestBeSent(user, account)" class="btn btn-sm btn-primary mr-2" ngbTooltip="Richiesta segui atleta" placement="top"><span class="fa fa-user-plus standard-action-icon-btn-lg mr-1"></span><span>Collega Atleta</span></button>
+                                <button type="button" (click)="cancelAthleteCoachLink(NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK, user, account, false)" *ngIf="userService.canCancelCoachToAthleteLinkBeSent(user, account)" class="btn btn-sm btn-danger mr-2" ngbTooltip="Elimina collegamento con Atleta" placement="top"><span class="fa fa-times-circle standard-action-icon-btn-lg mr-1"></span><span>Scollega Atleta</span></button>
                                 <button type="button" (click)="cancelAthleteCoachLinkRequest(NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK_REQUEST, user)" *ngIf="userService.canCancelCoachToAthleteLinkRequestBeSent(user, account)" class="btn btn-sm btn-warning mr-2" ngbTooltip="Elimina richiesta di collegamento con Atleta" placement="top"><span class="fa fa-times-circle standard-action-icon-btn-lg mr-1"></span><span>Elimina Richiesta a Atleta</span></button>
                                 <!-- <a class="btn btn-primary btn-sm ml-2 disabled"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="small-action-icon"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg> Message</a> -->
                             </div>
@@ -117,11 +117,11 @@
                         <div class="card-body" *ngIf="user.contacts.socials != null && (user.contacts.socials.facebook || user.contacts.socials.twitter || user.contacts.socials.instagram || user.contacts.socials.linkedin || user.contacts.socials.other)">
                             <h6 class="h6 card-title">Social</h6>
                             <ul class="list-unstyled mb-0">
-                                <li class="mb-1" [hidden]="user.contacts.socials.facebook == null || user.contacts.socials.facebook == ''"><span class="fa fa-facebook fa-fw mr-1"></span> <a href="{{user.contacts.socials.facebook}}" target="blank">Facebook</a></li>
-                                <li class="mb-1" [hidden]="user.contacts.socials.twitter == null || user.contacts.socials.twitter == ''"><span class="fa fa-twitter fa-fw mr-1"></span> <a href="{{user.contacts.socials.twitter}}" target="blank">Twitter</a></li>
-                                <li class="mb-1" [hidden]="user.contacts.socials.instagram == null || user.contacts.socials.instagram == ''"><span class="fa fa-instagram fa-fw mr-1"></span> <a href="{{user.contacts.socials.instagram}}" target="blank">Instagram</a></li>
-                                <li class="mb-1" [hidden]="user.contacts.socials.linkedin == null || user.contacts.socials.linkedin == ''"><span class="fa fa-linkedin fa-fw mr-1"></span> <a href="{{user.contacts.socials.linkedin}}" target="blank">LinkedIn</a></li>
-                                <li class="mb-1" [hidden]="user.contacts.socials.other == null || user.contacts.socials.other == ''"><span class="fa fa-globe fa-fw mr-1"></span> <a href="{{user.contacts.socials.other}}" target="blank">Altro</a></li>
+                                <li class="mb-1" [hidden]="user.contacts.socials.facebook == null || user.contacts.socials.facebook == ''"><span class="fa fa-facebook fa-fw mr-1"></span> <a href="{{user.contacts.socials.facebook}}" target="blank" class="fa-description">Facebook</a></li>
+                                <li class="mb-1" [hidden]="user.contacts.socials.twitter == null || user.contacts.socials.twitter == ''"><span class="fa fa-twitter fa-fw mr-1"></span> <a href="{{user.contacts.socials.twitter}}" target="blank" class="fa-description">Twitter</a></li>
+                                <li class="mb-1" [hidden]="user.contacts.socials.instagram == null || user.contacts.socials.instagram == ''"><span class="fa fa-instagram fa-fw mr-1"></span> <a href="{{user.contacts.socials.instagram}}" target="blank" class="fa-description">Instagram</a></li>
+                                <li class="mb-1" [hidden]="user.contacts.socials.linkedin == null || user.contacts.socials.linkedin == ''"><span class="fa fa-linkedin fa-fw mr-1"></span> <a href="{{user.contacts.socials.linkedin}}" target="blank" class="fa-description">LinkedIn</a></li>
+                                <li class="mb-1" [hidden]="user.contacts.socials.other == null || user.contacts.socials.other == ''"><span class="fa fa-globe fa-fw mr-1"></span> <a href="{{user.contacts.socials.other}}" target="blank" class="fa-description">Altro</a></li>
                             </ul>
                         </div>
                     </div>
@@ -151,7 +151,7 @@
                         </div>
                         <div class="card-body collapse show" id="activitiesContainer">
                             <div class="row m-0" *ngIf="activityList.length==0">
-                                <div class="px-2 py-4">Nessuna attività presente</div>
+                                <div class="col-12 alert-info p-3"><span>Nessuna attività presente</span></div>
                             </div>
 
                             <div class="activity-container" *ngFor="let activity of activityList; index as activityIndex; last as bLast">
@@ -215,7 +215,7 @@
                         </div>
                         <div class="card-body collapse show" id="prContainer">
                             <div class="row m-0" *ngIf="personalRecordList.length==0 || areAllPrsHidden()">
-                                <div class="px-2 py-4">Nessun Personal Record presente</div>
+                                <div class="col-12 alert-info p-3"><span>Nessun Personal Record presente</span></div>
                             </div>
 
                             <ul class="list-group border font-size-8">
@@ -264,11 +264,13 @@
                             <h5 class="card-title mb-0">Profilo Utente</h5>
                         </div>
                         <div class="list-group list-group-flush" role="tablist">
-                            <a class="list-group-item list-group-item-action" data-toggle="list" href="#account" role="tab" aria-selected="false" 
+                            <a class="list-group-item list-group-item-action" data-toggle="list" role="tab" aria-selected="false" 
                                [ngClass]="{'active': currentProfileSection == USERPROFILE_SECTIONS.USER_INFORMATIONS}" (click)="currentProfileSection = USERPROFILE_SECTIONS.USER_INFORMATIONS">Informazioni Utente</a>
-                            <a class="list-group-item list-group-item-action" data-toggle="list" href="#password" role="tab" aria-selected="false" 
+                            <a class="list-group-item list-group-item-action" data-toggle="list" role="tab" aria-selected="false" 
                                [ngClass]="{'active': currentProfileSection == USERPROFILE_SECTIONS.PERSONAL_RECORDS}" (click)="currentProfileSection = USERPROFILE_SECTIONS.PERSONAL_RECORDS">Personal Records</a>
-                            <a class="list-group-item list-group-item-action" data-toggle="list" href="#password" role="tab" aria-selected="false" 
+                            <a class="list-group-item list-group-item-action" data-toggle="list" role="tab" aria-selected="false" 
+                               [ngClass]="{'active': currentProfileSection == USERPROFILE_SECTIONS.LINKS}" (click)="currentProfileSection = USERPROFILE_SECTIONS.LINKS">Collegamenti</a>
+                            <a class="list-group-item list-group-item-action" data-toggle="list" role="tab" aria-selected="false" 
                                [ngClass]="{'active': currentProfileSection == USERPROFILE_SECTIONS.SETTINGS}" (click)="currentProfileSection = USERPROFILE_SECTIONS.SETTINGS">Impostazioni</a>
                         </div>
                     </div>
@@ -539,6 +541,7 @@
 
                                         <div class="form-group col-12 d-flex p-0 mt-3 mb-0" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
                                             <button type="submit" class="btn btn-primary ml-auto"><span *ngIf="bLoading" class="spinner-border spinner-border-sm mr-1"></span> Aggiorna</button>
+                                            <button type="button" (mousedown)="resetUserForm()" class="btn btn-secondary ml-2">Annulla</button>
                                         </div>
                                     </div>
                                 </fieldset>
@@ -554,7 +557,7 @@
                                     <div class="col-12 p-0"><h6 class="h6 text-success">Personal Records</h6></div>
                                     <div class="form-row form-row-inner col-12 border border-success">
                                         <div class="col-12 form-row px-0 m-0" *ngIf="personalRecordList.length==0">
-                                            <div class="px-0 py-4">Nessun Personal Record presente</div>
+                                            <div class="col-12 alert-info p-3"><span>Nessun Personal Record presente</span></div>
                                         </div>
                                         <div class="pr-container col-12 form-row position-relative p-0 m-0 mb-3" *ngFor="let pr of filterVisiblePR(); index as prIndex; first as prFirst">
                                             <div class="pr-header col-12 d-flex flex-row align-items-baseline px-3 py-3 m-0">
@@ -587,7 +590,7 @@
                                                         <input type="text" [(ngModel)]="pr.exercise.description" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
                                                             id="description_{{prIndex}}" name="description_{{prIndex}}" placeholder="Descrizione esercizio..." disabled>
                                                     </div> -->
-                                                    <div class="col-12 col-sm-10 col-xl-5 form-group px-0 px-lg-1">
+                                                    <div class="col-8 col-sm-10 col-xl-5 form-group px-0 px-lg-1">
                                                         <label for="oneRepPR_{{prIndex}}" class="col-form-label col-form-label-sm text-muted">1RM</label>
                                                         <div class="d-flex">
                                                             <input type="number" min="0" [(ngModel)]="pr.oneRepPR.weight" class="form-control form-control-sm w-100" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
@@ -599,19 +602,19 @@
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div class="col-12 col-sm-2 col-xl-1 form-group d-flex flex-column align-items-center pl-1 pr-0">
+                                                    <div class="col-4 col-sm-2 col-xl-1 form-group d-flex flex-column align-items-center pl-1 pr-0">
                                                         <label for="public_{{prIndex}}" class="col-form-label col-form-label-sm">Pubblico</label>
                                                         <input type="checkbox" [(ngModel)]="pr.bPublic" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"
                                                             id="public_{{prIndex}}" name="public_{{prIndex}}">
                                                     </div>
                                                 </div>
                                                 <div class="pl-lg-3 pr-0 mt-1 text-right ml-auto" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
-                                                    <small class="v-hidden v-sm-initial">Azioni</small>
-                                                    <div class="d-flex flex-column align-items-center align-items-lg-end justify-content-end">
+                                                    <small class="v-hidden v-initial-sm">Azioni</small>
+                                                    <div class="d-flex flex-column flex-xl-row align-items-center align-items-lg-end justify-content-end">
                                                         <div class="image-button tex-center" ngbTooltip="Copia personal record" placement="top" (click)="copyPR(prIndex)"><img src="assets/icons/actions/copy.svg" style="width:15px; height:auto;"></div>
-                                                        <div class="mt-1 image-button tex-center" ngbTooltip="Incolla personal record" placement="top" (click)="pastePR(prIndex)"><img src="assets/icons/actions/contract.svg" style="width:15px; height:auto;"></div>
-                                                        <div class="mt-1 image-button tex-center" ngbTooltip="Reset personal record" placement="top" (click)="resetPR(prIndex)"><img src="assets/icons/actions/return.svg" style="width:15px; height:auto;"></div>
-                                                        <div class="mt-1 image-button tex-center" ngbTooltip="Elimina personal record" placement="top" (click)="deletePR(prIndex)"><img src="assets/icons/actions/garbage-can.svg" style="width:15px; height:auto;"></div>
+                                                        <div class="mt-1 ml-xl-1 mt-xl-0 image-button tex-center" ngbTooltip="Incolla personal record" placement="top" (click)="pastePR(prIndex)"><img src="assets/icons/actions/contract.svg" style="width:15px; height:auto;"></div>
+                                                        <div class="mt-1 ml-xl-1 mt-xl-0 image-button tex-center" ngbTooltip="Reset personal record" placement="top" (click)="resetPR(prIndex)"><img src="assets/icons/actions/return.svg" style="width:15px; height:auto;"></div>
+                                                        <div class="mt-1 ml-xl-1 mt-xl-0 image-button tex-center" ngbTooltip="Elimina personal record" placement="top" (click)="deletePR(prIndex)"><img src="assets/icons/actions/garbage-can.svg" style="width:15px; height:auto;"></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -707,8 +710,69 @@
 
                                 <div class="form-group col-12 d-flex p-0 mt-3 mb-0" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
                                     <button type="submit" class="btn btn-primary ml-auto" (click)="onSubmitPersonaRecords()" [disabled]="!isPersonalRecordFormValid()"><span *ngIf="bLoading" class="spinner-border spinner-border-sm mr-1"></span> Aggiorna</button>
+                                    <button type="button" (mousedown)="resetPRForm()" class="btn btn-secondary ml-2">Annulla</button>
                                 </div>
                             </fieldset>
+                        </div>
+                    </div>
+
+                     <!-- LINKS -->
+                     <div *ngIf="currentProfileSection == USERPROFILE_SECTIONS.LINKS">
+                         <!-- Links -->
+                        <div class="card">
+                            <div class="row p-3 m-0" id="linksContainer">
+                                
+                                <div class="col-12 row m-0">
+                                    <div class="col-12 p-0"><h6 class="h6 text-dark">Collegamenti</h6></div>
+                                    <div [hidden]="user.coaches.length!=0 || user.athletes.length!=0" class="col-12 alert-info p-3"><span>Nessuna Collegamento</span></div>
+                                    <!-- Coaches -->
+                                    <div class="col-12 media border border-primary bg-custom-cyan border round-3 p-3" *ngFor="let link of user.coaches; index as linkIndex; first as bFirst; last as bLast" [ngClass]="{'mb-3': !bLast}">
+                                        <img class="avatar-lg img-fluid rounded-circle mr-3" src="{{link.profilePicture ? (baseServerUrl+link.profilePicture) : 'assets/icons/misc/user.svg'}}" alt="{{link.name}} {{link.surname}}">
+                                        <div class="media-body">
+                                            <div>
+                                                <h6 class="h6 cursor-pointer my-0" (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.USERS, link._id)">{{link.name}} {{link.surname}} <span class="badge badge-primary">Coach</span></h6>
+                                                <small>{{link.biography}}</small>
+                                            </div>
+                                            <div class="mt-3">
+                                                <button type="button" (click)="cancelAthleteCoachLink(NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK, link, userAccount, true)" *ngIf="userService.canCancelAthleteToCoachLinkBeSent(link, userAccount)" class="btn btn-sm btn-danger mr-2" ngbTooltip="Elimina collegamento con Coach" placement="top"><span class="fa fa-times-circle standard-action-icon-btn-lg mr-1"></span><span>Scollega Coach</span></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Athletes -->
+                                    <div class="col-12 media border border-secondary bg-custom-lightgray border round-3 p-3 mt-3" *ngFor="let link of user.athletes; index as linkIndex; first as bFirst; last as bLast">
+                                        <img class="avatar-lg img-fluid rounded-circle mr-3" src="{{link.profilePicture ? (baseServerUrl+link.profilePicture) : 'assets/icons/misc/user.svg'}}" alt="{{link.name}} {{link.surname}}">
+                                        <div class="media-body">
+                                            <div>
+                                                <h6 class="h6 cursor-pointer my-0" (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.USERS, link._id)">{{link.name}} {{link.surname}} <span class="badge badge-secondary">Atleta</span></h6>
+                                                <small>{{link.biography}}</small>
+                                            </div>
+                                            <div class="mt-3">
+                                                <button type="button" (click)="cancelAthleteCoachLink(NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK, link, userAccount, true)" *ngIf="userService.canCancelCoachToAthleteLinkBeSent(link, userAccount)" class="btn btn-sm btn-danger mr-2" ngbTooltip="Elimina collegamento con Atleta" placement="top"><span class="fa fa-times-circle standard-action-icon-btn-lg mr-1"></span><span>Scollega Atleta</span></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Notifications (only for admin or if the user is also the currentuser) -->
+                        <div class="card mt-3" *ngIf="account.role == Role.Admin || (account.user._id == user._id)">
+                            <div class="row p-3 m-0" id="notificationsContainer">
+                                <div class="col-12 row m-0">
+                                    <div class="col-12 p-0"><h6 class="h6 text-dark">Notifiche (richiesta atleta/coach)</h6></div>
+                                    <div [hidden]="notificationList.length!=0" class="w-100 alert-info p-3"><span>Nessuna notifica</span></div>
+                                    <div class="col-12 d-flex font-size-md-8 border round-3 p-0" [ngClass]="{'mb-3': !bLast}" *ngFor="let elem of notificationList; index as notificationIndex">
+                                        <div class="row w-100 d-flex align-items-center p-3 m-0">
+                                            <div class="col-12 col-md-6 col-xl-4 p-0"><div [innerHTML]="elem.message"></div></div>
+                                            <div class="col-12 col-md-6 col-xl-4 p-0 truncate-fullwidth"><span>{{elem.from.name != null ? elem.from.name : ''}} {{elem.from.surname != null ? elem.from.surname : elem.from}}</span></div>
+                                            <div class="col-12 col-xl-4 p-0 truncate-fullwidth"><span>{{elem.creationDate | date:'HH:mm:ss - dd/MM/yyyy'}}</span></div>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-end px-2">
+                                            <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.COACH_REQUEST || elem.type == NOTIFICATION_TYPE.ATHLETE_REQUEST)" (click)="acceptRequest(elem)" class="ml-2 image-button" ngbTooltip="Accetta Richiesta" placement="left"><img src="assets/icons/actions/confirm.svg" style="width:20px; height:auto;"></div>
+                                            <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.COACH_REQUEST || elem.type == NOTIFICATION_TYPE.ATHLETE_REQUEST)" (click)="refuseRequest(elem)" class="ml-2 image-button" ngbTooltip="Rifiuta Richiesta" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
@@ -756,6 +820,7 @@
 
                                         <div class="form-group col-12 d-flex p-0 mt-3 mb-0">
                                             <button type="submit" class="btn btn-primary ml-auto"><span *ngIf="bLoading" class="spinner-border spinner-border-sm mr-1"></span> Aggiorna</button>
+                                            <button type="button" (mousedown)="resetSettingsForm()" class="btn btn-secondary ml-2">Annulla</button>
                                         </div>
                                     </div>
                                 </fieldset>

@@ -27,8 +27,9 @@ export class UsersComponent implements OnInit {
   public account: Account;
   public Role = Role;
   public sortListStatus: any;
-  private currentSortField: any;
   public NOTIFICATION_TYPE = NOTIFICATION_TYPE;
+  public baseServerUrl = this.httpService.baseServerUrl;
+  private currentSortField: any;
   public bWindowOverMd: boolean;
   private lastWindowWidth: number;
   private triggerWidth: number = 767.98;
