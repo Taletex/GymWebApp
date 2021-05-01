@@ -6,7 +6,7 @@ const cors = require('cors');
 const fs = require('fs');
 const errorHandler = require('src/_middleware/error-handler');
 const _ = require('lodash');
-const fileDirPath = "/files";
+const fileManager = require('src/_helpers/fileManager');
 
 /* EXPRESS INITIALIZATION */
 // create express app
@@ -47,9 +47,9 @@ io.on('connection', (socket) => {
 
 
 // Serve all static files  inside files directory.
-if (!fs.existsSync(fileDirPath))
-    fs.mkdirSync(fileDirPath);
-app.use(fileDirPath, express.static(__dirname + fileDirPath));
+if (!fs.existsSync(fileManager.fileBaseDir))
+    fs.mkdirSync(fileManager.fileBaseDir);
+app.use(fileManager.fileBaseDir, express.static(__dirname + fileManager.fileBaseDir));
 
 /* ROUTES INITIALIZATION */
 app.get('/', (req, res) => { res.json({ "message": "Welcome to GymWebApp database application." }); });

@@ -1,8 +1,8 @@
 const { Exercise } = require('src/exercises/exercise.model.js');
 const { User } = require('src/users/user.model.js')
+const fileManager = require('src/_helpers/fileManager');
 const _ = require('lodash');
 const fs = require('fs');
-var fileBaseDir = "./files/images";
 
 module.exports = () => {
 
@@ -158,12 +158,10 @@ module.exports = () => {
         }
 
         // if exercise images have been updated, then save them replacing the existing ones
-        let filePaths;
-        let imagePromises;
         if (req.body.bNewImages) {
-            let fileDir = fileBaseDir + "/" + req.params._id;
-            if (!fs.existsSync(fileBaseDir))
-                fs.mkdirSync(fileBaseDir);
+            let fileDir = fileManager.imagesBaseDir + "/" + req.params._id;
+            if (!fs.existsSync(fileManager.imagesBaseDir))
+                fs.mkdirSync(fileManager.imagesBaseDir);
             if (!fs.existsSync(fileDir)) {
                 fs.mkdirSync(fileDir);
             } 
@@ -227,7 +225,7 @@ module.exports = () => {
                 }
 
                 // delete image folder
-                let fileDir = fileBaseDir + "/" + req.params._id;
+                let fileDir = fileManager.imagesBaseDir + "/" + req.params._id;
                 if (fs.existsSync(fileDir)) {
                     fs.rmdirSync(fileDir, { recursive: true });
                 } 

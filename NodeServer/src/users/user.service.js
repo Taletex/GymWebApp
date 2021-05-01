@@ -1,5 +1,7 @@
 const { User, Notification } = require('src/users/user.model.js');
 const { NOTIFICATION_ONLY_DISMISS, NOTIFICATION_TYPE } = require('src/_helpers/enum.js');
+const fileManager = require('src/_helpers/fileManager');
+const fs = require('fs');
 const _ = require('lodash');
 
 /** REST CALLBACKS **/
@@ -139,6 +141,37 @@ module.exports = (io, clientSocketList) => {
             });
     };
 
+
+    async function saveProfilePicture(userId, profilePicture, bNewProfilePicture) {
+        
+        return new Promise((resolve, reject) => {
+            // if it's a new image, than upload it and retrieve its path
+            if (profilePicture && bNewProfilePicture) {  
+                let fileDir = fileManager.usersImagesBaseDir + "/" + userId;
+                let filePath = fileDir + "/pp_" + userId + ".jpeg";
+                
+                // If folders does not exist, create them
+                if (!fs.existsSync(fileManager.imagesBaseDir))
+                    fs.mkdirSync(fileManager.imagesBaseDir);
+                if (!fs.existsSync(fileManager.usersImagesBaseDir))
+                    fs.mkdirSync(fileManager.usersImagesBaseDir);
+                if (!fs.existsSync(fileDir))
+                    fs.mkdirSync(fileDir);
+
+                // create the image and save it
+                let src = profilePicture.replace(/(data:image)(.)*(;base64,)/, "");
+                fs.writeFileSync(filePath, src, 'base64');
+                resolve(filePath.replace("./", "/"));
+            } 
+            // else, it is an old yet uploaded image, so retrieve only its path
+            else {
+                resolve(profilePicture);
+            }
+        })
+
+    }
+
+
     // Update a user identified by the id in the request
     function updateUser(req, res, next) {
         // Validate Request
@@ -148,53 +181,65 @@ module.exports = (io, clientSocketList) => {
             });
         }
 
-        // Find user and update it with the request body
-        User.findOneAndUpdate({ _id: req.params._id }, {
-            name: req.body.name,
-            surname: req.body.surname,
-            dateOfBirth: req.body.dateOfBirth,
-            placeOfBirth: req.body.placeOfBirth,
-            sex: req.body.sex,
-            userType: req.body.userType,
-            bodyWeight: req.body.bodyWeight,
-            yearsOfExperience: req.body.yearsOfExperience,
-            disciplines: req.body.disciplines,
-            gyms: req.body.gyms,
-            coaches: req.body.coaches,
-            athletes: req.body.athletes,
-            personalRecords: req.body.personalRecords,
-            contacts: req.body.contacts,
-            residence: req.body.residence,
-            biography: req.body.biography,
-            profilePicture: req.body.profilePicture,
-            notifications: _.orderBy(req.body.notifications, ['bConsumed', 'creationDate'], ['asc', 'desc']),
-            options: req.body.settings
-        }, { new: true })
-            .then(user => {
-                if (!user) {
-                    return res.status(404).send({
-                        message: "User not found with id " + req.params._id
-                    });
-                }
+        // Save new profile picture if there is one, then update user
+        saveProfilePicture(req.params._id, req.body.profilePicture, req.body.bNewProfilePicture)
+            .then((data) => {
+                req.body.profilePicture = data;
 
-                // Returns the user update by finding it in the database
-                User.find({ _id: user._id }).populate({path: 'personalRecords', populate: {path: 'exercise'}})
-                                            .populate({path: 'notifications', populate: {path: 'from'}})
-                                            .populate({path: 'notifications', populate: {path: 'destination'}})
-                                            .populate('coaches').populate('athletes')
-                    .then(users => {
-                        res.send(users[0]);
-                    })
-            }).catch(err => {
-                if (err.kind === 'ObjectId') {
-                    return res.status(404).send({
-                        message: "User not found with id " + req.params._id
-                    });
-                }
+                // Find user and update it with the request body
+                User.findOneAndUpdate({ _id: req.params._id }, {
+                    name: req.body.name,
+                    surname: req.body.surname,
+                    dateOfBirth: req.body.dateOfBirth,
+                    placeOfBirth: req.body.placeOfBirth,
+                    sex: req.body.sex,
+                    userType: req.body.userType,
+                    bodyWeight: req.body.bodyWeight,
+                    yearsOfExperience: req.body.yearsOfExperience,
+                    disciplines: req.body.disciplines,
+                    gyms: req.body.gyms,
+                    coaches: req.body.coaches,
+                    athletes: req.body.athletes,
+                    personalRecords: req.body.personalRecords,
+                    contacts: req.body.contacts,
+                    residence: req.body.residence,
+                    biography: req.body.biography,
+                    profilePicture: req.body.profilePicture,
+                    notifications: _.orderBy(req.body.notifications, ['bConsumed', 'creationDate'], ['asc', 'desc']),
+                    options: req.body.settings
+                }, { new: true })
+                    .then(user => {
+                        if (!user) {
+                            return res.status(404).send({
+                                message: "User not found with id " + req.params._id
+                            });
+                        }
+
+                        // Returns the user update by finding it in the database
+                        User.find({ _id: user._id }).populate({path: 'personalRecords', populate: {path: 'exercise'}})
+                                                    .populate({path: 'notifications', populate: {path: 'from'}})
+                                                    .populate({path: 'notifications', populate: {path: 'destination'}})
+                                                    .populate('coaches').populate('athletes')
+                            .then(users => {
+                                res.send(users[0]);
+                            })
+                    }).catch(err => {
+                        if (err.kind === 'ObjectId') {
+                            return res.status(404).send({
+                                message: "User not found with id " + req.params._id
+                            });
+                        }
+                        return res.status(500).send({
+                            message: "Error updating user with id " + req.params._id
+                        });
+                    });  
+
+            }).catch((err) => {
                 return res.status(500).send({
-                    message: "Error updating user with id " + req.params._id
+                    message: "Error saving profile picture",
+                    err: err
                 });
-            });
+            })
     };
 
     // Delete a user with the specified id in the request

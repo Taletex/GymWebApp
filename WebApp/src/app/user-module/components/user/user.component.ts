@@ -114,6 +114,7 @@ export class UserComponent implements OnInit {
 
   initUserInformations(data: any) {
     this.user = data;
+    this.user.bNewProfilePicture = false;
     this.userAccount.user = this.user;
     this.notificationList = this.user.notifications.filter((n) => { return (n.type == NOTIFICATION_TYPE.COACH_REQUEST || n.type == NOTIFICATION_TYPE.ATHLETE_REQUEST) && !n.bConsumed });
   }
@@ -135,7 +136,6 @@ export class UserComponent implements OnInit {
           this.user.biography = "questa è la mia biografia fottesega tutti quanti ciaoooo";
           this.user.residence = new Residence("Italia", "Catania", "95018", "Riposto", "Via Etna 83");
           this.user.placeOfBirth = new Residence("Italia", "Catania", "95018", "Riposto", "Via Etna 83");
-          this.user.profilePicture = "/files/images/users/60508d3d2f05793f18fef46d/linkeding_photo.jpg"
           this.user.gyms = ["Kobra Kai Fitness", "Sport Meeting Giarree asdasd "];
           this.user.contacts = new Contacts("martinafortuna2002@gmail.com", "3496799999", new Socials("https://angular.io/guide/router#router-links", "CIAO2", "CIAO3", "CIAO4", "CIAO5"));
           this.user.settings = new UserSettings();
@@ -161,7 +161,7 @@ export class UserComponent implements OnInit {
 
     // Init user form
     this.userForm = this.formBuilder.group({
-      profilePicture: [],
+      profilePicture: [this.user.profilePicture || ""],
       biography: [this.user.biography],
       name: [this.user.name, Validators.required],
       surname: [this.user.surname, Validators.required],
@@ -266,6 +266,7 @@ export class UserComponent implements OnInit {
           this.userForm.patchValue({
             profilePicture: e.target.result
           });
+          this.user.bNewProfilePicture = true;
           this.userForm.controls.profilePicture.markAsDirty();
           document.getElementById("imgUploadTitle").innerHTML = file.name;
           console.log("Uploaded file", file);
@@ -278,6 +279,8 @@ export class UserComponent implements OnInit {
 
   resetInputFile() {
     this.fu.profilePicture.reset();
+    this.userForm.value.profilePicture = this.user.profilePicture;
+    this.user.bNewProfilePicture = false;
     (document.getElementById("profilePictureFileInput") as HTMLInputElement).value = "";
     document.getElementById("imgUploadTitle").innerHTML = "";
   }
@@ -286,7 +289,7 @@ export class UserComponent implements OnInit {
     let exceptions = ['pobState', 'pobProvince', 'pobCap', 'pobCity', 'pobAddress', 'socialsFacebook', 'socialsTwitter', 'socialsInstagram', 'socialsLinkedin', 'socialsOther', 
                       'residenceState', 'residenceProvince', 'residenceCap', 'residenceCity', 'residenceAddress'];
     for (const [key, value] of Object.entries(this.userForm.value)) {
-      if (!exceptions.includes(key) && this.user[key] != undefined) {
+      if (!exceptions.includes(key)) {
           this.user[key] = value;
       }
     }
@@ -583,9 +586,7 @@ export class UserComponent implements OnInit {
   assignFormOptionsValueToUser() {
 
     for (const [key, value] of Object.entries(this.settingsForm.value)) {
-      if (this.user[key] != undefined) {
-          this.user[key] = value;
-      }
+        this.user[key] = value;
     }
   }
 
