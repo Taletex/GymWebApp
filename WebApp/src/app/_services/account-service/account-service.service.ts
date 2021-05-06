@@ -8,6 +8,7 @@ import * as _ from "lodash";
 
 import { environment } from '@environments/environment';
 import { Account } from '@app/_models';
+import { User } from '@app/_models/training-model';
 
 const baseUrl = `${environment.apiUrl}/accounts`;
 
@@ -46,6 +47,13 @@ export class AccountService {
 
     public get accountValue(): Account {
         return this.accountSubject.value;
+    }
+
+    public updateUserValue(user: User) {
+        if(user._id == this.accountSubject.value.user._id) {
+            this.accountSubject.value.user = user;
+            this.accountSubject.next(_.cloneDeep(this.accountSubject.value));
+        }
     }
 
     login(email: string, password: string) {

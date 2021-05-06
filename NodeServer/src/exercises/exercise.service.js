@@ -170,7 +170,7 @@ module.exports = () => {
             Promise.all(saveImagesResult).then((data) => {
                 req.body.images = data;
 
-                clearImagesDirectory(fileDir, data);
+                fileManager.clearImagesDirectory(fileDir, data);
                 findOneAndUpdateExercise(req, res);
             }).catch((err) => {
                 return res.status(500).send({
@@ -264,26 +264,6 @@ module.exports = () => {
             
         }
         else return null;
-    }
-
-    async function clearImagesDirectory(dirPath, images) {
-        return new Promise((resolve, reject) => {
-            fs.readdir(dirPath, (err, files) => {
-                if (err) {
-                    console.log(err);
-                    reject(err);
-                } else {
-                    files.forEach(file => {
-                        const fileDir = dirPath + "/" + file;
-                
-                        if (!images.includes(fileDir.replace("./", "/"))) {
-                            fs.unlinkSync(fileDir);
-                        }
-                    });
-                }
-                resolve('success');
-            });
-        })
     }
 
 }

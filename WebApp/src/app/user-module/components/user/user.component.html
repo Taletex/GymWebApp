@@ -60,15 +60,15 @@
                         <div class="card-body" *ngIf="(user.residence.city && user.residence.state) || (user.gyms != null && user.gyms.length > 0) || (user.placeOfBirth != null && (user.placeOfBirth.city != null && user.placeOfBirth.city != '') && (user.placeOfBirth.state != null && user.placeOfBirth.state != ''))">
                             <h5 class="h6 card-title">Luoghi</h5>
                             <ul class="list-unstyled mb-0">
-                                <li class="d-flex align-items-center mb-1" *ngIf="(user.residence.city != null && user.residence.city != '') && (user.residence.state != null && user.residence.state != '')">
+                                <li class="d-flex align-items-center mb-1" [hidden]="!(user.residence.city != null && user.residence.city != '') && (user.residence.state != null && user.residence.state != '')">
                                     <span class="fa fa-fw fa-home font-size-12 mr-1"></span>
                                     <span class="fa-description">Vive a {{user.residence.city || ''}} ({{user.residence.state || ''}})</span>    
                                 </li>
-                                <li class="d-flex align-items-center mb-1" *ngIf="user.placeOfBirth != null && (user.placeOfBirth.city != null && user.placeOfBirth.city != '') && (user.placeOfBirth.state != null && user.placeOfBirth.state != '')">
+                                <li class="d-flex align-items-center mb-1" [hidden]="user.placeOfBirth != null && (user.placeOfBirth.city != null && user.placeOfBirth.city != '') && (user.placeOfBirth.state != null && user.placeOfBirth.state != '')">
                                     <span class="fa fa-fw fa-birthday-cake mr-1"></span>
                                     <span class="fa-description">Nato a {{user.placeOfBirth.city || ''}} {{user.placeOfBirth.state ? ('('+user.placeOfBirth.state+')') : ''}}</span>    
                                 </li>
-                                <li class="d-flex align-items-center mb-1" *ngIf="user.gyms != null && user.gyms.length > 0">
+                                <li class="d-flex align-items-center mb-1" [hidden]="user.gyms != null && user.gyms.length > 0">
                                     <span class="fa fa-fw fa-map-marker mr-1"></span>
                                     <span class="fa-description">Frequenta&nbsp;<span *ngFor="let gym of user.gyms; last as bLast">{{gym}}<span [hidden]="bLast">,&nbsp;</span></span></span>
                                 </li>
@@ -79,11 +79,11 @@
                         <div class="card-body" *ngIf="(user.contacts.email || user.contacts.telephone)">
                             <h5 class="h6 card-title">Contatti</h5>
                             <ul class="list-unstyled mb-0">
-                                <li class="d-flex align-items-center mb-1" *ngIf="user.contacts.email">
+                                <li class="d-flex align-items-center mb-1" [hiden]="!user.contacts.email">
                                     <span class="fa fa-fw fa-envelope mr-1"></span>
                                     <span class="fa-description">Email {{user.contacts.email}}</span>    
                                 </li>
-                                <li class="d-flex align-items-center mb-1" *ngIf="user.contacts.telephone">
+                                <li class="d-flex align-items-center mb-1" [hidden]="!user.contacts.telephone">
                                     <span class="fa fa-fw fa-phone-square mr-1"></span>
                                     <span class="fa-description">Telefono {{user.contacts.telephone}}</span>    
                                 </li>
@@ -94,19 +94,19 @@
                         <div class="card-body" *ngIf="(user.dateOfBirth || user.sex || user.bodyWeight || user.yearsOfExperience)">
                             <h5 class="h6 card-title">Altro</h5>
                             <ul class="list-unstyled mb-0">
-                                <li class="d-flex align-items-center mb-1" *ngIf="user.dateOfBirth">
+                                <li class="d-flex align-items-center mb-1" [hidden]="!user.dateOfBirth">
                                     <span class="fa fa-fw fa-birthday-cake mr-1"></span>
                                     <span class="fa-description">Nato il {{user.dateOfBirth | date:'dd/MM/yyyy' }}</span>    
                                 </li>
-                                <li class="d-flex align-items-center mb-1" *ngIf="user.sex">
+                                <li class="d-flex align-items-center mb-1" [hidden]="!user.sex">
                                     <span class="fa fa-fw fa-venus-mars mr-1"></span>
                                     <span class="fa-description">Genere {{user.sex == 'M' ? 'Uomo' : 'Donna'}}</span>    
                                 </li>
-                                <li class="d-flex align-items-center mb-1" *ngIf="user.bodyWeight">
+                                <li class="d-flex align-items-center mb-1" [hidden]="!user.bodyWeight">
                                     <span class="fa fa-fw fa-balance-scale mr-1"></span>
                                     <span class="fa-description">Peso {{user.bodyWeight}}kg</span>    
                                 </li>
-                                <li class="d-flex align-items-center mb-1" *ngIf="user.sex">
+                                <li class="d-flex align-items-center mb-1" [hidden]="!user.sex">
                                     <span class="fa fa-fw fa-universal-access mr-1"></span>
                                     <span class="fa-description">Esperienza {{user.yearsOfExperience}} anni</span>    
                                 </li>
@@ -218,7 +218,7 @@
                                 <div class="col-12 alert-info p-3"><span>Nessun Personal Record presente</span></div>
                             </div>
 
-                            <ul class="list-group border font-size-8">
+                            <ul class="list-group border font-size-md-8">
                                 <li class="list-group-item pr-container px-2" *ngFor="let pr of filterVisiblePR(); index as prIndex; first as prFirst">
                                     <div class="media-body px-2">
                                         <div class="font-size-md-8">
@@ -228,12 +228,12 @@
                                             <span [hidden]="!pr.exercise.description">{{pr.exercise.description}}</span>
                                         </div>
                                     </div>
-                                    <div class="border font-size-sm-7 py-2 px-0 mx-2">
+                                    <div class="border font-size-sm-7 py-2 px-0 mx-2" [hidden]="(filterVisiblePRSeries(pr)).length == 0">
                                         <div class="row m-0">
                                             <div class="col-5 col-sm-4 text-muted small px-2 px-sm-3">Serie&times;Rep Peso</div>
                                             <div class="col-3 col-sm-2 text-muted small px-2 px-sm-3"><span class="d-none d-xl-inline">Recupero</span><span class="d-xl-none">Rec</span></div>
                                             <!-- <div class="col-2 text-muted small px-2 px-sm-3">Verificato</div> -->
-                                            <div class="col-4 col-sm-2 text-muted small text-center px-2 px-sm-3"><span class="d-none d-xl-inline">Competizione</span><span class="d-xl-none">Comp</span></div>
+                                            <div class="col-4 col-sm-2 text-muted small text-center px-2 px-sm-3"><span class="d-none d-xl-inline">In Gara</span><span class="d-xl-none">Gara</span></div>
                                             <div class="d-none d-sm-block col-sm-4 text-muted small px-2 px-sm-3">Note</div>
                                         </div>
                                         <div class="row m-0" *ngFor="let elem of filterVisiblePRSeries(pr); first as seriesFirst; last as seriesLast; index as seriesIndex">
@@ -321,7 +321,7 @@
                                                 <label for="userName" class="col-form-label col-form-label-sm text-muted">Nome</label>
                                                 <input type="text" formControlName="name" required maxlength="30" class="form-control form-control-sm"
                                                     [ngClass]="{'is-invalid': userFormSubmitted && fu.name.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                                <div *ngIf="userFormSubmitted && fu.name.errors" class="invalid-feedback">
+                                                <div *ngIf="(userFormSubmitted && fu.name.errors)" class="invalid-feedback">
                                                     <div *ngIf="fu.name.errors.required">Nome obbligatorio</div>
                                                 </div>
                                             </div>
@@ -331,7 +331,7 @@
                                                 <label for="userSurname" class="col-form-label col-form-label-sm text-muted">Cognome</label>
                                                 <input type="text" formControlName="surname" maxlength="30" required class="form-control form-control-sm"
                                                     [ngClass]="{'is-invalid': userFormSubmitted && fu.surname.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                                <div *ngIf="userFormSubmitted && fu.surname.errors" class="invalid-feedback">
+                                                <div *ngIf="(userFormSubmitted && fu.surname.errors)" class="invalid-feedback">
                                                     <div *ngIf="fu.surname.errors.required">Cognome obbligatorio</div>
                                                 </div>
                                             </div>
@@ -393,7 +393,7 @@
                                                     <option [value]="'coach'">Coach</option>
                                                     <option [value]="'both'">Both</option>
                                                 </select>
-                                                <div *ngIf="userFormSubmitted && fu.userType.errors" class="invalid-feedback">
+                                                <div *ngIf="(userFormSubmitted && fu.userType.errors)" class="invalid-feedback">
                                                     <div *ngIf="fu.userType.errors.required">Tipo utente obbligatorio</div>
                                                 </div>
                                             </div>
@@ -460,7 +460,7 @@
                                                 <label for="userContactsEmail" class="col-form-label col-form-label-sm text-muted">Email</label>
                                                 <input type="email" formControlName="email" required maxlength="100" class="form-control form-control-sm"
                                                     [ngClass]="{'is-invalid': userFormSubmitted && fu.email.errors, 'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}"/>
-                                                <div *ngIf="userFormSubmitted && fu.email.errors" class="invalid-feedback">
+                                                <div *ngIf="(userFormSubmitted && fu.email.errors)" class="invalid-feedback">
                                                     <div *ngIf="fu.email.errors.email">Il campo email deve contenere un'email valida</div>
                                                 </div>
                                             </div>
@@ -608,7 +608,7 @@
                                                             id="public_{{prIndex}}" name="public_{{prIndex}}">
                                                     </div>
                                                 </div>
-                                                <div class="pl-lg-3 pr-0 mt-1 text-right ml-auto" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
+                                                <div class="pl-lg-3 pr-0 mt-1 text-right ml-auto">
                                                     <small class="v-hidden v-initial-sm">Azioni</small>
                                                     <div class="d-flex flex-column flex-xl-row align-items-center align-items-lg-end justify-content-end">
                                                         <div class="image-button tex-center" ngbTooltip="Copia personal record" placement="top" (click)="copyPR(prIndex)"><img src="assets/icons/actions/copy.svg" style="width:15px; height:auto;"></div>
@@ -652,8 +652,8 @@
                                                             </select>
                                                         </div>
                                                         <div class="d-flex flex-column justify-content-center">
-                                                            <div class="image-button ml-1" *ngIf="!(pageStatus[PAGES.USERS] == PAGEMODE.READONLY)" ngbTooltip="Applica misura a tutti i personal record" placement="top" (click)="setPRlistMeasure(elem.measure)"><img src="assets/icons/actions/copy-secondary.svg" style="width:15px; height:auto;"></div>
-                                                            <div class="image-button ml-1" [ngClass]="{'mb-3': !seriesFirst}" *ngIf="!(pageStatus[PAGES.USERS] == PAGEMODE.READONLY)" ngbTooltip="Applica misura a tutto il personal record" placement="top" (click)="setPRMeasure(pr, elem.measure)"><img src="assets/icons/actions/copy-secondary.svg" style="width:15px; height:auto;"></div>
+                                                            <div class="image-button ml-1" ngbTooltip="Applica misura a tutti i personal record" placement="top" (click)="setPRlistMeasure(elem.measure)"><img src="assets/icons/actions/copy-secondary.svg" style="width:15px; height:auto;"></div>
+                                                            <div class="image-button ml-1" [ngClass]="{'mb-3': !seriesFirst}" ngbTooltip="Applica misura a tutto il personal record" placement="top" (click)="setPRMeasure(pr, elem.measure)"><img src="assets/icons/actions/copy-secondary.svg" style="width:15px; height:auto;"></div>
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-md-6 col-lg-2 col-xl-1 form-group">
@@ -671,7 +671,7 @@
                                                     </div>
                                                     <div class="col-12 col-md-6 col-lg-2 col-xl-1 form-group d-flex flex-column justify-content-center align-items-center">
                                                         <label for="competition_{{prIndex}}_{{seriesIndex}}" class="col-form-label col-form-label-sm"
-                                                        [hidden]="!seriesFirst">Comp.</label>
+                                                        [hidden]="!seriesFirst">Gara</label>
                                                         <input type="checkbox" [(ngModel)]="elem.bCompetition" class="form-control form-control-sm" [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.USERS] == PAGEMODE.READONLY)}" 
                                                             id="competition_{{prIndex}}_{{seriesIndex}}" name="competition_{{prIndex}}_{{seriesIndex}}">
                                                     </div>
@@ -688,7 +688,7 @@
                                                             class="form-control form-control-sm" id="comment_{{prIndex}}_{{seriesIndex}}"
                                                             name="comment_{{prIndex}}_{{seriesIndex}}" placeholder="Commento...">
                                                     </div>
-                                                    <div class="col-12 col-lg-6 col-xl-2 form-group m-0 p-0 pl-2 text-right" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
+                                                    <div class="col-12 col-lg-6 col-xl-2 form-group m-0 p-0 pl-2 text-right">
                                                         <label class="col-form-label col-form-label-sm" [hidden]="!seriesFirst"
                                                             [hidden]="!seriesFirst">Azioni</label>
                                                         <div class="d-flex justify-content-end">
@@ -702,13 +702,13 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-row m-0 d-flex justify-content-start" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
+                                        <div class="form-row m-0 d-flex justify-content-start">
                                             <div class="btn btn-outline-info btn-sm-sm mt-2" (click)="pushPR()">Aggiungi PR +</div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="form-group col-12 d-flex p-0 mt-3 mb-0" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
+                                <div class="form-group col-12 d-flex p-0 mt-3 mb-0">
                                     <button type="submit" class="btn btn-primary ml-auto" (click)="onSubmitPersonaRecords()" [disabled]="!isPersonalRecordFormValid()"><span *ngIf="bLoading" class="spinner-border spinner-border-sm mr-1"></span> Aggiorna</button>
                                     <button type="button" (mousedown)="resetPRForm()" class="btn btn-secondary ml-2">Annulla</button>
                                 </div>
@@ -779,7 +779,7 @@
                     <!-- OPTIONS -->
                     <div class="card" *ngIf="currentProfileSection == USERPROFILE_SECTIONS.SETTINGS">
                         <div class="form-row p-3 m-0" id="optionsContainer">
-                            <form [formGroup]="settingsForm" (ngSubmit)="onSubmitOptions()" class="col-12 row m-0 p-0">
+                            <form [formGroup]="settingsForm" (ngSubmit)="onSubmitSettings()" class="col-12 row m-0 p-0">
                                 <fieldset class="col-12 row form-group m-0 p-0" [disabled]="bLoading">
                                     <div class="row col-12 m-0">
 
@@ -792,7 +792,7 @@
                                                 <select formControlName="showActivities" required class="form-control form-control-sm cursor-pointer" [ngClass]="{'is-invalid': settingsFormSubmitted && fo.showActivities.errors}">
                                                     <option *ngFor="let o of optionsVisibilityList | keyvalue" [value]="o.key" class="text-capitalize">{{o.value}}</option>
                                                 </select>
-                                                <div *ngIf="settingsFormSubmitted && fo.showActivities.errors" class="invalid-feedback">
+                                                <div *ngIf="(settingsFormSubmitted && fo.showActivities.errors)" class="invalid-feedback">
                                                     <div *ngIf="fo.showActivities.errors.required">Campo obbligatorio</div>
                                                 </div>
                                             </div>
@@ -802,7 +802,7 @@
                                                 <select formControlName="showPrivateInfo" required class="form-control form-control-sm cursor-pointer" [ngClass]="{'is-invalid': settingsFormSubmitted && fo.showPrivateInfo.errors}">
                                                     <option *ngFor="let o of optionsVisibilityList | keyvalue" [value]="o.key" class="text-capitalize">{{o.value}}</option>
                                                 </select>
-                                                <div *ngIf="settingsFormSubmitted && fo.showPrivateInfo.errors" class="invalid-feedback">
+                                                <div *ngIf="(settingsFormSubmitted && fo.showPrivateInfo.errors)" class="invalid-feedback">
                                                     <div *ngIf="fo.showPrivateInfo.errors.required">Campo obbligatorio</div>
                                                 </div>
                                             </div>
@@ -812,7 +812,7 @@
                                                 <select formControlName="showPublicInfo" required class="form-control form-control-sm cursor-pointer" [ngClass]="{'is-invalid': settingsFormSubmitted && fo.showPublicInfo.errors}">
                                                     <option *ngFor="let o of optionsVisibilityList | keyvalue" [value]="o.key" class="text-capitalize">{{o.value}}</option>
                                                 </select>
-                                                <div *ngIf="settingsFormSubmitted && fo.showPublicInfo.errors" class="invalid-feedback">
+                                                <div *ngIf="(settingsFormSubmitted && fo.showPublicInfo.errors)" class="invalid-feedback">
                                                     <div *ngIf="fo.showPublicInfo.errors.required">Campo obbligatorio</div>
                                                 </div>
                                             </div>

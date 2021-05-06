@@ -113,7 +113,7 @@ async function register(params, origin) {
         biography: "",
         profilePicture: "",
         notifications: [],
-        options: new UserSettings()
+        settings: new UserSettings()
     });
 
     const data = await user.save()
@@ -246,7 +246,7 @@ async function create(params) {
         biography: "",
         profilePicture: "",
         notifications: [],
-        options: new UserSettings()
+        settings: new UserSettings()
     });
 
     const data = await user.save()

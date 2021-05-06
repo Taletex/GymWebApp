@@ -133,12 +133,6 @@ export class UserComponent implements OnInit {
           // For Test Purpose
           this.activityList.push(new Activity('lasjd0123uasd', 'competition', 'Torneo Nazionale WPA', ['powerlifting'], new Federation("10892asjnd", "WPA"), 'nazionale', ['all'], ['all'], new Residence('italia', 'PA', '91000', 'alimena', 'via della piovra 5'), new Date("05/22/2021"), new Date("05/23/2021"), "Gara nazionale WPA 2021, utile per le qualificazioni ai mondiali", [this.user._id], ["50 euro"], [], ["prozis"], this.user._id, true));
           this.activityList.push(new Activity('123ouqnsidunq', 'competition', 'Torneo Nazionale FIPL', ['powerlifting'], new Federation("10892asjnd", "FIPL"), 'nazionale', ['all'], ['all'], new Residence('italia', 'MI', '92000','san zenone al lambro', 'via delle rose 123'), new Date("10/06/2021"), new Date("10/08/2021"), "Gara nazionale FIPL 2021, utile per le qualificazioni ai mondiali", [this.user._id], ["50 euro"], ["100 euro primo posto", "50 euro secondo posto"], ["prozis"], this.user._id, true));
-          this.user.biography = "questa è la mia biografia fottesega tutti quanti ciaoooo";
-          this.user.residence = new Residence("Italia", "Catania", "95018", "Riposto", "Via Etna 83");
-          this.user.placeOfBirth = new Residence("Italia", "Catania", "95018", "Riposto", "Via Etna 83");
-          this.user.gyms = ["Kobra Kai Fitness", "Sport Meeting Giarree asdasd "];
-          this.user.contacts = new Contacts("martinafortuna2002@gmail.com", "3496799999", new Socials("https://angular.io/guide/router#router-links", "CIAO2", "CIAO3", "CIAO4", "CIAO5"));
-          this.user.settings = new UserSettings();
           // end test
           this.postUserInitialization();
           this.initFormInitialValues();
@@ -193,9 +187,9 @@ export class UserComponent implements OnInit {
     });
 
     this.settingsForm = this.formBuilder.group({
-      showActivities: [this.user.settings.showActivities, Validators.required],
-      showPrivateInfo: [this.user.settings.showActivities, Validators.required],
-      showPublicInfo: [this.user.settings.showActivities, Validators.required]
+      showActivities: [this.user.settings.showActivities || 0, Validators.required],
+      showPrivateInfo: [this.user.settings.showPrivateInfo || 0, Validators.required],
+      showPublicInfo: [this.user.settings.showPublicInfo || 0, Validators.required]
     });
 
     this.personalRecordList = _.cloneDeep(this.user.personalRecords);   // Note: I'm using a simpler solution for handling personal record inputs because using dynamic forms required much time
@@ -293,16 +287,20 @@ export class UserComponent implements OnInit {
           this.user[key] = value;
       }
     }
+
+    // PoB
     this.user.placeOfBirth.state = this.userForm.value.pobState;
     this.user.placeOfBirth.province = this.userForm.value.pobProvince;
     this.user.placeOfBirth.cap = this.userForm.value.pobCap;
     this.user.placeOfBirth.city = this.userForm.value.pobCity;
     this.user.placeOfBirth.address = this.userForm.value.pobAddress;
+    // Contacts
     this.user.contacts.socials.facebook = this.userForm.value.socialsFacebook;
     this.user.contacts.socials.twitter = this.userForm.value.socialsTwitter;
     this.user.contacts.socials.instagram = this.userForm.value.socialsInstagram;
     this.user.contacts.socials.linkedin = this.userForm.value.socialsLinkedin;
     this.user.contacts.socials.other = this.userForm.value.socialsOther;
+    // Residence
     this.user.residence.state = this.userForm.value.residenceState;
     this.user.residence.province = this.userForm.value.residenceProvince;
     this.user.residence.cap = this.userForm.value.residenceCap;
@@ -327,6 +325,9 @@ export class UserComponent implements OnInit {
         (data: any) => {
           this.bLoading = false;
           this.initPageInformations(data);
+
+          this.accountService.updateUserValue(data);
+
           this.toastr.success('User information successfully updated!');
         },
         (error: HttpErrorResponse) => {
@@ -586,11 +587,11 @@ export class UserComponent implements OnInit {
   assignFormOptionsValueToUser() {
 
     for (const [key, value] of Object.entries(this.settingsForm.value)) {
-        this.user[key] = value;
+        this.user.settings[key] = value;
     }
   }
 
-  onSubmitOptions() {
+  onSubmitSettings() {
     this.settingsFormSubmitted = true;
 
     // stop here if settingsForm is invalid

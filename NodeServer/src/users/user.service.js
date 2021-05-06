@@ -57,7 +57,7 @@ module.exports = (io, clientSocketList) => {
             biography: req.body.biography,
             profilePicture: req.body.profilePicture,
             notifications: [],
-            options: req.body.settings || {}
+            settings: req.body.settings || {}
         });
 
         // Save User in the database
@@ -142,13 +142,12 @@ module.exports = (io, clientSocketList) => {
     };
 
 
-    async function saveProfilePicture(userId, profilePicture, bNewProfilePicture) {
+    async function saveProfilePicture(fileDir, userId, profilePicture, bNewProfilePicture) {
         
         return new Promise((resolve, reject) => {
             // if it's a new image, than upload it and retrieve its path
             if (profilePicture && bNewProfilePicture) {  
-                let fileDir = fileManager.usersImagesBaseDir + "/" + userId;
-                let filePath = fileDir + "/pp_" + userId + ".jpeg";
+                let filePath = fileDir + "/pp_" + userId + (new Date()).getMilliseconds() + ".jpeg";
                 
                 // If folders does not exist, create them
                 if (!fs.existsSync(fileManager.imagesBaseDir))
@@ -182,9 +181,11 @@ module.exports = (io, clientSocketList) => {
         }
 
         // Save new profile picture if there is one, then update user
-        saveProfilePicture(req.params._id, req.body.profilePicture, req.body.bNewProfilePicture)
+        let fileDir = fileManager.usersImagesBaseDir + "/" + req.params._id;
+        saveProfilePicture(fileDir, req.params._id, req.body.profilePicture, req.body.bNewProfilePicture)
             .then((data) => {
                 req.body.profilePicture = data;
+                fileManager.clearImagesDirectory(fileDir, [req.body.profilePicture]);
 
                 // Find user and update it with the request body
                 User.findOneAndUpdate({ _id: req.params._id }, {
@@ -206,7 +207,7 @@ module.exports = (io, clientSocketList) => {
                     biography: req.body.biography,
                     profilePicture: req.body.profilePicture,
                     notifications: _.orderBy(req.body.notifications, ['bConsumed', 'creationDate'], ['asc', 'desc']),
-                    options: req.body.settings
+                    settings: req.body.settings
                 }, { new: true })
                     .then(user => {
                         if (!user) {

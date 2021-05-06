@@ -116,6 +116,7 @@
                   <path d="M18 8a6 6 0 0 0-9.33-5"></path>
                   <line x1="1" y1="1" x2="23" y2="23"></line>
                 </svg>
+                <span class="indicator">{{unreadNotificationLength}}</span>
               </div>
             </a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right py-0" aria-labelledby="alertsDropdown">
@@ -226,7 +227,7 @@
               </svg>
             </a>
             <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-toggle="dropdown" aria-expanded="false">
-              <img src="{{account.user.profilePicture ? (baseServerUrl + account.user.profilePicture) : 'assets/icons/misc/user.svg'}}" class="avatar img-fluid rounded-circle mr-1" alt="{{account.user.name}} {{account.user.surname}}"> 
+              <img *ngIf="!bLoading" src="{{account.user.profilePicture ? (baseServerUrl + account.user.profilePicture) : 'assets/icons/misc/user.svg'}}" class="avatar img-fluid rounded-circle mr-1"> 
               <span class="d-none d-lg-inline">{{account.user.name}}</span>
             </a>
             <div class="dropdown-menu dropdown-menu-right">

@@ -1047,16 +1047,19 @@ ngb-carousel .picsum-img-wrapper>img {
 .avatar-sm {
   width: 30px;
   height: 30px;
+  max-height: 30px !important;
 }
 
 .avatar-xl {
   width: 128px;
   height: 128px;
+  max-height: 128px !important;
 }
 
 .avatar-lg {
   width: 64px;
   height: 64px;
+  max-height: 64px !important;
 }
 
 .avatar {
@@ -1064,6 +1067,7 @@ ngb-carousel .picsum-img-wrapper>img {
   margin-bottom: -15px;
   width: 40px;
   height: 40px;
+  max-height: 40px !important;
 }
 
 
