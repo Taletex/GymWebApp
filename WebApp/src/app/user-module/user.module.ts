@@ -11,6 +11,8 @@ import { UsersComponent } from './components/users/users.component';
 import { UserModalComponent, SharedModule } from '@app/shared-module/shared.module';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
+export { UserComponent } from './components/user/user.component';
+
 @NgModule({
     imports: [
         CommonModule,
@@ -20,6 +22,9 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
         UserRoutingModule,
         SharedModule,
         NgMultiSelectDropDownModule
+    ],
+    exports: [
+        UserComponent
     ],
     declarations: [
         LayoutComponent,

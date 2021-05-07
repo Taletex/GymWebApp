@@ -23,7 +23,8 @@ export enum USERPROFILE_SECTIONS {
     USER_INFORMATIONS = 0,
     PERSONAL_RECORDS = 1,
     LINKS = 2,
-    SETTINGS = 3
+    SETTINGS = 3,
+    ACCOUNT = 4
 }
 
 export class PageStatus {

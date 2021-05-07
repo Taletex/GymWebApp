@@ -19,6 +19,7 @@ module.exports = {
     resetPassword,
     getAll,
     getById,
+    getAccountByUserId,
     create,
     update,
     delete: _delete
@@ -218,6 +219,17 @@ async function getAll() {
 async function getById(id) {
     const account = await getAccount(id);
     return basicDetails(account);
+}
+
+async function getAccountByUserId(userId) {
+    if (!db.isValidId(id)) throw 'Account not found';
+    const account = await db.Account.find({user: userId}).populate({ path: 'user', populate: {path: 'personalRecords', populate: {path: 'exercise'}}})
+                                                 .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}, populate: {path: 'from'}}})
+                                                 .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}, populate: {path: 'destination'}}})
+                                                 .populate({ path: 'user', populate: 'coaches'}).populate({ path: 'user', populate: 'athletes'});
+
+    if (!account) throw 'Account not found';
+    return account;
 }
 
 async function create(params) {

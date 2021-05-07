@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { ProfileRoutingModule } from './profile-routing.module';
 import { LayoutComponent } from './layout.component';
 import { SharedModule } from '@app/shared-module/shared.module';
+import { UserModule } from '@app/user-module/user.module';
 import { ProfileDetailsComponent } from './components/profile-details/profile-details.component';
 
 @NgModule({
@@ -15,7 +16,8 @@ import { ProfileDetailsComponent } from './components/profile-details/profile-de
         ReactiveFormsModule,
         NgbModule,
         ProfileRoutingModule,
-        SharedModule
+        SharedModule,
+        UserModule
     ],
     declarations: [
         LayoutComponent,

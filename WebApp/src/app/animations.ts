@@ -10,17 +10,17 @@ export const slideInAnimation =
         query(':enter', [
             style({
               position: 'absolute',
-              top: 60,
+              top: 0,
               left: 0,
               width: '100%'
             })
-          ]),
+          ], { optional: true }),
       query(':enter', [
         style({opacity: 0}),
           stagger(-500, [
             animate('500ms cubic-bezier(0.35, 0, 0.25, 1)', style({ opacity: 1, transform: 'none' }))
           ])
-      ]),
+      ], { optional: true }),
     //   query(':leave', [
     //     style({opacity: 1}),
     //       stagger(-10, [

@@ -108,6 +108,10 @@ export class AccountService {
     getById(id: string) {
         return this.http.get<Account>(`${baseUrl}/${id}`);
     }
+
+    getAccountByUserId(userId: string) {
+        return this.http.get<Account>(`${baseUrl}/user/${userId}`);
+    }
     
     create(params) {
         return this.http.post(baseUrl, params);

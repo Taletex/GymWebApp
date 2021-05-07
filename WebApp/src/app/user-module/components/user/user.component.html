@@ -13,10 +13,14 @@
                             [ngClass]="{'active': pageStatus[PAGES.USERS] == PAGEMODE.READONLY}"
                             ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg"
                                 style="width:20px; height:auto;"></div>
-                        <div *ngIf="account.role == Role.Admin"
+                        <div *ngIf="account.role == Role.Admin || user._id == account.user._id"
                             (click)="changeMode(PAGEMODE.WRITE)" class="ml-2 inverse-image-button"
                             [ngClass]="{'active': pageStatus[PAGES.USERS] == PAGEMODE.WRITE}" ngbTooltip="Modifica"
                             placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;">
+                        </div>
+                        <div *ngIf="account.role == Role.Admin"
+                            (click)="onDeleteAccount()" class="ml-2 inverse-image-button" ngbTooltip="Elimina Utente"
+                            placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;">
                         </div>
                     </div>
                 </div>
@@ -272,6 +276,8 @@
                                [ngClass]="{'active': currentProfileSection == USERPROFILE_SECTIONS.LINKS}" (click)="currentProfileSection = USERPROFILE_SECTIONS.LINKS">Collegamenti</a>
                             <a class="list-group-item list-group-item-action" data-toggle="list" role="tab" aria-selected="false" 
                                [ngClass]="{'active': currentProfileSection == USERPROFILE_SECTIONS.SETTINGS}" (click)="currentProfileSection = USERPROFILE_SECTIONS.SETTINGS">Impostazioni</a>
+                            <a class="list-group-item list-group-item-action" data-toggle="list" role="tab" aria-selected="false" 
+                               [ngClass]="{'active': currentProfileSection == USERPROFILE_SECTIONS.ACCOUNT}" (click)="currentProfileSection = USERPROFILE_SECTIONS.ACCOUNT">Account</a>
                         </div>
                     </div>
                 </div>
@@ -717,7 +723,7 @@
                     </div>
 
                      <!-- LINKS -->
-                     <div *ngIf="currentProfileSection == USERPROFILE_SECTIONS.LINKS">
+                    <div *ngIf="currentProfileSection == USERPROFILE_SECTIONS.LINKS">
                          <!-- Links -->
                         <div class="card">
                             <div class="row p-3 m-0" id="linksContainer">
@@ -814,6 +820,67 @@
                                                 </select>
                                                 <div *ngIf="(settingsFormSubmitted && fo.showPublicInfo.errors)" class="invalid-feedback">
                                                     <div *ngIf="fo.showPublicInfo.errors.required">Campo obbligatorio</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-12 d-flex p-0 mt-3 mb-0">
+                                            <button type="submit" class="btn btn-primary ml-auto"><span *ngIf="bLoading" class="spinner-border spinner-border-sm mr-1"></span> Aggiorna</button>
+                                            <button type="button" (mousedown)="resetSettingsForm()" class="btn btn-secondary ml-2">Annulla</button>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- ACCOUNT -->
+                    <div class="card" *ngIf="currentProfileSection == USERPROFILE_SECTIONS.ACCOUNT && (account.role == 'Admin' || account._id == userAccount._id)">
+                        <div class="form-row p-3 m-0" id="accountContainer">
+                            <form [formGroup]="accountForm" (ngSubmit)="onSubmitAccount()" class="col-12 row m-0 p-0">
+                                <fieldset class="col-12 row form-group m-0 p-0" [disabled]="bLoading">
+                                    <div class="row col-12 m-0">
+
+                                        <!-- Email and Role -->
+                                        <div class="col-12 p-0"><h6 class="h6 text-primary">Email <span *ngIf="account.role == Role.Admin">e Ruolo</span></h6></div>
+                                        <div class="form-row form-row-inner col-12 border border-primary">
+                                            <div class="col-12 col-md-8 form-group">
+                                                <label class="col-form-label col-form-label-sm text-muted">Email</label>
+                                                <input type="text" max="100" formControlName="email" class="form-control form-control-sm" [ngClass]="{ 'is-invalid': accountFormSubmitted && fa.email.errors}"/>
+                                                <div *ngIf="accountFormSubmitted && fa.email.errors" class="invalid-feedback">
+                                                    <div *ngIf="fa.email.errors.required">Email obbligatoria</div>
+                                                    <div *ngIf="fa.email.errors.email">Il campo email deve contenere un'email valida</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-4 form-group" *ngIf="account.role == Role.Admin">
+                                                <label class="col-form-label col-form-label-sm text-muted">Ruolo</label>
+                                                <select formControlName="role" class="form-control form-control-sm" [ngClass]="{ 'is-invalid': submitted && f.role.errors }">
+                                                    <option value="User">User</option>
+                                                    <option value="Admin">Admin</option>
+                                                </select>
+                                                <div *ngIf="submitted && f.role.errors" class="invalid-feedback">
+                                                    <div *ngIf="f.role.errors.required">Ruolo obbligatorio</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Password -->
+                                        <div class="col-12 p-0 mt-4"><h6 class="h6 text-success">Password <span *ngIf="account.role == Role.Admin">e Ruolo</span></h6></div>
+                                        <div class="form-row form-row-inner col-12 border border-success">
+                                            <div class="form-group col-12 col-xl-6">
+                                                <label class="col-form-label col-form-label-sm text-muted">Password (lasciare vuoto il campo per mantenere la stessa password)</label>
+                                                <input type="password" formControlName="password" max="100" class="form-control form-control-sm" [ngClass]="{ 'is-invalid': accountFormSubmitted && fa.password.errors }" />
+                                                <div *ngIf="accountFormSubmitted && fa.password.errors" class="invalid-feedback">
+                                                    <div *ngIf="fa.password.errors.required">Password obbligatoria</div>
+                                                    <div *ngIf="fa.password.errors.minlength">Il campo password deve essere di almeno 6 caratteri</div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-12 col-xl-6">
+                                                <label class="col-form-label col-form-label-sm text-muted">Conferma Password (lasciare vuoto il campo per mantenere la stessa password)</label>
+                                                <input type="password" formControlName="confirmPassword" max="100" class="form-control form-control-sm" [ngClass]="{ 'is-invalid': accountFormSubmitted && fa.confirmPassword.errors }" />
+                                                <div *ngIf="accountFormSubmitted && fa.confirmPassword.errors" class="invalid-feedback">
+                                                    <div *ngIf="fa.confirmPassword.errors.required">Conferma Password è obbligatoria</div>
+                                                    <div *ngIf="fa.confirmPassword.errors.mustMatch">Le password devono essere uguali</div>
                                                 </div>
                                             </div>
                                         </div>

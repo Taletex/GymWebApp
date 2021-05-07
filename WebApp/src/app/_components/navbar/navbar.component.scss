@@ -1,0 +1,16 @@
+.main__header {
+    cursor: default;
+    height: 60px;
+    box-shadow: 0 0 2rem 0 rgb(41 48 66 / 10%);
+    background-color: #ffffff;
+
+    .account-info {
+        position: absolute;
+        right: 16px; 
+        bottom: 3px;
+
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+    }
+}

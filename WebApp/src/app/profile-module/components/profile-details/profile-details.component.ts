@@ -1,5 +1,5 @@
 ﻿import { HttpErrorResponse } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, ComponentFactoryResolver, ViewContainerRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MustMatch } from '@app/_helpers';
@@ -47,9 +47,20 @@ export class ProfileDetailsComponent {
     public newExercise: Exercise = new Exercise();
     private currentExerciseIndex: number = 0;
 
-    constructor(private generalService: GeneralService, private accountService: AccountService, private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private toastr: ToastrService, private httpService: HttpService) { }
+    // User Component Aux
+    userComponent: any;
+
+
+    constructor(private vcref: ViewContainerRef, private cfr: ComponentFactoryResolver, private generalService: GeneralService, private accountService: AccountService, private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private toastr: ToastrService, private httpService: HttpService) {
+        this.accountService.account.subscribe(x => {
+            this.account = x;
+            this.loadUserComponent();
+        });
+     }
 
     ngOnInit() {
+        
+
         this.personalRecordList = this.account.user.personalRecords;
 
         // Init user form
@@ -85,6 +96,15 @@ export class ProfileDetailsComponent {
 
         // Init exercise list
         this.getExercises();
+    }
+
+    async loadUserComponent(){
+        if(!this.userComponent) {
+            this.vcref.clear();
+            const { UserComponent } = await import('@app/user-module/components/user/user.component');
+            this.userComponent = this.vcref.createComponent(this.cfr.resolveComponentFactory(UserComponent));
+            this.userComponent.instance.userId = this.account.user._id;
+        }
     }
 
     changeMode(mode: PAGEMODE) {

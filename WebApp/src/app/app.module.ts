@@ -28,6 +28,7 @@ import { TrainingCalendarComponent } from './_components/training-calendar/train
 
 import { JwtInterceptor, ErrorInterceptor, appInitializer } from './_helpers';
 import { environment } from '@environments/environment';
+import { NavbarComponent } from './_components/navbar/navbar.component';
 
 @NgModule({
   imports: [
@@ -56,7 +57,8 @@ import { environment } from '@environments/environment';
     PageNotFoundComponent,
     SidebarComponent,
     NotificationsComponent,
-    TrainingCalendarComponent
+    TrainingCalendarComponent,
+    NavbarComponent
   ],
   providers: [
     { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AccountService] },

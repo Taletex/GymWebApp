@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Activity, Contacts, Exercise, Federation, Notification, OPTION_VISIBILITY, PersonalRecord, PRSeries, Residence, Socials, TRAINING_TYPES, User, UserSettings, USER_TYPES, Variant } from '@app/_models/training-model';
 import { HttpService } from '@app/_services/http-service/http-service.service';
@@ -12,9 +12,10 @@ import { UserService } from '@app/user-module/services/user-service/user-service
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { Observable } from 'rxjs';
-import { debounceTime, map } from 'rxjs/operators';
+import { debounceTime, first, map } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { Socket } from 'ngx-socket-io';
+import { MustMatch } from '@app/_helpers/must-match.validator';
 
 @Component({
   selector: 'app-user',
@@ -25,14 +26,17 @@ export class UserComponent implements OnInit {
 
   public bLoading: boolean = false;
 
+  // User informations
+  @Input() userId: string;
   public user: any = new User();
   public userAccount: Account = new Account();
   public notificationList: Notification[] = [];
   public activityList: Activity[] = [];
 
-  // Account information
+  // Account informations
   public account: Account;
   public Role = Role;
+  public bCurrentUserOrAdmin: boolean;
 
   // Pagemode handling
   public PAGEMODE = PAGEMODE;
@@ -64,6 +68,11 @@ export class UserComponent implements OnInit {
   public settingsFormSubmitted = false;
   public optionsVisibilityList = Object.keys(OPTION_VISIBILITY).filter(key => isNaN(+key));
 
+  // Account Form
+  public accountForm: FormGroup;
+  public accountFormSubmitted = false;
+  public accountFormDeleting = false;
+
   // Aux attributes for new exercise handling
   public newExercise: Exercise = new Exercise();
   private currentExerciseIndex: number = 0;
@@ -78,16 +87,14 @@ export class UserComponent implements OnInit {
   public personalRecordInitialValues: any;
 
 
-  constructor(public userService: UserService, private generalService: GeneralService, private accountService: AccountService, private formBuilder: FormBuilder, private router: Router, private toastr: ToastrService, private httpService: HttpService, socket: Socket) {
+  constructor(public userService: UserService, private generalService: GeneralService, private accountService: AccountService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private toastr: ToastrService, private httpService: HttpService, socket: Socket) {
     this.bLoading = true;
     this.accountService.account.subscribe(x => this.account = x);
+    this.bCurrentUserOrAdmin = (this.account.user._id == (this.userId || (this.router.url).split('/')[2])) || this.account.role == Role.Admin;
     
     // Page status init
     this.pageStatus = this.generalService.getPageStatus();
     console.log(this.pageStatus);
-
-    // get user informations
-    this.getUser((this.router.url).split('/')[2]);
 
     // Socket events
     let scope = this;
@@ -100,6 +107,10 @@ export class UserComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(this.bCurrentUserOrAdmin)
+      this.getAccount(this.userId || (this.router.url).split('/')[2])
+    else
+      this.getUser(this.userId || (this.router.url).split('/')[2]);
   }
   
   // From services
@@ -107,6 +118,13 @@ export class UserComponent implements OnInit {
     this.generalService.openPageWithMode(mode, page, id);
   } 
 
+  changeMode(mode: PAGEMODE) {
+    this.pageStatus[PAGES.USERS] = mode;
+    this.generalService.setPageStatus(mode, PAGES.USERS);
+  }
+
+
+  /* === Initialization Functions === */
   initPageInformations(data: any) {
     this.initUserInformations(data);
     this.initFormInitialValues();
@@ -115,39 +133,12 @@ export class UserComponent implements OnInit {
   initUserInformations(data: any) {
     this.user = data;
     this.user.bNewProfilePicture = false;
+
+    if(this.user._id == this.account.user._id) {
+      this.userAccount = _.cloneDeep(this.account);
+    }
     this.userAccount.user = this.user;
     this.notificationList = this.user.notifications.filter((n) => { return (n.type == NOTIFICATION_TYPE.COACH_REQUEST || n.type == NOTIFICATION_TYPE.ATHLETE_REQUEST) && !n.bConsumed });
-  }
-
-  initFormInitialValues() {
-    this.userFormInitialValues = _.cloneDeep(this.userForm.value);
-    this.settingsFormInitialValues = _.cloneDeep(this.settingsForm.value);
-    this.personalRecordInitialValues = _.cloneDeep(this.personalRecordList);
-  }
-
-  getUser(userId: string) {
-    this.httpService.getUser(userId)
-      .subscribe(
-        (data: any) => {
-          this.initUserInformations(data);
-          // For Test Purpose
-          this.activityList.push(new Activity('lasjd0123uasd', 'competition', 'Torneo Nazionale WPA', ['powerlifting'], new Federation("10892asjnd", "WPA"), 'nazionale', ['all'], ['all'], new Residence('italia', 'PA', '91000', 'alimena', 'via della piovra 5'), new Date("05/22/2021"), new Date("05/23/2021"), "Gara nazionale WPA 2021, utile per le qualificazioni ai mondiali", [this.user._id], ["50 euro"], [], ["prozis"], this.user._id, true));
-          this.activityList.push(new Activity('123ouqnsidunq', 'competition', 'Torneo Nazionale FIPL', ['powerlifting'], new Federation("10892asjnd", "FIPL"), 'nazionale', ['all'], ['all'], new Residence('italia', 'MI', '92000','san zenone al lambro', 'via delle rose 123'), new Date("10/06/2021"), new Date("10/08/2021"), "Gara nazionale FIPL 2021, utile per le qualificazioni ai mondiali", [this.user._id], ["50 euro"], ["100 euro primo posto", "50 euro secondo posto"], ["prozis"], this.user._id, true));
-          // end test
-          this.postUserInitialization();
-          this.initFormInitialValues();
-
-          this.bLoading = false;
-          console.log(this.user);
-
-          this.pageStatus = this.generalService.getPageStatus();
-          console.log(this.pageStatus);
-        },
-        (error: HttpErrorResponse) => {
-          this.bLoading = false;
-          this.toastr.error('An error occurred while loading the user!');
-          console.log(error.error.message);
-        });
   }
 
   postUserInitialization() {
@@ -186,10 +177,21 @@ export class UserComponent implements OnInit {
       //To implement also personal record using dynamic forms you can follow this link: https://stackoverflow.com/questions/57425789/formgroup-in-formarray-containing-object-displaying-object-object 
     });
 
+    // Init settings form
     this.settingsForm = this.formBuilder.group({
       showActivities: [this.user.settings.showActivities || 0, Validators.required],
       showPrivateInfo: [this.user.settings.showPrivateInfo || 0, Validators.required],
       showPublicInfo: [this.user.settings.showPublicInfo || 0, Validators.required]
+    });
+    
+      // Init account form
+    this.accountForm = this.formBuilder.group({
+      email: [this.userAccount.email, [Validators.required, Validators.email]],
+      role: [this.userAccount.role, Validators.required],
+      password: ['', [Validators.minLength(6), Validators.nullValidator]],
+      confirmPassword: ['']
+    }, {
+      validator: MustMatch('password', 'confirmPassword')
     });
 
     this.personalRecordList = _.cloneDeep(this.user.personalRecords);   // Note: I'm using a simpler solution for handling personal record inputs because using dynamic forms required much time
@@ -201,10 +203,67 @@ export class UserComponent implements OnInit {
     this.getExercises();
   }
 
-  changeMode(mode: PAGEMODE) {
-    this.pageStatus[PAGES.USERS] = mode;
-    this.generalService.setPageStatus(mode, PAGES.USERS);
+  initFormInitialValues() {
+    this.userFormInitialValues = _.cloneDeep(this.userForm.value);
+    this.settingsFormInitialValues = _.cloneDeep(this.settingsForm.value);
+    this.personalRecordInitialValues = _.cloneDeep(this.personalRecordList);
   }
+
+
+  getAccount(userId: string) {
+    this.accountService.getAccountByUserId(userId)
+      .subscribe(
+        (data: any) => {
+          this.initUserInformations(data);
+          // For Test Purpose
+          this.activityList.push(new Activity('lasjd0123uasd', 'competition', 'Torneo Nazionale WPA', ['powerlifting'], new Federation("10892asjnd", "WPA"), 'nazionale', ['all'], ['all'], new Residence('italia', 'PA', '91000', 'alimena', 'via della piovra 5'), new Date("05/22/2021"), new Date("05/23/2021"), "Gara nazionale WPA 2021, utile per le qualificazioni ai mondiali", [this.user._id], ["50 euro"], [], ["prozis"], this.user._id, true));
+          this.activityList.push(new Activity('123ouqnsidunq', 'competition', 'Torneo Nazionale FIPL', ['powerlifting'], new Federation("10892asjnd", "FIPL"), 'nazionale', ['all'], ['all'], new Residence('italia', 'MI', '92000','san zenone al lambro', 'via delle rose 123'), new Date("10/06/2021"), new Date("10/08/2021"), "Gara nazionale FIPL 2021, utile per le qualificazioni ai mondiali", [this.user._id], ["50 euro"], ["100 euro primo posto", "50 euro secondo posto"], ["prozis"], this.user._id, true));
+          if(!this.user.settings)
+            this.user.settings = new UserSettings();
+          // end test
+          this.postUserInitialization();
+          this.initFormInitialValues();
+
+          this.bLoading = false;
+          console.log(this.userAccount);
+
+          this.pageStatus = this.generalService.getPageStatus();
+          console.log(this.pageStatus);
+        },
+        (error: HttpErrorResponse) => {
+          this.bLoading = false;
+          this.toastr.error('An error occurred while loading the account!');
+          console.log(error.error.message);
+        });
+  }
+
+  getUser(userId: string) {
+    this.httpService.getUser(userId)
+      .subscribe(
+        (data: any) => {
+          this.initUserInformations(data);
+          // For Test Purpose
+          this.activityList.push(new Activity('lasjd0123uasd', 'competition', 'Torneo Nazionale WPA', ['powerlifting'], new Federation("10892asjnd", "WPA"), 'nazionale', ['all'], ['all'], new Residence('italia', 'PA', '91000', 'alimena', 'via della piovra 5'), new Date("05/22/2021"), new Date("05/23/2021"), "Gara nazionale WPA 2021, utile per le qualificazioni ai mondiali", [this.user._id], ["50 euro"], [], ["prozis"], this.user._id, true));
+          this.activityList.push(new Activity('123ouqnsidunq', 'competition', 'Torneo Nazionale FIPL', ['powerlifting'], new Federation("10892asjnd", "FIPL"), 'nazionale', ['all'], ['all'], new Residence('italia', 'MI', '92000','san zenone al lambro', 'via delle rose 123'), new Date("10/06/2021"), new Date("10/08/2021"), "Gara nazionale FIPL 2021, utile per le qualificazioni ai mondiali", [this.user._id], ["50 euro"], ["100 euro primo posto", "50 euro secondo posto"], ["prozis"], this.user._id, true));
+          if(!this.user.settings)
+            this.user.settings = new UserSettings();
+          // end test
+          this.postUserInitialization();
+          this.initFormInitialValues();
+
+          this.bLoading = false;
+          console.log(this.user);
+
+          this.pageStatus = this.generalService.getPageStatus();
+          console.log(this.pageStatus);
+        },
+        (error: HttpErrorResponse) => {
+          this.bLoading = false;
+          this.toastr.error('An error occurred while loading the user!');
+          console.log(error.error.message);
+        });
+  }
+
 
 
   /* === User Form utilities === */
@@ -615,6 +674,53 @@ export class UserComponent implements OnInit {
           this.toastr.error('An error occurred while updating the user!');
           console.log(error.error.message);
         });
+  }
+
+  /* Account Form utilities */
+  // convenience getter for easy access to accountForm fields
+  get fa() { return this.accountForm.controls; }
+
+  onSubmitAccount() {
+      this.accountFormSubmitted = true;
+
+      // stop here if accountForm is invalid
+      if (this.accountForm.invalid) {
+          return;
+      }
+
+      this.bLoading = true;
+      this.accountService.update(this.userAccount.id, this.accountForm.value)
+          .pipe(first())
+          .subscribe({
+              next: () => {
+                  this.bLoading = false;
+                  this.toastr.success('Update successful');
+              },
+              error: error => {
+                  this.toastr.error(error);
+                  this.bLoading = false;
+              }
+          });
+  }
+
+  onDeleteAccount() {
+      if (confirm('Are you sure?')) {
+          this.accountFormDeleting = true;
+          this.bLoading = true;
+          this.accountService.delete(this.account.id)
+              .pipe(first())
+              .subscribe(() => {
+                this.bLoading = false;
+                this.router.navigate(['../'], { relativeTo: this.route }).then(() => {
+                    this.toastr.success('Account successfully deleted!');
+                });
+            },
+            (error: HttpErrorResponse) => {
+                this.bLoading = false;
+                this.toastr.error('An error occurred while deleting the account!');
+                console.log(error.error.message);
+            });
+      }
   }
 
 

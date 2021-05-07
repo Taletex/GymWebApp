@@ -21,15 +21,9 @@ export class AppComponent {
   account: Account;
   baseServerUrl = this.httpService.baseServerUrl;
   sidebarOptions = {bExpanded: true};
-  unreadNotificationLength = 0;
-  bLoading: boolean = false;
 
-  constructor(public router: Router, private accountService: AccountService, public httpService: HttpService) {
-    this.accountService.account.subscribe(
-      x => { 
-        this.account = x;
-        this.unreadNotificationLength = (this.account.user.notifications.filter((n)=>{ return !n.bConsumed; })).length;
-      });
+  constructor(public router: Router, private accountService: AccountService, private httpService: HttpService) {
+    this.accountService.account.subscribe( x => { this.account = x; });
   }
 
   logout() {

@@ -29,12 +29,10 @@ export class SidebarComponent implements OnInit {
   private triggerWidth: number = 767.98;
 
   constructor(public router: Router, private accountService: AccountService, private generalService: GeneralService) {
-    this.bActiveList[(this.router.url).split('/')[1]] = true;
     this.accountService.account.subscribe(x => {
       this.account = x;
       this.unreadNotificationLength = (_.filter(this.account.user.notifications, function(n) { return !n.bConsumed; })).length;
     });
-
     
     // Init responsiveness aux
     this.lastWindowWidth = window.innerWidth;
@@ -46,6 +44,15 @@ export class SidebarComponent implements OnInit {
       console.log("Sidebar options initialized inside sidebar component")
     }
     this.initExpandOption();
+    this.initSidebarStatus();
+  }
+
+  initSidebarStatus() {
+    let splittedPath = (this.router.url).split('/');
+    if((splittedPath.length == 3 && splittedPath[2] == this.account.user._id))
+      this.bActiveList.userprofile = true;
+    else 
+      this.bActiveList[splittedPath[2]] = true;
   }
 
   initExpandOption() {
