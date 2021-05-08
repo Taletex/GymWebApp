@@ -172,8 +172,8 @@ function getById(req, res, next) {
 }
 
 function getAccountByUserId(req, res, next) {
-    // users can get only their own account, admins can get any account (note: req is an account object)
-    if (req.params.id !== req.user.id && req.role !== Role.Admin) {
+    // only admins can use this rest (note: req is an object containing 'user' which is an account object)
+    if (req.user.role !== Role.Admin) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
 

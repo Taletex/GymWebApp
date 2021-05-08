@@ -3,8 +3,11 @@ import { User } from './training-model';
 
 export class Account {
     id: string;
-    email: string;
-    role: Role;
-    jwtToken?: string;
-    user: User;
+
+    constructor(
+        public email: string = "", 
+        public role: Role = Role.User, 
+        public jwtToken: string = "", 
+        public user: User = new User() 
+    ) {}
 }

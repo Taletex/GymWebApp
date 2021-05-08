@@ -109,7 +109,7 @@ async function register(params, origin) {
         coaches: [],
         athletes: [],
         personalRecords: [],
-        contacts: new db.Contacts({email: params.email, telephone: ''}),
+        contacts: new db.Contacts({email: params.email, telephone: '', socials: {}}),
         residence: new db.Residence(),
         biography: "",
         profilePicture: "",
@@ -222,14 +222,14 @@ async function getById(id) {
 }
 
 async function getAccountByUserId(userId) {
-    if (!db.isValidId(id)) throw 'Account not found';
+    if (!db.isValidId(userId)) throw 'Account not found';
     const account = await db.Account.find({user: userId}).populate({ path: 'user', populate: {path: 'personalRecords', populate: {path: 'exercise'}}})
                                                  .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}, populate: {path: 'from'}}})
                                                  .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}, populate: {path: 'destination'}}})
                                                  .populate({ path: 'user', populate: 'coaches'}).populate({ path: 'user', populate: 'athletes'});
 
     if (!account) throw 'Account not found';
-    return account;
+    return account[0];
 }
 
 async function create(params) {
@@ -253,7 +253,7 @@ async function create(params) {
         coaches: [],
         athletes: [],
         personalRecords: [],
-        contacts: new db.Contacts({email: params.email, telephone: ''}),
+        contacts: new db.Contacts({email: params.email, telephone: '', socials: {}}),
         residence: new db.Residence(),
         biography: "",
         profilePicture: "",

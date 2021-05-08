@@ -5,7 +5,7 @@
         <div class="maincontainer__header card-header px-0">
 
             <div class="d-flex align-items-center col-12">
-                <h4 class="m-0 h4">{{user.name}} {{user.surname}}</h4>
+                <h4 class="m-0 h4" *ngIf="userAccount && userAccount.user">{{userAccount.user.name}} {{userAccount.user.surname}}</h4>
                 <div class="d-flex input-group w-auto ml-auto">
                     <div class="input-group-prepend d-none d-md-inline"><span class="input-group-text">ACTIONS</span></div>
                     <div class="d-flex align-items-center form-control round-right-5 round-md-5">
@@ -13,13 +13,13 @@
                             [ngClass]="{'active': pageStatus[PAGES.USERS] == PAGEMODE.READONLY}"
                             ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg"
                                 style="width:20px; height:auto;"></div>
-                        <div *ngIf="account.role == Role.Admin || user._id == account.user._id"
+                        <div *ngIf="account.role == Role.Admin || userAccount.user._id == account.user._id"
                             (click)="changeMode(PAGEMODE.WRITE)" class="ml-2 inverse-image-button"
                             [ngClass]="{'active': pageStatus[PAGES.USERS] == PAGEMODE.WRITE}" ngbTooltip="Modifica"
                             placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;">
                         </div>
                         <div *ngIf="account.role == Role.Admin"
-                            (click)="onDeleteAccount()" class="ml-2 inverse-image-button" ngbTooltip="Elimina Utente"
+                            (click)="deleteAccount()" class="ml-2 inverse-image-button" ngbTooltip="Elimina Utente"
                             placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;">
                         </div>
                     </div>
@@ -39,93 +39,93 @@
                         </div>
                         <!-- picture, name, surname, biography, follow, message -->
                         <div class="card-body text-center">
-                            <img src="{{user.profilePicture ? (baseServerUrl+user.profilePicture) : 'assets/icons/misc/user.svg'}}" alt="{{user.name}} {{user.surname}}" class="avatar-xl img-fluid rounded-circle mb-2">
-                            <h5 class="card-title mb-0">{{user.name}} {{user.surname}}</h5>
-                            <div class="text-muted mb-2">{{user.userType=='both' ? 'Coach e Atleta' : (user.userType=='coach' ? 'Coach' : 'Atleta')}}</div>
-                            <div class="text-muted mb-2" [hidden]="!user.biography">{{user.biography}}</div>
+                            <img src="{{userAccount.user.profilePicture ? (baseServerUrl+userAccount.user.profilePicture) : 'assets/icons/misc/user.svg'}}" alt="{{userAccount.user.name}} {{userAccount.user.surname}}" class="avatar-xl img-fluid rounded-circle mb-2">
+                            <h5 class="card-title mb-0">{{userAccount.user.name}} {{userAccount.user.surname}}</h5>
+                            <div class="text-muted mb-2">{{userAccount.user.userType=='both' ? 'Coach e Atleta' : (userAccount.user.userType=='coach' ? 'Coach' : 'Atleta')}}</div>
+                            <div class="text-muted mb-2" [hidden]="!userAccount.user.biography">{{userAccount.user.biography}}</div>
                             <div>
-                                <button type="button" (click)="sendNotification(NOTIFICATION_TYPE.COACH_REQUEST, user, account)" *ngIf="userService.canCoachRequestBeSent(user, account)" class="btn btn-sm btn-primary mr-2" ngbTooltip="Richiesta segui coach" placement="top"><span class="fa fa-user-plus standard-action-icon-btn-lg mr-1"></span><span>Collega Coach</span></button>
-                                <button type="button" (click)="cancelAthleteCoachLink(NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK, user, account, false)" *ngIf="userService.canCancelAthleteToCoachLinkBeSent(user, account)" class="btn btn-sm btn-danger mr-2" ngbTooltip="Elimina collegamento con Coach" placement="top"><span class="fa fa-times-circle standard-action-icon-btn-lg mr-1"></span><span>Scollega Coach</span></button>
-                                <button type="button" (click)="cancelAthleteCoachLinkRequest(NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK_REQUEST, user)" *ngIf="userService.canCancelAthleteToCoachLinkRequestBeSent(user, account)" class="btn btn-sm btn-warning mr-2" ngbTooltip="Elimina richiesta di collegamento con Coach" placement="top"><span class="fa fa-times-circle standard-action-icon-btn-lg mr-1"></span><span>Elimina Richiesta a Coach</span></button>
-                                <button type="button" (click)="sendNotification(NOTIFICATION_TYPE.ATHLETE_REQUEST, user, account, account)" *ngIf="userService.canAthleteRequestBeSent(user, account)" class="btn btn-sm btn-primary mr-2" ngbTooltip="Richiesta segui atleta" placement="top"><span class="fa fa-user-plus standard-action-icon-btn-lg mr-1"></span><span>Collega Atleta</span></button>
-                                <button type="button" (click)="cancelAthleteCoachLink(NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK, user, account, false)" *ngIf="userService.canCancelCoachToAthleteLinkBeSent(user, account)" class="btn btn-sm btn-danger mr-2" ngbTooltip="Elimina collegamento con Atleta" placement="top"><span class="fa fa-times-circle standard-action-icon-btn-lg mr-1"></span><span>Scollega Atleta</span></button>
-                                <button type="button" (click)="cancelAthleteCoachLinkRequest(NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK_REQUEST, user)" *ngIf="userService.canCancelCoachToAthleteLinkRequestBeSent(user, account)" class="btn btn-sm btn-warning mr-2" ngbTooltip="Elimina richiesta di collegamento con Atleta" placement="top"><span class="fa fa-times-circle standard-action-icon-btn-lg mr-1"></span><span>Elimina Richiesta a Atleta</span></button>
+                                <button type="button" (click)="sendNotification(NOTIFICATION_TYPE.COACH_REQUEST, userAccount.user, account)" *ngIf="userService.canCoachRequestBeSent(userAccount.user, account)" class="btn btn-sm btn-primary mr-2" ngbTooltip="Richiesta segui coach" placement="top"><span class="fa fa-user-plus standard-action-icon-btn-lg mr-1"></span><span>Collega Coach</span></button>
+                                <button type="button" (click)="cancelAthleteCoachLink(NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK, userAccount.user, account, false)" *ngIf="userService.canCancelAthleteToCoachLinkBeSent(userAccount.user, account)" class="btn btn-sm btn-danger mr-2" ngbTooltip="Elimina collegamento con Coach" placement="top"><span class="fa fa-times-circle standard-action-icon-btn-lg mr-1"></span><span>Scollega Coach</span></button>
+                                <button type="button" (click)="cancelAthleteCoachLinkRequest(NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK_REQUEST, userAccount.user)" *ngIf="userService.canCancelAthleteToCoachLinkRequestBeSent(userAccount.user, account)" class="btn btn-sm btn-warning mr-2" ngbTooltip="Elimina richiesta di collegamento con Coach" placement="top"><span class="fa fa-times-circle standard-action-icon-btn-lg mr-1"></span><span>Elimina Richiesta a Coach</span></button>
+                                <button type="button" (click)="sendNotification(NOTIFICATION_TYPE.ATHLETE_REQUEST, userAccount.user, account, account)" *ngIf="userService.canAthleteRequestBeSent(userAccount.user, account)" class="btn btn-sm btn-primary mr-2" ngbTooltip="Richiesta segui atleta" placement="top"><span class="fa fa-user-plus standard-action-icon-btn-lg mr-1"></span><span>Collega Atleta</span></button>
+                                <button type="button" (click)="cancelAthleteCoachLink(NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK, userAccount.user, account, false)" *ngIf="userService.canCancelCoachToAthleteLinkBeSent(userAccount.user, account)" class="btn btn-sm btn-danger mr-2" ngbTooltip="Elimina collegamento con Atleta" placement="top"><span class="fa fa-times-circle standard-action-icon-btn-lg mr-1"></span><span>Scollega Atleta</span></button>
+                                <button type="button" (click)="cancelAthleteCoachLinkRequest(NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK_REQUEST, userAccount.user)" *ngIf="userService.canCancelCoachToAthleteLinkRequestBeSent(userAccount.user, account)" class="btn btn-sm btn-warning mr-2" ngbTooltip="Elimina richiesta di collegamento con Atleta" placement="top"><span class="fa fa-times-circle standard-action-icon-btn-lg mr-1"></span><span>Elimina Richiesta a Atleta</span></button>
                                 <!-- <a class="btn btn-primary btn-sm ml-2 disabled"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="small-action-icon"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg> Message</a> -->
                             </div>
                         </div>
                         <!-- disciplines -->
-                        <hr class="my-0" *ngIf="user.disciplines != null && user.disciplines.length > 0">
-                        <div class="card-body" *ngIf="user.disciplines != null && user.disciplines.length > 0">
+                        <hr class="my-0" *ngIf="userAccount.user.disciplines != null && userAccount.user.disciplines.length > 0">
+                        <div class="card-body" *ngIf="userAccount.user.disciplines != null && userAccount.user.disciplines.length > 0">
                             <h6 class="h6 card-title">Discipline</h6>
-                            <span class="badge badge-primary mr-1 my-1" *ngFor="let d of user.disciplines">{{d}}</span>
+                            <span class="badge badge-primary mr-1 my-1" *ngFor="let d of userAccount.user.disciplines">{{d}}</span>
                         </div>
                         <!-- residence, gyms, pob -->
-                        <hr class="my-0" *ngIf="(user.residence.city && user.residence.state) || (user.gyms != null && user.gyms.length > 0) || (user.placeOfBirth != null && (user.placeOfBirth.city != null && user.placeOfBirth.city != '') && (user.placeOfBirth.state != null && user.placeOfBirth.state != ''))">
-                        <div class="card-body" *ngIf="(user.residence.city && user.residence.state) || (user.gyms != null && user.gyms.length > 0) || (user.placeOfBirth != null && (user.placeOfBirth.city != null && user.placeOfBirth.city != '') && (user.placeOfBirth.state != null && user.placeOfBirth.state != ''))">
+                        <hr class="my-0" *ngIf="(userAccount.user.residence.city && userAccount.user.residence.state) || (userAccount.user.gyms != null && userAccount.user.gyms.length > 0) || (userAccount.user.placeOfBirth != null && (userAccount.user.placeOfBirth.city != null && userAccount.user.placeOfBirth.city != '') && (userAccount.user.placeOfBirth.state != null && userAccount.user.placeOfBirth.state != ''))">
+                        <div class="card-body" *ngIf="(userAccount.user.residence.city && userAccount.user.residence.state) || (userAccount.user.gyms != null && userAccount.user.gyms.length > 0) || (userAccount.user.placeOfBirth != null && (userAccount.user.placeOfBirth.city != null && userAccount.user.placeOfBirth.city != '') && (userAccount.user.placeOfBirth.state != null && userAccount.user.placeOfBirth.state != ''))">
                             <h5 class="h6 card-title">Luoghi</h5>
                             <ul class="list-unstyled mb-0">
-                                <li class="d-flex align-items-center mb-1" [hidden]="!(user.residence.city != null && user.residence.city != '') && (user.residence.state != null && user.residence.state != '')">
+                                <li class="d-flex align-items-center mb-1" [hidden]="!(userAccount.user.residence.city != null && userAccount.user.residence.city != '') && (userAccount.user.residence.state != null && userAccount.user.residence.state != '')">
                                     <span class="fa fa-fw fa-home font-size-12 mr-1"></span>
-                                    <span class="fa-description">Vive a {{user.residence.city || ''}} ({{user.residence.state || ''}})</span>    
+                                    <span class="fa-description">Vive a {{userAccount.user.residence.city || ''}} ({{userAccount.user.residence.state || ''}})</span>    
                                 </li>
-                                <li class="d-flex align-items-center mb-1" [hidden]="user.placeOfBirth != null && (user.placeOfBirth.city != null && user.placeOfBirth.city != '') && (user.placeOfBirth.state != null && user.placeOfBirth.state != '')">
+                                <li class="d-flex align-items-center mb-1" [hidden]="userAccount.user.placeOfBirth != null && (userAccount.user.placeOfBirth.city != null && userAccount.user.placeOfBirth.city != '') && (userAccount.user.placeOfBirth.state != null && userAccount.user.placeOfBirth.state != '')">
                                     <span class="fa fa-fw fa-birthday-cake mr-1"></span>
-                                    <span class="fa-description">Nato a {{user.placeOfBirth.city || ''}} {{user.placeOfBirth.state ? ('('+user.placeOfBirth.state+')') : ''}}</span>    
+                                    <span class="fa-description">Nato a {{userAccount.user.placeOfBirth.city || ''}} {{userAccount.user.placeOfBirth.state ? ('('+userAccount.user.placeOfBirth.state+')') : ''}}</span>    
                                 </li>
-                                <li class="d-flex align-items-center mb-1" [hidden]="user.gyms != null && user.gyms.length > 0">
+                                <li class="d-flex align-items-center mb-1" [hidden]="userAccount.user.gyms != null && userAccount.user.gyms.length > 0">
                                     <span class="fa fa-fw fa-map-marker mr-1"></span>
-                                    <span class="fa-description">Frequenta&nbsp;<span *ngFor="let gym of user.gyms; last as bLast">{{gym}}<span [hidden]="bLast">,&nbsp;</span></span></span>
+                                    <span class="fa-description">Frequenta&nbsp;<span *ngFor="let gym of userAccount.user.gyms; last as bLast">{{gym}}<span [hidden]="bLast">,&nbsp;</span></span></span>
                                 </li>
                             </ul>
                         </div>
                         <!-- contacts: email and telephone -->
-                        <hr class="my-0" *ngIf="(user.contacts.email || user.contacts.telephone)">
-                        <div class="card-body" *ngIf="(user.contacts.email || user.contacts.telephone)">
+                        <hr class="my-0" *ngIf="(userAccount.user.contacts.email || userAccount.user.contacts.telephone)">
+                        <div class="card-body" *ngIf="(userAccount.user.contacts.email || userAccount.user.contacts.telephone)">
                             <h5 class="h6 card-title">Contatti</h5>
                             <ul class="list-unstyled mb-0">
-                                <li class="d-flex align-items-center mb-1" [hiden]="!user.contacts.email">
+                                <li class="d-flex align-items-center mb-1" [hiden]="!userAccount.user.contacts.email">
                                     <span class="fa fa-fw fa-envelope mr-1"></span>
-                                    <span class="fa-description">Email {{user.contacts.email}}</span>    
+                                    <span class="fa-description">Email {{userAccount.user.contacts.email}}</span>    
                                 </li>
-                                <li class="d-flex align-items-center mb-1" [hidden]="!user.contacts.telephone">
+                                <li class="d-flex align-items-center mb-1" [hidden]="!userAccount.user.contacts.telephone">
                                     <span class="fa fa-fw fa-phone-square mr-1"></span>
-                                    <span class="fa-description">Telefono {{user.contacts.telephone}}</span>    
+                                    <span class="fa-description">Telefono {{userAccount.user.contacts.telephone}}</span>    
                                 </li>
                             </ul>
                         </div>
                         <!-- Category infos -->
-                        <hr class="my-0" *ngIf="(user.dateOfBirth || user.sex || user.bodyWeight || user.yearsOfExperience)">
-                        <div class="card-body" *ngIf="(user.dateOfBirth || user.sex || user.bodyWeight || user.yearsOfExperience)">
+                        <hr class="my-0" *ngIf="(userAccount.user.dateOfBirth || userAccount.user.sex || userAccount.user.bodyWeight || userAccount.user.yearsOfExperience)">
+                        <div class="card-body" *ngIf="(userAccount.user.dateOfBirth || userAccount.user.sex || userAccount.user.bodyWeight || userAccount.user.yearsOfExperience)">
                             <h5 class="h6 card-title">Altro</h5>
                             <ul class="list-unstyled mb-0">
-                                <li class="d-flex align-items-center mb-1" [hidden]="!user.dateOfBirth">
+                                <li class="d-flex align-items-center mb-1" [hidden]="!userAccount.user.dateOfBirth">
                                     <span class="fa fa-fw fa-birthday-cake mr-1"></span>
-                                    <span class="fa-description">Nato il {{user.dateOfBirth | date:'dd/MM/yyyy' }}</span>    
+                                    <span class="fa-description">Nato il {{userAccount.user.dateOfBirth | date:'dd/MM/yyyy' }}</span>    
                                 </li>
-                                <li class="d-flex align-items-center mb-1" [hidden]="!user.sex">
+                                <li class="d-flex align-items-center mb-1" [hidden]="!userAccount.user.sex">
                                     <span class="fa fa-fw fa-venus-mars mr-1"></span>
-                                    <span class="fa-description">Genere {{user.sex == 'M' ? 'Uomo' : 'Donna'}}</span>    
+                                    <span class="fa-description">Genere {{userAccount.user.sex == 'M' ? 'Uomo' : 'Donna'}}</span>    
                                 </li>
-                                <li class="d-flex align-items-center mb-1" [hidden]="!user.bodyWeight">
+                                <li class="d-flex align-items-center mb-1" [hidden]="!userAccount.user.bodyWeight">
                                     <span class="fa fa-fw fa-balance-scale mr-1"></span>
-                                    <span class="fa-description">Peso {{user.bodyWeight}}kg</span>    
+                                    <span class="fa-description">Peso {{userAccount.user.bodyWeight}}kg</span>    
                                 </li>
-                                <li class="d-flex align-items-center mb-1" [hidden]="!user.sex">
+                                <li class="d-flex align-items-center mb-1" [hidden]="!userAccount.user.sex">
                                     <span class="fa fa-fw fa-universal-access mr-1"></span>
-                                    <span class="fa-description">Esperienza {{user.yearsOfExperience}} anni</span>    
+                                    <span class="fa-description">Esperienza {{userAccount.user.yearsOfExperience}} anni</span>    
                                 </li>
                             </ul>
                         </div>
                         <!-- socials -->
-                        <hr class="my-0" *ngIf="user.contacts.socials != null && (user.contacts.socials.facebook || user.contacts.socials.twitter || user.contacts.socials.instagram || user.contacts.socials.linkedin || user.contacts.socials.other)">
-                        <div class="card-body" *ngIf="user.contacts.socials != null && (user.contacts.socials.facebook || user.contacts.socials.twitter || user.contacts.socials.instagram || user.contacts.socials.linkedin || user.contacts.socials.other)">
+                        <hr class="my-0" *ngIf="userAccount.user.contacts.socials != null && (userAccount.user.contacts.socials.facebook || userAccount.user.contacts.socials.twitter || userAccount.user.contacts.socials.instagram || userAccount.user.contacts.socials.linkedin || userAccount.user.contacts.socials.other)">
+                        <div class="card-body" *ngIf="userAccount.user.contacts.socials != null && (userAccount.user.contacts.socials.facebook || userAccount.user.contacts.socials.twitter || userAccount.user.contacts.socials.instagram || userAccount.user.contacts.socials.linkedin || userAccount.user.contacts.socials.other)">
                             <h6 class="h6 card-title">Social</h6>
                             <ul class="list-unstyled mb-0">
-                                <li class="mb-1" [hidden]="user.contacts.socials.facebook == null || user.contacts.socials.facebook == ''"><span class="fa fa-facebook fa-fw mr-1"></span> <a href="{{user.contacts.socials.facebook}}" target="blank" class="fa-description">Facebook</a></li>
-                                <li class="mb-1" [hidden]="user.contacts.socials.twitter == null || user.contacts.socials.twitter == ''"><span class="fa fa-twitter fa-fw mr-1"></span> <a href="{{user.contacts.socials.twitter}}" target="blank" class="fa-description">Twitter</a></li>
-                                <li class="mb-1" [hidden]="user.contacts.socials.instagram == null || user.contacts.socials.instagram == ''"><span class="fa fa-instagram fa-fw mr-1"></span> <a href="{{user.contacts.socials.instagram}}" target="blank" class="fa-description">Instagram</a></li>
-                                <li class="mb-1" [hidden]="user.contacts.socials.linkedin == null || user.contacts.socials.linkedin == ''"><span class="fa fa-linkedin fa-fw mr-1"></span> <a href="{{user.contacts.socials.linkedin}}" target="blank" class="fa-description">LinkedIn</a></li>
-                                <li class="mb-1" [hidden]="user.contacts.socials.other == null || user.contacts.socials.other == ''"><span class="fa fa-globe fa-fw mr-1"></span> <a href="{{user.contacts.socials.other}}" target="blank" class="fa-description">Altro</a></li>
+                                <li class="mb-1" [hidden]="userAccount.user.contacts.socials.facebook == null || userAccount.user.contacts.socials.facebook == ''"><span class="fa fa-facebook fa-fw mr-1"></span> <a href="{{userAccount.user.contacts.socials.facebook}}" target="blank" class="fa-description">Facebook</a></li>
+                                <li class="mb-1" [hidden]="userAccount.user.contacts.socials.twitter == null || userAccount.user.contacts.socials.twitter == ''"><span class="fa fa-twitter fa-fw mr-1"></span> <a href="{{userAccount.user.contacts.socials.twitter}}" target="blank" class="fa-description">Twitter</a></li>
+                                <li class="mb-1" [hidden]="userAccount.user.contacts.socials.instagram == null || userAccount.user.contacts.socials.instagram == ''"><span class="fa fa-instagram fa-fw mr-1"></span> <a href="{{userAccount.user.contacts.socials.instagram}}" target="blank" class="fa-description">Instagram</a></li>
+                                <li class="mb-1" [hidden]="userAccount.user.contacts.socials.linkedin == null || userAccount.user.contacts.socials.linkedin == ''"><span class="fa fa-linkedin fa-fw mr-1"></span> <a href="{{userAccount.user.contacts.socials.linkedin}}" target="blank" class="fa-description">LinkedIn</a></li>
+                                <li class="mb-1" [hidden]="userAccount.user.contacts.socials.other == null || userAccount.user.contacts.socials.other == ''"><span class="fa fa-globe fa-fw mr-1"></span> <a href="{{userAccount.user.contacts.socials.other}}" target="blank" class="fa-description">Altro</a></li>
                             </ul>
                         </div>
                     </div>
@@ -297,8 +297,8 @@
                                             <div class="col-12 col-md-4 form-group d-flex flex-column align-items-center justify-content-center">
                                                 <label for="userProfilePicture" class="col-form-label w-100 text-left col-form-label-sm text-muted">Immagine Profilo</label>
                                                 <div class="position-relative">
-                                                    <img *ngIf="fu.profilePicture.dirty" src="{{fu.profilePicture.value ? fu.profilePicture.value : 'assets/icons/misc/user.svg'}}" alt="{{user.name}} {{user.surname}}" class="avatar-xl img-fluid rounded-circle mb-2">
-                                                    <img [hidden]="fu.profilePicture.dirty" src="{{user.profilePicture ? (baseServerUrl+user.profilePicture) : 'assets/icons/misc/user.svg'}}" alt="{{user.name}} {{user.surname}}" class="avatar-xl img-fluid rounded-circle mb-2">
+                                                    <img *ngIf="fu.profilePicture.dirty" src="{{fu.profilePicture.value ? fu.profilePicture.value : 'assets/icons/misc/user.svg'}}" alt="{{userAccount.user.name}} {{userAccount.user.surname}}" class="avatar-xl img-fluid rounded-circle mb-2">
+                                                    <img [hidden]="fu.profilePicture.dirty" src="{{userAccount.user.profilePicture ? (baseServerUrl+userAccount.user.profilePicture) : 'assets/icons/misc/user.svg'}}" alt="{{userAccount.user.name}} {{userAccount.user.surname}}" class="avatar-xl img-fluid rounded-circle mb-2">
                                                     <div class="avatar-xl img-fluid rounded-circle upload-image-label-container">
                                                         <label for="profilePictureFileInput"><img src="assets/icons/actions/upload-2.svg" class="avatar-xl img-fluid"></label>
                                                         <input hidden type="file" id="profilePictureFileInput" name="profilePictureFileInput" class="form-control form-control-sm" [ngClass]="{'is-invalid': userFormSubmitted && fu.profilePicture.errors}"
@@ -730,9 +730,9 @@
                                 
                                 <div class="col-12 row m-0">
                                     <div class="col-12 p-0"><h6 class="h6 text-dark">Collegamenti</h6></div>
-                                    <div [hidden]="user.coaches.length!=0 || user.athletes.length!=0" class="col-12 alert-info p-3"><span>Nessuna Collegamento</span></div>
+                                    <div [hidden]="userAccount.user.coaches.length!=0 || userAccount.user.athletes.length!=0" class="col-12 alert-info p-3"><span>Nessuna Collegamento</span></div>
                                     <!-- Coaches -->
-                                    <div class="col-12 media border border-primary bg-custom-cyan border round-3 p-3" *ngFor="let link of user.coaches; index as linkIndex; first as bFirst; last as bLast" [ngClass]="{'mb-3': !bLast}">
+                                    <div class="col-12 media border border-primary bg-custom-cyan border round-3 p-3" *ngFor="let link of userAccount.user.coaches; index as linkIndex; first as bFirst; last as bLast" [ngClass]="{'mb-3': !bLast}">
                                         <img class="avatar-lg img-fluid rounded-circle mr-3" src="{{link.profilePicture ? (baseServerUrl+link.profilePicture) : 'assets/icons/misc/user.svg'}}" alt="{{link.name}} {{link.surname}}">
                                         <div class="media-body">
                                             <div>
@@ -745,7 +745,7 @@
                                         </div>
                                     </div>
                                     <!-- Athletes -->
-                                    <div class="col-12 media border border-secondary bg-custom-lightgray border round-3 p-3 mt-3" *ngFor="let link of user.athletes; index as linkIndex; first as bFirst; last as bLast">
+                                    <div class="col-12 media border border-secondary bg-custom-lightgray border round-3 p-3 mt-3" *ngFor="let link of userAccount.user.athletes; index as linkIndex; first as bFirst; last as bLast">
                                         <img class="avatar-lg img-fluid rounded-circle mr-3" src="{{link.profilePicture ? (baseServerUrl+link.profilePicture) : 'assets/icons/misc/user.svg'}}" alt="{{link.name}} {{link.surname}}">
                                         <div class="media-body">
                                             <div>
@@ -761,7 +761,7 @@
                             </div>
                         </div>
                         <!-- Notifications (only for admin or if the user is also the currentuser) -->
-                        <div class="card mt-3" *ngIf="account.role == Role.Admin || (account.user._id == user._id)">
+                        <div class="card mt-3" *ngIf="account.role == Role.Admin || (account.user._id == userAccount.user._id)">
                             <div class="row p-3 m-0" id="notificationsContainer">
                                 <div class="col-12 row m-0">
                                     <div class="col-12 p-0"><h6 class="h6 text-dark">Notifiche (richiesta atleta/coach)</h6></div>
@@ -844,7 +844,7 @@
                                         <!-- Email and Role -->
                                         <div class="col-12 p-0"><h6 class="h6 text-primary">Email <span *ngIf="account.role == Role.Admin">e Ruolo</span></h6></div>
                                         <div class="form-row form-row-inner col-12 border border-primary">
-                                            <div class="col-12 col-md-8 form-group">
+                                            <div class="col-12 col-md-8 form-group" [ngClass]="{'col-md-12': account.role != Role.Admin}">
                                                 <label class="col-form-label col-form-label-sm text-muted">Email</label>
                                                 <input type="text" max="100" formControlName="email" class="form-control form-control-sm" [ngClass]="{ 'is-invalid': accountFormSubmitted && fa.email.errors}"/>
                                                 <div *ngIf="accountFormSubmitted && fa.email.errors" class="invalid-feedback">

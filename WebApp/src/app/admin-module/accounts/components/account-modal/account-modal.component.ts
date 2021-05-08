@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MustMatch } from '@app/_helpers';
-import { Account } from '@app/_models';
+import { Account, Role } from '@app/_models';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { HttpService } from '@app/_services/http-service/http-service.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -10,6 +10,7 @@ import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { first } from 'rxjs/operators';
 import * as _ from 'lodash';
+import { USER_TYPES } from '@app/_models/training-model';
 
 @Component({
   selector: 'app-account-modal',
@@ -47,7 +48,7 @@ export class AccountModalComponent implements OnInit {
       surname: ['', Validators.required],
       dateOfBirth: [''],
       sex: [''],
-      userType: ['', Validators.required],
+      userType: [USER_TYPES.ATHLETE, Validators.required],
       bodyWeight: [''],
       yearsOfExperience: [''],
       userEmail: ['', Validators.email],
@@ -56,7 +57,7 @@ export class AccountModalComponent implements OnInit {
       residenceCity: [''],
       residenceAddress: [''],
       email: ['', [Validators.required, Validators.email]],
-      role: ['', Validators.required],
+      role: [Role.User, Validators.required],
       password: ['', [Validators.minLength(6), Validators.required]],
       confirmPassword: ['']
     }, {

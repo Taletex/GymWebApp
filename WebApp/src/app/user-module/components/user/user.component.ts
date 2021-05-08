@@ -28,6 +28,7 @@ export class UserComponent implements OnInit {
 
   // User informations
   @Input() userId: string;
+  @Input() accountId: string;
   public user: any = new User();
   public userAccount: Account = new Account();
   public notificationList: Notification[] = [];
@@ -36,7 +37,6 @@ export class UserComponent implements OnInit {
   // Account informations
   public account: Account;
   public Role = Role;
-  public bCurrentUserOrAdmin: boolean;
 
   // Pagemode handling
   public PAGEMODE = PAGEMODE;
@@ -90,7 +90,6 @@ export class UserComponent implements OnInit {
   constructor(public userService: UserService, private generalService: GeneralService, private accountService: AccountService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private toastr: ToastrService, private httpService: HttpService, socket: Socket) {
     this.bLoading = true;
     this.accountService.account.subscribe(x => this.account = x);
-    this.bCurrentUserOrAdmin = (this.account.user._id == (this.userId || (this.router.url).split('/')[2])) || this.account.role == Role.Admin;
     
     // Page status init
     this.pageStatus = this.generalService.getPageStatus();
@@ -101,15 +100,19 @@ export class UserComponent implements OnInit {
     socket.on('userListUserUpdated', function(user) {
       // Update user if page status is "READONLY"
       if(user != null && scope.pageStatus[scope.PAGES.USERS] == scope.PAGEMODE.READONLY) {
-        scope.user = _.cloneDeep(user);
+        scope.userAccount.user = _.cloneDeep(user);
       }
     })
   }
 
   ngOnInit() {
-    if(this.bCurrentUserOrAdmin)
-      this.getAccount(this.userId || (this.router.url).split('/')[2])
-    else
+    if(this.account.role == Role.Admin && this.accountId!=null)                                                                // if admin and accountId!=null get the account from be
+      this.getAccount(this.accountId);
+    else if(this.account.role == Role.Admin && (this.account.user._id != (this.userId || (this.router.url).split('/')[2])) )   // if admin and the selected account/user is not the current account/user, get the selected account
+      this.getAccountByUserId(this.userId || (this.router.url).split('/')[2])
+    else if(this.account.user._id == (this.userId || (this.router.url).split('/')[2]))                                         // if the selected account/user is the current account/user use the current account
+      this.setAccountFromCurrentAccount();
+    else                                                                                                                       // else get the selected user
       this.getUser(this.userId || (this.router.url).split('/')[2]);
   }
   
@@ -125,62 +128,61 @@ export class UserComponent implements OnInit {
 
 
   /* === Initialization Functions === */
-  initPageInformations(data: any) {
-    this.initUserInformations(data);
+  initPageInformations(userData: User, accountData: Account) {
+    this.initUserInformations(userData, accountData);
     this.initFormInitialValues();
   }
 
-  initUserInformations(data: Account) {
-    this.userAccount = _.cloneDeep(data);
-    this.user.bNewProfilePicture = false;
-
-    // if(this.user._id == this.account.user._id) {
-    //   this.userAccount = _.cloneDeep(this.account);
-    // }
+  initUserInformations(userData: User, accountData: Account) {
+    if(!accountData && userData)
+      this.userAccount.user = _.cloneDeep(userData);
+    else if(accountData && !userData)
+      this.userAccount = _.cloneDeep(accountData);
+    this.userAccount.user['bNewProfilePicture'] = false;
     this.notificationList = this.userAccount.user.notifications.filter((n) => { return (n.type == NOTIFICATION_TYPE.COACH_REQUEST || n.type == NOTIFICATION_TYPE.ATHLETE_REQUEST) && !n.bConsumed });
   }
 
   postUserInitialization() {
-    this.personalRecordList = this.user.personalRecords;
+    this.personalRecordList = this.userAccount.user.personalRecords;
 
     // Init user form
     this.userForm = this.formBuilder.group({
-      profilePicture: [this.user.profilePicture || ""],
-      biography: [this.user.biography],
-      name: [this.user.name, Validators.required],
-      surname: [this.user.surname, Validators.required],
-      dateOfBirth: [moment(this.user.dateOfBirth).format("yyyy-MM-DD")],
-      pobState: [this.user.placeOfBirth.state],
-      pobProvince: [this.user.placeOfBirth.province],
-      pobCap: [this.user.placeOfBirth.cap],
-      pobCity: [this.user.placeOfBirth.city],
-      pobAddress: [this.user.placeOfBirth.address],
-      sex: [this.user.sex],
-      userType: [this.user.userType, Validators.required],
-      bodyWeight: [this.user.bodyWeight],
-      yearsOfExperience: [this.user.yearsOfExperience],
-      disciplines: [this.user.disciplines],
-      gyms: [this.user.gyms],
-      email: [this.user.contacts.email, [Validators.email]],
-      telephone: [this.user.contacts.telephone],
-      socialsFacebook: [this.user.contacts.socials.facebook],
-      socialsTwitter: [this.user.contacts.socials.twitter],
-      socialsInstagram: [this.user.contacts.socials.instagram],
-      socialsLinkedin: [this.user.contacts.socials.linkedin],
-      socialsOther: [this.user.contacts.socials.other],
-      residenceState: [this.user.residence.state],
-      residenceProvince: [this.user.residence.province],
-      residenceCap: [this.user.residence.cap],
-      residenceCity: [this.user.residence.city],
-      residenceAddress: [this.user.residence.address],
+      profilePicture: [this.userAccount.user.profilePicture || ""],
+      biography: [this.userAccount.user.biography],
+      name: [this.userAccount.user.name, Validators.required],
+      surname: [this.userAccount.user.surname, Validators.required],
+      dateOfBirth: [moment(this.userAccount.user.dateOfBirth).format("yyyy-MM-DD")],
+      pobState: [this.userAccount.user.placeOfBirth.state],
+      pobProvince: [this.userAccount.user.placeOfBirth.province],
+      pobCap: [this.userAccount.user.placeOfBirth.cap],
+      pobCity: [this.userAccount.user.placeOfBirth.city],
+      pobAddress: [this.userAccount.user.placeOfBirth.address],
+      sex: [this.userAccount.user.sex],
+      userType: [this.userAccount.user.userType, Validators.required],
+      bodyWeight: [this.userAccount.user.bodyWeight],
+      yearsOfExperience: [this.userAccount.user.yearsOfExperience],
+      disciplines: [this.userAccount.user.disciplines],
+      gyms: [this.userAccount.user.gyms],
+      email: [this.userAccount.user.contacts.email, [Validators.email]],
+      telephone: [this.userAccount.user.contacts.telephone],
+      socialsFacebook: [this.userAccount.user.contacts.socials.facebook],
+      socialsTwitter: [this.userAccount.user.contacts.socials.twitter],
+      socialsInstagram: [this.userAccount.user.contacts.socials.instagram],
+      socialsLinkedin: [this.userAccount.user.contacts.socials.linkedin],
+      socialsOther: [this.userAccount.user.contacts.socials.other],
+      residenceState: [this.userAccount.user.residence.state],
+      residenceProvince: [this.userAccount.user.residence.province],
+      residenceCap: [this.userAccount.user.residence.cap],
+      residenceCity: [this.userAccount.user.residence.city],
+      residenceAddress: [this.userAccount.user.residence.address],
       //To implement also personal record using dynamic forms you can follow this link: https://stackoverflow.com/questions/57425789/formgroup-in-formarray-containing-object-displaying-object-object 
     });
 
     // Init settings form
     this.settingsForm = this.formBuilder.group({
-      showActivities: [this.user.settings.showActivities || 0, Validators.required],
-      showPrivateInfo: [this.user.settings.showPrivateInfo || 0, Validators.required],
-      showPublicInfo: [this.user.settings.showPublicInfo || 0, Validators.required]
+      showActivities: [this.userAccount.user.settings.showActivities || 0, Validators.required],
+      showPrivateInfo: [this.userAccount.user.settings.showPrivateInfo || 0, Validators.required],
+      showPublicInfo: [this.userAccount.user.settings.showPublicInfo || 0, Validators.required]
     });
     
       // Init account form
@@ -193,10 +195,10 @@ export class UserComponent implements OnInit {
       validator: MustMatch('password', 'confirmPassword')
     });
 
-    this.personalRecordList = _.cloneDeep(this.user.personalRecords);   // Note: I'm using a simpler solution for handling personal record inputs because using dynamic forms required much time
+    this.personalRecordList = _.cloneDeep(this.userAccount.user.personalRecords);   // Note: I'm using a simpler solution for handling personal record inputs because using dynamic forms required much time
 
     // Init gyms multiselect list
-    this.gymsList = this.user.gyms;
+    this.gymsList = this.userAccount.user.gyms;
 
     // Init exercise list
     this.getExercises();
@@ -208,17 +210,39 @@ export class UserComponent implements OnInit {
     this.personalRecordInitialValues = _.cloneDeep(this.personalRecordList);
   }
 
+  getAccount(accountId: string) {
+    this.accountService.getById(accountId)
+      .subscribe(
+        (data: any) => {
+          this.initUserInformations(null, data);
+          // For Test Purpose
+          this.activityList.push(new Activity('lasjd0123uasd', 'competition', 'Torneo Nazionale WPA', ['powerlifting'], new Federation("10892asjnd", "WPA"), 'nazionale', ['all'], ['all'], new Residence('italia', 'PA', '91000', 'alimena', 'via della piovra 5'), new Date("05/22/2021"), new Date("05/23/2021"), "Gara nazionale WPA 2021, utile per le qualificazioni ai mondiali", [this.userAccount.user._id], ["50 euro"], [], ["prozis"], this.userAccount.user._id, true));
+          this.activityList.push(new Activity('123ouqnsidunq', 'competition', 'Torneo Nazionale FIPL', ['powerlifting'], new Federation("10892asjnd", "FIPL"), 'nazionale', ['all'], ['all'], new Residence('italia', 'MI', '92000','san zenone al lambro', 'via delle rose 123'), new Date("10/06/2021"), new Date("10/08/2021"), "Gara nazionale FIPL 2021, utile per le qualificazioni ai mondiali", [this.userAccount.user._id], ["50 euro"], ["100 euro primo posto", "50 euro secondo posto"], ["prozis"], this.userAccount.user._id, true));
+          // end test
+          this.postUserInitialization();
+          this.initFormInitialValues();
 
-  getAccount(userId: string) {
+          this.bLoading = false;
+          console.log(this.userAccount);
+
+          this.pageStatus = this.generalService.getPageStatus();
+          console.log(this.pageStatus);
+        },
+        (error: HttpErrorResponse) => {
+          this.bLoading = false;
+          this.toastr.error('An error occurred while loading the account!');
+          console.log(error.error.message);
+        });
+  }
+
+  getAccountByUserId(userId: string) {
     this.accountService.getAccountByUserId(userId)
       .subscribe(
         (data: any) => {
-          this.initUserInformations(data);
+          this.initUserInformations(null, data);
           // For Test Purpose
-          this.activityList.push(new Activity('lasjd0123uasd', 'competition', 'Torneo Nazionale WPA', ['powerlifting'], new Federation("10892asjnd", "WPA"), 'nazionale', ['all'], ['all'], new Residence('italia', 'PA', '91000', 'alimena', 'via della piovra 5'), new Date("05/22/2021"), new Date("05/23/2021"), "Gara nazionale WPA 2021, utile per le qualificazioni ai mondiali", [this.user._id], ["50 euro"], [], ["prozis"], this.user._id, true));
-          this.activityList.push(new Activity('123ouqnsidunq', 'competition', 'Torneo Nazionale FIPL', ['powerlifting'], new Federation("10892asjnd", "FIPL"), 'nazionale', ['all'], ['all'], new Residence('italia', 'MI', '92000','san zenone al lambro', 'via delle rose 123'), new Date("10/06/2021"), new Date("10/08/2021"), "Gara nazionale FIPL 2021, utile per le qualificazioni ai mondiali", [this.user._id], ["50 euro"], ["100 euro primo posto", "50 euro secondo posto"], ["prozis"], this.user._id, true));
-          if(!this.user.settings)
-            this.user.settings = new UserSettings();
+          this.activityList.push(new Activity('lasjd0123uasd', 'competition', 'Torneo Nazionale WPA', ['powerlifting'], new Federation("10892asjnd", "WPA"), 'nazionale', ['all'], ['all'], new Residence('italia', 'PA', '91000', 'alimena', 'via della piovra 5'), new Date("05/22/2021"), new Date("05/23/2021"), "Gara nazionale WPA 2021, utile per le qualificazioni ai mondiali", [this.userAccount.user._id], ["50 euro"], [], ["prozis"], this.userAccount.user._id, true));
+          this.activityList.push(new Activity('123ouqnsidunq', 'competition', 'Torneo Nazionale FIPL', ['powerlifting'], new Federation("10892asjnd", "FIPL"), 'nazionale', ['all'], ['all'], new Residence('italia', 'MI', '92000','san zenone al lambro', 'via delle rose 123'), new Date("10/06/2021"), new Date("10/08/2021"), "Gara nazionale FIPL 2021, utile per le qualificazioni ai mondiali", [this.userAccount.user._id], ["50 euro"], ["100 euro primo posto", "50 euro secondo posto"], ["prozis"], this.userAccount.user._id, true));
           // end test
           this.postUserInitialization();
           this.initFormInitialValues();
@@ -240,16 +264,11 @@ export class UserComponent implements OnInit {
     this.httpService.getUser(userId)
       .subscribe(
         (data: any) => {
-          let accountData = new Account();
-          accountData.user = data;
-
-          this.initUserInformations(accountData);
+          this.initUserInformations(data, null);
 
           // For Test Purpose
-          this.activityList.push(new Activity('lasjd0123uasd', 'competition', 'Torneo Nazionale WPA', ['powerlifting'], new Federation("10892asjnd", "WPA"), 'nazionale', ['all'], ['all'], new Residence('italia', 'PA', '91000', 'alimena', 'via della piovra 5'), new Date("05/22/2021"), new Date("05/23/2021"), "Gara nazionale WPA 2021, utile per le qualificazioni ai mondiali", [this.user._id], ["50 euro"], [], ["prozis"], this.user._id, true));
-          this.activityList.push(new Activity('123ouqnsidunq', 'competition', 'Torneo Nazionale FIPL', ['powerlifting'], new Federation("10892asjnd", "FIPL"), 'nazionale', ['all'], ['all'], new Residence('italia', 'MI', '92000','san zenone al lambro', 'via delle rose 123'), new Date("10/06/2021"), new Date("10/08/2021"), "Gara nazionale FIPL 2021, utile per le qualificazioni ai mondiali", [this.user._id], ["50 euro"], ["100 euro primo posto", "50 euro secondo posto"], ["prozis"], this.user._id, true));
-          if(!this.user.settings)
-            this.user.settings = new UserSettings();
+          this.activityList.push(new Activity('lasjd0123uasd', 'competition', 'Torneo Nazionale WPA', ['powerlifting'], new Federation("10892asjnd", "WPA"), 'nazionale', ['all'], ['all'], new Residence('italia', 'PA', '91000', 'alimena', 'via della piovra 5'), new Date("05/22/2021"), new Date("05/23/2021"), "Gara nazionale WPA 2021, utile per le qualificazioni ai mondiali", [this.userAccount.user._id], ["50 euro"], [], ["prozis"], this.userAccount.user._id, true));
+          this.activityList.push(new Activity('123ouqnsidunq', 'competition', 'Torneo Nazionale FIPL', ['powerlifting'], new Federation("10892asjnd", "FIPL"), 'nazionale', ['all'], ['all'], new Residence('italia', 'MI', '92000','san zenone al lambro', 'via delle rose 123'), new Date("10/06/2021"), new Date("10/08/2021"), "Gara nazionale FIPL 2021, utile per le qualificazioni ai mondiali", [this.userAccount.user._id], ["50 euro"], ["100 euro primo posto", "50 euro secondo posto"], ["prozis"], this.userAccount.user._id, true));
           // end test
           
           this.postUserInitialization();
@@ -264,6 +283,20 @@ export class UserComponent implements OnInit {
           this.toastr.error('An error occurred while loading the user!');
           console.log(error.error.message);
         });
+  }
+
+  setAccountFromCurrentAccount() {
+    this.initUserInformations(null, this.account);
+
+    // For Test Purpose
+    this.activityList.push(new Activity('lasjd0123uasd', 'competition', 'Torneo Nazionale WPA', ['powerlifting'], new Federation("10892asjnd", "WPA"), 'nazionale', ['all'], ['all'], new Residence('italia', 'PA', '91000', 'alimena', 'via della piovra 5'), new Date("05/22/2021"), new Date("05/23/2021"), "Gara nazionale WPA 2021, utile per le qualificazioni ai mondiali", [this.userAccount.user._id], ["50 euro"], [], ["prozis"], this.userAccount.user._id, true));
+    this.activityList.push(new Activity('123ouqnsidunq', 'competition', 'Torneo Nazionale FIPL', ['powerlifting'], new Federation("10892asjnd", "FIPL"), 'nazionale', ['all'], ['all'], new Residence('italia', 'MI', '92000','san zenone al lambro', 'via delle rose 123'), new Date("10/06/2021"), new Date("10/08/2021"), "Gara nazionale FIPL 2021, utile per le qualificazioni ai mondiali", [this.userAccount.user._id], ["50 euro"], ["100 euro primo posto", "50 euro secondo posto"], ["prozis"], this.userAccount.user._id, true));
+    if(!this.userAccount.user.settings)
+      this.userAccount.user.settings = new UserSettings();
+    // end test
+    
+    this.postUserInitialization();
+    this.initFormInitialValues();
   }
 
 
@@ -321,7 +354,7 @@ export class UserComponent implements OnInit {
           this.userForm.patchValue({
             profilePicture: e.target.result
           });
-          this.user.bNewProfilePicture = true;
+          this.userAccount.user['bNewProfilePicture'] = true;
           this.userForm.controls.profilePicture.markAsDirty();
           document.getElementById("imgUploadTitle").innerHTML = file.name;
           console.log("Uploaded file", file);
@@ -334,8 +367,8 @@ export class UserComponent implements OnInit {
 
   resetInputFile() {
     this.fu.profilePicture.reset();
-    this.userForm.value.profilePicture = this.user.profilePicture;
-    this.user.bNewProfilePicture = false;
+    this.userForm.value.profilePicture = this.userAccount.user.profilePicture;
+    this.userAccount.user['bNewProfilePicture'] = false;
     (document.getElementById("profilePictureFileInput") as HTMLInputElement).value = "";
     document.getElementById("imgUploadTitle").innerHTML = "";
   }
@@ -345,28 +378,28 @@ export class UserComponent implements OnInit {
                       'residenceState', 'residenceProvince', 'residenceCap', 'residenceCity', 'residenceAddress'];
     for (const [key, value] of Object.entries(this.userForm.value)) {
       if (!exceptions.includes(key)) {
-          this.user[key] = value;
+          this.userAccount.user[key] = value;
       }
     }
 
     // PoB
-    this.user.placeOfBirth.state = this.userForm.value.pobState;
-    this.user.placeOfBirth.province = this.userForm.value.pobProvince;
-    this.user.placeOfBirth.cap = this.userForm.value.pobCap;
-    this.user.placeOfBirth.city = this.userForm.value.pobCity;
-    this.user.placeOfBirth.address = this.userForm.value.pobAddress;
+    this.userAccount.user.placeOfBirth.state = this.userForm.value.pobState;
+    this.userAccount.user.placeOfBirth.province = this.userForm.value.pobProvince;
+    this.userAccount.user.placeOfBirth.cap = this.userForm.value.pobCap;
+    this.userAccount.user.placeOfBirth.city = this.userForm.value.pobCity;
+    this.userAccount.user.placeOfBirth.address = this.userForm.value.pobAddress;
     // Contacts
-    this.user.contacts.socials.facebook = this.userForm.value.socialsFacebook;
-    this.user.contacts.socials.twitter = this.userForm.value.socialsTwitter;
-    this.user.contacts.socials.instagram = this.userForm.value.socialsInstagram;
-    this.user.contacts.socials.linkedin = this.userForm.value.socialsLinkedin;
-    this.user.contacts.socials.other = this.userForm.value.socialsOther;
+    this.userAccount.user.contacts.socials.facebook = this.userForm.value.socialsFacebook;
+    this.userAccount.user.contacts.socials.twitter = this.userForm.value.socialsTwitter;
+    this.userAccount.user.contacts.socials.instagram = this.userForm.value.socialsInstagram;
+    this.userAccount.user.contacts.socials.linkedin = this.userForm.value.socialsLinkedin;
+    this.userAccount.user.contacts.socials.other = this.userForm.value.socialsOther;
     // Residence
-    this.user.residence.state = this.userForm.value.residenceState;
-    this.user.residence.province = this.userForm.value.residenceProvince;
-    this.user.residence.cap = this.userForm.value.residenceCap;
-    this.user.residence.city = this.userForm.value.residenceCity;
-    this.user.residence.address = this.userForm.value.residenceAddress;
+    this.userAccount.user.residence.state = this.userForm.value.residenceState;
+    this.userAccount.user.residence.province = this.userForm.value.residenceProvince;
+    this.userAccount.user.residence.cap = this.userForm.value.residenceCap;
+    this.userAccount.user.residence.city = this.userForm.value.residenceCity;
+    this.userAccount.user.residence.address = this.userForm.value.residenceAddress;
   }
 
   onSubmitUser() {
@@ -381,11 +414,11 @@ export class UserComponent implements OnInit {
     this.assignFormValuesToUser();
 
     this.bLoading = true;
-    this.httpService.updateUser(this.user._id, this.user)
+    this.httpService.updateUser(this.userAccount.user._id, this.userAccount.user)
       .subscribe(
         (data: any) => {
           this.bLoading = false;
-          this.initPageInformations(data);
+          this.initPageInformations(data, null);
 
           this.accountService.updateUserValue(data);
 
@@ -412,7 +445,7 @@ export class UserComponent implements OnInit {
         term === ''
           ? this.exerciseList
           : ((this.exerciseList.filter(v => (v.name + " (" + v.variant.name + ")").toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)).length == 0
-            ? ((this.user.userType != 'athlete') ? [new Exercise("Nuovo Esercizio", new Variant("new", -1))] : [])
+            ? ((this.userAccount.user.userType != 'athlete') ? [new Exercise("Nuovo Esercizio", new Variant("new", -1))] : [])
             : (this.exerciseList.filter(v => (v.name + " (" + v.variant.name + ")").toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)))
       )
     )
@@ -420,7 +453,7 @@ export class UserComponent implements OnInit {
   getExercises() {
     this.bLoading = true;
 
-    this.httpService.getExercisesForUser(this.account.user._id)
+    this.httpService.getExercisesForUser(this.userAccount.user._id)
       .subscribe(
         (data: Array<Exercise>) => {
           for (let i = 0; i < this.personalRecordList.length; i++) {
@@ -463,7 +496,7 @@ export class UserComponent implements OnInit {
 
   initNewExercise() {
     this.newExercise = new Exercise();
-    this.newExercise.creator = this.user._id;
+    this.newExercise.creator = this.userAccount.user._id;
   }
 
   abortCreateExercise() {
@@ -586,7 +619,7 @@ export class UserComponent implements OnInit {
       return;
     }
 
-    let newUser = _.cloneDeep(this.user);
+    let newUser = _.cloneDeep(this.userAccount.user);
     newUser.personalRecords = this.personalRecordList;
 
     this.bLoading = true;
@@ -594,7 +627,7 @@ export class UserComponent implements OnInit {
       .subscribe(
         (data: any) => {
           this.bLoading = false;
-          this.initPageInformations(data);
+          this.initPageInformations(data, null);
           this.toastr.success('User information successfully updated!');
         },
         (error: HttpErrorResponse) => {
@@ -626,14 +659,14 @@ export class UserComponent implements OnInit {
    * If the current user is an admin or the user of this userpage and the page mode is WRITE, return the full personalRecordList, else return the personalRecordList filtered by bPublic attribute (set to true)
    */
   filterVisiblePR(): PersonalRecord[] {
-    return (((this.account.role == Role.Admin || this.account.user._id == this.user._id) && this.pageStatus[PAGES.USERS] == PAGEMODE.WRITE) ? this.personalRecordList : this.personalRecordList.filter(pr => pr.bPublic));
+    return (((this.account.role == Role.Admin || this.account.user._id == this.userAccount.user._id) && this.pageStatus[PAGES.USERS] == PAGEMODE.WRITE) ? this.personalRecordList : this.personalRecordList.filter(pr => pr.bPublic));
   }
 
   /**
    * If the current user is an admin or the user of this userpage and the page mode is WRITE, return the full pr.series, else return the pr.series filtered by bPublic attribute (set to true)
    */
   filterVisiblePRSeries(pr: PersonalRecord): PRSeries[] {
-    return (((this.account.role == Role.Admin || this.account.user._id == this.user._id) && this.pageStatus[PAGES.USERS] == PAGEMODE.WRITE) ? pr.series : pr.series.filter(series => series.bPublic));
+    return (((this.account.role == Role.Admin || this.account.user._id == this.userAccount.user._id) && this.pageStatus[PAGES.USERS] == PAGEMODE.WRITE) ? pr.series : pr.series.filter(series => series.bPublic));
   }
 
 
@@ -648,7 +681,7 @@ export class UserComponent implements OnInit {
   assignFormOptionsValueToUser() {
 
     for (const [key, value] of Object.entries(this.settingsForm.value)) {
-        this.user.settings[key] = value;
+        this.userAccount.user.settings[key] = value;
     }
   }
 
@@ -664,11 +697,11 @@ export class UserComponent implements OnInit {
     this.assignFormOptionsValueToUser();
 
     this.bLoading = true;
-    this.httpService.updateUser(this.user._id, this.user)
+    this.httpService.updateUser(this.userAccount.user._id, this.userAccount.user)
       .subscribe(
         (data: any) => {
           this.bLoading = false;
-          this.initPageInformations(data);
+          this.initPageInformations(data, null);
           this.toastr.success('User information successfully updated!');
         },
         (error: HttpErrorResponse) => {
@@ -705,11 +738,11 @@ export class UserComponent implements OnInit {
           });
   }
 
-  onDeleteAccount() {
+  deleteAccount() {
       if (confirm('Are you sure?')) {
           this.accountFormDeleting = true;
           this.bLoading = true;
-          this.accountService.delete(this.account.id)
+          this.accountService.delete(this.userAccount.id)
               .pipe(first())
               .subscribe(() => {
                 this.bLoading = false;
@@ -774,21 +807,21 @@ export class UserComponent implements OnInit {
 
   removeLink(notificationType: NOTIFICATION_TYPE, userId: string) {
     if(notificationType == NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK)
-      this.user.coaches.splice(this.user.coaches.findIndex((u)=>{return (u._id == userId)}), 1);
+      this.userAccount.user.coaches.splice(this.userAccount.user.coaches.findIndex((u)=>{return (u['_id'] == userId)}), 1);
     else if(notificationType == NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK) 
-      this.user.athletes.splice(this.user.athletes.findIndex((u)=>{return (u._id == userId)}), 1);
+      this.userAccount.user.athletes.splice(this.userAccount.user.athletes.findIndex((u)=>{return (u['_id'] == userId)}), 1);
   }
 
   addLink(notificationType: string, user: any) {
     if(notificationType == NOTIFICATION_TYPE.ATHLETE_REQUEST)
-      this.user.coaches.push(user);
+      this.userAccount.user.coaches.push(user);
     else if(notificationType == NOTIFICATION_TYPE.COACH_REQUEST) 
-      this.user.athletes.push(user);
+      this.userAccount.user.athletes.push(user);
   }
 
   acceptRequest(notification: Notification) {
     this.bLoading = true;
-    this.httpService.acceptRequest(this.user._id, notification)
+    this.httpService.acceptRequest(this.userAccount.user._id, notification)
     .subscribe(
       (data: any) => {
         this.removeNotification(notification._id);            // MUST update notifications list since socket does not update it (or its user)
@@ -806,7 +839,7 @@ export class UserComponent implements OnInit {
 
   refuseRequest(notification: Notification) {
     this.bLoading = true;
-    this.httpService.refuseRequest(this.user._id, notification)
+    this.httpService.refuseRequest(this.userAccount.user._id, notification)
     .subscribe(
       (data: any) => {
         this.removeNotification(notification._id);  // MUST update notifications list since socket does not update it (or its user)

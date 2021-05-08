@@ -12,21 +12,6 @@
   }
 }
 
-.main__header {
-  cursor: default;
-  height: 60px;
-  box-shadow: 0 0 2rem 0 rgba(41, 48, 66, 0.1);
-  background-color: #ffffff;
-}
-.main__header .account-info {
-  position: absolute;
-  right: 16px;
-  bottom: 3px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-}
-
 .main-content {
   overflow: hidden !important;
   /* ===== Scrollbar ===== */

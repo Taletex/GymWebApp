@@ -12,7 +12,7 @@ const SocialsSchema = mongoose.Schema ({
 const ContactsSchema = mongoose.Schema({
     email: String,
     telephone: String,
-    socials: { type: SocialsSchema, required: false }
+    socials: SocialsSchema,
 }, { _id: false})
 
 const ResidenceSchema = mongoose.Schema({
