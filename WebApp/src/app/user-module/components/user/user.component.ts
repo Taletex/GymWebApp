@@ -130,15 +130,14 @@ export class UserComponent implements OnInit {
     this.initFormInitialValues();
   }
 
-  initUserInformations(data: any) {
-    this.user = data;
+  initUserInformations(data: Account) {
+    this.userAccount = _.cloneDeep(data);
     this.user.bNewProfilePicture = false;
 
-    if(this.user._id == this.account.user._id) {
-      this.userAccount = _.cloneDeep(this.account);
-    }
-    this.userAccount.user = this.user;
-    this.notificationList = this.user.notifications.filter((n) => { return (n.type == NOTIFICATION_TYPE.COACH_REQUEST || n.type == NOTIFICATION_TYPE.ATHLETE_REQUEST) && !n.bConsumed });
+    // if(this.user._id == this.account.user._id) {
+    //   this.userAccount = _.cloneDeep(this.account);
+    // }
+    this.notificationList = this.userAccount.user.notifications.filter((n) => { return (n.type == NOTIFICATION_TYPE.COACH_REQUEST || n.type == NOTIFICATION_TYPE.ATHLETE_REQUEST) && !n.bConsumed });
   }
 
   postUserInitialization() {
@@ -241,21 +240,24 @@ export class UserComponent implements OnInit {
     this.httpService.getUser(userId)
       .subscribe(
         (data: any) => {
-          this.initUserInformations(data);
+          let accountData = new Account();
+          accountData.user = data;
+
+          this.initUserInformations(accountData);
+
           // For Test Purpose
           this.activityList.push(new Activity('lasjd0123uasd', 'competition', 'Torneo Nazionale WPA', ['powerlifting'], new Federation("10892asjnd", "WPA"), 'nazionale', ['all'], ['all'], new Residence('italia', 'PA', '91000', 'alimena', 'via della piovra 5'), new Date("05/22/2021"), new Date("05/23/2021"), "Gara nazionale WPA 2021, utile per le qualificazioni ai mondiali", [this.user._id], ["50 euro"], [], ["prozis"], this.user._id, true));
           this.activityList.push(new Activity('123ouqnsidunq', 'competition', 'Torneo Nazionale FIPL', ['powerlifting'], new Federation("10892asjnd", "FIPL"), 'nazionale', ['all'], ['all'], new Residence('italia', 'MI', '92000','san zenone al lambro', 'via delle rose 123'), new Date("10/06/2021"), new Date("10/08/2021"), "Gara nazionale FIPL 2021, utile per le qualificazioni ai mondiali", [this.user._id], ["50 euro"], ["100 euro primo posto", "50 euro secondo posto"], ["prozis"], this.user._id, true));
           if(!this.user.settings)
             this.user.settings = new UserSettings();
           // end test
+          
           this.postUserInitialization();
           this.initFormInitialValues();
 
           this.bLoading = false;
-          console.log(this.user);
-
           this.pageStatus = this.generalService.getPageStatus();
-          console.log(this.pageStatus);
+          console.log("User Account", this.userAccount);
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
