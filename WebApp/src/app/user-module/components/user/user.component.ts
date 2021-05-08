@@ -291,8 +291,6 @@ export class UserComponent implements OnInit {
     // For Test Purpose
     this.activityList.push(new Activity('lasjd0123uasd', 'competition', 'Torneo Nazionale WPA', ['powerlifting'], new Federation("10892asjnd", "WPA"), 'nazionale', ['all'], ['all'], new Residence('italia', 'PA', '91000', 'alimena', 'via della piovra 5'), new Date("05/22/2021"), new Date("05/23/2021"), "Gara nazionale WPA 2021, utile per le qualificazioni ai mondiali", [this.userAccount.user._id], ["50 euro"], [], ["prozis"], this.userAccount.user._id, true));
     this.activityList.push(new Activity('123ouqnsidunq', 'competition', 'Torneo Nazionale FIPL', ['powerlifting'], new Federation("10892asjnd", "FIPL"), 'nazionale', ['all'], ['all'], new Residence('italia', 'MI', '92000','san zenone al lambro', 'via delle rose 123'), new Date("10/06/2021"), new Date("10/08/2021"), "Gara nazionale FIPL 2021, utile per le qualificazioni ai mondiali", [this.userAccount.user._id], ["50 euro"], ["100 euro primo posto", "50 euro secondo posto"], ["prozis"], this.userAccount.user._id, true));
-    if(!this.userAccount.user.settings)
-      this.userAccount.user.settings = new UserSettings();
     // end test
     
     this.postUserInitialization();

@@ -259,8 +259,8 @@ export enum EXERCISE_GROUPS {
 
 export enum OPTION_VISIBILITY {
     ALL = 0,
-    LINKS_ONLY = 1,
-    NONE = 2
+    NONE = 1,
+    // LINKS_ONLY = 2,
 }
 
 export enum USER_TYPES {

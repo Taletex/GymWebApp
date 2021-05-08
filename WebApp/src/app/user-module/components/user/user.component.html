@@ -54,15 +54,19 @@
                             </div>
                         </div>
                         <!-- disciplines -->
-                        <hr class="my-0" *ngIf="userAccount.user.disciplines != null && userAccount.user.disciplines.length > 0">
-                        <div class="card-body" *ngIf="userAccount.user.disciplines != null && userAccount.user.disciplines.length > 0">
-                            <h6 class="h6 card-title">Discipline</h6>
+                        <hr class="my-0" *ngIf="(userAccount.user.disciplines != null && userAccount.user.disciplines.length > 0)
+                                                && (userAccount.user.settings.showPublicInfo == OPTION_VISIBILITY.ALL || (account.role == Role.Admin || account.user._id == userAccount.user._id))">
+                        <div class="card-body" *ngIf="(userAccount.user.disciplines != null && userAccount.user.disciplines.length > 0) 
+                                                      && (userAccount.user.settings.showPublicInfo == OPTION_VISIBILITY.ALL || (account.role == Role.Admin || account.user._id == userAccount.user._id))">
+                            <h6 class="h6 card-title">Discipline <span *ngIf="userAccount.user.settings.showPublicInfo == OPTION_VISIBILITY.NONE && (account.role == Role.Admin || account.user._id == userAccount.user._id)">(privato)</span></h6>
                             <span class="badge badge-primary mr-1 my-1" *ngFor="let d of userAccount.user.disciplines">{{d}}</span>
                         </div>
                         <!-- residence, gyms, pob -->
-                        <hr class="my-0" *ngIf="(userAccount.user.residence.city && userAccount.user.residence.state) || (userAccount.user.gyms != null && userAccount.user.gyms.length > 0) || (userAccount.user.placeOfBirth != null && (userAccount.user.placeOfBirth.city != null && userAccount.user.placeOfBirth.city != '') && (userAccount.user.placeOfBirth.state != null && userAccount.user.placeOfBirth.state != ''))">
-                        <div class="card-body" *ngIf="(userAccount.user.residence.city && userAccount.user.residence.state) || (userAccount.user.gyms != null && userAccount.user.gyms.length > 0) || (userAccount.user.placeOfBirth != null && (userAccount.user.placeOfBirth.city != null && userAccount.user.placeOfBirth.city != '') && (userAccount.user.placeOfBirth.state != null && userAccount.user.placeOfBirth.state != ''))">
-                            <h5 class="h6 card-title">Luoghi</h5>
+                        <hr class="my-0" *ngIf="((userAccount.user.residence.city && userAccount.user.residence.state) || (userAccount.user.gyms != null && userAccount.user.gyms.length > 0) || (userAccount.user.placeOfBirth != null && (userAccount.user.placeOfBirth.city != null && userAccount.user.placeOfBirth.city != '') && (userAccount.user.placeOfBirth.state != null && userAccount.user.placeOfBirth.state != '')))
+                                                 && (userAccount.user.settings.showPrivateInfo == OPTION_VISIBILITY.ALL || (account.role == Role.Admin || account.user._id == userAccount.user._id))">
+                        <div class="card-body" *ngIf="((userAccount.user.residence.city && userAccount.user.residence.state) || (userAccount.user.gyms != null && userAccount.user.gyms.length > 0) || (userAccount.user.placeOfBirth != null && (userAccount.user.placeOfBirth.city != null && userAccount.user.placeOfBirth.city != '') && (userAccount.user.placeOfBirth.state != null && userAccount.user.placeOfBirth.state != '')))
+                                                      && (userAccount.user.settings.showPrivateInfo == OPTION_VISIBILITY.ALL || (account.role == Role.Admin || account.user._id == userAccount.user._id))">
+                            <h5 class="h6 card-title">Luoghi <span *ngIf="userAccount.user.settings.showPrivateInfo == OPTION_VISIBILITY.NONE && (account.role == Role.Admin || account.user._id == userAccount.user._id)">(privato)</span></h5>
                             <ul class="list-unstyled mb-0">
                                 <li class="d-flex align-items-center mb-1" *ngIf="userAccount.user.residence.city && userAccount.user.residence.state">
                                     <span class="fa fa-fw fa-home font-size-12 mr-1"></span>
@@ -79,9 +83,11 @@
                             </ul>
                         </div>
                         <!-- contacts: email and telephone -->
-                        <hr class="my-0" *ngIf="(userAccount.user.contacts.email || userAccount.user.contacts.telephone)">
-                        <div class="card-body" *ngIf="(userAccount.user.contacts.email || userAccount.user.contacts.telephone)">
-                            <h5 class="h6 card-title">Contatti</h5>
+                        <hr class="my-0" *ngIf="(userAccount.user.contacts.email || userAccount.user.contacts.telephone) 
+                                                && (userAccount.user.settings.showPrivateInfo == OPTION_VISIBILITY.ALL || (account.role == Role.Admin || account.user._id == userAccount.user._id))">
+                        <div class="card-body" *ngIf="(userAccount.user.contacts.email || userAccount.user.contacts.telephone)
+                                                      && (userAccount.user.settings.showPrivateInfo == OPTION_VISIBILITY.ALL || (account.role == Role.Admin || account.user._id == userAccount.user._id))">
+                            <h5 class="h6 card-title">Contatti <span *ngIf="userAccount.user.settings.showPrivateInfo == OPTION_VISIBILITY.NONE && (account.role == Role.Admin || account.user._id == userAccount.user._id)">(privato)</span></h5>
                             <ul class="list-unstyled mb-0">
                                 <li class="d-flex align-items-center mb-1" *ngIf="userAccount.user.contacts.email">
                                     <span class="fa fa-fw fa-envelope mr-1"></span>
@@ -94,9 +100,11 @@
                             </ul>
                         </div>
                         <!-- Category infos -->
-                        <hr class="my-0" *ngIf="(userAccount.user.dateOfBirth || userAccount.user.sex || userAccount.user.bodyWeight || userAccount.user.yearsOfExperience)">
-                        <div class="card-body" *ngIf="(userAccount.user.dateOfBirth || userAccount.user.sex || userAccount.user.bodyWeight || userAccount.user.yearsOfExperience)">
-                            <h5 class="h6 card-title">Altro</h5>
+                        <hr class="my-0" *ngIf="(userAccount.user.dateOfBirth || userAccount.user.sex || userAccount.user.bodyWeight || userAccount.user.yearsOfExperience)
+                                                && (userAccount.user.settings.showPrivateInfo == OPTION_VISIBILITY.ALL || (account.role == Role.Admin || account.user._id == userAccount.user._id))">
+                        <div class="card-body" *ngIf="(userAccount.user.dateOfBirth || userAccount.user.sex || userAccount.user.bodyWeight || userAccount.user.yearsOfExperience)
+                                                      && (userAccount.user.settings.showPrivateInfo == OPTION_VISIBILITY.ALL || (account.role == Role.Admin || account.user._id == userAccount.user._id))">
+                            <h5 class="h6 card-title">Altro <span *ngIf="userAccount.user.settings.showPrivateInfo == OPTION_VISIBILITY.NONE && (account.role == Role.Admin || account.user._id == userAccount.user._id)">(privato)</span></h5>
                             <ul class="list-unstyled mb-0">
                                 <li class="d-flex align-items-center mb-1" *ngIf="userAccount.user.dateOfBirth">
                                     <span class="fa fa-fw fa-birthday-cake mr-1"></span>
@@ -117,9 +125,11 @@
                             </ul>
                         </div>
                         <!-- socials -->
-                        <hr class="my-0" *ngIf="userAccount.user.contacts.socials != null && (userAccount.user.contacts.socials.facebook || userAccount.user.contacts.socials.twitter || userAccount.user.contacts.socials.instagram || userAccount.user.contacts.socials.linkedin || userAccount.user.contacts.socials.other)">
-                        <div class="card-body" *ngIf="userAccount.user.contacts.socials != null && (userAccount.user.contacts.socials.facebook || userAccount.user.contacts.socials.twitter || userAccount.user.contacts.socials.instagram || userAccount.user.contacts.socials.linkedin || userAccount.user.contacts.socials.other)">
-                            <h6 class="h6 card-title">Social</h6>
+                        <hr class="my-0" *ngIf="(userAccount.user.contacts.socials != null && (userAccount.user.contacts.socials.facebook || userAccount.user.contacts.socials.twitter || userAccount.user.contacts.socials.instagram || userAccount.user.contacts.socials.linkedin || userAccount.user.contacts.socials.other))
+                                                && (userAccount.user.settings.showPublicInfo == OPTION_VISIBILITY.ALL || (account.role == Role.Admin || account.user._id == userAccount.user._id))">
+                        <div class="card-body" *ngIf="(userAccount.user.contacts.socials != null && (userAccount.user.contacts.socials.facebook || userAccount.user.contacts.socials.twitter || userAccount.user.contacts.socials.instagram || userAccount.user.contacts.socials.linkedin || userAccount.user.contacts.socials.other)) 
+                                                && (userAccount.user.settings.showPublicInfo == OPTION_VISIBILITY.ALL || (account.role == Role.Admin || account.user._id == userAccount.user._id))">
+                            <h6 class="h6 card-title">Social <span *ngIf="userAccount.user.settings.showPublicInfo == OPTION_VISIBILITY.NONE && (account.role == Role.Admin || account.user._id == userAccount.user._id)">(privato)</span></h6>
                             <ul class="list-unstyled mb-0">
                                 <li class="mb-1" *ngIf="userAccount.user.contacts.socials.facebook"><span class="fa fa-facebook fa-fw mr-1"></span> <a href="{{userAccount.user.contacts.socials.facebook}}" target="blank" class="fa-description">Facebook</a></li>
                                 <li class="mb-1" *ngIf="userAccount.user.contacts.socials.twitter"><span class="fa fa-twitter fa-fw mr-1"></span> <a href="{{userAccount.user.contacts.socials.twitter}}" target="blank" class="fa-description">Twitter</a></li>
@@ -133,7 +143,7 @@
 
                 <div class="col-xl-8">
                     <!-- Activity -->
-                    <div class="card">
+                    <div class="card mb-2" *ngIf="userAccount.user.settings.showActivities == OPTION_VISIBILITY.ALL || (account.role == Role.Admin || account.user._id == userAccount.user._id)">
                         <div class="card-header user-expanded-card-header round-3">
                             <!-- <div class="card-actions float-right">
                                 <div class="dropdown show">
@@ -150,7 +160,7 @@
                             </div> -->
                             
                             <button class="btn btn-primary w-100 btn-transparent" type="button" data-toggle="collapse" data-target="#activitiesContainer" aria-expanded="false" aria-controls="activitiesContainer">
-                                <h5 class="card-title mb-0 text-left">Attività</h5>
+                                <h5 class="card-title mb-0 text-left">Attività <span *ngIf="userAccount.user.settings.showActivities == OPTION_VISIBILITY.NONE && (account.role == Role.Admin || account.user._id == userAccount.user._id)">(privato)</span></h5>
                             </button>
                         </div>
                         <div class="card-body collapse show" id="activitiesContainer">
@@ -197,7 +207,7 @@
                     </div>
 
                     <!-- Personal Records -->
-                    <div class="card mt-2">
+                    <div class="card" *ngIf="userAccount.user.settings.showPublicInfo == OPTION_VISIBILITY.ALL || (account.role == Role.Admin || account.user._id == userAccount.user._id)">
                         <div class="card-header user-expanded-card-header round-3">
                             <!-- <div class="card-actions float-right">
                                 <div class="dropdown show">
@@ -214,7 +224,7 @@
                             </div> -->
                             
                             <button class="btn btn-primary w-100 btn-transparent" type="button" data-toggle="collapse" data-target="#prContainer" aria-expanded="false" aria-controls="prContainer">
-                                <h5 class="card-title mb-0 text-left">Personal Records</h5>
+                                <h5 class="card-title mb-0 text-left">Personal Records <span *ngIf="userAccount.user.settings.showPublicInfo == OPTION_VISIBILITY.NONE && (account.role == Role.Admin || account.user._id == userAccount.user._id)">(privato)</span></h5>
                             </button>
                         </div>
                         <div class="card-body collapse show" id="prContainer">
@@ -260,7 +270,7 @@
             </div>
 
             <!-- WRITE MODE PAGE -->
-            <div class="row m-0 body__write-content" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
+            <div class="row m-0 body__write-content" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE) && (account.role == Role.Admin || account.user._id == userAccount.user._id)">
 
                 <div class="col-xl-2 mb-3 mb-xl-0">
                     <div class="card">
