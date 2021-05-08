@@ -695,19 +695,21 @@ export class TrainingComponent implements OnInit {
   }
   
   deleteTraining() {
-    this.bLoading = true;
-    this.httpService.deleteTraining(this.training._id)
-    .subscribe(
-      (data: any) => {
-        this.bLoading = false;
-        this.toastr.success('Training successfully deleted!');
-        this.router.navigate(['trainings']);
-      },
-      (error: HttpErrorResponse) => {
-        this.bLoading = false;
-        this.toastr.error('An error occurred while deleting the training!');
-        console.log(error.error.message);
-      });
+    if (confirm('Vuoi procedere?')) {
+      this.bLoading = true;
+      this.httpService.deleteTraining(this.training._id)
+      .subscribe(
+        (data: any) => {
+          this.bLoading = false;
+          this.toastr.success('Training successfully deleted!');
+          this.router.navigate(['trainings']);
+        },
+        (error: HttpErrorResponse) => {
+          this.bLoading = false;
+          this.toastr.error('An error occurred while deleting the training!');
+          console.log(error.error.message);
+        });
+    }
   }
 
   canTrainingBeSaved() {

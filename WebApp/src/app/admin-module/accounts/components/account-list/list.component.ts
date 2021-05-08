@@ -98,23 +98,25 @@ export class ListComponent implements OnInit {
 
 
     deleteAccount(id: string) {
-        this.bLoading = true;
-        this.accountService.delete(id)
-            .pipe(first())
-            .subscribe(() => {
-                this.bLoading = false;
-
-                this.originalAccountList.splice(this.originalAccountList.findIndex((a) => { return a.id == id; }), 1);
-                this.accountList = _.cloneDeep(_.sortBy(this.originalAccountList, ['role', 'user.name', 'user.surname']));
-                this.filterAccounts(null);
-
-                this.toastr.success('Account successfully deleted!');
-            },
-                (error: HttpErrorResponse) => {
+        if (confirm('Vuoi procedere?')) {
+            this.bLoading = true;
+            this.accountService.delete(id)
+                .pipe(first())
+                .subscribe(() => {
                     this.bLoading = false;
-                    this.toastr.error('An error occurred while deleting the account!');
-                    console.log(error.error.message);
-                });
+
+                    this.originalAccountList.splice(this.originalAccountList.findIndex((a) => { return a.id == id; }), 1);
+                    this.accountList = _.cloneDeep(_.sortBy(this.originalAccountList, ['role', 'user.name', 'user.surname']));
+                    this.filterAccounts(null);
+
+                    this.toastr.success('Account successfully deleted!');
+                },
+                    (error: HttpErrorResponse) => {
+                        this.bLoading = false;
+                        this.toastr.error('An error occurred while deleting the account!');
+                        console.log(error.error.message);
+                    });
+        }
     }
 
     initNewAccountModalResult() {

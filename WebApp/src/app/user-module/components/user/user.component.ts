@@ -739,7 +739,7 @@ export class UserComponent implements OnInit {
   }
 
   deleteAccount() {
-      if (confirm('Are you sure?')) {
+      if (confirm('Vuoi procedere?')) {
           this.accountFormDeleting = true;
           this.bLoading = true;
           this.accountService.delete(this.userAccount.id)

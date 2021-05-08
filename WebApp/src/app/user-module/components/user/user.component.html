@@ -64,15 +64,15 @@
                         <div class="card-body" *ngIf="(userAccount.user.residence.city && userAccount.user.residence.state) || (userAccount.user.gyms != null && userAccount.user.gyms.length > 0) || (userAccount.user.placeOfBirth != null && (userAccount.user.placeOfBirth.city != null && userAccount.user.placeOfBirth.city != '') && (userAccount.user.placeOfBirth.state != null && userAccount.user.placeOfBirth.state != ''))">
                             <h5 class="h6 card-title">Luoghi</h5>
                             <ul class="list-unstyled mb-0">
-                                <li class="d-flex align-items-center mb-1" [hidden]="!(userAccount.user.residence.city != null && userAccount.user.residence.city != '') && (userAccount.user.residence.state != null && userAccount.user.residence.state != '')">
+                                <li class="d-flex align-items-center mb-1" *ngIf="userAccount.user.residence.city && userAccount.user.residence.state">
                                     <span class="fa fa-fw fa-home font-size-12 mr-1"></span>
                                     <span class="fa-description">Vive a {{userAccount.user.residence.city || ''}} ({{userAccount.user.residence.state || ''}})</span>    
                                 </li>
-                                <li class="d-flex align-items-center mb-1" [hidden]="userAccount.user.placeOfBirth != null && (userAccount.user.placeOfBirth.city != null && userAccount.user.placeOfBirth.city != '') && (userAccount.user.placeOfBirth.state != null && userAccount.user.placeOfBirth.state != '')">
+                                <li class="d-flex align-items-center mb-1" *ngIf="userAccount.user.placeOfBirth != null && (userAccount.user.placeOfBirth.city != null && userAccount.user.placeOfBirth.city != '') && (userAccount.user.placeOfBirth.state != null && userAccount.user.placeOfBirth.state != '')">
                                     <span class="fa fa-fw fa-birthday-cake mr-1"></span>
                                     <span class="fa-description">Nato a {{userAccount.user.placeOfBirth.city || ''}} {{userAccount.user.placeOfBirth.state ? ('('+userAccount.user.placeOfBirth.state+')') : ''}}</span>    
                                 </li>
-                                <li class="d-flex align-items-center mb-1" [hidden]="userAccount.user.gyms != null && userAccount.user.gyms.length > 0">
+                                <li class="d-flex align-items-center mb-1" *ngIf="userAccount.user.gyms != null && userAccount.user.gyms.length > 0">
                                     <span class="fa fa-fw fa-map-marker mr-1"></span>
                                     <span class="fa-description">Frequenta&nbsp;<span *ngFor="let gym of userAccount.user.gyms; last as bLast">{{gym}}<span [hidden]="bLast">,&nbsp;</span></span></span>
                                 </li>
@@ -83,11 +83,11 @@
                         <div class="card-body" *ngIf="(userAccount.user.contacts.email || userAccount.user.contacts.telephone)">
                             <h5 class="h6 card-title">Contatti</h5>
                             <ul class="list-unstyled mb-0">
-                                <li class="d-flex align-items-center mb-1" [hiden]="!userAccount.user.contacts.email">
+                                <li class="d-flex align-items-center mb-1" *ngIf="userAccount.user.contacts.email">
                                     <span class="fa fa-fw fa-envelope mr-1"></span>
                                     <span class="fa-description">Email {{userAccount.user.contacts.email}}</span>    
                                 </li>
-                                <li class="d-flex align-items-center mb-1" [hidden]="!userAccount.user.contacts.telephone">
+                                <li class="d-flex align-items-center mb-1" *ngIf="userAccount.user.contacts.telephone">
                                     <span class="fa fa-fw fa-phone-square mr-1"></span>
                                     <span class="fa-description">Telefono {{userAccount.user.contacts.telephone}}</span>    
                                 </li>
@@ -98,19 +98,19 @@
                         <div class="card-body" *ngIf="(userAccount.user.dateOfBirth || userAccount.user.sex || userAccount.user.bodyWeight || userAccount.user.yearsOfExperience)">
                             <h5 class="h6 card-title">Altro</h5>
                             <ul class="list-unstyled mb-0">
-                                <li class="d-flex align-items-center mb-1" [hidden]="!userAccount.user.dateOfBirth">
+                                <li class="d-flex align-items-center mb-1" *ngIf="userAccount.user.dateOfBirth">
                                     <span class="fa fa-fw fa-birthday-cake mr-1"></span>
                                     <span class="fa-description">Nato il {{userAccount.user.dateOfBirth | date:'dd/MM/yyyy' }}</span>    
                                 </li>
-                                <li class="d-flex align-items-center mb-1" [hidden]="!userAccount.user.sex">
+                                <li class="d-flex align-items-center mb-1" *ngIf="userAccount.user.sex">
                                     <span class="fa fa-fw fa-venus-mars mr-1"></span>
                                     <span class="fa-description">Genere {{userAccount.user.sex == 'M' ? 'Uomo' : 'Donna'}}</span>    
                                 </li>
-                                <li class="d-flex align-items-center mb-1" [hidden]="!userAccount.user.bodyWeight">
+                                <li class="d-flex align-items-center mb-1" *ngIf="userAccount.user.bodyWeight">
                                     <span class="fa fa-fw fa-balance-scale mr-1"></span>
                                     <span class="fa-description">Peso {{userAccount.user.bodyWeight}}kg</span>    
                                 </li>
-                                <li class="d-flex align-items-center mb-1" [hidden]="!userAccount.user.sex">
+                                <li class="d-flex align-items-center mb-1" *ngIf="userAccount.user.yearsOfExperience">
                                     <span class="fa fa-fw fa-universal-access mr-1"></span>
                                     <span class="fa-description">Esperienza {{userAccount.user.yearsOfExperience}} anni</span>    
                                 </li>
@@ -121,11 +121,11 @@
                         <div class="card-body" *ngIf="userAccount.user.contacts.socials != null && (userAccount.user.contacts.socials.facebook || userAccount.user.contacts.socials.twitter || userAccount.user.contacts.socials.instagram || userAccount.user.contacts.socials.linkedin || userAccount.user.contacts.socials.other)">
                             <h6 class="h6 card-title">Social</h6>
                             <ul class="list-unstyled mb-0">
-                                <li class="mb-1" [hidden]="userAccount.user.contacts.socials.facebook == null || userAccount.user.contacts.socials.facebook == ''"><span class="fa fa-facebook fa-fw mr-1"></span> <a href="{{userAccount.user.contacts.socials.facebook}}" target="blank" class="fa-description">Facebook</a></li>
-                                <li class="mb-1" [hidden]="userAccount.user.contacts.socials.twitter == null || userAccount.user.contacts.socials.twitter == ''"><span class="fa fa-twitter fa-fw mr-1"></span> <a href="{{userAccount.user.contacts.socials.twitter}}" target="blank" class="fa-description">Twitter</a></li>
-                                <li class="mb-1" [hidden]="userAccount.user.contacts.socials.instagram == null || userAccount.user.contacts.socials.instagram == ''"><span class="fa fa-instagram fa-fw mr-1"></span> <a href="{{userAccount.user.contacts.socials.instagram}}" target="blank" class="fa-description">Instagram</a></li>
-                                <li class="mb-1" [hidden]="userAccount.user.contacts.socials.linkedin == null || userAccount.user.contacts.socials.linkedin == ''"><span class="fa fa-linkedin fa-fw mr-1"></span> <a href="{{userAccount.user.contacts.socials.linkedin}}" target="blank" class="fa-description">LinkedIn</a></li>
-                                <li class="mb-1" [hidden]="userAccount.user.contacts.socials.other == null || userAccount.user.contacts.socials.other == ''"><span class="fa fa-globe fa-fw mr-1"></span> <a href="{{userAccount.user.contacts.socials.other}}" target="blank" class="fa-description">Altro</a></li>
+                                <li class="mb-1" *ngIf="userAccount.user.contacts.socials.facebook"><span class="fa fa-facebook fa-fw mr-1"></span> <a href="{{userAccount.user.contacts.socials.facebook}}" target="blank" class="fa-description">Facebook</a></li>
+                                <li class="mb-1" *ngIf="userAccount.user.contacts.socials.twitter"><span class="fa fa-twitter fa-fw mr-1"></span> <a href="{{userAccount.user.contacts.socials.twitter}}" target="blank" class="fa-description">Twitter</a></li>
+                                <li class="mb-1" *ngIf="userAccount.user.contacts.socials.instagram"><span class="fa fa-instagram fa-fw mr-1"></span> <a href="{{userAccount.user.contacts.socials.instagram}}" target="blank" class="fa-description">Instagram</a></li>
+                                <li class="mb-1" *ngIf="userAccount.user.contacts.socials.linkedin"><span class="fa fa-linkedin fa-fw mr-1"></span> <a href="{{userAccount.user.contacts.socials.linkedin}}" target="blank" class="fa-description">LinkedIn</a></li>
+                                <li class="mb-1" *ngIf="userAccount.user.contacts.socials.other"><span class="fa fa-globe fa-fw mr-1"></span> <a href="{{userAccount.user.contacts.socials.other}}" target="blank" class="fa-description">Altro</a></li>
                             </ul>
                         </div>
                     </div>
@@ -546,7 +546,7 @@
                                         </div>
 
                                         <div class="form-group col-12 d-flex p-0 mt-3 mb-0" *ngIf="(pageStatus[PAGES.USERS] == PAGEMODE.WRITE)">
-                                            <button type="submit" class="btn btn-primary ml-auto"><span *ngIf="bLoading" class="spinner-border spinner-border-sm mr-1"></span> Aggiorna</button>
+                                            <button type="submit" class="btn btn-primary ml-auto">Aggiorna</button>
                                             <button type="button" (mousedown)="resetUserForm()" class="btn btn-secondary ml-2">Annulla</button>
                                         </div>
                                     </div>
@@ -715,7 +715,7 @@
                                 </div>
 
                                 <div class="form-group col-12 d-flex p-0 mt-3 mb-0">
-                                    <button type="submit" class="btn btn-primary ml-auto" (click)="onSubmitPersonaRecords()" [disabled]="!isPersonalRecordFormValid()"><span *ngIf="bLoading" class="spinner-border spinner-border-sm mr-1"></span> Aggiorna</button>
+                                    <button type="submit" class="btn btn-primary ml-auto" (click)="onSubmitPersonaRecords()" [disabled]="!isPersonalRecordFormValid()">Aggiorna</button>
                                     <button type="button" (mousedown)="resetPRForm()" class="btn btn-secondary ml-2">Annulla</button>
                                 </div>
                             </fieldset>
@@ -825,7 +825,7 @@
                                         </div>
 
                                         <div class="form-group col-12 d-flex p-0 mt-3 mb-0">
-                                            <button type="submit" class="btn btn-primary ml-auto"><span *ngIf="bLoading" class="spinner-border spinner-border-sm mr-1"></span> Aggiorna</button>
+                                            <button type="submit" class="btn btn-primary ml-auto">Aggiorna</button>
                                             <button type="button" (mousedown)="resetSettingsForm()" class="btn btn-secondary ml-2">Annulla</button>
                                         </div>
                                     </div>
@@ -886,7 +886,7 @@
                                         </div>
 
                                         <div class="form-group col-12 d-flex p-0 mt-3 mb-0">
-                                            <button type="submit" class="btn btn-primary ml-auto"><span *ngIf="bLoading" class="spinner-border spinner-border-sm mr-1"></span> Aggiorna</button>
+                                            <button type="submit" class="btn btn-primary ml-auto">Aggiorna</button>
                                             <button type="button" (mousedown)="resetSettingsForm()" class="btn btn-secondary ml-2">Annulla</button>
                                         </div>
                                     </div>

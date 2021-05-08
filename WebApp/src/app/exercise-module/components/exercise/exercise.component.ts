@@ -153,19 +153,21 @@ export class ExerciseComponent implements OnInit {
   }
 
   deleteExercise() {
-    this.bLoading = true;
-    this.httpService.deleteExercise(this.exercise._id)
-      .subscribe(
-        (data: any) => {
-          this.bLoading = false;
-          this.toastr.success('Exercise successfully deleted!');
-          this.router.navigate(['exercises']);
-        },
-        (error: HttpErrorResponse) => {
-          this.bLoading = false;
-          this.toastr.error('An error occurred while deleting the exercise!');
-          console.log(error.error.message);
-        });
+    if (confirm('Vuoi procedere?')) {
+      this.bLoading = true;
+      this.httpService.deleteExercise(this.exercise._id)
+        .subscribe(
+          (data: any) => {
+            this.bLoading = false;
+            this.toastr.success('Exercise successfully deleted!');
+            this.router.navigate(['exercises']);
+          },
+          (error: HttpErrorResponse) => {
+            this.bLoading = false;
+            this.toastr.error('An error occurred while deleting the exercise!');
+            console.log(error.error.message);
+          });
+    }
   }
 
 }

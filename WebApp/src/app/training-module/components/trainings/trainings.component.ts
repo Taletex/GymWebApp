@@ -109,21 +109,23 @@ export class TrainingsComponent implements OnInit {
   }
 
   deleteTraining(id: string) {
-    this.bLoading = true;
-    this.httpService.deleteTraining(id)
-      .subscribe(
-        (data: any) => {
-          this.bLoading = false;
-          this.originalTrainingList.splice(this.originalTrainingList.findIndex((t) => { return t._id == id; }), 1);
-          this.trainingList = _.cloneDeep(_.orderBy(this.originalTrainingList, ['startDate', 'type'], ['desc', 'asc']));
-          this.filterTrainings(null);
-          this.toastr.success('Training successfully deleted.');
-        },
-        (error: HttpErrorResponse) => {
-          this.bLoading = false;
-          this.toastr.error('An error occurred while deleting the training.');
-          console.log(error.error.message);
-        });
+    if (confirm('Vuoi procedere?')) {
+      this.bLoading = true;
+      this.httpService.deleteTraining(id)
+        .subscribe(
+          (data: any) => {
+            this.bLoading = false;
+            this.originalTrainingList.splice(this.originalTrainingList.findIndex((t) => { return t._id == id; }), 1);
+            this.trainingList = _.cloneDeep(_.orderBy(this.originalTrainingList, ['startDate', 'type'], ['desc', 'asc']));
+            this.filterTrainings(null);
+            this.toastr.success('Training successfully deleted.');
+          },
+          (error: HttpErrorResponse) => {
+            this.bLoading = false;
+            this.toastr.error('An error occurred while deleting the training.');
+            console.log(error.error.message);
+          });
+    }
   }
 
   /* IMPORT/EXPORT FUNCTIONS */

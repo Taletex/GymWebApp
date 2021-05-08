@@ -100,23 +100,25 @@ export class ExercisesComponent implements OnInit {
   }
 
   deleteExercise(id: string) {
-    this.bLoading = true;
-    this.httpService.deleteExercise(id)
-      .subscribe(
-        (data: any) => {
-          this.bLoading = false;
+    if (confirm('Vuoi procedere?')) {
+      this.bLoading = true;
+      this.httpService.deleteExercise(id)
+        .subscribe(
+          (data: any) => {
+            this.bLoading = false;
 
-          this.originalExerciseList.splice(this.originalExerciseList.findIndex((e) => { return e._id == id; }), 1);
-          this.exerciseList = _.cloneDeep(_.sortBy(this.originalExerciseList, ['name', 'variant.name']));
-          this.filterExercises(null);
+            this.originalExerciseList.splice(this.originalExerciseList.findIndex((e) => { return e._id == id; }), 1);
+            this.exerciseList = _.cloneDeep(_.sortBy(this.originalExerciseList, ['name', 'variant.name']));
+            this.filterExercises(null);
 
-          this.toastr.success('Exercise successfully deleted!');
-        },
-        (error: HttpErrorResponse) => {
-          this.bLoading = false;
-          this.toastr.error('An error occurred while deleting the exercise!');
-          console.log(error.error.message);
-        });
+            this.toastr.success('Exercise successfully deleted!');
+          },
+          (error: HttpErrorResponse) => {
+            this.bLoading = false;
+            this.toastr.error('An error occurred while deleting the exercise!');
+            console.log(error.error.message);
+          });
+    }
   }
 
   initNewExercise() {
