@@ -122,7 +122,7 @@ export class ExercisesComponent implements OnInit {
   }
 
   initNewExercise() {
-    this.newExercise = new Exercise();
+    this.newExercise = new Exercise("Esercizio");
     this.newExercise.creator = this.account.user._id;
   }
 

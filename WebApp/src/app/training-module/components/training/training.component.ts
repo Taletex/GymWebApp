@@ -1,23 +1,21 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { NgbDate, NgbCalendar, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDate, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { HttpService } from '@app/_services/http-service/http-service.service';
 import { UtilsService } from '@app/_services/utils-service/utils-service.service';
 import { TrainingService } from '../../services/training-service/training-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Training, Week, Series, Exercise, Session, User, Variant, SessionExercise, Notification, TRAINING_STATES, TRAINING_TYPES } from '@app/_models/training-model';
+import { Training, Week, Series, Exercise, Session, Variant, SessionExercise, Notification, TRAINING_STATES, TRAINING_TYPES } from '@app/_models/training-model';
 import * as _ from "lodash";
 import { GeneralService, PAGES, PAGEMODE, NOTIFY_MEDIUM_TYPE, PageStatus, NOTIFICATION_TYPE } from '@app/_services/general-service/general-service.service';
-import * as jsPDF from 'jspdf';
 import * as $ from 'jquery';
 import { Role } from '@app/_models';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { stringify } from '@angular/compiler/src/util';
-import { FormGroup } from '@angular/forms';
 
 declare const tinymce: any;
 const NOTIFICATION_WAIT_SECONDS: number = 30;
@@ -114,7 +112,7 @@ export class TrainingComponent implements OnInit {
 
 
   /* CONSTRUCTOR */
-  constructor(private generalService: GeneralService, private accountService: AccountService, private utilsService: UtilsService, private trainingService: TrainingService, public router: Router, private toastr: ToastrService, private calendar: NgbCalendar, public httpService: HttpService) {
+  constructor(private generalService: GeneralService, private accountService: AccountService, private utilsService: UtilsService, private trainingService: TrainingService, public router: Router, private toastr: ToastrService, calendar: NgbCalendar, public httpService: HttpService) {
 
     // Init attributes
     this.setDefaultoptions();
@@ -206,10 +204,10 @@ export class TrainingComponent implements OnInit {
     let trainingAthleteIdx = this.training.athletes.findIndex((a)=>{ return a._id == item._id });
     this.training.athletes.splice(trainingAthleteIdx, 1);
   }
-  onSelectAll(items: any) {
+  onSelectAll() {
     this.training.athletes = _.cloneDeep(this.athleteList);
   }
-  onDeSelectAll(items: any) {
+  onDeSelectAll() {
     this.training.athletes = [];
   }
 
@@ -283,7 +281,7 @@ export class TrainingComponent implements OnInit {
   initReadOnlyPage() {
     this.readOnlyTraining = _.cloneDeep(this.training);
 
-    setTimeout((scope) => {
+    setTimeout(() => {
       this.setReadOnlySessionContainerHeight();
     }, 1 * 1000, this);         
   }
@@ -733,7 +731,7 @@ export class TrainingComponent implements OnInit {
       this.bLoading = true;
       this.httpService.deleteTraining(this.training._id)
       .subscribe(
-        (data: any) => {
+        () => {
           this.bLoading = false;
           this.toastr.success('Training successfully deleted!');
           this.router.navigate(['trainings']);
@@ -867,7 +865,7 @@ export class TrainingComponent implements OnInit {
       this.changeMode(PAGEMODE.READONLY);
 
       this.toastr.success("Training successfully imported. Save it to keep the changes.");
-    }).error((err) => {
+    }).error(() => {
       this.toastr.error("An error occurs during import process");
     })
   }

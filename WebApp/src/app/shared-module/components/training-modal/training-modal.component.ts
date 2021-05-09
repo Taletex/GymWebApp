@@ -4,6 +4,7 @@ import { Training, TRAINING_TYPES, User } from '@app/_models/training-model';
 import { UtilsService } from '@app/_services/utils-service/utils-service.service';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { TrainingService } from '@app/training-module/services/training-service/training-service.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-training-modal',
@@ -16,13 +17,14 @@ export class TrainingModalComponent implements OnInit {
   public closeResult: string;
   public TRAINING_TYPES = TRAINING_TYPES;
   public TRAINING_VALIDATIONS: any;
+  public modal: any;
 
   @Input() newTraining: Training;
   @Input() athleteList: Array<any>;
   @Output() onClose: EventEmitter<any> = new EventEmitter();
   @Output() onAbort: EventEmitter<any> = new EventEmitter();
 
-  constructor(private modalService: NgbModal, private utilsService: UtilsService, private trainingService: TrainingService) { 
+  constructor(private modalService: NgbModal, private utilsService: UtilsService, private trainingService: TrainingService, private toastr: ToastrService) { 
   }
   
   ngOnInit() {
@@ -62,8 +64,18 @@ export class TrainingModalComponent implements OnInit {
   isTrainingValidToSubmit = this.trainingService.isTrainingValidToSubmit;
   areBasicTrainingInfosValidToSubmit = this.trainingService.areBasicTrainingInfosValidToSubmit;
 
+  submit() {
+    if(!this.areBasicTrainingInfosValidToSubmit(this.newTraining)) {
+      this.toastr.warning("Creazione non riuscita: alcuni campi non sono correttamente valorizzati!");
+      return;
+    }
+
+    this.modal.close(this.newTraining);
+  }
+
   public openTrainingModal(content) {
-    this.modalService.open(content, { size: "lg", centered: true, scrollable: true, backdrop: "static" }).result.then((result) => {
+    this.modal = this.modalService.open(content, { size: "lg", centered: true, scrollable: true, backdrop: "static" })
+    this.modal.result.then((result) => {
       this.onClose.emit(null);
     }, (reason) => {
       this.onAbort.emit(null);

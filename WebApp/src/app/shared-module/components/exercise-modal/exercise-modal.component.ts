@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Exercise, EXERCISE_GROUPS, TRAINING_STATES, TRAINING_TYPES } from '@app/_models/training-model';
+import { ExerciseService } from '@app/_services/exercise-service/exercise-service.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-exercise-modal',
@@ -15,11 +17,14 @@ export class ExerciseModalComponent implements OnInit {
   public EXERCISE_GROUPS = EXERCISE_GROUPS;
   public exerciseGroupsList = Object.values(this.EXERCISE_GROUPS);
   public exerciseDisciplinesList = Object.values(this.TRAINING_TYPES);
+  public EXERCISE_VALIDATIONS: any;
+  public modal: any;
+
   @Input() newExercise: Exercise;
   @Output() onClose: EventEmitter<any> = new EventEmitter();
   @Output() onAbort: EventEmitter<any> = new EventEmitter();
 
-  constructor(private modalService: NgbModal) { }
+  constructor(private modalService: NgbModal, private exerciseService: ExerciseService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.groupDropdownSettings = {
@@ -36,7 +41,12 @@ export class ExerciseModalComponent implements OnInit {
       unSelectAllText: 'Deseleziona Tutti',
       allowSearchFilter: true
     };
+
+    this.EXERCISE_VALIDATIONS = this.exerciseService.EXERCISE_VALIDATIONS;
   }
+
+  // From services
+  isExerciseValidToSubmit = this.exerciseService.isExerciseValidToSubmit;
 
   get getGroupItems() {
     return this.exerciseGroupsList.reduce((acc, curr) => {
@@ -52,8 +62,18 @@ export class ExerciseModalComponent implements OnInit {
     }, {});
   }
 
+  submit() {
+    if(!this.isExerciseValidToSubmit(this.newExercise)) {
+      this.toastr.warning("Creazione non riuscita: alcuni campi non sono correttamente valorizzati!");
+      return;
+    }
+
+    this.modal.close(this.newExercise);
+  }
+
   public openExerciseModal(content) {
-    this.modalService.open(content, { centered: true, scrollable: true, backdrop: "static" }).result.then((result) => {
+    this.modal = this.modalService.open(content, { centered: true, scrollable: true, backdrop: "static" });
+    this.modal.result.then((result) => {
       this.onClose.emit(null);
     }, (reason) => {
       this.onAbort.emit(null);
