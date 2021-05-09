@@ -6,7 +6,7 @@
             <div class="d-flex">
                 <div class="d-flex flex-column">
                     <span class="fa fa-filter" style="font-size: 20px;"></span>
-                    <span *ngIf="areFiltersDirty()" class="fa fa-times text-danger cursor-pointer" style="font-size: 16px;" (click)="cancelFilters()" ngbTooltip="Ripristina Filtri" placement="right"></span>
+                    <span *ngIf="areFiltersDirty()" class="fa fa-times text-danger cursor-pointer" style="font-size: 16px;" (click)="cancelFilters()" container="body" ngbTooltip="Ripristina Filtri" placement="right"></span>
                 </div>
                 <div class="ml-2">
                     <h6 class="m-0">Filtri</h6>
@@ -129,23 +129,23 @@
                                 </ng-template>
                             </div>
                             <div class="col-5 col-md-2">
-                                <div class="text-capitalize truncate-fullwidth" ngbTooltip="{{training.type}}">{{training.type}}</div>
+                                <div class="text-capitalize truncate-fullwidth" container="body" ngbTooltip="{{training.type}}">{{training.type}}</div>
                             </div>
-                            <div class="col-4 col-md-1 p-md-0 truncate-fullwidth" ngbTooltip="{{training.startDate | date:'dd/MM/yyyy'}} - {{training.endDate | date:'dd/MM/yyyy'}}">
+                            <div class="col-4 col-md-1 p-md-0 truncate-fullwidth" container="body" ngbTooltip="{{training.startDate | date:'dd/MM/yyyy'}} - {{training.endDate | date:'dd/MM/yyyy'}}">
                                 <div class="truncate-fullwidth">{{training.startDate | date:'dd/MM/yyyy'}}</div>
                                 <small>{{training.endDate | date:'dd/MM/yyyy'}}</small>
                             </div>
                             <div class="d-none d-md-flex col-md-1">
                                 <span class="text-uppercase badge" [ngClass]="{'badge-info': training.state == TRAINING_STATES.NEW, 'badge-primary': training.state == TRAINING_STATES.STARTED, 'badge-success': training.state == TRAINING_STATES.COMPLETED, 'badge-danger': training.state == TRAINING_STATES.ABORTED, 'badge-warning': training.state == TRAINING_STATES.PARTIAL_COMPLETED}">{{training.state}}</span>
                             </div>
-                            <div class="d-none d-md-inline col-md-2 truncate-list-elem-overflow" ngbTooltip="{{training.comment != '' ? training.comment : 'Nessun Commento'}}">{{training.comment != "" ? training.comment : "Nessun Commento"}}</div>
+                            <div class="d-none d-md-inline col-md-2 truncate-list-elem-overflow" container="body" ngbTooltip="{{training.comment != '' ? training.comment : 'Nessun Commento'}}">{{training.comment != "" ? training.comment : "Nessun Commento"}}</div>
                             <div class="col-3 col-md-2 d-flex justify-content-end">
-                                <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.TRAININGS, training._id)" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
-                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="openPageWithMode(PAGEMODE.WRITE, PAGES.TRAININGS, training._id)" class="ml-2 image-button d-none d-md-flex align-items-center" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></div>
-                                <div (click)="openPageWithMode(PAGEMODE.STATS, PAGES.TRAININGS, training._id)" class="ml-2 image-button d-none d-md-flex align-items-center" ngbTooltip="Statistiche" placement="left"><img src="assets/icons/actions/graph.svg" style="width:20px; height:auto;"></div>
-                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="exportTraining(elem)" class="ml-2 image-button d-none d-md-flex align-items-center" ngbTooltip="Esporta Allenamento" placement="left"><img src="assets/icons/actions/export.svg" style="width:20px; height:auto;"></div>
-                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="deleteTraining(training._id)" class="ml-2 image-button d-none d-md-flex align-items-center" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
-                                <div class="d-inline d-md-none ml-2 image-button" ngbTooltip="{{opened ? 'Nascondi Dettagli' : 'Mostra Dettagli'}}" placement="left"><button ngbPanelToggle class="btn btn-transparent"><span class="fa text-dark" [ngClass]="{'fa-arrow-circle-up': opened, 'fa-arrow-circle-down': !opened}"></span></button></div>
+                                <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.TRAININGS, training._id)" class="image-button" container="body" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
+                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="openPageWithMode(PAGEMODE.WRITE, PAGES.TRAININGS, training._id)" class="ml-2 image-button d-none d-md-flex align-items-center" container="body" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></div>
+                                <div (click)="openPageWithMode(PAGEMODE.STATS, PAGES.TRAININGS, training._id)" class="ml-2 image-button d-none d-md-flex align-items-center" container="body" ngbTooltip="Statistiche" placement="left"><img src="assets/icons/actions/graph.svg" style="width:20px; height:auto;"></div>
+                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="exportTraining(elem)" class="ml-2 image-button d-none d-md-flex align-items-center" container="body" ngbTooltip="Esporta Allenamento" placement="left"><img src="assets/icons/actions/export.svg" style="width:20px; height:auto;"></div>
+                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="deleteTraining(training._id)" class="ml-2 image-button d-none d-md-flex align-items-center" container="body" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
+                                <div class="d-inline d-md-none ml-2 image-button" container="body" ngbTooltip="{{opened ? 'Nascondi Dettagli' : 'Mostra Dettagli'}}" placement="left"><button ngbPanelToggle class="btn btn-transparent"><span class="fa text-dark" [ngClass]="{'fa-arrow-circle-up': opened, 'fa-arrow-circle-down': !opened}"></span></button></div>
                             </div>
                         </div>
                     </ng-template>
@@ -176,21 +176,21 @@
                         <div class="row m-0 mt-2">
                             <div class="col-4 text-muted">Azioni</div>
                             <div class="col-8 d-flex">
-                                <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.TRAININGS, training._id)" class="image-button" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
-                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="openPageWithMode(PAGEMODE.WRITE, PAGES.TRAININGS, training._id)" class="ml-2 image-button" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></div>
-                                <div (click)="openPageWithMode(PAGEMODE.STATS, PAGES.TRAININGS, training._id)" class="ml-2 image-button" ngbTooltip="Statistiche" placement="left"><img src="assets/icons/actions/graph.svg" style="width:20px; height:auto;"></div>
-                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="exportTraining(elem)" class="ml-2 image-button" ngbTooltip="Esporta Allenamento" placement="left"><img src="assets/icons/actions/export.svg" style="width:20px; height:auto;"></div>
-                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="deleteTraining(training._id)" class="ml-2 image-button" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
+                                <div (click)="openPageWithMode(PAGEMODE.READONLY, PAGES.TRAININGS, training._id)" class="image-button" container="body" ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
+                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="openPageWithMode(PAGEMODE.WRITE, PAGES.TRAININGS, training._id)" class="ml-2 image-button" container="body" ngbTooltip="Modifica" placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;"></div>
+                                <div (click)="openPageWithMode(PAGEMODE.STATS, PAGES.TRAININGS, training._id)" class="ml-2 image-button" container="body" ngbTooltip="Statistiche" placement="left"><img src="assets/icons/actions/graph.svg" style="width:20px; height:auto;"></div>
+                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="exportTraining(elem)" class="ml-2 image-button" container="body" ngbTooltip="Esporta Allenamento" placement="left"><img src="assets/icons/actions/export.svg" style="width:20px; height:auto;"></div>
+                                <div *ngIf="((account.user.userType=='both' || account.user.userType=='coach') && training.author._id == account.user._id)" (click)="deleteTraining(training._id)" class="ml-2 image-button" container="body" ngbTooltip="Elimina" placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;"></div>
                             </div>
                         </div>
                     </ng-template>
                 </ngb-panel>
             </ngb-accordion>
             <div class="bottom-right-absolute d-flex" *ngIf="!bLoading">
-                <div *ngIf="trainingList.length > 0 && (account.user.userType=='both' || account.user.userType=='coach')" (click)="exportAllTrainings()" class="image-button-big" ngbTooltip="Esporta tutti gli allenamenti" placement="top"><img src="assets/icons/actions/export.svg" style="width:40px; height:auto;"></div>    
-                <div *ngIf="(account.user.userType=='both' || account.user.userType == 'coach')" class="ml-2">
+                <div *ngIf="trainingList.length > 0 && (account.user.userType=='both' || account.user.userType=='coach')" (click)="exportAllTrainings()" class="image-button-big" container="body" ngbTooltip="Esporta tutti gli allenamenti" placement="top"><img src="assets/icons/actions/export.svg" style="width:40px; height:auto;"></div>    
+                <div *ngIf="(account.user.userType=='both' || account.user.userType == 'coach') && newTraining" class="ml-2">
                     <app-training-modal (onClose)="createTraining()" [(newTraining)] = "newTraining" [(originalAthleteList)]="athleteList" [(athleteList)] = "athleteList">
-                        <div class="image-button-big cursor-pointer" ngbTooltip="Nuovo Allenamento" placement="left"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></div>
+                        <div class="image-button-big cursor-pointer" container="body" ngbTooltip="Nuovo Allenamento" placement="left"><img src="assets/icons/actions/plus.svg" style="width:40px; height:auto;"></div>
                     </app-training-modal>
                 </div>    
             </div>

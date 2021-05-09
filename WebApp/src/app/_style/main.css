@@ -2638,6 +2638,10 @@ ngb-carousel .picsum-img-wrapper > img {
   }
 }
 
+.multiselect-dropdown .dropdown-btn {
+  padding: 3px !important;
+}
+
 .carousel-container-small {
   height: 50vh !important;
   width: 50vh !important;

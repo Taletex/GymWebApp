@@ -170,7 +170,7 @@
 
             <!-- WRITE MODE CONTENT -->
             <div *ngIf="pageStatus[PAGES.TRAININGS] == PAGEMODE.WRITE && !bLoading">
-                <form id="trainingForm" ngNativeValidate action='#' #trainingForm="ngForm" (ngSubmit)="saveTraining()" class="d-flex" >
+                <form id="trainingForm" ngNativeValidate action='#' #trainingForm="ngForm" (ngSubmit)="saveTraining()" class="d-flex">
                     
                     <div (click)="toggleWeekNavbar()" id="toggle-week-navbar-btn" class="d-block d-xl-none toggle-week-navbar-btn bg-custom-lightgray px-2 border cursor-pointer"><span>SETTIMANE</span><span id="toggle-week-navbar-btn-icon" class="toggle-week-navbar-btn-icon fa fa-arrow-circle-down ml-2"></span></div>
                     
@@ -538,7 +538,7 @@
                                 <img src="assets/icons/actions/info-light.svg" style="width:15px; height:auto;">
                             </button>
                         </div>
-                        <button type="submit" class="btn btn-success" [ngClass]="{'disabled header-invalid cursor-not-allowed': !isTrainingValidToSubmit(training)}" ngbTooltip="Alcuni input presentano valori errati" [tooltipDisabled]="isTrainingValidToSubmit(training)">SALVA</button>
+                        <button type="submit" class="btn btn-success" [ngClass]="{'disabled header-invalid cursor-not-allowed': !isTrainingValidToSubmit(training)}" ngbTooltip="Alcuni input presentano valori errati" [disableTooltip]="isTrainingValidToSubmit(training)">SALVA</button>
                     </div>
                 </form>
             </div>

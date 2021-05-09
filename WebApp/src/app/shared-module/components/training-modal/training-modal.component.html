@@ -9,9 +9,9 @@
         <div class="modal-body">
             <div class="card h-100">
                 <div class="card-body">
-                    <form class="form-row m-0">
+                    <form id="trainingForm" ngNativeValidate action='#' #trainingForm="ngForm" (ngSubmit)="modal.close(newTraining)" class="form-row m-0">
                         <div class="col-12 form-group">Allenamento creato da {{newTraining.author.name}} {{newTraining.author.surname}} il {{newTraining.creationDate | date:'dd/MM/yyyy'}}</div>
-                        <div class="col-12 col-md-6 col-xl-4 form-group">
+                        <div class="col-12 col-md-4 form-group">
                             <label for="newTrainingType"
                                 class="col-form-label col-form-label-sm text-muted">Disciplina</label>
                             <select [(ngModel)]="newTraining.type" class="form-control form-control-sm cursor-pointer" id="newTraining" name="newTraining"
@@ -23,7 +23,19 @@
                                 <div (click)="newTraining.type=TRAINING_TYPES.POWERLIFTING" style="position:absolute; right: 3px; top: 0px;">&times;</div>
                             </div>
                         </div>
-                        <div class="col-12 col-md-6 col-xl-4 form-group">
+                        <div class="col-12 col-sm-6 col-md-4 form-group">
+                            <label for="newTrainingStartDate" class="col-form-label col-form-label-sm text-muted">Data inizio</label>
+                            <input type="datetime-local" [ngModel]="newTraining.startDate | date:'yyyy-MM-ddTHH:mm'" [max]="TRAINING_VALIDATIONS.MAX_DATE" 
+                                (ngModelChange)="newTraining.startDate = $event" class="form-control form-control-sm" [ngClass]="{'border-danger': !isValidStartDate(newTraining.startDate)}"
+                                id="newTrainingStartDate" name="newTrainingStartDate">
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 form-group">
+                            <label for="newTrainingEndDate" class="col-form-label col-form-label-sm text-muted">Data fine</label>
+                            <input type="datetime-local" [ngModel]="newTraining.endDate | date:'yyyy-MM-ddTHH:mm'" [min]="newTraining.startDate | date:'yyyy-MM-ddTHH:mm'" [max]="TRAINING_VALIDATIONS.MAX_DATE" 
+                                (ngModelChange)="newTraining.endDate = $event" class="form-control form-control-sm" [ngClass]="{'border-danger': !isValidEndDate(newTraining.startDate, newTraining.endDate)}"
+                                id="newTrainingEndDate" name="newTrainingEndDate">
+                        </div>
+                        <div class="col-12 form-group">
                             <label for="newTrainingAthletes"
                                 class="col-form-label col-form-label-sm text-muted">Atleti</label>
                             <ng-multiselect-dropdown 
@@ -35,7 +47,11 @@
                                 [data]="athleteList"
                                 [(ngModel)]="newTraining.athletes" 
                                 (onSelect)="onItemSelect($event)"
-                                (onSelectAll)="onSelectAll($event)">
+                                (onSelectAll)="onSelectAll($event)"
+                                required
+                                [ngClass]="{'is-invalid-dropdown': !newTraining.athletes || !newTraining.athletes.length}"
+                                ngbTooltip="Deve essere selezionato almeno un atleta"
+                                [disableTooltip]="newTraining.athletes && newTraining.athletes.length">
                                 <ng-template #optionsTemplate let-item let-option="option" let-id="id" let-isSelected="isSelected">
                                     <div>
                                         <label style="color: #333; min-width: 130px; font-weight: normal;" class="m-0"
@@ -49,25 +65,11 @@
                                 </ng-template>
                             </ng-multiselect-dropdown>
                         </div>
-                        <div class="col-6 col-md-4 col-xl-2 form-group">
-                            <label for="newTrainingStartDate" class="col-form-label col-form-label-sm text-muted">Data
-                                inizio</label>
-                            <input type="date" [ngModel]="newTraining.startDate | date:'yyyy-MM-dd'"
-                                (ngModelChange)="newTraining.startDate = $event" class="form-control form-control-sm"
-                                id="newTrainingStartDate" name="newTrainingStartDate">
-                        </div>
-                        <div class="col-6 col-md-4 col-xl-2 form-group">
-                            <label for="newTrainingEndDate" class="col-form-label col-form-label-sm text-muted">Data
-                                fine</label>
-                            <input type="date" [ngModel]="newTraining.endDate | date:'yyyy-MM-dd'"
-                                (ngModelChange)="newTraining.endDate = $event" class="form-control form-control-sm"
-                                id="newTrainingEndDate" name="newTrainingEndDate">
-                        </div>
                         <div class="col-12 form-group">
                             <label for="newTrainingcomment"
                                 class="col-form-label col-form-label-sm text-muted">Commento</label>
-                            <textarea [(ngModel)]="newTraining.comment" class="form-control" maxlength="1000"
-                                id="newTrainingcomment" name="newTrainingcomment" placeholder="Commento..."></textarea>
+                            <textarea [(ngModel)]="newTraining.comment" class="form-control" [maxlength]="TRAINING_VALIDATIONS.MAX_TRAINING_COMMENT_LENGTH" 
+                                id="newTrainingcomment" name="newTrainingcomment" placeholder="Commento..." [ngClass]="{'is-invalid': newTraining.comment.length > TRAINING_VALIDATIONS.MAX_TRAINING_COMMENT_LENGTH}"></textarea>
                         </div>
                     </form>
                 </div>
@@ -75,13 +77,8 @@
         </div>
         <div class="modal-footer">
             <div class="position-relative">
-                <button class="btn btn-success" ngbAutofocus 
-                    [disabled]="(newTraining.athletes == null || newTraining.athletes.length == 0)"
-                    (click)="modal.close(newTraining)">
-                    Crea
-                </button>
-                <div class="button-tooltip" ngbTooltip="Campo atleti vuoto" placement="top" [hidden]="!(newTraining.athletes == null || newTraining.athletes.length == 0)">
-                </div>
+                <button type="submit" (click)="trainingForm.submit()" ngbAutofocus class="btn btn-success" [ngClass]="{'disabled header-invalid cursor-not-allowed': !areBasicTrainingInfosValidToSubmit(newTraining)}" 
+                ngbTooltip="Alcuni input presentano valori errati" [disableTooltip]="areBasicTrainingInfosValidToSubmit(newTraining)">CREA</button>
             </div>
         </div>
     </div>

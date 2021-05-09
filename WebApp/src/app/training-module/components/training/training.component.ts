@@ -103,7 +103,6 @@ export class TrainingComponent implements OnInit {
   public dropdownSettings:IDropdownSettings = {};
 
   // Training Form
-  public userForm: FormGroup;
   public TRAINING_VALIDATIONS: any;
 
   // Others
