@@ -17,6 +17,7 @@ import { Role } from '@app/_models';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { stringify } from '@angular/compiler/src/util';
+import { FormGroup } from '@angular/forms';
 
 declare const tinymce: any;
 const NOTIFICATION_WAIT_SECONDS: number = 30;
@@ -101,6 +102,10 @@ export class TrainingComponent implements OnInit {
   // Multiselect dropdown
   public dropdownSettings:IDropdownSettings = {};
 
+  // Training Form
+  public userForm: FormGroup;
+  public TRAINING_VALIDATIONS: any;
+
   // Others
   public importedTraining: any;
   public replaceTrainingMessage: string = "L'allenamento attuale sarà sovrascritto con la versione precedente selezionata. Sei sicuro di voler procedere?"
@@ -181,6 +186,8 @@ export class TrainingComponent implements OnInit {
       this.timeLeft = Math.abs( Math.trunc( ((new Date().getTime()) - (parseInt(localStorage.getItem("sentNotificationTime")))) / 1000 - NOTIFICATION_WAIT_SECONDS) );
       this.startTimer(this.timeLeft);
     }
+
+    this.TRAINING_VALIDATIONS = this.trainingService.TRAINING_VALIDATIONS;
   }
 
   get getItems() {
@@ -192,9 +199,19 @@ export class TrainingComponent implements OnInit {
   
   onItemSelect(item: any) {
     console.log(item);
+    let athleteIdx = this.athleteList.findIndex((a)=>{ return a._id == item._id });
+    this.training.athletes.push(_.cloneDeep(this.athleteList[athleteIdx]));
+  }
+  onItemDeSelect(item: any) {
+    console.log(item);
+    let trainingAthleteIdx = this.training.athletes.findIndex((a)=>{ return a._id == item._id });
+    this.training.athletes.splice(trainingAthleteIdx, 1);
   }
   onSelectAll(items: any) {
-    console.log(items);
+    this.training.athletes = _.cloneDeep(this.athleteList);
+  }
+  onDeSelectAll(items: any) {
+    this.training.athletes = [];
   }
 
   initTrainingsStructures(data: any) {
@@ -237,6 +254,12 @@ export class TrainingComponent implements OnInit {
 
   // From services
   compareObjects = this.utilsService.compareObjects;
+  isValidStartDate = this.trainingService.isValidStartDate;
+  isValidEndDate = this.trainingService.isValidEndDate;
+  isSessionValidToSubmit = this.trainingService.isSessionValidToSubmit;
+  isWeekValidToSubmit = this.trainingService.isWeekValidToSubmit;
+  isTrainingValidToSubmit = this.trainingService.isTrainingValidToSubmit;
+  areBasicTrainingInfosValidToSubmit = this.trainingService.areBasicTrainingInfosValidToSubmit;
 
   // Init exercise typeahead
   search = (text$: Observable<string>) => 
@@ -434,7 +457,9 @@ export class TrainingComponent implements OnInit {
   /* EXERCISES FUNCTIONS */
   pushExercise(session: Session) {
     if (session && session.exercises != null) {
-      session.exercises.push(_.cloneDeep(new SessionExercise()));
+      let e = new SessionExercise();
+      e.exercise = _.cloneDeep(this.exerciseList[0]);
+      session.exercises.push(e);
     } else {
       console.log('Error: "exercises" is not defined');
     }
@@ -500,7 +525,9 @@ export class TrainingComponent implements OnInit {
   /* SESSIONS FUNCTIONS */
   pushSession(event: MouseEvent, week: Week) {
     if (week && week.sessions != null) {
-      week.sessions.push(new Session());
+      let s = new Session();
+      s.exercises[0].exercise = _.cloneDeep(this.exerciseList[0]);
+      week.sessions.push(s);
     } else {
       console.log('Error: "sessions" is not defined');
     }
@@ -588,7 +615,9 @@ export class TrainingComponent implements OnInit {
 
   /* WEEKS FUNCTIONS */
   pushWeek(event: MouseEvent) {
-    this.training.weeks.push(_.cloneDeep(new Week()));
+    let w = new Week()
+    w.sessions[0].exercises[0].exercise = _.cloneDeep(this.exerciseList[0])
+    this.training.weeks.push(w);
     event.preventDefault();
   }
 
@@ -676,6 +705,12 @@ export class TrainingComponent implements OnInit {
 
   /* TRAINING FUNCTIONS */
   saveTraining() {
+
+    if(!this.trainingService.isTrainingValidToSubmit(this.training)) {
+      this.toastr.warning("Salvataggio non riuscito: sono presenti degli errori nella compilazione dell'allenamento!");
+      return;
+    }
+
     this.bLoading = true;
 
     let data = this.trainingService.prepareTrainingData(this.training, this.originalTraining)

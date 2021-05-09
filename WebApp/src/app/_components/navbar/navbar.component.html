@@ -2,7 +2,7 @@
     <!-- <img src="assets/icons/favicon.ico" style="max-height:100%; width:auto;" class="mr-2"> -->
     <span class="d-md-none fa fa-bars cursor-pointer font-size-14 mr-2" (click)="expandSidebar()"></span>
     <h4 class="h4 font-weight-700 text-uppercase m-0">
-      <span>{{(router.url).split('/')[1] | uppercase}}</span>
+      <span>{{((router.url).split('/')[1]).split('?')[0] | uppercase}}</span>
       <span [hidden]="((router.url).split('/')[2]) == null || ((router.url).split('/')[2]) == ''" class="fa fa-arrow-right mx-2"></span><span>{{(router.url).split('/')[2] | uppercase}}</span>
     </h4>
     <!-- <div class="account-info">

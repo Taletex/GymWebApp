@@ -220,7 +220,7 @@ export class GeneralService {
             " \
   <div class='card border-0 col-12 p-0' style='position: relative; width: 100%; padding-right: 15px; padding-left: 15px; -ms-flex: 0 0 100%; flex: 0 0 100%; max-width: 100%; border: 0px !important; padding: 0px !important; position: relative; display: -ms-flexbox; display: flex; -ms-flex-direction: column; flex-direction: column; min-width: 0; word-wrap: break-word; background-color: #fff; background-clip: border-box; border: 1px solid rgba(0, 0, 0, 0.125); border-radius: 0.25rem; box-shadow: 0px 2px 0px rgba(0,0,0,.5); border-radius: 0px !important; border: 0px !important; height: " + options.format.maxSessionContainerHeight + "'> \
       <div class='card-header m-0 px-0 border-0 text-white' style='padding: 0.75rem 1.25rem; margin-bottom: 0; background-color: rgba(0, 0, 0, 0.03); border-bottom: 1px solid rgba(0, 0, 0, 0.125); margin: 0px !important; padding-left: 0px !important; padding-right: 0px !important; border: 0px !important; color: white !important; background-color: rgba(0, 0, 0, 0.6) !important; border-radius: 0px !important;'> \
-          <h6 class='m-0 px-3' style='margin: 0px !important; padding-left: 1rem !important; padding-right: 1rem !important'>Sessione " + index + " - " + session.name + "</h6> \
+          <h6 class='m-0 px-3' style='margin: 0px !important; padding-left: 1rem !important; padding-right: 1rem !important'>Sessione " + (index+1) + " - " + session.name + "</h6> \
           <div class='row m-0 px-3 py-0' style='display: -ms-flexbox; display: flex; -ms-flex-wrap: wrap; flex-wrap: wrap; margin-right: -15px; margin-left: -15px; margin: 0px !important; padding: 0px 1rem 0px 1rem !important; font-size: small; font-style: italic; padding-left: 1rem !important; padding-right: 1rem !important'> \
               <div class='col-4 px-0' style='margin: 0px !important; position: relative; width: 100%; padding-right: 15px; padding-left: 15px; -ms-flex: 0 0 33.333333%; flex: 0 0 33.333333%; max-width: 33.333333%; padding-left: 0px !important; padding-right: 0px !important'> \
                   <span>Esercizio (variante)</span> \
@@ -297,7 +297,7 @@ export class GeneralService {
 
     copyObjectWithoutId(s1: any, s2: any) {
         for (const [key, value] of Object.entries(s2)) {
-            if (key != '_id' && s1[key] != undefined) {
+            if (key != '_id' && s1[key] !== undefined) {
                 s1[key] = _.cloneDeep(s2[key])
             }
         }

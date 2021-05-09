@@ -2,13 +2,17 @@ import { Injectable } from '@angular/core';
 import { Training, Week, Session, Exercise, Series, SessionExercise, PersonalRecord } from '@app/_models/training-model';
 import * as _ from 'lodash';
 import { saveAs } from 'file-saver';
+import * as moment from 'moment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class TrainingService {
 
+    public TRAINING_VALIDATIONS: any = {MAX_SESSION_NAME_LENGTH: 50, MAX_SESSION_COMMENT_LENGTH: 100, MAX_SERIES_NUMBER: 99999, MIN_SERIES_NUMBER: 1, MAX_REP_NUMBER: 99999, MIN_REP_NUMBER: 1, MAX_WEIGHT_NUMBER: 99999, MIN_WEIGHT_NUMBER: 0, MAX_REST_TIME: 99999, MIN_REST_TIME: 0, MAX_DATE: "2100-01-01T00:00", MAX_WEEK_COMMENT_LENGTH: 500, MAX_TRAINING_COMMENT_LENGTH: 1000};
+
     constructor() { }
+
 
     public trainingDecorator(training: Training) {
         for(let i=0; i<training.oldVersions.length; i++) {
@@ -193,7 +197,7 @@ export class TrainingService {
     }
 
 
-    /* COPY FUNCTIONS */
+    /* === COPY FUNCTIONS === */
     copyWeek(w1: Week, w2: Week) {
         w1.comment = w2.comment;
         w1.sessions = _.cloneDeep(w2.sessions);
@@ -219,4 +223,92 @@ export class TrainingService {
         e1.creator = _.cloneDeep(e2.creator);
     }
     
+
+    /* === VALIDATION FUNCTIONS === */
+    isValidStartDate(startDate: Date): boolean {
+        return !(moment(startDate).isAfter(this.TRAINING_VALIDATIONS.MAX_DATE));
+    }
+    isValidEndDate(startDate: Date, endDate: Date): boolean {
+        return !(moment(endDate).isBefore(startDate) || moment(endDate).isAfter(this.TRAINING_VALIDATIONS.MAX_DATE));
+    }
+
+    isSessionValidToSubmit(session: Session): boolean {
+
+        // session name and comment lengths must be less than their limits
+        if(session.name.length > this.TRAINING_VALIDATIONS.MAX_SESSION_NAME_LENGTH || session.comment.length > this.TRAINING_VALIDATIONS.MAX_SESSION_COMMENT_LENGTH)
+            return false;
+
+        // end date must be after start date, end date and start date must be before 2100-01-01
+        if(moment(session.endDate).isBefore(session.startDate) || moment(session.endDate).isAfter(this.TRAINING_VALIDATIONS.MAX_DATE) || moment(session.startDate).isAfter(this.TRAINING_VALIDATIONS.MAX_DATE))
+            return false;
+        
+        // each exercise
+        for(let e of session.exercises) {
+            // exercise must be defined
+            if(!e.exercise.name)
+                return false;
+            
+            for(let s of e.series) {
+                // series, rep, weight and rest must be defined and must be less and more than their limits
+                if( 
+                    (s.seriesNumber == null || s.seriesNumber < this.TRAINING_VALIDATIONS.MIN_SERIES_NUMBER || s.seriesNumber > this.TRAINING_VALIDATIONS.MAX_SERIES_NUMBER) ||
+                    (s.repNumber == null || s.repNumber < this.TRAINING_VALIDATIONS.MIN_REP_NUMBER || s.repNumber > this.TRAINING_VALIDATIONS.MAX_REP_NUMBER) ||
+                    (s.weight == null || s.weight < this.TRAINING_VALIDATIONS.MIN_WEIGHT_NUMBER || s.weight > this.TRAINING_VALIDATIONS.MAX_WEIGHT_NUMBER) ||
+                    (s.rest == null || s.rest < this.TRAINING_VALIDATIONS.MIN_REST_TIME || s.rest > this.TRAINING_VALIDATIONS.MAX_REST_TIME)
+                )
+                    return false;
+            }
+        }
+
+        return true;
+
+    }
+
+    isWeekValidToSubmit(week: Week): boolean {
+
+        // week comment length must be less than its limit
+        if(week.comment.length > this.TRAINING_VALIDATIONS.MAX_WEEK_COMMENT_LENGTH)
+            return false;
+        
+        // all week sessions must be valid
+        for(let s of week.sessions) {
+            if(!this.isSessionValidToSubmit(s))
+                return false;
+        }
+
+        return true;
+
+    }
+
+    isTrainingValidToSubmit(training: Training): boolean {
+
+        // all basic training infos must be valid
+        if(!this.areBasicTrainingInfosValidToSubmit(training))
+            return false;
+
+        // all training weeks must be valid
+        for(let w of training.weeks) {
+            if(!this.isWeekValidToSubmit(w))
+                return false;
+        }
+
+        return true;
+    }
+
+    areBasicTrainingInfosValidToSubmit(training: Training): boolean {
+        
+        // training comment length must be less than its limit
+        if(training.comment.length > this.TRAINING_VALIDATIONS.MAX_TRAINING_COMMENT_LENGTH)
+            return false;
+
+        // end date must be after start date, end date and start date must be before 2100-01-01
+        if(moment(training.endDate).isBefore(training.startDate) || moment(training.endDate).isAfter(this.TRAINING_VALIDATIONS.MAX_DATE) || moment(training.startDate).isAfter(this.TRAINING_VALIDATIONS.MAX_DATE))
+            return false;
+
+        // athlete list must not be empty
+        if(training.athletes.length == 0)
+            return false;
+
+        return true;
+    }
 }
