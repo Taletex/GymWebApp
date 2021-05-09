@@ -18,28 +18,30 @@
         </div>
 
         <div class="maincontainer__body card-body h-vh-fixed">
-            <form>
+            <form id="exerciseForm" ngNativeValidate action='#' #exerciseForm="ngForm" (ngSubmit)="saveExercise()">
                 <fieldset class="form-row m-0" [disabled]="(pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)">
                     <div class="col-12 col-lg-6 form-row m-0 p-0">
                         <div class="col-12 col-md-12 col-lg-12 form-group">
                             <label for="exerciseName" class="col-form-label col-form-label-sm text-muted">Nome</label>
-                            <input type="text" [(ngModel)]="exercise.name" class="form-control form-control-sm"
-                                [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)}" id="exerciseName" name="exerciseName">
+                            <input type="text" [(ngModel)]="exercise.name" class="form-control form-control-sm" id="exerciseName" name="exerciseName"
+                                required [maxlength]="EXERCISE_VALIDATIONS.MAX_EXERCISE_NAME_LENGTH" [ngClass]="{'is-invalid': !exercise.name || exercise.name.length > EXERCISE_VALIDATIONS.MAX_EXERCISE_NAME_LENGTH}">
                         </div>
                         <div class="col-12 col-md-6 col-lg-12 form-group">
                             <label for="exerciseVariantName" class="col-form-label col-form-label-sm text-muted">Nome Variante</label>
-                            <input type="text" [(ngModel)]="exercise.variant.name" class="form-control form-control-sm"
-                                [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)}" id="exerciseVariantName" name="exerciseVariantName">
+                            <input type="text" [(ngModel)]="exercise.variant.name" class="form-control form-control-sm" id="exerciseVariantName" name="exerciseVariantName"
+                                [maxlength]="EXERCISE_VALIDATIONS.MAX_VARIANT_NAME_LENGTH" [ngClass]="{'is-invalid': exercise.variant.name.length > EXERCISE_VALIDATIONS.MAX_VARIANT_NAME_LENGTH}">
                         </div>
                         <div class="col-12 col-md-6 col-lg-12 form-group">
                             <label for="exerciseVariantCoefficient" class="col-form-label col-form-label-sm text-muted">Coefficente di intensità</label>
-                            <input type="number" min=0.1 [(ngModel)]="exercise.variant.intensityCoefficient" class="form-control form-control-sm"
-                                [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)}" id="exerciseVariantCoefficient" name="exerciseVariantCoefficient">
+                            <input type="number" min=0.1 [(ngModel)]="exercise.variant.intensityCoefficient" class="form-control form-control-sm" id="exerciseVariantCoefficient" name="exerciseVariantCoefficient"
+                                [min]="EXERCISE_VALIDATIONS.MIN_INTENSITY_COEFFICIENT_NUMBER" [max]="EXERCISE_VALIDATIONS.MAX_INTENSITY_COEFFICIENT_NUMBER"
+                                [ngClass]="{'is-invalid': (exercise.variant.intensityCoefficient == null || exercise.variant.intensityCoefficient < EXERCISE_VALIDATIONS.MIN_INTENSITY_COEFFICIENT_NUMBER || exercise.variant.intensityCoefficient > EXERCISE_VALIDATIONS.MAX_INTENSITY_COEFFICIENT_NUMBER)}">
                         </div>
                         <div class="col-12 form-group">
                             <label for="exerciseDescription" class="col-form-label col-form-label-sm text-muted">Descrizione</label>
-                            <textarea [(ngModel)]="exercise.description" class="form-control form-control-sm"
-                                [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)}" id="exerciseDescription" name="exerciseDescription"></textarea>
+                            <textarea [(ngModel)]="exercise.description" class="form-control form-control-sm" id="exerciseDescription" name="exerciseDescription"
+                                [maxlength]="EXERCISE_VALIDATIONS.MAX_EXERCISE_DESCRIPTION_LENGTH" [ngClass]="{'is-invalid': exercise.description.length > EXERCISE_VALIDATIONS.MAX_EXERCISE_DESCRIPTION_LENGTH}">
+                            </textarea>
                         </div>
                         <div class="col-12 form-group">
                             <label for="exerciseGroups" class="col-form-label col-form-label-sm text-muted">Gruppi</label>
@@ -125,11 +127,11 @@
                         </div>
                     </div>
                 </fieldset>
+                <div class="bottom-right-absolute" *ngIf="(pageStatus[PAGES.EXERCISES] == PAGEMODE.WRITE)">
+                    <button type="submit" ngbAutofocus class="btn btn-success" [ngClass]="{'disabled header-invalid cursor-not-allowed': !isExerciseValidToSubmit(exercise)}" 
+                        ngbTooltip="Alcuni input presentano valori errati" [disableTooltip]="isExerciseValidToSubmit(exercise)">CREA</button>
+                </div>
             </form>
-
-            <div class="bottom-right-absolute" *ngIf="(pageStatus[PAGES.EXERCISES] == PAGEMODE.WRITE)">
-                <div (click)="saveExercise()" class="btn btn-success">SALVA</div>
-            </div>
         </div>
 
         <!-- Loader -->

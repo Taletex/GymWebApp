@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Account, Role } from '@app/_models';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { GeneralService, PAGEMODE, PAGES, PageStatus } from '@app/_services/general-service/general-service.service';
+import { ExerciseService } from '@app/_services/exercise-service/exercise-service.service';
 
 @Component({
   selector: 'app-exercise',
@@ -37,11 +38,12 @@ export class ExerciseComponent implements OnInit {
   public fileList: File[] = [];
   public imgList: any = [];
   public fileInputOptions: any = {bImgInputDisabled: (this.pageStatus[PAGES.EXERCISES] != PAGEMODE.WRITE), bImgInputDirty: false};
+  public EXERCISE_VALIDATIONS: any;
 
   public baseServerUrl = this.httpService.baseServerUrl;
 
   
-  constructor(private generalService: GeneralService, private router: Router, private httpService: HttpService, private toastr: ToastrService, private accountService: AccountService) {
+  constructor(private generalService: GeneralService, private router: Router, private httpService: HttpService, private toastr: ToastrService, private accountService: AccountService, private exerciseService: ExerciseService) {
     let exerciseId = (this.router.url).split('/')[2];
     this.accountService.account.subscribe(x => this.account = x);
 
@@ -79,8 +81,13 @@ export class ExerciseComponent implements OnInit {
       unSelectAllText: 'Deseleziona Tutti',
       allowSearchFilter: true
     };
+
+    this.EXERCISE_VALIDATIONS = this.exerciseService.EXERCISE_VALIDATIONS;
   }
-  
+
+  // From services
+  isExerciseValidToSubmit = this.exerciseService.isExerciseValidToSubmit;
+
   initFileInputOptions() {
     this.fileInputOptions = {bImgInputDisabled: (this.pageStatus[PAGES.EXERCISES] != PAGEMODE.WRITE), bImgInputDirty: false};
   }
@@ -130,6 +137,11 @@ export class ExerciseComponent implements OnInit {
   }
 
   saveExercise() {
+    if(!this.isExerciseValidToSubmit(this.exercise)) {
+      this.toastr.warning("Salvataggio non riuscito: alcuni campi non sono correttamente valorizzati!");
+      return;
+    }
+
     this.bLoading = true;
 
     if(this.fileInputOptions.bImgInputDirty) {
