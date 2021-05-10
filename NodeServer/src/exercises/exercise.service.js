@@ -6,6 +6,9 @@ const fs = require('fs');
 
 module.exports = () => {
 
+    const EXERCISE_VALIDATIONS = {MAX_EXERCISE_NAME_LENGTH: 50, MAX_EXERCISE_DESCRIPTION_LENGTH: 100, MAX_VARIANT_NAME_LENGTH: 50, MIN_INTENSITY_COEFFICIENT_NUMBER: 0, MAX_INTENSITY_COEFFICIENT_NUMBER: 99999};
+
+
     return {
         createExercise,
         findAllExercise,
@@ -36,8 +39,10 @@ module.exports = () => {
             groups: req.body.groups
         });
 
-        // Save Exercise in the database
-        exercise.save()
+        // Check if exercise is a valid exercise
+        if(isExerciseValidToSubmit(exercise)) {
+            // Save Exercise in the database
+            exercise.save()
             .then(data => {
                 res.send(data);
             }).catch(err => {
@@ -45,6 +50,12 @@ module.exports = () => {
                     message: err.message || "Some error occurred while creating the Exercise."
                 });
             });
+        } else {
+            res.status(500).send({
+                message: "Exercise contains invalid field values."
+            });
+        }
+        
     };
 
     // Retrieve and return all exercises from the database.
@@ -157,28 +168,44 @@ module.exports = () => {
             });
         }
 
-        // if exercise images have been updated, then save them replacing the existing ones
-        if (req.body.bNewImages) {
-            let fileDir = fileManager.imagesBaseDir + "/" + req.params._id;
-            if (!fs.existsSync(fileManager.imagesBaseDir))
-                fs.mkdirSync(fileManager.imagesBaseDir);
-            if (!fs.existsSync(fileDir)) {
-                fs.mkdirSync(fileDir);
-            } 
+        // Check if exercise is a valid exercise
+        if(isExerciseValidToSubmit(new Exercise({
+            name: req.body.name,
+            variant: req.body.variant,
+            description: req.body.description,
+            creator: (req.body.creator != "") ? req.body.creator : null,
+            images: req.body.images,  
+            disciplines: req.body.disciplines,
+            groups: req.body.groups
+        }))) {
 
-            let saveImagesResult = await saveImages(req.body.images, fileDir);
-            Promise.all(saveImagesResult).then((data) => {
-                req.body.images = data;
+            // if exercise images have been updated, then save them replacing the existing ones
+            if (req.body.bNewImages) {
+                let fileDir = fileManager.imagesBaseDir + "/" + req.params._id;
+                if (!fs.existsSync(fileManager.imagesBaseDir))
+                    fs.mkdirSync(fileManager.imagesBaseDir);
+                if (!fs.existsSync(fileDir)) {
+                    fs.mkdirSync(fileDir);
+                } 
 
-                fileManager.clearImagesDirectory(fileDir, data);
+                let saveImagesResult = await saveImages(req.body.images, fileDir);
+                Promise.all(saveImagesResult).then((data) => {
+                    req.body.images = data;
+
+                    fileManager.clearImagesDirectory(fileDir, data);
+                    findOneAndUpdateExercise(req, res);
+                }).catch((err) => {
+                    return res.status(500).send({
+                        message: "Error saving exercise images"
+                    });
+                })
+            } else {
                 findOneAndUpdateExercise(req, res);
-            }).catch((err) => {
-                return res.status(500).send({
-                    message: "Error saving exercise images"
-                });
-            })
+            }
         } else {
-            findOneAndUpdateExercise(req, res);
+            res.status(500).send({
+                message: "Exercise contains invalid field values."
+            });
         }
         
     };
@@ -265,5 +292,27 @@ module.exports = () => {
         }
         else return null;
     }
+
+    // Validation util
+    function isExerciseValidToSubmit(exercise) {
+    
+        // exercise name must be defined and its length must be less than its limit
+        if(!exercise.name || exercise.name.length > EXERCISE_VALIDATIONS.MAX_EXERCISE_NAME_LENGTH)
+          return false;
+    
+        // exercise variant name length must be less than its limit
+        if(exercise.variant.name && exercise.variant.name.length > EXERCISE_VALIDATIONS.MAX_VARIANT_NAME_LENGTH)
+          return false;
+        
+        // exercise variant intensity coefficient must be defined and in its range limit
+        if(exercise.variant.intensityCoefficient == null || exercise.variant.intensityCoefficient < EXERCISE_VALIDATIONS.MIN_INTENSITY_COEFFICIENT_NUMBER || exercise.variant.intensityCoefficient > EXERCISE_VALIDATIONS.MAX_INTENSITY_COEFFICIENT_NUMBER)
+          return false;
+        
+        // exercise description length must be less than its limit
+        if(exercise.description.length > EXERCISE_VALIDATIONS.MAX_EXERCISE_DESCRIPTION_LENGTH)
+          return false;
+        
+        return true;
+      }
 
 }
