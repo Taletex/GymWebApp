@@ -1,9 +1,9 @@
 <div class="main__exercise row m-3">
 
-    <div class="exercise__maincontainer col-12 card p-0">
+    <div class="exercise__maincontainer col-12 card p-0" [ngClass]="{'bg-transparent': (pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)}">
 
-        <div class="maincontainer__header card-header px-0">
-            <div class="d-flex align-items-center">
+        <div class="maincontainer__header card-header px-0" [ngClass]="{'bg-transparent': (pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)}">
+            <div class="d-flex align-items-center col-12">
                 <h4 class="m-0 h4"><span class="d-block d-md-inline mr-2">ESERCIZIO</span> <span class="d-block d-md-inline">{{exercise.name}}</span></h4>
 
                 <div class="d-flex input-group w-auto ml-auto">
@@ -17,121 +17,120 @@
             </div>
         </div>
 
-        <div class="maincontainer__body card-body h-vh-fixed">
-            <form id="exerciseForm" ngNativeValidate action='#' #exerciseForm="ngForm" (ngSubmit)="saveExercise()">
-                <fieldset class="form-row m-0" [disabled]="(pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)">
-                    <div class="col-12 col-lg-6 form-row m-0 p-0">
-                        <div class="col-12 col-md-12 col-lg-12 form-group">
-                            <label for="exerciseName" class="col-form-label col-form-label-sm text-muted">Nome</label>
-                            <input type="text" [(ngModel)]="exercise.name" class="form-control form-control-sm" id="exerciseName" name="exerciseName"
-                                required [maxlength]="EXERCISE_VALIDATIONS.MAX_EXERCISE_NAME_LENGTH" [ngClass]="{'is-invalid': !exercise.name || exercise.name.length > EXERCISE_VALIDATIONS.MAX_EXERCISE_NAME_LENGTH}">
-                        </div>
-                        <div class="col-12 col-md-6 col-lg-12 form-group">
-                            <label for="exerciseVariantName" class="col-form-label col-form-label-sm text-muted">Nome Variante</label>
-                            <input type="text" [(ngModel)]="exercise.variant.name" class="form-control form-control-sm" id="exerciseVariantName" name="exerciseVariantName"
-                                [maxlength]="EXERCISE_VALIDATIONS.MAX_VARIANT_NAME_LENGTH" [ngClass]="{'is-invalid': exercise.variant.name.length > EXERCISE_VALIDATIONS.MAX_VARIANT_NAME_LENGTH}">
-                        </div>
-                        <div class="col-12 col-md-6 col-lg-12 form-group">
-                            <label for="exerciseVariantCoefficient" class="col-form-label col-form-label-sm text-muted">Coefficente di intensità</label>
-                            <input type="number" min=0.1 [(ngModel)]="exercise.variant.intensityCoefficient" class="form-control form-control-sm" id="exerciseVariantCoefficient" name="exerciseVariantCoefficient"
-                                [min]="EXERCISE_VALIDATIONS.MIN_INTENSITY_COEFFICIENT_NUMBER" [max]="EXERCISE_VALIDATIONS.MAX_INTENSITY_COEFFICIENT_NUMBER"
-                                [ngClass]="{'is-invalid': (exercise.variant.intensityCoefficient == null || exercise.variant.intensityCoefficient < EXERCISE_VALIDATIONS.MIN_INTENSITY_COEFFICIENT_NUMBER || exercise.variant.intensityCoefficient > EXERCISE_VALIDATIONS.MAX_INTENSITY_COEFFICIENT_NUMBER)}">
-                        </div>
-                        <div class="col-12 form-group">
-                            <label for="exerciseDescription" class="col-form-label col-form-label-sm text-muted">Descrizione</label>
-                            <textarea [(ngModel)]="exercise.description" class="form-control form-control-sm" id="exerciseDescription" name="exerciseDescription"
-                                [maxlength]="EXERCISE_VALIDATIONS.MAX_EXERCISE_DESCRIPTION_LENGTH" [ngClass]="{'is-invalid': exercise.description.length > EXERCISE_VALIDATIONS.MAX_EXERCISE_DESCRIPTION_LENGTH}">
-                            </textarea>
-                        </div>
-                        <div class="col-12 form-group">
-                            <label for="exerciseGroups" class="col-form-label col-form-label-sm text-muted">Gruppi</label>
-                            <ng-multiselect-dropdown 
-                                [disabled]="(pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)"
-                                class="w-100 small" 
-                                id="exerciseGroups" 
-                                name="exerciseGroups" 
-                                ngDefaultControl
-                                [placeholder]="'Gruppi'" 
-                                [settings]="groupDropdownSettings" 
-                                [data]="exerciseGroupsList"
-                                [(ngModel)]="exercise.groups"
-                                [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)}">
-                                <ng-template #optionsTemplate let-item let-option="option" let-id="id" let-isSelected="isSelected">
-                                    <div>
-                                        <label style="color: #333; min-width: 130px; font-weight: normal;" class="m-0 text-capitalize"
-                                            [ngStyle]="{ 'font-weight': isSelected? 'bold':' normal','color': getGroupItems[id].isDisabled? 'lightgrey': ''}">{{getGroupItems[id]}}</label>
-                                    </div>
-                                </ng-template>
-                                <ng-template #optionSelectedTemplate let-option="option" let-id="id">
-                                    <div class="text-capitalize">
-                                        {{getGroupItems[id]}}
-                                    </div>
-                                </ng-template>
-                            </ng-multiselect-dropdown>
-                        </div>
-                        <div class="col-12 form-group">
-                            <label for="exerciseDisciplines" class="col-form-label col-form-label-sm text-muted">Discipline</label>
-                            <ng-multiselect-dropdown 
-                                [disabled]="(pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)"
-                                class="w-100 small" 
-                                id="exerciseDisciplines" 
-                                name="exerciseDisciplines" 
-                                ngDefaultControl
-                                [placeholder]="'Discipline'" 
-                                [settings]="disciplineDropdownSettings" 
-                                [data]="exerciseDisciplinesList"
-                                [(ngModel)]="exercise.disciplines"
-                                [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)}">
-                                <ng-template #optionsTemplate let-item let-option="option" let-id="id" let-isSelected="isSelected">
-                                    <div>
-                                        <label style="color: #333; min-width: 130px; font-weight: normal;" class="m-0 text-capitalize"
-                                            [ngStyle]="{ 'font-weight': isSelected? 'bold':' normal','color': getDisciplineItems[id].isDisabled? 'lightgrey': ''}">{{getDisciplineItems[id]}}</label>
-                                    </div>
-                                </ng-template>
-                                <ng-template #optionSelectedTemplate let-option="option" let-id="id">
-                                    <div class="text-capitalize">
-                                        {{getDisciplineItems[id]}}
-                                    </div>
-                                </ng-template>
-                            </ng-multiselect-dropdown>
-                        </div>
+        <div class="maincontainer__body card-body h-vh-fixed pt-0 px-0 mt-3" [ngClass]="{'border-0': (pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY), 'border': (pageStatus[PAGES.EXERCISES] == PAGEMODE.WRITE)}">
+            <!-- READONLY MODE PAGE -->
+            <div *ngIf="(pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)" class="row m-0">
+                <div (click)="toggleExerciseList()" id="toggle-exercise-list-btn" class="d-block d-xl-none toggle-exercise-list-btn bg-custom-lightgray px-2 border cursor-pointer"><span>ESERCIZI</span><span id="toggle-exercise-list-btn-icon" class="toggle-exercise-list-btn-icon fa fa-arrow-circle-down ml-2"></span></div>
+
+                <div class="col-md-4 exercise-list-container closed" id="exercise-list-container">
+                    <div class="card pr-2 pb-2">
+                        <div class="card-header bg-white border-0">
+                            <h5 class="card-title mb-0">Lista Esercizi</h5>
+                        </div>   
+                        <div class="card-body pt-0 pr-2 font-size-xl-8 font-size-10">
+                            <div *ngFor="let e of exerciseList" (click)="changeCurrentExercise(e)" class="list-group-item" [ngClass]="{'active': e._id == exercise._id}">{{e.name}}</div>
+                        </div>  
                     </div>
-                    <div class="col-12 col-lg-6 form-row m-0">
-                        <div class="col-12 form-group" *ngIf="(pageStatus[PAGES.EXERCISES] == PAGEMODE.WRITE)">
-                            <label for="exerciseImages" class="col-form-label col-form-label-sm text-muted">Immagini </label>
-                            <label for="exerciseImages" class="d-block d-sm-inline ml-sm-1 col-form-label col-form-label-sm text-muted pt-0">(limiti: 2MB, .jpeg/.png, 3 immagini)</label>
-                            <app-upload-files id="exerciseImages" [(fileInputOptions)]="fileInputOptions" [(fileList)]="fileList" [(imgList)]="imgList" [(exercise)]="exercise"></app-upload-files>
-                        </div>
-                        <div class="col-12 form-group" *ngIf="(pageStatus[PAGES.EXERCISES] != PAGEMODE.WRITE)">
-                            <label for="exerciseImages" class="col-form-label col-form-label-sm text-muted">Immagini</label>
-                            <div class="row m-0 d-flex align-items-center justify-content-center" *ngIf="!fileInputOptions.bImgInputDirty">
-                                <ngb-carousel [hidden]="exercise.images.length == 0" class="col-12 p-0 carousel-container-small">
-                                    <ng-template ngbSlide *ngFor="let img of exercise.images">
-                                      <div class="picsum-img-wrapper d-flex align-items-center justify-content-center">
-                                        <img [src]="baseServerUrl + img" alt="Exercise img {{index}}" class="carousel-img">
-                                      </div>
-                                    </ng-template>
-                                </ngb-carousel>
-                                <div [hidden]="exercise.images.length > 0" class="font-size-9">Nessuna immagine disponibile</div>
-                            </div>
-                            <div class="row m-0 p-3 d-flex align-items-center justify-content-center" *ngIf="fileInputOptions.bImgInputDirty">
-                                <ngb-carousel [hidden]="imgList.length == 0" class="col-12 p-0 carousel-container-small">
-                                    <ng-template ngbSlide *ngFor="let img of imgList">
-                                      <div class="picsum-img-wrapper">
-                                        <img [src]="img.bNew ? img.src : (baseServerUrl + img.src)" alt="{{img.title}}" class="carousel-img">
-                                      </div>
-                                    </ng-template>
-                                </ngb-carousel>
-                                <div [hidden]="imgList.length > 0" class="font-size-9">Nessuna immagine disponibile</div>
-                            </div>
-                        </div>
-                    </div>
-                </fieldset>
-                <div class="bottom-right-absolute" *ngIf="(pageStatus[PAGES.EXERCISES] == PAGEMODE.WRITE)">
-                    <button type="submit" ngbAutofocus class="btn btn-success" [ngClass]="{'disabled header-invalid cursor-not-allowed': !isExerciseValidToSubmit(exercise)}" 
-                        ngbTooltip="Alcuni input presentano valori errati" [disableTooltip]="isExerciseValidToSubmit(exercise)">CREA</button>
                 </div>
-            </form>
+                <div class="col-12 col-xl-8">
+                    <app-exercise-view [(exercise)]="exercise"></app-exercise-view>
+                </div>
+            </div>
+
+            <!-- WRITE MODE PAGE -->
+            <div *ngIf="(pageStatus[PAGES.EXERCISES] == PAGEMODE.WRITE)">
+                <form id="exerciseForm" ngNativeValidate action='#' #exerciseForm="ngForm" (ngSubmit)="saveExercise()">
+                    <fieldset class="form-row m-0" [disabled]="(pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)">
+                        <div class="col-12 col-lg-6 form-row m-0 p-0">
+                            <div class="col-12 form-group">
+                                <label for="exerciseName" class="col-form-label col-form-label-sm text-muted">Nome</label>
+                                <input type="text" [(ngModel)]="exercise.name" class="form-control form-control-sm" id="exerciseName" name="exerciseName"
+                                    required [maxlength]="EXERCISE_VALIDATIONS.MAX_EXERCISE_NAME_LENGTH" [ngClass]="{'is-invalid': !exercise.name || exercise.name.length > EXERCISE_VALIDATIONS.MAX_EXERCISE_NAME_LENGTH}">
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-12 form-group">
+                                <label for="exerciseVariantName" class="col-form-label col-form-label-sm text-muted">Nome Variante</label>
+                                <input type="text" [(ngModel)]="exercise.variant.name" class="form-control form-control-sm" id="exerciseVariantName" name="exerciseVariantName"
+                                    [maxlength]="EXERCISE_VALIDATIONS.MAX_VARIANT_NAME_LENGTH" [ngClass]="{'is-invalid': exercise.variant.name.length > EXERCISE_VALIDATIONS.MAX_VARIANT_NAME_LENGTH}">
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-12 form-group">
+                                <label for="exerciseVariantCoefficient" class="col-form-label col-form-label-sm text-muted">Coefficente di intensità</label>
+                                <input type="number" min=0.1 [(ngModel)]="exercise.variant.intensityCoefficient" class="form-control form-control-sm" id="exerciseVariantCoefficient" name="exerciseVariantCoefficient"
+                                    [min]="EXERCISE_VALIDATIONS.MIN_INTENSITY_COEFFICIENT_NUMBER" [max]="EXERCISE_VALIDATIONS.MAX_INTENSITY_COEFFICIENT_NUMBER"
+                                    [ngClass]="{'is-invalid': (exercise.variant.intensityCoefficient == null || exercise.variant.intensityCoefficient < EXERCISE_VALIDATIONS.MIN_INTENSITY_COEFFICIENT_NUMBER || exercise.variant.intensityCoefficient > EXERCISE_VALIDATIONS.MAX_INTENSITY_COEFFICIENT_NUMBER)}">
+                            </div>
+                            <div class="col-12 form-group">
+                                <label for="exerciseDescription" class="col-form-label col-form-label-sm text-muted">Descrizione</label>
+                                <textarea [(ngModel)]="exercise.description" class="form-control form-control-sm" id="exerciseDescription" name="exerciseDescription"
+                                    [maxlength]="EXERCISE_VALIDATIONS.MAX_EXERCISE_DESCRIPTION_LENGTH" [ngClass]="{'is-invalid': exercise.description.length > EXERCISE_VALIDATIONS.MAX_EXERCISE_DESCRIPTION_LENGTH}">
+                                </textarea>
+                            </div>
+                            <div class="col-12 form-group">
+                                <label for="exerciseGroups" class="col-form-label col-form-label-sm text-muted">Gruppi</label>
+                                <ng-multiselect-dropdown 
+                                    [disabled]="(pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)"
+                                    class="w-100 small" 
+                                    id="exerciseGroups" 
+                                    name="exerciseGroups" 
+                                    ngDefaultControl
+                                    [placeholder]="'Gruppi'" 
+                                    [settings]="groupDropdownSettings" 
+                                    [data]="exerciseGroupsList"
+                                    [(ngModel)]="exercise.groups"
+                                    [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)}">
+                                    <ng-template #optionsTemplate let-item let-option="option" let-id="id" let-isSelected="isSelected">
+                                        <div>
+                                            <label style="color: #333; min-width: 130px; font-weight: normal;" class="m-0 text-capitalize"
+                                                [ngStyle]="{ 'font-weight': isSelected? 'bold':' normal','color': getGroupItems[id].isDisabled? 'lightgrey': ''}">{{getGroupItems[id]}}</label>
+                                        </div>
+                                    </ng-template>
+                                    <ng-template #optionSelectedTemplate let-option="option" let-id="id">
+                                        <div class="text-capitalize">
+                                            {{getGroupItems[id]}}
+                                        </div>
+                                    </ng-template>
+                                </ng-multiselect-dropdown>
+                            </div>
+                            <div class="col-12 form-group">
+                                <label for="exerciseDisciplines" class="col-form-label col-form-label-sm text-muted">Discipline</label>
+                                <ng-multiselect-dropdown 
+                                    [disabled]="(pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)"
+                                    class="w-100 small" 
+                                    id="exerciseDisciplines" 
+                                    name="exerciseDisciplines" 
+                                    ngDefaultControl
+                                    [placeholder]="'Discipline'" 
+                                    [settings]="disciplineDropdownSettings" 
+                                    [data]="exerciseDisciplinesList"
+                                    [(ngModel)]="exercise.disciplines"
+                                    [ngClass]="{'border-bottom-only bg-white': (pageStatus[PAGES.EXERCISES] == PAGEMODE.READONLY)}">
+                                    <ng-template #optionsTemplate let-item let-option="option" let-id="id" let-isSelected="isSelected">
+                                        <div>
+                                            <label style="color: #333; min-width: 130px; font-weight: normal;" class="m-0 text-capitalize"
+                                                [ngStyle]="{ 'font-weight': isSelected? 'bold':' normal','color': getDisciplineItems[id].isDisabled? 'lightgrey': ''}">{{getDisciplineItems[id]}}</label>
+                                        </div>
+                                    </ng-template>
+                                    <ng-template #optionSelectedTemplate let-option="option" let-id="id">
+                                        <div class="text-capitalize">
+                                            {{getDisciplineItems[id]}}
+                                        </div>
+                                    </ng-template>
+                                </ng-multiselect-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 form-row m-0">
+                            <div class="col-12 form-group">
+                                <label for="exerciseImages" class="col-form-label col-form-label-sm text-muted">Immagini </label>
+                                <label for="exerciseImages" class="d-block d-sm-inline ml-sm-1 col-form-label col-form-label-sm text-muted pt-0">(limiti: 2MB, .jpeg/.png, 3 immagini)</label>
+                                <app-upload-files id="exerciseImages" [(fileInputOptions)]="fileInputOptions" [(fileList)]="fileList" [(imgList)]="imgList" [(exercise)]="exercise"></app-upload-files>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="bottom-right-absolute">
+                        <button type="submit" ngbAutofocus class="btn btn-success" [ngClass]="{'disabled header-invalid cursor-not-allowed': !isExerciseValidToSubmit(exercise)}" 
+                            ngbTooltip="Alcuni input presentano valori errati" [disableTooltip]="isExerciseValidToSubmit(exercise)">SALVA</button>
+                    </div>
+                </form>
+            </div>
         </div>
 
         <!-- Loader -->

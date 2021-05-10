@@ -15,7 +15,8 @@ import { SessionViewComponent } from './components/session-view/session-view.com
 import { TrainingViewComponent } from './components/training-view/training-view.component';
 import { UploadFilesComponent } from './components/upload-files/upload-files.component';
 import { DragDropDirective } from './directives/drag-drop.directives';
-import { CropImageModalComponent } from './components/crop-image-modal/crop-image-modal.component'
+import { CropImageModalComponent } from './components/crop-image-modal/crop-image-modal.component';
+import { ExerciseViewComponent } from './components/exercise-view/exercise-view.component'
 
 export { TrainingModalComponent } from './components/training-modal/training-modal.component';
 export { ExerciseModalComponent } from './components/exercise-modal/exercise-modal.component';
@@ -25,6 +26,7 @@ export { SessionModalComponent } from './components/session-modal/session-modal.
 export { PageNotAuthorizedComponent } from './components/page-not-authorized/page-not-authorized.component';
 export { UploadFilesComponent } from './components/upload-files/upload-files.component';
 export { DragDropDirective } from './directives/drag-drop.directives'
+export { ExerciseViewComponent } from './components/exercise-view/exercise-view.component';
 
 @NgModule({
     imports: [
@@ -46,7 +48,8 @@ export { DragDropDirective } from './directives/drag-drop.directives'
         TrainingViewComponent,
         UploadFilesComponent,
         DragDropDirective,
-        CropImageModalComponent
+        CropImageModalComponent,
+        ExerciseViewComponent
     ],
     exports: [
         TrainingModalComponent,
@@ -59,7 +62,8 @@ export { DragDropDirective } from './directives/drag-drop.directives'
         SessionViewComponent,
         TrainingViewComponent,
         UploadFilesComponent,
-        DragDropDirective
+        DragDropDirective,
+        ExerciseViewComponent
     ]
 })
 export class SharedModule { }

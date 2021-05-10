@@ -1,0 +1,45 @@
+<div class="view__maincontainer round-5">
+    <div class="card">
+        <div class="card-header bg-white border-0 text-center">
+            <h5 class="card-title mb-0">Dettagli Esercizio</h5>
+        </div>
+        <div class="d-flex flex-column flex-xl-row border-top-xl">
+            <div class="border-right-xl">
+                <div class="card-body text-center">
+                    <h5 class="card-title mb-0">{{exercise.name}}</h5>
+                    <div *ngIf="exercise.variant.name">Variante {{exercise.variant.name}}</div>
+                    <div>Coefficiente di intensità {{exercise.variant.intensityCoefficient}}</div>
+                    <small class="mt-1" *ngIf="exercise.description">{{exercise.description}}</small>
+                </div>
+                <hr class="my-0" *ngIf="exercise.groups && exercise.groups.length > 0">
+                <div class="card-body" *ngIf="exercise.groups && exercise.groups.length > 0">
+                    <h6 class="h6 card-title text-muted">Gruppi muscolari</h6>
+                    <span class="badge badge-primary mr-2" *ngFor="let g of exercise.groups">{{g}}</span>
+                </div>
+                <hr class="my-0" *ngIf="exercise.disciplines && exercise.disciplines.length > 0">
+                <div class="card-body" *ngIf="exercise.disciplines && exercise.disciplines.length > 0">
+                    <h6 class="h6 card-title text-muted">Discipline</h6>
+                    <span class="badge badge-info mr-2" *ngFor="let d of exercise.disciplines">{{d}}</span>
+                </div>
+            </div>
+            <div>
+                <hr class="my-0 d-xl-none">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="exerciseImages" class="col-form-label col-form-label-sm text-muted">Immagini</label>
+                        <div class="row m-0 d-flex align-items-center justify-content-center">
+                            <ngb-carousel [hidden]="exercise.images.length == 0" class="col-12 p-0 carousel-container-small">
+                                <ng-template ngbSlide *ngFor="let img of exercise.images">
+                                  <div class="picsum-img-wrapper d-flex align-items-center justify-content-center">
+                                    <img [src]="baseServerUrl + img" alt="Exercise img {{index}}" class="carousel-img">
+                                  </div>
+                                </ng-template>
+                            </ngb-carousel>
+                            <div [hidden]="exercise.images.length > 0" class="font-size-9">Nessuna immagine disponibile</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

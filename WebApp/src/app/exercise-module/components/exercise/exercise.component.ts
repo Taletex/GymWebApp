@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { Exercise, EXERCISE_GROUPS, TRAINING_TYPES } from '@app/_models/training-model';
 import { HttpService } from '@app/_services/http-service/http-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -8,6 +9,8 @@ import { Account, Role } from '@app/_models';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { GeneralService, PAGEMODE, PAGES, PageStatus } from '@app/_services/general-service/general-service.service';
 import { ExerciseService } from '@app/_services/exercise-service/exercise-service.service';
+import * as _ from 'lodash';
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-exercise',
@@ -23,6 +26,7 @@ export class ExerciseComponent implements OnInit {
   public pageStatus: PageStatus = new PageStatus();
 
   public exercise: any = new Exercise();
+  public exerciseList: Array<Exercise> = [];
   public account: Account;
   public Role = Role;
 
@@ -43,27 +47,14 @@ export class ExerciseComponent implements OnInit {
   public baseServerUrl = this.httpService.baseServerUrl;
 
   
-  constructor(private generalService: GeneralService, private router: Router, private httpService: HttpService, private toastr: ToastrService, private accountService: AccountService, private exerciseService: ExerciseService) {
-    let exerciseId = (this.router.url).split('/')[2];
+  constructor(private location: Location, private generalService: GeneralService, private router: Router, private httpService: HttpService, private toastr: ToastrService, private accountService: AccountService, private exerciseService: ExerciseService) {
     this.accountService.account.subscribe(x => this.account = x);
 
-    this.bLoading = true;
-    this.httpService.getExercise(exerciseId)
-      .subscribe(
-        (data: any) => {
-          this.exercise = data;
-          this.bLoading = false;
-          console.log(this.exercise);
+    // Init current exercise
+    this.getExercise((this.router.url).split('/')[2]);
 
-          this.pageStatus = this.generalService.getPageStatus();
-          this.initImageInputAuxVariables();
-          console.log(this.pageStatus);
-        },
-        (error: HttpErrorResponse) => {
-          this.bLoading = false;
-          this.toastr.error('An error occurred while loading the exercise!');
-          console.log(error.error.message);
-        });
+    // Init exercise list 
+    this.getExercises();
   }
 
   ngOnInit(): void {
@@ -83,6 +74,50 @@ export class ExerciseComponent implements OnInit {
     };
 
     this.EXERCISE_VALIDATIONS = this.exerciseService.EXERCISE_VALIDATIONS;
+  }
+
+  getExercise(exerciseId: string) {
+    this.bLoading = true;
+    this.httpService.getExercise(exerciseId)
+      .subscribe(
+        (data: any) => {
+          this.exercise = data;
+          this.bLoading = false;
+          console.log("Current Exercise", this.exercise);
+
+          this.pageStatus = this.generalService.getPageStatus();
+          this.initImageInputAuxVariables();
+        },
+        (error: HttpErrorResponse) => {
+          this.bLoading = false;
+          this.toastr.error('An error occurred while loading the exercise!');
+          console.log(error.error.message);
+        });
+  }
+
+  getExercises() {
+    this.bLoading = true;
+    this.httpService.getExercisesForUser(this.account.user._id)
+      .subscribe(
+        (data: any) => {
+          this.exerciseList = _.cloneDeep(_.sortBy(data, ['name', 'variant.name']));
+          
+          this.bLoading = false;
+          console.log("Exercises List", this.exerciseList);
+        },
+        (error: HttpErrorResponse) => {
+          this.bLoading = false;
+          this.toastr.error('An error occurred while loading the exercise list!');
+          console.log(error.error.message);
+        });
+  }
+
+  changeCurrentExercise(exercise: Exercise) {
+    if(window.innerWidth < 1200)
+      this.toggleExerciseList(false);
+    this.generalService.openPageWithMode(PAGEMODE.READONLY, PAGES.EXERCISES, exercise._id);
+    this.location.go("/exercises/"+exercise._id);
+    this.getExercise(exercise._id);
   }
 
   // From services
@@ -179,6 +214,25 @@ export class ExerciseComponent implements OnInit {
             this.toastr.error('An error occurred while deleting the exercise!');
             console.log(error.error.message);
           });
+    }
+  }
+
+  toggleExerciseList(bOpen: boolean){
+    let exerciseList = $(".exercise-list-container");
+    let exerciseListBtn = $("#toggle-exercise-list-btn");
+    let exerciseListBtnIcon = $("#toggle-exercise-list-btn-icon");
+
+    if(exerciseList.hasClass("closed") || bOpen) {
+      exerciseList.removeClass("closed").addClass("opened");
+      exerciseList.show("fast");
+      exerciseListBtn.removeClass("open-btn").addClass("close-btn");
+      exerciseListBtnIcon.removeClass("fa-arrow-circle-down").addClass("fa-arrow-circle-up");
+    }
+    else if(!exerciseList.hasClass("closed") || !bOpen){
+      exerciseList.removeClass("opened").addClass("closed");
+      exerciseList.hide("fast");
+      exerciseListBtn.removeClass("close-btn").addClass("open-btn");
+      exerciseListBtnIcon.removeClass("fa-arrow-circle-up").addClass("fa-arrow-circle-down");
     }
   }
 
