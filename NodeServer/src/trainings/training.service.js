@@ -6,11 +6,13 @@ const _ = require('lodash');
 const emailHelper = require('src/_helpers/send-email');
 var html_to_pdf = require('html-pdf-node');
 const fs = require('fs');
+const moment = require('moment');
 
 /** REST CALLBACKS **/
 module.exports = (io, clientSocketList) => {
 
     const notificationService = require('src/_helpers/notification.service')(io, clientSocketList);
+    const TRAINING_VALIDATIONS = {MAX_SESSION_NAME_LENGTH: 50, MAX_SESSION_COMMENT_LENGTH: 100, MAX_SERIES_NUMBER: 99999, MIN_SERIES_NUMBER: 1, MAX_REP_NUMBER: 99999, MIN_REP_NUMBER: 1, MAX_WEIGHT_NUMBER: 99999, MIN_WEIGHT_NUMBER: 0, MAX_REST_TIME: 99999, MIN_REST_TIME: 0, MAX_DATE: "2100-01-01T00:00", MAX_WEEK_COMMENT_LENGTH: 500, MAX_TRAINING_COMMENT_LENGTH: 1000};
 
     return {
         createTraining,
@@ -79,52 +81,58 @@ module.exports = (io, clientSocketList) => {
             oldVersions: req.body.oldVersions
         }));
 
-        // Save Training in the database
-        training.save()
-        .then(data => {
+        if(areBasicTrainingInfosValidToSubmit(training)) {
+            // Save Training in the database
+            training.save()
+            .then(data => {
 
-            // 1. Find athletes and the new training
-            Promise.all([
-                User.find({_id: {$in: req.body.athletes}}), 
-                Training.findOne({_id: training._id}).populate('author').populate('athletes').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
-            ])
-            .then(([users, training]) => {
-                
-                // 2. Send notifications to all athletes client (if online)
-                let message = "Il coach " + training.author.name + " " + training.author.surname + " ha creato un nuovo <a href='trainings/" + training._id + "'>allenamento</a>.";
-                const userPromise = users.map(user => {
-                    return new Promise((resolve, reject) => {
-                        user.notifications.push(new Notification({ type: NOTIFICATION_TYPE.TRAINING_CREATED, from: req.body.author, destination: user._id, message: message, bConsumed: false, creationDate: new Date() }));
-                        user.save((error, result) => {
-                            if (error)
-                              reject(error)
+                // 1. Find athletes and the new training
+                Promise.all([
+                    User.find({_id: {$in: req.body.athletes}}), 
+                    Training.findOne({_id: training._id}).populate('author').populate('athletes').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
+                ])
+                .then(([users, training]) => {
+                    
+                    // 2. Send notifications to all athletes client (if online)
+                    let message = "Il coach " + training.author.name + " " + training.author.surname + " ha creato un nuovo <a href='trainings/" + training._id + "'>allenamento</a>.";
+                    const userPromise = users.map(user => {
+                        return new Promise((resolve, reject) => {
+                            user.notifications.push(new Notification({ type: NOTIFICATION_TYPE.TRAINING_CREATED, from: req.body.author, destination: user._id, message: message, bConsumed: false, creationDate: new Date() }));
+                            user.save((error, result) => {
+                                if (error)
+                                reject(error)
 
-                            result.populate({path: 'personalRecords', populate: {path: 'exercise'}})
-                            .populate({path: 'notifications', populate: {path: 'destination'}})
-                            .populate({path: 'notifications', populate: {path: 'from'}})
-                            .populate('coaches').populate('athletes').execPopulate().then((result) => {
-                                resolve(result);
+                                result.populate({path: 'personalRecords', populate: {path: 'exercise'}})
+                                .populate({path: 'notifications', populate: {path: 'destination'}})
+                                .populate({path: 'notifications', populate: {path: 'from'}})
+                                .populate('coaches').populate('athletes').execPopulate().then((result) => {
+                                    resolve(result);
+                                })
                             })
-                          })
+                        })
                     })
+                    Promise.all(userPromise).then((users) => {
+
+                        // 3. Update all client informations using the socket
+                        for(let i=0; i<users.length; i++) 
+                            notificationService.sendUpdatedUserToItsSocket(users[i]);
+
+                        // 4. Return the new training
+                        res.send(training);
+                    })
+
                 })
-                Promise.all(userPromise).then((users) => {
-
-                    // 3. Update all client informations using the socket
-                    for(let i=0; i<users.length; i++) 
-                        notificationService.sendUpdatedUserToItsSocket(users[i]);
-
-                    // 4. Return the new training
-                    res.send(training);
-                })
-
-            })
-            
-        }).catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while creating the Training."
+                
+            }).catch(err => {
+                res.status(500).send({
+                    message: err.message || "Some error occurred while creating the Training."
+                });
             });
-        });
+        } else {
+            res.status(500).send({
+                message: "Training contains invalid field values."
+            });
+        }
     };
 
 
@@ -216,10 +224,7 @@ module.exports = (io, clientSocketList) => {
             });
         }
 
-
-        // Find training and update it with the request body
-        Training.findOneAndUpdate({_id: req.params._id}, trainingDecorator({
-            state: req.body.state,
+        if(isTrainingValidToSubmit(new Training({state: req.body.state,
             author: req.body.author,
             athletes: req.body.athletes,
             type: req.body.type,
@@ -228,30 +233,48 @@ module.exports = (io, clientSocketList) => {
             endDate: req.body.endDate,
             comment: req.body.comment,
             weeks: req.body.weeks,
-            oldVersions: req.body.oldVersions
-        }), {new: true})
-        .then(training => {
-            if(!training) {
-                return res.status(404).send({
-                    message: "Training not found with id " + req.params._id
-                });
-            }
+            oldVersions: req.body.oldVersions}))
+            ) {
+            // Find training and update it with the request body
+            Training.findOneAndUpdate({_id: req.params._id}, trainingDecorator({
+                state: req.body.state,
+                author: req.body.author,
+                athletes: req.body.athletes,
+                type: req.body.type,
+                creationDate: req.body.creationDate,
+                startDate: req.body.startDate,
+                endDate: req.body.endDate,
+                comment: req.body.comment,
+                weeks: req.body.weeks,
+                oldVersions: req.body.oldVersions
+            }), {new: true})
+            .then(training => {
+                if(!training) {
+                    return res.status(404).send({
+                        message: "Training not found with id " + req.params._id
+                    });
+                }
 
-            // Returns the training updated by finding it in the database
-            Training.find({_id: req.params._id}).populate('author').populate('athletes').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
-            .then(data => {
-                res.send(data[0]);
-            })
-        }).catch(err => {
-            if(err.kind === 'ObjectId') {
-                return res.status(404).send({
-                    message: "Training not found with id " + req.params._id
-                });                
-            }
-            return res.status(500).send({
-                message: "Error updating training with id " + req.params._id
+                // Returns the training updated by finding it in the database
+                Training.find({_id: req.params._id}).populate('author').populate('athletes').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
+                .then(data => {
+                    res.send(data[0]);
+                })
+            }).catch(err => {
+                if(err.kind === 'ObjectId') {
+                    return res.status(404).send({
+                        message: "Training not found with id " + req.params._id
+                    });                
+                }
+                return res.status(500).send({
+                    message: "Error updating training with id " + req.params._id
+                });
             });
-        });
+        } else {
+            res.status(500).send({
+                message: "Training contains invalid field values."
+            });
+        }
     };
 
     // Delete a training with the specified id in the request
@@ -387,6 +410,94 @@ module.exports = (io, clientSocketList) => {
                 reject(err | "Error during pdf creation");
             });;
         });
+    }
+
+    /* === VALIDATION FUNCTIONS === */
+    function isValidStartDate(startDate) {
+        return !(moment(startDate).isAfter(TRAINING_VALIDATIONS.MAX_DATE));
+    }
+    function isValidEndDate(startDate, endDate) {
+        return !(moment(endDate).isBefore(startDate) || moment(endDate).isAfter(TRAINING_VALIDATIONS.MAX_DATE));
+    }
+
+    function isSessionValidToSubmit(session) {
+
+        // session name and comment lengths must be less than their limits
+        if(session.name.length > TRAINING_VALIDATIONS.MAX_SESSION_NAME_LENGTH || session.comment.length > TRAINING_VALIDATIONS.MAX_SESSION_COMMENT_LENGTH)
+            return false;
+
+        // end date must be after start date, end date and start date must be before 2100-01-01
+        if(moment(session.endDate).isBefore(session.startDate) || moment(session.endDate).isAfter(TRAINING_VALIDATIONS.MAX_DATE) || moment(session.startDate).isAfter(TRAINING_VALIDATIONS.MAX_DATE))
+            return false;
+        
+        // each exercise
+        for(let e of session.exercises) {
+            // exercise must be defined
+            if(!e.exercise.name)
+                return false;
+            
+            for(let s of e.series) {
+                // series, rep, weight and rest must be defined and must be less and more than their limits
+                if( 
+                    (s.seriesNumber == null || s.seriesNumber < TRAINING_VALIDATIONS.MIN_SERIES_NUMBER || s.seriesNumber > TRAINING_VALIDATIONS.MAX_SERIES_NUMBER) ||
+                    (s.repNumber == null || s.repNumber < TRAINING_VALIDATIONS.MIN_REP_NUMBER || s.repNumber > TRAINING_VALIDATIONS.MAX_REP_NUMBER) ||
+                    (s.weight == null || s.weight < TRAINING_VALIDATIONS.MIN_WEIGHT_NUMBER || s.weight > TRAINING_VALIDATIONS.MAX_WEIGHT_NUMBER) ||
+                    (s.rest == null || s.rest < TRAINING_VALIDATIONS.MIN_REST_TIME || s.rest > TRAINING_VALIDATIONS.MAX_REST_TIME)
+                )
+                    return false;
+            }
+        }
+
+        return true;
+
+    }
+
+    function isWeekValidToSubmit(week) {
+
+        // week comment length must be less than its limit
+        if(week.comment.length > TRAINING_VALIDATIONS.MAX_WEEK_COMMENT_LENGTH)
+            return false;
+        
+        // all week sessions must be valid
+        for(let s of week.sessions) {
+            if(!isSessionValidToSubmit(s))
+                return false;
+        }
+
+        return true;
+
+    }
+
+    function isTrainingValidToSubmit(training) {
+
+        // all basic training infos must be valid
+        if(!areBasicTrainingInfosValidToSubmit(training))
+            return false;
+
+        // all training weeks must be valid
+        for(let w of training.weeks) {
+            if(!isWeekValidToSubmit(w))
+                return false;
+        }
+
+        return true;
+    }
+
+    function areBasicTrainingInfosValidToSubmit(training) {
+        
+        // training comment length must be less than its limit
+        if(training.comment.length > TRAINING_VALIDATIONS.MAX_TRAINING_COMMENT_LENGTH)
+            return false;
+
+        // end date must be after start date, end date and start date must be before 2100-01-01
+        if(moment(training.endDate).isBefore(training.startDate) || moment(training.endDate).isAfter(TRAINING_VALIDATIONS.MAX_DATE) || moment(training.startDate).isAfter(TRAINING_VALIDATIONS.MAX_DATE))
+            return false;
+
+        // athlete list must not be empty
+        if(training.athletes.length == 0)
+            return false;
+
+        return true;
     }
 
 }
