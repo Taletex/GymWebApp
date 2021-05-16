@@ -5,6 +5,7 @@ const validateRequest = require('src/_middleware/validate-request');
 const authorize = require('src/_middleware/authorize')
 const Role = require('src/_helpers/role');
 const accountService = require('./account.service');
+const { ACCOUNT_VALIDATORS, USER_TYPES } = require('../_helpers/enum');
 
 // routes
 router.post('/authenticate', authenticateSchema, authenticate);
@@ -81,14 +82,12 @@ function revokeToken(req, res, next) {
 // Note: only during registration I need also user information (to create the user associated with the account)
 function registerSchema(req, res, next) {
     const schema = Joi.object({
-        name: Joi.string().required(),                  // user info
-        surname: Joi.string().required(),               // user info
-        userType: Joi.string().required(),              // user info
-        // dateOfBirth: Joi.date().required(),             // user info
-        // sex: Joi.string(),                              // user info
-        email: Joi.string().email().required(),
-        password: Joi.string().min(6).required(),
-        confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
+        name: Joi.string().min(0).max(ACCOUNT_VALIDATORS.MAX_NAME_LENGTH).required(),                  
+        surname: Joi.string().min(0).max(ACCOUNT_VALIDATORS.MAX_SURNAME_LENGTH).required(),              
+        userType: Joi.string().valid(USER_TYPES.BOTH, USER_TYPES.ATHLETE, USER_TYPES.COACH).required(),             
+        email: Joi.string().email().max(ACCOUNT_VALIDATORS.MAX_EMAIL_LENGTH).required(),
+        password: Joi.string().min(ACCOUNT_VALIDATORS.MIN_PSW_LENGTH).max(ACCOUNT_VALIDATORS.MAX_PSW_LENGTH).required(),
+        confirmPassword: Joi.string().min(ACCOUNT_VALIDATORS.MIN_PSW_LENGTH).max(ACCOUNT_VALIDATORS.MAX_PSW_LENGTH).valid(Joi.ref('password')).required(),
         acceptTerms: Joi.boolean().valid(true).required()
     });
     validateRequest(req, next, schema);

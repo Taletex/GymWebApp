@@ -1,12 +1,14 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { EmailValidator, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
 import { AccountService } from '@app/_services/account-service/account-service.service';
 
 import { MustMatch } from '@app/_helpers';
 import { ToastrService } from 'ngx-toastr';
+import { userTypeValidator } from '@app/_helpers/user-type.validator';
+import { emailValidator } from '@app/_helpers/email.validator';
 
 @Component({ 
     selector: 'app-register',
@@ -18,6 +20,7 @@ export class RegisterComponent implements OnInit {
     form: FormGroup;
     loading = false;
     submitted = false;
+    ACCOUNT_VALIDATORS = this.accountService.ACCOUNT_VALIDATORS;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -30,14 +33,14 @@ export class RegisterComponent implements OnInit {
     ngOnInit() {
         this.form = this.formBuilder.group({
             userType: ['', Validators.required],
-            name: ['', Validators.required],
-            surname: ['', Validators.required],
-            email: ['', [Validators.required, Validators.email]],
-            password: ['', [Validators.required, Validators.minLength(6)]],
-            confirmPassword: ['', Validators.required],
+            name: ['', [Validators.required, Validators.maxLength(this.ACCOUNT_VALIDATORS.MAX_NAME_LENGTH)]],
+            surname: ['', [Validators.required, Validators.maxLength(this.ACCOUNT_VALIDATORS.MAX_SURNAME_LENGTH)]],
+            email: ['', [Validators.required, Validators.email, Validators.maxLength(this.ACCOUNT_VALIDATORS.MAX_EMAIL_LENGTH)]],
+            password: ['', [Validators.required, Validators.minLength(this.ACCOUNT_VALIDATORS.MIN_PSW_LENGTH), Validators.maxLength(this.ACCOUNT_VALIDATORS.MAX_PSW_LENGTH)]],
+            confirmPassword: ['', [Validators.required, Validators.minLength(this.ACCOUNT_VALIDATORS.MIN_PSW_LENGTH), Validators.maxLength(this.ACCOUNT_VALIDATORS.MAX_PSW_LENGTH)]],
             acceptTerms: [false, Validators.requiredTrue]
         }, {
-            validator: MustMatch('password', 'confirmPassword')
+            validator: [MustMatch('password', 'confirmPassword'), userTypeValidator('userType'), emailValidator('email')]
         });
     }
 
@@ -48,9 +51,10 @@ export class RegisterComponent implements OnInit {
         this.submitted = true;
 
         // stop here if form is invalid
-        if (this.form.invalid) {
-            return;
-        }
+        // if (this.form.invalid) {
+        //     this.toastr.warning("Registrazione non riuscita: sono presenti degli errori nella compilazione del form");
+        //     return;
+        // }
 
         this.loading = true;
         this.accountService.register(this.form.value)

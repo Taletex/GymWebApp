@@ -1,11 +1,12 @@
 ﻿<div class="card">
     <h3 class="card-header pt-0">Register</h3>
     <div class="card-body py-0">
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <form [formGroup]="form" ngNativeValidate (ngSubmit)="onSubmit()">
             <div class="form-row">
                 <div class="form-group col-12 col-sm">
                     <label class="col-form-label col-form-label-max-xl">First Name</label>
-                    <input type="text" formControlName="name" class="form-control form-control-max-xxl"
+                    <input type="text" formControlName="name" class="form-control form-control-max-xxl" required
+                        [maxlength]="ACCOUNT_VALIDATORS.MAX_NAME_LENGTH"
                         [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
                     <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
                         <div *ngIf="f.name.errors.required">First Name is required</div>
@@ -13,7 +14,8 @@
                 </div>
                 <div class="form-group col-12 col-sm">
                     <label class="col-form-label col-form-label-max-xl">Last Name</label>
-                    <input type="text" formControlName="surname" class="form-control form-control-max-xxl"
+                    <input type="text" formControlName="surname" class="form-control form-control-max-xxl" required
+                        [maxlength]="ACCOUNT_VALIDATORS.MAX_SURNAME_LENGTH"
                         [ngClass]="{ 'is-invalid': submitted && f.surname.errors }" />
                     <div *ngIf="submitted && f.surname.errors" class="invalid-feedback">
                         <div *ngIf="f.surname.errors.required">Last Name is required</div>
@@ -23,7 +25,7 @@
             <div class="form-row">
                 <div class="form-group col-12 col-sm-3">
                     <label class="col-form-label col-form-label-max-xl">User Type</label>
-                    <select formControlName="userType" class="form-control form-control-max-xxl cursor-pointer"
+                    <select formControlName="userType" class="form-control form-control-max-xxl cursor-pointer" required
                         [ngClass]="{ 'is-invalid': submitted && f.userType.errors }">
                         <option value="coach">Coach</option>
                         <option value="athlete">Athlete</option>
@@ -35,7 +37,8 @@
                 </div>
                 <div class="form-group col-12 col-sm-9">
                     <label class="col-form-label col-form-label-max-xl">Email</label>
-                    <input type="text" formControlName="email" class="form-control form-control-max-xxl"
+                    <input type="email" formControlName="email" class="form-control form-control-max-xxl" required
+                        [maxlength]="ACCOUNT_VALIDATORS.MAX_EMAIL_LENGTH"
                         [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
                     <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
                         <div *ngIf="f.email.errors.required">Email is required</div>
@@ -46,7 +49,8 @@
             <div class="form-row">
                 <div class="form-group col-12 col-sm">
                     <label class="col-form-label col-form-label-max-xl">Password</label>
-                    <input type="password" formControlName="password" class="form-control form-control-max-xxl"
+                    <input type="password" formControlName="password" class="form-control form-control-max-xxl" required
+                        [minlength]="ACCOUNT_VALIDATORS.MIN_PSW_LENGTH" [maxlength]="ACCOUNT_VALIDATORS.MAX_PSW_LENGTH"
                         [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
                     <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
                         <div *ngIf="f.password.errors.required">Password is required</div>
@@ -56,6 +60,8 @@
                 <div class="form-group col-12 col-sm">
                     <label class="col-form-label col-form-label-max-xl">Confirm Password</label>
                     <input type="password" formControlName="confirmPassword" class="form-control form-control-max-xxl"
+                        required [minlength]="ACCOUNT_VALIDATORS.MIN_PSW_LENGTH"
+                        [maxlength]="ACCOUNT_VALIDATORS.MAX_PSW_LENGTH"
                         [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" />
                     <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback">
                         <div *ngIf="f.confirmPassword.errors.required">Confirm Password is required</div>
@@ -70,7 +76,7 @@
                 <div *ngIf="submitted && f.acceptTerms.errors" class="invalid-feedback">Accept Ts & Cs is required</div>
             </div>
             <div class="form-group mb-0">
-                <button [disabled]="loading" class="btn btn-sm btn-primary">
+                <button type="submit" [disabled]="loading" class="btn btn-sm btn-primary">
                     <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
                     Register
                 </button>

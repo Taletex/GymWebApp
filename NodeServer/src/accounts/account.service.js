@@ -8,7 +8,8 @@ const Role = require('src/_helpers/role');
 const _ = require('lodash');
 const { Residence, UserSettings } = require('../users/user.model');
 const { validateEmail } = require('../_helpers/send-email');
-const ACCOUNT_VALIDATIONS = {MAX_EMAIL_LENGTH: 100, MAX_PASSWORD_LENGTH: 50};
+const { USER_TYPES } = require('../_helpers/enum');
+const ACCOUNT_VALIDATORS = {MAX_EMAIL_LENGTH: 100, MIN_PSW_LENGTH: 6, MAX_PSW_LENGTH: 50, MAX_NAME_LENGTH: 30, MAX_SURNAME_LENGTH: 30};
 
 module.exports = {
     authenticate,
@@ -435,10 +436,10 @@ async function sendPasswordResetEmail(account, origin) {
 /* UTILS */
 function isAccountValidForSubmission(account) {
     if(
-        (account.email == null || account.email.length == 0 || (account.email.length > ACCOUNT_VALIDATIONS.MAX_EMAIL_LENGTH || !validateEmail(account.email))) ||
+        (account.email == null || account.email.length == 0 || (account.email.length > ACCOUNT_VALIDATORS.MAX_EMAIL_LENGTH || !validateEmail(account.email))) ||
         (account.role == null || (account.role != Role.Admin && account.role != Role.User)) ||
-        (account.password != null && (account.password.length < 6 || account.password.length > ACCOUNT_VALIDATIONS.MAX_PASSWORD_LENGTH)) ||
-        (account.confirmPassword != null && (account.confirmPassword.length < 6 || account.confirmPassword.length > ACCOUNT_VALIDATIONS.MAX_PASSWORD_LENGTH)) ||
+        (account.password != null && (account.password.length < 6 || account.password.length > ACCOUNT_VALIDATORS.MAX_PASSWORD_LENGTH)) ||
+        (account.confirmPassword != null && (account.confirmPassword.length < 6 || account.confirmPassword.length > ACCOUNT_VALIDATORS.MAX_PASSWORD_LENGTH)) ||
         (account.password != null && account.confirmPassword != null && (account.password != account.confirmPassword))
     )
         return false;

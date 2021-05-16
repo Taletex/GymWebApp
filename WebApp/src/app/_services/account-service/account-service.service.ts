@@ -17,6 +17,7 @@ export class AccountService {
     private accountSubject: BehaviorSubject<Account>;
     private bSocketInitialized: boolean = false;
     public account: Observable<Account>;
+    public ACCOUNT_VALIDATORS: any = {MAX_EMAIL_LENGTH: 100, MIN_PSW_LENGTH: 6, MAX_PSW_LENGTH: 50, MAX_NAME_LENGTH: 30, MAX_SURNAME_LENGTH: 30};
 
     constructor(private router: Router, private http: HttpClient, private socket: Socket) {
         this.accountSubject = new BehaviorSubject<Account>(null);
