@@ -11,6 +11,9 @@ import { ToastrService } from 'ngx-toastr';
 import { first } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { USER_TYPES } from '@app/_models/training-model';
+import { userTypeValidator } from '@app/_helpers/user-type.validator';
+import { emailValidator } from '@app/_helpers/email.validator';
+import { roleValidator } from '@app/_helpers/role.validator';
 
 @Component({
   selector: 'app-account-modal',
@@ -29,6 +32,7 @@ export class AccountModalComponent implements OnInit {
   bLoading = false;
   submitted = false;
   closeResult: string;
+  ACCOUNT_VALIDATORS = this.accountService.ACCOUNT_VALIDATORS;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -44,8 +48,8 @@ export class AccountModalComponent implements OnInit {
     this.id = this.route.snapshot.params['id'];
 
     this.form = this.formBuilder.group({
-      name: ['', Validators.required],
-      surname: ['', Validators.required],
+      name: ['', [Validators.required, Validators.maxLength(this.ACCOUNT_VALIDATORS.MAX_NAME_LENGTH)]],
+      surname: ['', [Validators.required, Validators.maxLength(this.ACCOUNT_VALIDATORS.MAX_SURNAME_LENGTH)]],
       dateOfBirth: [''],
       sex: [''],
       userType: [USER_TYPES.ATHLETE, Validators.required],
@@ -56,12 +60,12 @@ export class AccountModalComponent implements OnInit {
       residenceState: [''],
       residenceCity: [''],
       residenceAddress: [''],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(this.ACCOUNT_VALIDATORS.MAX_EMAIL_LENGTH)]],
       role: [Role.User, Validators.required],
-      password: ['', [Validators.minLength(6), Validators.required]],
-      confirmPassword: ['']
+      password: ['', [Validators.required, Validators.minLength(this.ACCOUNT_VALIDATORS.MIN_PSW_LENGTH), Validators.maxLength(this.ACCOUNT_VALIDATORS.MAX_PSW_LENGTH)]],
+      confirmPassword: ['', [Validators.required, Validators.minLength(this.ACCOUNT_VALIDATORS.MIN_PSW_LENGTH), Validators.maxLength(this.ACCOUNT_VALIDATORS.MAX_PSW_LENGTH)]]
     }, {
-      validator: MustMatch('password', 'confirmPassword')
+      validator: [MustMatch('password', 'confirmPassword'), userTypeValidator('userType'), emailValidator('email'), roleValidator('role')]
     });
   }
 
@@ -73,6 +77,7 @@ export class AccountModalComponent implements OnInit {
 
     // stop here if form is invalid
     if (this.form.invalid) {
+      this.toastr.warning("Salvataggio non riuscito: sono presenti degli errori nella compilazione del form");
       return;
     }
 

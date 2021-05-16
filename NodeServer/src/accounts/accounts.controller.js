@@ -183,14 +183,12 @@ function getAccountByUserId(req, res, next) {
 
 function createSchema(req, res, next) {
     const schema = Joi.object({
-        name: Joi.string().required(),                  // user info
-        surname: Joi.string().required(),               // user info
-        userType: Joi.string().required(),              // user info
-        // dateOfBirth: Joi.date().required(),             // user info
-        // sex: Joi.string(),                              // user info
-        email: Joi.string().email().required(),
-        password: Joi.string().min(6).required(),
-        confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
+        name: Joi.string().min(0).max(ACCOUNT_VALIDATORS.MAX_NAME_LENGTH).required(),                  
+        surname: Joi.string().min(0).max(ACCOUNT_VALIDATORS.MAX_SURNAME_LENGTH).required(),              
+        userType: Joi.string().valid(USER_TYPES.BOTH, USER_TYPES.ATHLETE, USER_TYPES.COACH).required(),             
+        email: Joi.string().email().max(ACCOUNT_VALIDATORS.MAX_EMAIL_LENGTH).required(),
+        password: Joi.string().min(ACCOUNT_VALIDATORS.MIN_PSW_LENGTH).max(ACCOUNT_VALIDATORS.MAX_PSW_LENGTH).required(),
+        confirmPassword: Joi.string().min(ACCOUNT_VALIDATORS.MIN_PSW_LENGTH).max(ACCOUNT_VALIDATORS.MAX_PSW_LENGTH).valid(Joi.ref('password')).required(),
         role: Joi.string().valid(Role.Admin, Role.User).required()
     });
     validateRequest(req, next, schema);
