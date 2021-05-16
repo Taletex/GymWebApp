@@ -27,8 +27,8 @@ module.exports = router;
 
 function authenticateSchema(req, res, next) {
     const schema = Joi.object({
-        email: Joi.string().required(),
-        password: Joi.string().required()
+        email: Joi.string().max(ACCOUNT_VALIDATORS.MAX_EMAIL_LENGTH).required(),
+        password: Joi.string().min(ACCOUNT_VALIDATORS.MIN_PSW_LENGTH).max(ACCOUNT_VALIDATORS.MAX_PSW_LENGTH).required()
     });
     validateRequest(req, next, schema);
 }
@@ -114,7 +114,7 @@ function verifyEmail(req, res, next) {
 
 function forgotPasswordSchema(req, res, next) {
     const schema = Joi.object({
-        email: Joi.string().email().required()
+        email: Joi.string().email().max(ACCOUNT_VALIDATORS.MAX_EMAIL_LENGTH).required().required()
     });
     validateRequest(req, next, schema);
 }
@@ -141,8 +141,8 @@ function validateResetToken(req, res, next) {
 function resetPasswordSchema(req, res, next) {
     const schema = Joi.object({
         token: Joi.string().required(),
-        password: Joi.string().min(6).required(),
-        confirmPassword: Joi.string().valid(Joi.ref('password')).required()
+        password: Joi.string().min(ACCOUNT_VALIDATORS.MIN_PSW_LENGTH).max(ACCOUNT_VALIDATORS.MAX_PSW_LENGTH).required(),
+        confirmPassword: Joi.string().min(ACCOUNT_VALIDATORS.MIN_PSW_LENGTH).max(ACCOUNT_VALIDATORS.MAX_PSW_LENGTH).valid(Joi.ref('password')).required()
     });
     validateRequest(req, next, schema);
 }

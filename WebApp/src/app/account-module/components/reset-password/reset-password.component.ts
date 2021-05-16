@@ -27,6 +27,7 @@ export class ResetPasswordComponent implements OnInit {
     form: FormGroup;
     loading = false;
     submitted = false;
+    ACCOUNT_VALIDATORS = this.accountService.ACCOUNT_VALIDATORS;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -38,8 +39,8 @@ export class ResetPasswordComponent implements OnInit {
 
     ngOnInit() {
         this.form = this.formBuilder.group({
-            password: ['', [Validators.required, Validators.minLength(6)]],
-            confirmPassword: ['', Validators.required],
+            password: ['', [Validators.required, Validators.minLength(this.ACCOUNT_VALIDATORS.MIN_PSW_LENGTH), Validators.maxLength(this.ACCOUNT_VALIDATORS.MAX_PSW_LENGTH)]],
+            confirmPassword: ['', [Validators.required, Validators.minLength(this.ACCOUNT_VALIDATORS.MIN_PSW_LENGTH), Validators.maxLength(this.ACCOUNT_VALIDATORS.MAX_PSW_LENGTH)]],
         }, {
             validator: MustMatch('password', 'confirmPassword')
         });
