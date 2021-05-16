@@ -16,6 +16,11 @@ import { debounceTime, first, map } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { Socket } from 'ngx-socket-io';
 import { MustMatch } from '@app/_helpers/must-match.validator';
+import { dateValidator } from '@app/_helpers/date-before-after.validator';
+import { userTypeValidator } from '@app/_helpers/user-type.validator';
+import { roleValidator } from '@app/_helpers/role.validator';
+import { ExerciseService } from '@app/_services/exercise-service/exercise-service.service';
+import { TrainingService } from '@app/training-module/services/training-service/training-service.service';
 
 @Component({
   selector: 'app-user',
@@ -62,6 +67,9 @@ export class UserComponent implements OnInit {
   public maxImageSize: number = 2;    //MB
   public acceptedFormats: string[] = ["image/png", "image/jpeg"];
 
+  // Personal Record Form
+  public TRAINING_VALIDATIONS;
+
   // Settings Form
   public settingsForm: FormGroup;
   public settingsFormInitialValues: any;
@@ -70,6 +78,7 @@ export class UserComponent implements OnInit {
 
   // Account Form
   public accountForm: FormGroup;
+  public accountFormInitialValues: any;
   public accountFormSubmitted = false;
   public accountFormDeleting = false;
 
@@ -80,6 +89,7 @@ export class UserComponent implements OnInit {
   // User service aux
   public NOTIFICATION_TYPE = NOTIFICATION_TYPE;
   public OPTION_VISIBILITY = OPTION_VISIBILITY;
+  public USER_VALIDATIONS: any;
 
   // Others
   public baseServerUrl: string = this.httpService.baseServerUrl
@@ -87,7 +97,7 @@ export class UserComponent implements OnInit {
   public personalRecordInitialValues: any;
 
 
-  constructor(public userService: UserService, private generalService: GeneralService, private accountService: AccountService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private toastr: ToastrService, private httpService: HttpService, socket: Socket) {
+  constructor(private trainingService: TrainingService, public userService: UserService, private generalService: GeneralService, private accountService: AccountService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private toastr: ToastrService, private httpService: HttpService, socket: Socket) {
     this.bLoading = true;
     this.accountService.account.subscribe(x => this.account = x);
     
@@ -106,6 +116,9 @@ export class UserComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.USER_VALIDATIONS = this.userService.USER_VALIDATIONS;
+    this.TRAINING_VALIDATIONS = this.trainingService.TRAINING_VALIDATIONS;
+
     if(this.account.role == Role.Admin && this.accountId!=null)                                                                // if admin and accountId!=null get the account from be
       this.getAccount(this.accountId);
     else if(this.account.role == Role.Admin && (this.account.user._id != (this.userId || (this.router.url).split('/')[2])) )   // if admin and the selected account/user is not the current account/user, get the selected account
@@ -148,34 +161,36 @@ export class UserComponent implements OnInit {
     // Init user form
     this.userForm = this.formBuilder.group({
       profilePicture: [this.userAccount.user.profilePicture || ""],
-      biography: [this.userAccount.user.biography],
-      name: [this.userAccount.user.name, Validators.required],
-      surname: [this.userAccount.user.surname, Validators.required],
+      biography: [this.userAccount.user.biography, Validators.maxLength(this.USER_VALIDATIONS.MAX_BIOGRAPHY_LENGTH)],
+      name: [this.userAccount.user.name, [Validators.required, Validators.maxLength(this.USER_VALIDATIONS.MAX_NAME_LENGTH)]],
+      surname: [this.userAccount.user.surname, [Validators.required, Validators.maxLength(this.USER_VALIDATIONS.MAX_SURNAME_LENGTH)]],
       dateOfBirth: [moment(this.userAccount.user.dateOfBirth).format("yyyy-MM-DD")],
-      pobState: [this.userAccount.user.placeOfBirth.state],
-      pobProvince: [this.userAccount.user.placeOfBirth.province],
-      pobCap: [this.userAccount.user.placeOfBirth.cap],
-      pobCity: [this.userAccount.user.placeOfBirth.city],
-      pobAddress: [this.userAccount.user.placeOfBirth.address],
+      pobState: [this.userAccount.user.placeOfBirth.state, Validators.maxLength(this.USER_VALIDATIONS.MAX_GENERIC_RESIDENCE_FIELD_LENGTH)],
+      pobProvince: [this.userAccount.user.placeOfBirth.province, Validators.maxLength(this.USER_VALIDATIONS.MAX_GENERIC_RESIDENCE_FIELD_LENGTH)],
+      pobCap: [this.userAccount.user.placeOfBirth.cap, Validators.maxLength(this.USER_VALIDATIONS.MAX_CAP_LENGTH)],
+      pobCity: [this.userAccount.user.placeOfBirth.city, Validators.maxLength(this.USER_VALIDATIONS.MAX_GENERIC_RESIDENCE_FIELD_LENGTH)],
+      pobAddress: [this.userAccount.user.placeOfBirth.address, Validators.maxLength(this.USER_VALIDATIONS.MAX_ADDRESS_LENGTH)],
       sex: [this.userAccount.user.sex],
       userType: [this.userAccount.user.userType, Validators.required],
-      bodyWeight: [this.userAccount.user.bodyWeight],
-      yearsOfExperience: [this.userAccount.user.yearsOfExperience],
+      bodyWeight: [this.userAccount.user.bodyWeight, [Validators.min(this.USER_VALIDATIONS.MIN_WEIGHT), Validators.max(this.USER_VALIDATIONS.MAX_WEIGHT)]],
+      yearsOfExperience: [this.userAccount.user.yearsOfExperience, [Validators.min(this.USER_VALIDATIONS.MIN_EXPERIENCE), Validators.max(this.USER_VALIDATIONS.MAX_EXPERIENCE)]],
       disciplines: [this.userAccount.user.disciplines],
       gyms: [this.userAccount.user.gyms],
-      email: [this.userAccount.user.contacts.email, [Validators.email]],
-      telephone: [this.userAccount.user.contacts.telephone],
-      socialsFacebook: [this.userAccount.user.contacts.socials.facebook],
-      socialsTwitter: [this.userAccount.user.contacts.socials.twitter],
-      socialsInstagram: [this.userAccount.user.contacts.socials.instagram],
-      socialsLinkedin: [this.userAccount.user.contacts.socials.linkedin],
-      socialsOther: [this.userAccount.user.contacts.socials.other],
-      residenceState: [this.userAccount.user.residence.state],
-      residenceProvince: [this.userAccount.user.residence.province],
-      residenceCap: [this.userAccount.user.residence.cap],
-      residenceCity: [this.userAccount.user.residence.city],
-      residenceAddress: [this.userAccount.user.residence.address],
+      email: [this.userAccount.user.contacts.email, [Validators.email, Validators.maxLength(this.USER_VALIDATIONS.MAX_EMAIL_LENGTH)]],
+      telephone: [this.userAccount.user.contacts.telephone, Validators.maxLength(this.USER_VALIDATIONS.MAX_TELEPHONE_LENGTH)],
+      socialsFacebook: [this.userAccount.user.contacts.socials.facebook, Validators.maxLength(this.USER_VALIDATIONS.MAX_GENERIC_CONTACT_LENGTH)],
+      socialsTwitter: [this.userAccount.user.contacts.socials.twitter, Validators.maxLength(this.USER_VALIDATIONS.MAX_GENERIC_CONTACT_LENGTH)],
+      socialsInstagram: [this.userAccount.user.contacts.socials.instagram, Validators.maxLength(this.USER_VALIDATIONS.MAX_GENERIC_CONTACT_LENGTH)],
+      socialsLinkedin: [this.userAccount.user.contacts.socials.linkedin, Validators.maxLength(this.USER_VALIDATIONS.MAX_GENERIC_CONTACT_LENGTH)],
+      socialsOther: [this.userAccount.user.contacts.socials.other, Validators.maxLength(this.USER_VALIDATIONS.MAX_GENERIC_CONTACT_LENGTH)],
+      residenceState: [this.userAccount.user.residence.state, Validators.maxLength(this.USER_VALIDATIONS.MAX_GENERIC_RESIDENCE_FIELD_LENGTH)],
+      residenceProvince: [this.userAccount.user.residence.province, Validators.maxLength(this.USER_VALIDATIONS.MAX_GENERIC_RESIDENCE_FIELD_LENGTH)],
+      residenceCap: [this.userAccount.user.residence.cap, Validators.maxLength(this.USER_VALIDATIONS.MAX_CAP_LENGTH)],
+      residenceCity: [this.userAccount.user.residence.city, Validators.maxLength(this.USER_VALIDATIONS.MAX_GENERIC_RESIDENCE_FIELD_LENGTH)],
+      residenceAddress: [this.userAccount.user.residence.address, Validators.maxLength(this.USER_VALIDATIONS.MAX_ADDRESS_LENGTH)],
       //To implement also personal record using dynamic forms you can follow this link: https://stackoverflow.com/questions/57425789/formgroup-in-formarray-containing-object-displaying-object-object 
+    }, {
+      validator: [dateValidator('dateOfBirth'), userTypeValidator('userType')]
     });
 
     // Init settings form
@@ -187,12 +202,12 @@ export class UserComponent implements OnInit {
     
       // Init account form
     this.accountForm = this.formBuilder.group({
-      email: [this.userAccount.email, [Validators.required, Validators.email]],
+      email: [this.userAccount.email, [Validators.required, Validators.email, Validators.maxLength(this.USER_VALIDATIONS.MAX_EMAIL_LENGTH)]],
       role: [this.userAccount.role, Validators.required],
-      password: ['', [Validators.minLength(6), Validators.nullValidator]],
+      password: ['', [Validators.minLength(6), Validators.nullValidator, Validators.maxLength(this.USER_VALIDATIONS.MAX_PSW_LENGTH)]],
       confirmPassword: ['']
     }, {
-      validator: MustMatch('password', 'confirmPassword')
+      validator: [MustMatch('password', 'confirmPassword'), roleValidator('role')]
     });
 
     this.personalRecordList = _.cloneDeep(this.userAccount.user.personalRecords);   // Note: I'm using a simpler solution for handling personal record inputs because using dynamic forms required much time
@@ -208,6 +223,7 @@ export class UserComponent implements OnInit {
     this.userFormInitialValues = _.cloneDeep(this.userForm.value);
     this.settingsFormInitialValues = _.cloneDeep(this.settingsForm.value);
     this.personalRecordInitialValues = _.cloneDeep(this.personalRecordList);
+    this.accountFormInitialValues = _.cloneDeep(this.accountForm.value);
   }
 
   getAccount(accountId: string) {
@@ -404,7 +420,8 @@ export class UserComponent implements OnInit {
     this.userFormSubmitted = true;
 
     // stop here if userForm is invalid
-    if (this.userForm.invalid) {
+    if(this.userForm.invalid) {
+      this.toastr.warning("Salvataggio non riuscito: sono presenti degli errori nella compilazione dell'utente");
       return;
     }
 
@@ -613,7 +630,8 @@ export class UserComponent implements OnInit {
 
   onSubmitPersonaRecords() {
 
-    if (!this.isPersonalRecordFormValid()) {
+    if(!this.isPersonalRecordFormValid()) {
+      this.toastr.warning("Salvataggio non riuscito: sono presenti degli errori nella compilazione dei personal record");
       return;
     }
 
@@ -637,7 +655,25 @@ export class UserComponent implements OnInit {
 
   isPersonalRecordFormValid(): boolean {
     for (let i = 0; i < this.personalRecordList.length; i++) {
+
+      // Exercise must be valid
       if (!this.personalRecordList[i].exercise.name)
+        return false;
+
+      // series, rep, weight and rest must be defined and must be less and more than their limits
+      for(let s of this.personalRecordList[i].series) {
+        if( 
+            (s.seriesNumber == null || s.seriesNumber < this.TRAINING_VALIDATIONS.MIN_SERIES_NUMBER || s.seriesNumber > this.TRAINING_VALIDATIONS.MAX_SERIES_NUMBER) ||
+            (s.repNumber == null || s.repNumber < this.TRAINING_VALIDATIONS.MIN_REP_NUMBER || s.repNumber > this.TRAINING_VALIDATIONS.MAX_REP_NUMBER) ||
+            (s.weight == null || s.weight < this.TRAINING_VALIDATIONS.MIN_WEIGHT_NUMBER || s.weight > this.TRAINING_VALIDATIONS.MAX_WEIGHT_NUMBER) ||
+            (s.rest == null || s.rest < this.TRAINING_VALIDATIONS.MIN_REST_TIME || s.rest > this.TRAINING_VALIDATIONS.MAX_REST_TIME) ||
+            (s.comment.length > this.TRAINING_VALIDATIONS.MAX_SESSION_COMMENT_LENGTH)
+        )
+          return false;
+      }
+
+      //one rep pr must be valid
+      if(this.personalRecordList[i].oneRepPR.weight == null || this.personalRecordList[i].oneRepPR.weight < this.TRAINING_VALIDATIONS.MIN_WEIGHT_NUMBER || this.personalRecordList[i].oneRepPR.weight > this.TRAINING_VALIDATIONS.MAX_WEIGHT_NUMBER || !this.personalRecordList[i].oneRepPR.measure)
         return false;
     }
 
@@ -687,7 +723,8 @@ export class UserComponent implements OnInit {
     this.settingsFormSubmitted = true;
 
     // stop here if settingsForm is invalid
-    if (this.settingsForm.invalid) {
+    if(this.settingsForm.invalid) {
+      this.toastr.warning("Salvataggio non riuscito: sono presenti degli errori nella compilazione delle impostazioni");
       return;
     }
 
@@ -717,8 +754,9 @@ export class UserComponent implements OnInit {
       this.accountFormSubmitted = true;
 
       // stop here if accountForm is invalid
-      if (this.accountForm.invalid) {
-          return;
+      if(this.accountForm.invalid) {
+        this.toastr.warning("Salvataggio non riuscito: sono presenti degli errori nella compilazione dell'account");
+        return;
       }
 
       this.bLoading = true;
@@ -734,6 +772,10 @@ export class UserComponent implements OnInit {
                   this.bLoading = false;
               }
           });
+  }
+
+  resetAccountForm() {
+    this.accountForm.reset(this.accountFormInitialValues);
   }
 
   deleteAccount() {

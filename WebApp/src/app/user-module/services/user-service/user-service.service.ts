@@ -11,10 +11,15 @@ import * as _ from 'lodash';
 })
 export class UserService {
 
+  public USER_VALIDATIONS: any = {MAX_PROFILE_PICTURE_NUMBER: 1, MAX_PROFILE_PICTURE_SIZE: 2, PROFILE_PICTURE_ACCEPTED_FORMATS: ['.jpg', '.jpeg', '.png'], MAX_BIOGRAPHY_LENGTH: 1000, MAX_NAME_LENGTH: 30, MAX_SURNAME_LENGTH: 30, 
+                                  MIN_DATE: '1900-01-01T00:00', MAX_DATE: new Date(), MAX_GENERIC_RESIDENCE_FIELD_LENGTH: 100, MAX_CAP_LENGTH: 5, MAX_ADDRESS_LENGTH: 200, MIN_WEIGHT: 1, MAX_WEIGHT: 500, MIN_EXPERIENCE: 0, MAX_EXPERIENCE: 99, 
+                                  MAX_GENERIC_CONTACT_LENGTH: 100, MAX_EMAIL_LENGTH: 100, MAX_TELEPHONE_LENGTH: 15, MAX_PSW_LENGTH: 50};
+
+
   constructor(private httpService: HttpService) { }
 
 
-  /* === CHECK FUNCTIONS === */
+  /* === CHECK FUNCTIONS === */ 
 
   isCoachInUser(coach: User, account: Account) {
     return (_.find(account.user.coaches, function(c) { return c._id == coach._id; }) != undefined);
