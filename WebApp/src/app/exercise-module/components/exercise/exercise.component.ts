@@ -91,7 +91,7 @@ export class ExerciseComponent implements OnInit {
         (error: HttpErrorResponse) => {
           this.bLoading = false;
           this.toastr.error('An error occurred while loading the exercise!');
-          console.log(error.error.message);
+          console.log(error);
         });
   }
 
@@ -108,7 +108,7 @@ export class ExerciseComponent implements OnInit {
         (error: HttpErrorResponse) => {
           this.bLoading = false;
           this.toastr.error('An error occurred while loading the exercise list!');
-          console.log(error.error.message);
+          console.log(error);
         });
   }
 
@@ -195,7 +195,7 @@ export class ExerciseComponent implements OnInit {
       (error: HttpErrorResponse) => {
         this.bLoading = false;
         this.toastr.error('An error occurred while updating the exercise!');
-        console.log(error.error.message);
+        console.log(error);
       });
   }
 
@@ -212,7 +212,7 @@ export class ExerciseComponent implements OnInit {
           (error: HttpErrorResponse) => {
             this.bLoading = false;
             this.toastr.error('An error occurred while deleting the exercise!');
-            console.log(error.error.message);
+            console.log(error);
           });
     }
   }

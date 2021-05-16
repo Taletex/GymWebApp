@@ -6,7 +6,7 @@ const fs = require('fs');
 
 module.exports = () => {
 
-    const EXERCISE_VALIDATIONS = {MAX_EXERCISE_NAME_LENGTH: 50, MAX_EXERCISE_DESCRIPTION_LENGTH: 100, MAX_VARIANT_NAME_LENGTH: 50, MIN_INTENSITY_COEFFICIENT_NUMBER: 0, MAX_INTENSITY_COEFFICIENT_NUMBER: 99999};
+    const EXERCISE_VALIDATIONS = {MAX_EXERCISE_NAME_LENGTH: 50, MAX_EXERCISE_DESCRIPTION_LENGTH: 100, MAX_VARIANT_NAME_LENGTH: 50, MIN_INTENSITY_COEFFICIENT_NUMBER: 0, MAX_INTENSITY_COEFFICIENT_NUMBER: 99999, MAX_PICTURES_NUMBER: 3, MAX_PICTURE_SIZE: 2, PICTURES_ACCEPTED_FORMATS: ['image/jpg', 'image/jpeg', 'image/png']};
 
 
     return {
@@ -40,7 +40,7 @@ module.exports = () => {
         });
 
         // Check if exercise is a valid exercise
-        if(isExerciseValidToSubmit(exercise)) {
+        if(isExerciseValidToSubmit(exercise, false)) {
             // Save Exercise in the database
             exercise.save()
             .then(data => {
@@ -169,7 +169,7 @@ module.exports = () => {
         }
 
         // Check if exercise is a valid exercise
-        if(isExerciseValidToSubmit(new Exercise({
+        if(isExerciseValidToSubmit({
             name: req.body.name,
             variant: req.body.variant,
             description: req.body.description,
@@ -177,7 +177,7 @@ module.exports = () => {
             images: req.body.images,  
             disciplines: req.body.disciplines,
             groups: req.body.groups
-        }))) {
+        }, req.body.bNewImages)) {
 
             // if exercise images have been updated, then save them replacing the existing ones
             if (req.body.bNewImages) {
@@ -294,7 +294,7 @@ module.exports = () => {
     }
 
     // Validation util
-    function isExerciseValidToSubmit(exercise) {
+    function isExerciseValidToSubmit(exercise, bNewImages) {
     
         // exercise name must be defined and its length must be less than its limit
         if(!exercise.name || exercise.name.length > EXERCISE_VALIDATIONS.MAX_EXERCISE_NAME_LENGTH)
@@ -311,6 +311,29 @@ module.exports = () => {
         // exercise description length must be less than its limit
         if(exercise.description.length > EXERCISE_VALIDATIONS.MAX_EXERCISE_DESCRIPTION_LENGTH)
           return false;
+
+        // exercise images must be less than 3, max 2MB and .jpeg, .jpg or .png
+        if(bNewImages != null && bNewImages) {
+            if(exercise.images.length > EXERCISE_VALIDATIONS.MAX_PICTURES_NUMBER)
+                return false;
+
+            for(let img of exercise.images) {
+                if(img.bNew) {
+                    if((Number((((Buffer.byteLength(img.src, 'base64'))/1024)/1024).toFixed(4)) >= EXERCISE_VALIDATIONS.MAX_PICTURE_SIZE))
+                    return false;
+                
+                    let ret = false;
+                    for(e of EXERCISE_VALIDATIONS.PICTURES_ACCEPTED_FORMATS) {
+                        if(img.src.includes(e)) {
+                            ret = true;
+                            break;
+                        }
+                    }
+                    if(!ret) return false;
+                }
+                
+            }
+        }
         
         return true;
       }

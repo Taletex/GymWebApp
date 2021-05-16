@@ -83,7 +83,7 @@ export class TrainingsComponent implements OnInit {
         (error: HttpErrorResponse) => {
           this.bLoading = false;
           this.toastr.error('An error occurred while loading the training and athlete list.');
-          console.log(error.error.message);
+          console.log(error);
         });
   }
 
@@ -104,7 +104,7 @@ export class TrainingsComponent implements OnInit {
         (error: HttpErrorResponse) => {
           this.bLoading = false;
           this.toastr.error('An error occurred while creating the training.');
-          console.log(error.error.message);
+          console.log(error);
         });
   }
 
@@ -123,7 +123,7 @@ export class TrainingsComponent implements OnInit {
           (error: HttpErrorResponse) => {
             this.bLoading = false;
             this.toastr.error('An error occurred while deleting the training.');
-            console.log(error.error.message);
+            console.log(error);
           });
     }
   }

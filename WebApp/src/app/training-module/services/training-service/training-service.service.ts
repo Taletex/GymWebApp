@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Training, Week, Session, Exercise, Series, SessionExercise, PersonalRecord } from '@app/_models/training-model';
+import { Training, Week, Session, Exercise, Series, SessionExercise, PersonalRecord, TRAINING_STATES } from '@app/_models/training-model';
 import * as _ from 'lodash';
 import { saveAs } from 'file-saver';
 import * as moment from 'moment';
@@ -10,10 +10,9 @@ import * as moment from 'moment';
 export class TrainingService {
 
     public TRAINING_VALIDATIONS: any = {MAX_SESSION_NAME_LENGTH: 50, MAX_SESSION_COMMENT_LENGTH: 100, MAX_SERIES_NUMBER: 99999, MIN_SERIES_NUMBER: 1, MAX_REP_NUMBER: 99999, MIN_REP_NUMBER: 1, MAX_WEIGHT_NUMBER: 99999, MIN_WEIGHT_NUMBER: 0, 
-                                        MAX_REST_TIME: 99999, MIN_REST_TIME: 0, MAX_DATE: "2100-01-01T00:00", MAX_WEEK_COMMENT_LENGTH: 500, MAX_TRAINING_COMMENT_LENGTH: 1000};
-
+                                        MAX_REST_TIME: 99999, MIN_REST_TIME: 0, MAX_DATE: "2100-01-01T00:00", MAX_WEEK_COMMENT_LENGTH: 500, MAX_TRAINING_COMMENT_LENGTH: 1000, MIN_TYPE_LENGTH: 1, MAX_TYPE_LENGTH: 50};
+    
     constructor() { }
-
 
     public trainingDecorator(training: Training) {
         for(let i=0; i<training.oldVersions.length; i++) {
@@ -295,11 +294,15 @@ export class TrainingService {
 
         return true;
     }
-
+    
     areBasicTrainingInfosValidToSubmit(training: Training): boolean {
         
         // training comment length must be less than its limit
         if(training.comment.length > this.TRAINING_VALIDATIONS.MAX_TRAINING_COMMENT_LENGTH)
+            return false;
+
+        // training state and discipline must be valid
+        if(training.state == null || !Object.values(TRAINING_STATES).includes(training.state) || training.type == null || training.type == '' || training.type.length < this.TRAINING_VALIDATIONS.MIN_TYPE_LENGTH || training.type.length > this.TRAINING_VALIDATIONS.MAX_TYPE_LENGTH)
             return false;
 
         // end date must be after start date, end date and start date must be before 2100-01-01

@@ -182,18 +182,18 @@
                                 <div class="form-row m-0">
                                     <div class="col-12 col-md-6 col-xl-3 form-group">
                                         <label for="trainingState" class="col-form-label col-form-label-sm text-muted">Stato</label>
-                                        <select [(ngModel)]="training.state" class="form-control form-control-sm cursor-pointer" id="trainingState" name="trainingState">
+                                        <select [(ngModel)]="training.state" required class="form-control form-control-sm cursor-pointer" id="trainingState" name="trainingState">
                                             <option *ngFor="let state of TRAINING_STATES | keyvalue" [value]="state.value" class="text-capitalize">{{state.value}}</option>
                                         </select>
                                     </div>
                                     <div class="col-12 col-md-6 col-xl-3 form-group">
                                         <label for="trainingType" class="col-form-label col-form-label-sm text-muted">Disciplina</label>
-                                        <select [(ngModel)]="training.type" class="form-control form-control-sm cursor-pointer" id="trainingType" name="trainingType"
+                                        <select [(ngModel)]="training.type" class="form-control form-control-sm cursor-pointer" id="trainingType" name="trainingType" required [minlength]="TRAINING_VALIDATIONS.MIN_TYPE_LENGTH" [maxlength]="TRAINING_VALIDATIONS.MAX_TYPE_LENGTH" [ngClass]="{'is-invalid': training.type.length < TRAINING_VALIDATIONS.MIN_TYPE_LENGTH || training.type.length > TRAINING_VALIDATIONS.MAX_TYPE_LENGTH}"
                                             *ngIf="(training.type==TRAINING_TYPES.POWERLIFTING || training.type==TRAINING_TYPES.WEIGHTLIFTING || training.type==TRAINING_TYPES.CROSSFIT || training.type==TRAINING_TYPES.BODYBUILDING || training.type==TRAINING_TYPES.SALA)">
                                             <option *ngFor="let type of TRAINING_TYPES | keyvalue" [value]="type.value" class="text-capitalize">{{type.value}}</option>
                                         </select>
                                         <div class="position-relative" *ngIf="!(training.type==TRAINING_TYPES.POWERLIFTING || training.type==TRAINING_TYPES.WEIGHTLIFTING || training.type==TRAINING_TYPES.CROSSFIT || training.type==TRAINING_TYPES.BODYBUILDING || training.type==TRAINING_TYPES.SALA)">
-                                            <input type="text" [(ngModel)]="training.type" class="form-control form-control-sm" id="trainingType" name="trainingType">
+                                            <input type="text" [(ngModel)]="training.type" class="form-control form-control-sm" id="trainingType" name="trainingType" required [minlength]="TRAINING_VALIDATIONS.MIN_TYPE_LENGTH" [maxlength]="TRAINING_VALIDATIONS.MAX_TYPE_LENGTH" [ngClass]="{'is-invalid': training.type.length < TRAINING_VALIDATIONS.MIN_TYPE_LENGTH || training.type.length > TRAINING_VALIDATIONS.MAX_TYPE_LENGTH}">
                                             <div (click)="training.type=TRAINING_TYPES.POWERLIFTING" style="position:absolute; right: 3px; top: 0px;">&times;</div>
                                         </div>
                                     </div>
@@ -552,7 +552,7 @@
 
         <!-- Loader -->
         <div class='h-100 w-100' [hidden]="!bLoading">
-            <div style="position:absolute; background-color:black; opacity:50%; right:0; top:0;" class="w-100 h-100">
+            <div class="w-100 h-100 loader-container">
                 <div class="container d-flex align-items-center justify-content-center w-100 h-100">
                     <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
                 </div>

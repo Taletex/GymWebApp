@@ -2626,6 +2626,15 @@ ngb-carousel .picsum-img-wrapper > img {
 }
 
 /* loader */
+.loader-container {
+  position: absolute;
+  background-color: black;
+  opacity: 50%;
+  right: 0;
+  top: 0;
+  z-index: 100;
+}
+
 .lds-ring {
   display: inline-block;
   position: relative;

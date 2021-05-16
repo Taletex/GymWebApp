@@ -162,7 +162,7 @@ export class TrainingComponent implements OnInit {
         (error: HttpErrorResponse) => {
           this.bLoading = false;
           this.toastr.error('An error occurred while loading the training!');
-          console.log(error.error.message);
+          console.log(error);
         });
 
     
@@ -324,7 +324,7 @@ export class TrainingComponent implements OnInit {
       (error: HttpErrorResponse) => {
         this.bLoading = false;
         this.toastr.error('An error occurred while loading the exercise list!');
-        console.log(error.error.message);
+        console.log(error);
       });
   }
 
@@ -344,7 +344,7 @@ export class TrainingComponent implements OnInit {
         (error: HttpErrorResponse) => {
           this.bLoading = false;
           this.toastr.error('An error occurred while creating the exercise!');
-          console.log(error.error.message);
+          console.log(error);
         });
   }
 
@@ -722,7 +722,7 @@ export class TrainingComponent implements OnInit {
       (error: HttpErrorResponse) => {
         this.bLoading = false;
         this.toastr.error('An error occurred while updating the training!');
-        console.log(error.error.message);
+        console.log(error);
       });
   }
   
@@ -739,7 +739,7 @@ export class TrainingComponent implements OnInit {
         (error: HttpErrorResponse) => {
           this.bLoading = false;
           this.toastr.error('An error occurred while deleting the training!');
-          console.log(error.error.message);
+          console.log(error);
         });
     }
   }
@@ -925,7 +925,7 @@ export class TrainingComponent implements OnInit {
         (error: HttpErrorResponse) => {
           this.bLoading = false;
           this.toastr.error("Si è verificato un errore durante l'invio delle notifiche agli atleti dell'allenamento");
-          console.log("sendNotification error", error.error.message);
+          console.log("sendNotification error", error);
         });
     }
   }
@@ -950,7 +950,7 @@ export class TrainingComponent implements OnInit {
         (error: HttpErrorResponse) => {
           this.bLoading = false;
           this.toastr.error("Si è verificato un errore durante l'invio delle email agli atleti dell'allenamento. Verifica che gli utenti destinatari abbiano configurato una email.");
-          console.log("sendTrainingEmails error", error.error.message);
+          console.log("sendTrainingEmails error", error);
         });
     }
   }

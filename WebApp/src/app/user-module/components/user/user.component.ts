@@ -242,7 +242,7 @@ export class UserComponent implements OnInit {
         (error: HttpErrorResponse) => {
           this.bLoading = false;
           this.toastr.error('An error occurred while loading the account!');
-          console.log(error.error.message);
+          console.log(error);
         });
   }
 
@@ -267,7 +267,7 @@ export class UserComponent implements OnInit {
         (error: HttpErrorResponse) => {
           this.bLoading = false;
           this.toastr.error('An error occurred while loading the account!');
-          console.log(error.error.message);
+          console.log(error);
         });
   }
 
@@ -292,7 +292,7 @@ export class UserComponent implements OnInit {
         (error: HttpErrorResponse) => {
           this.bLoading = false;
           this.toastr.error('An error occurred while loading the user!');
-          console.log(error.error.message);
+          console.log(error);
         });
   }
 
@@ -348,15 +348,15 @@ export class UserComponent implements OnInit {
     if(event.target.files && event.target.files.length) {
       const [file] = event.target.files;
 
-      // if(!this.acceptedFormats.includes(file.type)) {
-      //   this.resetInputFile();
-      //   this.toastr.warning("Le immmagini devono avere estensione .jpeg, .jpg o .png");
-      //   return;
-      // } else if(Number((((file).size/1024)/1024).toFixed(4)) >= this.maxImageSize) {      // MB
-      //   this.resetInputFile();
-      //   this.toastr.warning("La dimensione massima delle immagini deve essere inferiore a " + this.maxImageSize + "MB");
-      //   return;
-      // } else {
+      if(!this.acceptedFormats.includes(file.type)) {
+        this.resetInputFile();
+        this.toastr.warning("Le immmagini devono avere estensione .jpeg, .jpg o .png");
+        return;
+      } else if(Number((((file).size/1024)/1024).toFixed(4)) >= this.maxImageSize) {      // MB
+        this.resetInputFile();
+        this.toastr.warning("La dimensione massima delle immagini deve essere inferiore a " + this.maxImageSize + "MB");
+        return;
+      } else {
         
         let reader = new FileReader();
         reader.onload = (e) => {
@@ -370,7 +370,7 @@ export class UserComponent implements OnInit {
         }
         
         reader.readAsDataURL(file);       // convert to base64 string
-      // };
+      };
     }
   }
 
@@ -438,7 +438,7 @@ export class UserComponent implements OnInit {
         (error: HttpErrorResponse) => {
           this.bLoading = false;
           this.toastr.error('An error occurred while updating the user!');
-          console.log(error.error.message);
+          console.log(error);
         });
   }
 
@@ -481,7 +481,7 @@ export class UserComponent implements OnInit {
         (error: HttpErrorResponse) => {
           this.bLoading = false;
           this.toastr.error('An error occurred while loading the exercise list!');
-          console.log(error.error.message);
+          console.log(error);
         });
   }
 
@@ -501,7 +501,7 @@ export class UserComponent implements OnInit {
         (error: HttpErrorResponse) => {
           this.bLoading = false;
           this.toastr.error('An error occurred while creating the exercise!');
-          console.log(error.error.message);
+          console.log(error);
         });
   }
 
@@ -647,7 +647,7 @@ export class UserComponent implements OnInit {
         (error: HttpErrorResponse) => {
           this.bLoading = false;
           this.toastr.error('An error occurred while updating the user!');
-          console.log(error.error.message);
+          console.log(error);
         });
   }
 
@@ -719,7 +719,7 @@ export class UserComponent implements OnInit {
         (error: HttpErrorResponse) => {
           this.bLoading = false;
           this.toastr.error('An error occurred while updating the user!');
-          console.log(error.error.message);
+          console.log(error);
         });
   }
 
@@ -772,7 +772,7 @@ export class UserComponent implements OnInit {
             (error: HttpErrorResponse) => {
                 this.bLoading = false;
                 this.toastr.error('An error occurred while deleting the account!');
-                console.log(error.error.message);
+                console.log(error);
             });
       }
   }

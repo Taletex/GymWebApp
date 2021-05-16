@@ -51,7 +51,7 @@ export class HomepageComponent implements OnInit {
         (error: HttpErrorResponse) => {
           this.bLoading = false;
           this.toastr.error('Si è verificato un errore durante il caricamento della homepage');
-          console.log(error.error.message);
+          console.log(error);
         });
   }
 }

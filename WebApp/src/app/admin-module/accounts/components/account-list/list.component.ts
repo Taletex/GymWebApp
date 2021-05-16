@@ -71,7 +71,7 @@ export class ListComponent implements OnInit {
                 (error: HttpErrorResponse) => {
                     this.bLoading = false;
                     this.toastr.error('An error occurred while loading the account list!');
-                    console.log(error.error.message);
+                    console.log(error);
                 });
     }
 
@@ -92,7 +92,7 @@ export class ListComponent implements OnInit {
             (error: HttpErrorResponse) => {
               this.bLoading = false;
               this.toastr.error('An error occurred while creating the account!');
-              console.log(error.error.message);
+              console.log(error);
             });
       }
 
@@ -114,7 +114,7 @@ export class ListComponent implements OnInit {
                     (error: HttpErrorResponse) => {
                         this.bLoading = false;
                         this.toastr.error('An error occurred while deleting the account!');
-                        console.log(error.error.message);
+                        console.log(error);
                     });
         }
     }

@@ -15,12 +15,13 @@
                             <div class="col-12 col-md-4 form-group">
                                 <label for="newTrainingType"
                                     class="col-form-label col-form-label-sm text-muted">Disciplina</label>
-                                <select [(ngModel)]="newTraining.type" class="form-control form-control-sm cursor-pointer" id="newTraining" name="newTraining"
+                                <select [(ngModel)]="newTraining.type" required [minlength]="TRAINING_VALIDATIONS.MIN_TYPE_LENGTH" [maxlength]="TRAINING_VALIDATIONS.MAX_TYPE_LENGTH" [ngClass]="{'is-invalid': newTraining.type.length < TRAINING_VALIDATIONS.MIN_TYPE_LENGTH || newTraining.type.length > TRAINING_VALIDATIONS.MAX_TYPE_LENGTH}"
+                                    class="form-control form-control-sm cursor-pointer" id="newTraining" name="newTraining" 
                                     *ngIf="(newTraining.type==TRAINING_TYPES.POWERLIFTING || newTraining.type==TRAINING_TYPES.WEIGHTLIFTING || newTraining.type==TRAINING_TYPES.CROSSFIT || newTraining.type==TRAINING_TYPES.BODYBUILDING || newTraining.type==TRAINING_TYPES.SALA)">
                                     <option *ngFor="let type of TRAINING_TYPES | keyvalue" [value]="type.value" class="text-capitalize">{{type.value}}</option>
                                 </select>
                                 <div class="position-relative" *ngIf="!(newTraining.type==TRAINING_TYPES.POWERLIFTING || newTraining.type==TRAINING_TYPES.WEIGHTLIFTING || newTraining.type==TRAINING_TYPES.CROSSFIT || newTraining.type==TRAINING_TYPES.BODYBUILDING || newTraining.type==TRAINING_TYPES.SALA)">
-                                    <input type="text" [(ngModel)]="newTraining.type" class="form-control form-control-sm" id="newTraining" name="newTraining">
+                                    <input type="text" required [(ngModel)]="newTraining.type" class="form-control form-control-sm" id="newTraining" name="newTraining" [minlength]="TRAINING_VALIDATIONS.MIN_TYPE_LENGTH" [maxlength]="TRAINING_VALIDATIONS.MAX_TYPE_LENGTH" [ngClass]="{'is-invalid': newTraining.type.length < TRAINING_VALIDATIONS.MIN_TYPE_LENGTH || newTraining.type.length > TRAINING_VALIDATIONS.MAX_TYPE_LENGTH}">
                                     <div (click)="newTraining.type=TRAINING_TYPES.POWERLIFTING" style="position:absolute; right: 3px; top: 0px;">&times;</div>
                                 </div>
                             </div>
