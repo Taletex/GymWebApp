@@ -3,11 +3,18 @@ const { NOTIFICATION_ONLY_DISMISS, NOTIFICATION_TYPE } = require('src/_helpers/e
 const fileManager = require('src/_helpers/fileManager');
 const fs = require('fs');
 const _ = require('lodash');
+const { validateEmail } = require('../_helpers/send-email');
+const moment = require('moment');
 
 /** REST CALLBACKS **/
 module.exports = (io, clientSocketList) => {
 
     const notificationService = require('src/_helpers/notification.service')(io, clientSocketList);
+    const TRAINING_VALIDATIONS = {MAX_SESSION_NAME_LENGTH: 50, MAX_SESSION_COMMENT_LENGTH: 100, MAX_SERIES_NUMBER: 99999, MIN_SERIES_NUMBER: 1, MAX_REP_NUMBER: 99999, MIN_REP_NUMBER: 1, MAX_WEIGHT_NUMBER: 99999, MIN_WEIGHT_NUMBER: 0, MAX_REST_TIME: 99999, MIN_REST_TIME: 0, MAX_DATE: "2100-01-01T00:00", MAX_WEEK_COMMENT_LENGTH: 500, MAX_TRAINING_COMMENT_LENGTH: 1000};
+    const USER_VALIDATIONS = {MAX_PROFILE_PICTURE_NUMBER: 1, MAX_PROFILE_PICTURE_SIZE: 2, PROFILE_PICTURE_ACCEPTED_FORMATS: ['image/jpg', 'image/jpeg', 'image/png'], MAX_BIOGRAPHY_LENGTH: 1000, MAX_NAME_LENGTH: 30, MAX_SURNAME_LENGTH: 30, 
+                              MIN_DATE: moment('1900-01-01T00:00'), MAX_DATE: moment(new Date()), MAX_GENERIC_RESIDENCE_FIELD_LENGTH: 100, MAX_CAP_LENGTH: 5, MAX_ADDRESS_LENGTH: 200, MIN_WEIGHT: 1, MAX_WEIGHT: 500, MIN_EXPERIENCE: 0, MAX_EXPERIENCE: 99, 
+                              MAX_GENERIC_CONTACT_LENGTH: 100, MAX_EMAIL_LENGTH: 100, MAX_TELEPHONE_LENGTH: 15, MAX_PSW_LENGTH: 50};
+    const SETTINGS_VALIDATIONS = {GENERIC_PRIVACY_VALUES: [0, 1, 2, "0", "1", "2"]};
 
     return {
         createUser,
@@ -179,6 +186,9 @@ module.exports = (io, clientSocketList) => {
                 message: "User content can not be empty"
             });
         }
+
+        if(!areUserInformationsValidForSubmission(req.body) || !arePersonalRecordsValidForSubmission(req.body.personalRecords) || !areSettingsValidForSubmission(req.body.settings))
+            return res.status(500).send({message: "User informations are not valid"});
 
         // Save new profile picture if there is one, then update user
         let fileDir = fileManager.usersImagesBaseDir + "/" + req.params._id;
@@ -773,6 +783,93 @@ module.exports = (io, clientSocketList) => {
     /* UTILS */
     function isLinkYetEstablished(coach, athlete) {
         return (coach.athletes.includes(athlete._id) || athlete.coaches.includes(coach._id));
+    }
+
+    function areUserInformationsValidForSubmission(user) {
+
+        // profile picture must be one, less than 2MB and format .png, .jpg or .jpeg
+        if(user.profilePicture && user.bNewProfilePicture) {
+            if((Number((((Buffer.byteLength(user.profilePicture, 'base64'))/1024)/1024).toFixed(4)) >= USER_VALIDATIONS.MAX_PROFILE_PICTURE_SIZE))
+                return false;
+            
+            let ret = false;
+            for(e of USER_VALIDATIONS.PROFILE_PICTURE_ACCEPTED_FORMATS) {
+                if(user.profilePicture.includes(e)) {
+                    ret = true;
+                    break;
+                }
+            }
+            if(!ret) return false;
+        }
+
+        // Other informations must be valid
+        if(
+            (user.biography != null && user.biography.length > USER_VALIDATIONS.MAX_BIOGRAPHY_LENGTH) ||
+            (user.name == null || user.name.length == 0 || user.name.length > USER_VALIDATIONS.MAX_NAME_LENGTH) ||
+            (user.surname  == null || user.surname.length == 0 || user.surname.length > USER_VALIDATIONS.MAX_SURNAME_LENGTH) ||
+            ((moment(user.dateOfBirth)).isValid() && moment(user.dateOfBirth).isBefore(USER_VALIDATIONS.MIN_DATE) || moment(user.dateOfBirth).isAfter(USER_VALIDATIONS.MAX_DATE)) ||
+            (user.placeOfBirth.state != null && user.placeOfBirth.state.length > USER_VALIDATIONS.MAX_GENERIC_RESIDENCE_FIELD_LENGTH) ||
+            (user.placeOfBirth.province != null && user.placeOfBirth.province.length > USER_VALIDATIONS.MAX_GENERIC_RESIDENCE_FIELD_LENGTH) ||
+            (user.placeOfBirth.cap != null && user.placeOfBirth.cap.length > USER_VALIDATIONS.MAX_CAP_LENGTH) ||
+            (user.placeOfBirth.city != null && user.placeOfBirth.city.length > USER_VALIDATIONS.MAX_GENERIC_RESIDENCE_FIELD_LENGTH) ||
+            (user.placeOfBirth.address != null && user.placeOfBirth.address.length > USER_VALIDATIONS.MAX_ADDRESS_LENGTH) ||
+            (user.sex != null && (user.sex != 'M' && user.sex != 'F')) ||
+            (user.bodyWeight != null && (user.bodyWeight < USER_VALIDATIONS.MIN_WEIGHT || user.bodyWeight > USER_VALIDATIONS.MAX_WEIGHT)) ||
+            (user.yearsOfExperience != null && (user.yearsOfExperience < USER_VALIDATIONS.MIN_EXPERIENCE || user.yearsOfExperience > USER_VALIDATIONS.MAX_EXPERIENCE)) ||
+            (user.contacts.email != null && (user.contacts.email.length > USER_VALIDATIONS.MAX_EMAIL_LENGTH || !validateEmail(user.contacts.email))) ||
+            (user.contacts.telephone != null && (user.contacts.telephone.length > USER_VALIDATIONS.MAX_TELEPHONE_LENGTH)) ||
+            (user.contacts.socials.facebook != null && (user.socials.facebook.length > USER_VALIDATIONS.MAX_GENERIC_CONTACT_LENGTH)) ||
+            (user.contacts.socials.twitter != null && (user.socials.twitter.length > USER_VALIDATIONS.MAX_GENERIC_CONTACT_LENGTH)) ||
+            (user.contacts.socials.instagram != null && (user.socials.instagram.length > USER_VALIDATIONS.MAX_GENERIC_CONTACT_LENGTH)) ||
+            (user.contacts.socials.linkedin != null && (user.socials.linkedin.length > USER_VALIDATIONS.MAX_GENERIC_CONTACT_LENGTH)) ||
+            (user.contacts.socials.other != null && (user.socials.other.length > USER_VALIDATIONS.MAX_GENERIC_CONTACT_LENGTH)) ||
+            (user.residence.state != null && user.residence.state.length > USER_VALIDATIONS.MAX_GENERIC_RESIDENCE_FIELD_LENGTH) ||
+            (user.residence.province != null && user.residence.province.length > USER_VALIDATIONS.MAX_GENERIC_RESIDENCE_FIELD_LENGTH) ||
+            (user.residence.cap != null && user.residence.cap.length > USER_VALIDATIONS.MAX_CAP_LENGTH) ||
+            (user.residence.city != null && user.residence.city.length > USER_VALIDATIONS.MAX_GENERIC_RESIDENCE_FIELD_LENGTH) ||
+            (user.residence.address != null && user.residence.address.length > USER_VALIDATIONS.MAX_ADDRESS_LENGTH)
+        )
+            return false;
+        
+        return true;
+    }
+
+    function arePersonalRecordsValidForSubmission(personalRecordList) {
+        for (let i = 0; i < personalRecordList.length; i++) {
+    
+          // Exercise must be valid
+          if (!personalRecordList[i].exercise.name)
+            return false;
+    
+          // series, rep, weight and rest must be defined and must be less and more than their limits
+          for(let s of personalRecordList[i].series) {
+            if( 
+                (s.seriesNumber == null || s.seriesNumber < TRAINING_VALIDATIONS.MIN_SERIES_NUMBER || s.seriesNumber > TRAINING_VALIDATIONS.MAX_SERIES_NUMBER) ||
+                (s.repNumber == null || s.repNumber < TRAINING_VALIDATIONS.MIN_REP_NUMBER || s.repNumber > TRAINING_VALIDATIONS.MAX_REP_NUMBER) ||
+                (s.weight == null || s.weight < TRAINING_VALIDATIONS.MIN_WEIGHT_NUMBER || s.weight > TRAINING_VALIDATIONS.MAX_WEIGHT_NUMBER) ||
+                (s.rest == null || s.rest < TRAINING_VALIDATIONS.MIN_REST_TIME || s.rest > TRAINING_VALIDATIONS.MAX_REST_TIME) ||
+                (s.comment.length > TRAINING_VALIDATIONS.MAX_SESSION_COMMENT_LENGTH)
+            )
+              return false;
+          }
+    
+          //one rep pr must be valid
+          if(personalRecordList[i].oneRepPR.weight == null || personalRecordList[i].oneRepPR.weight < TRAINING_VALIDATIONS.MIN_WEIGHT_NUMBER || personalRecordList[i].oneRepPR.weight > TRAINING_VALIDATIONS.MAX_WEIGHT_NUMBER || !personalRecordList[i].oneRepPR.measure)
+            return false;
+        }
+    
+        return true;
+      }
+
+    function areSettingsValidForSubmission(settings) {
+        if( 
+            (settings.showActivities == null || !SETTINGS_VALIDATIONS.GENERIC_PRIVACY_VALUES.includes(settings.showActivities)) ||
+            (settings.showPrivateInfo == null || !SETTINGS_VALIDATIONS.GENERIC_PRIVACY_VALUES.includes(settings.showPrivateInfo)) ||
+            (settings.showPublicInfo == null || !SETTINGS_VALIDATIONS.GENERIC_PRIVACY_VALUES.includes(settings.showPublicInfo))
+        )
+            return false;
+
+        return true;
     }
 
 }

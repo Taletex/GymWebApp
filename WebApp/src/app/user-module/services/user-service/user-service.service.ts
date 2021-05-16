@@ -14,6 +14,8 @@ export class UserService {
   public USER_VALIDATIONS: any = {MAX_PROFILE_PICTURE_NUMBER: 1, MAX_PROFILE_PICTURE_SIZE: 2, PROFILE_PICTURE_ACCEPTED_FORMATS: ['.jpg', '.jpeg', '.png'], MAX_BIOGRAPHY_LENGTH: 1000, MAX_NAME_LENGTH: 30, MAX_SURNAME_LENGTH: 30, 
                                   MIN_DATE: '1900-01-01T00:00', MAX_DATE: new Date(), MAX_GENERIC_RESIDENCE_FIELD_LENGTH: 100, MAX_CAP_LENGTH: 5, MAX_ADDRESS_LENGTH: 200, MIN_WEIGHT: 1, MAX_WEIGHT: 500, MIN_EXPERIENCE: 0, MAX_EXPERIENCE: 99, 
                                   MAX_GENERIC_CONTACT_LENGTH: 100, MAX_EMAIL_LENGTH: 100, MAX_TELEPHONE_LENGTH: 15, MAX_PSW_LENGTH: 50};
+  public TRAINING_VALIDATIONS: any = {MAX_SESSION_NAME_LENGTH: 50, MAX_SESSION_COMMENT_LENGTH: 100, MAX_SERIES_NUMBER: 99999, MIN_SERIES_NUMBER: 1, MAX_REP_NUMBER: 99999, MIN_REP_NUMBER: 1, MAX_WEIGHT_NUMBER: 99999, MIN_WEIGHT_NUMBER: 0, 
+                                      MAX_REST_TIME: 99999, MIN_REST_TIME: 0, MAX_DATE: "2100-01-01T00:00", MAX_WEEK_COMMENT_LENGTH: 500, MAX_TRAINING_COMMENT_LENGTH: 1000};
 
 
   constructor(private httpService: HttpService) { }
@@ -202,6 +204,35 @@ export class UserService {
           reject(error || "dismissNotification error");
         });
     });
+  }
+
+
+  /* VALIDATION FUNCTIONS */
+  arePersonalRecordsValidForSubmission(personalRecordList): boolean {
+    for (let i = 0; i < personalRecordList.length; i++) {
+
+      // Exercise must be valid
+      if (!personalRecordList[i].exercise.name)
+        return false;
+
+      // series, rep, weight and rest must be defined and must be less and more than their limits
+      for(let s of personalRecordList[i].series) {
+        if( 
+            (s.seriesNumber == null || s.seriesNumber < this.TRAINING_VALIDATIONS.MIN_SERIES_NUMBER || s.seriesNumber > this.TRAINING_VALIDATIONS.MAX_SERIES_NUMBER) ||
+            (s.repNumber == null || s.repNumber < this.TRAINING_VALIDATIONS.MIN_REP_NUMBER || s.repNumber > this.TRAINING_VALIDATIONS.MAX_REP_NUMBER) ||
+            (s.weight == null || s.weight < this.TRAINING_VALIDATIONS.MIN_WEIGHT_NUMBER || s.weight > this.TRAINING_VALIDATIONS.MAX_WEIGHT_NUMBER) ||
+            (s.rest == null || s.rest < this.TRAINING_VALIDATIONS.MIN_REST_TIME || s.rest > this.TRAINING_VALIDATIONS.MAX_REST_TIME) ||
+            (s.comment.length > this.TRAINING_VALIDATIONS.MAX_SESSION_COMMENT_LENGTH)
+        )
+          return false;
+      }
+
+      //one rep pr must be valid
+      if(personalRecordList[i].oneRepPR.weight == null || personalRecordList[i].oneRepPR.weight < this.TRAINING_VALIDATIONS.MIN_WEIGHT_NUMBER || personalRecordList[i].oneRepPR.weight > this.TRAINING_VALIDATIONS.MAX_WEIGHT_NUMBER || !personalRecordList[i].oneRepPR.measure)
+        return false;
+    }
+
+    return true;
   }
 
 }

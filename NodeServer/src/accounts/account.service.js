@@ -7,6 +7,8 @@ const db = require('src/_helpers/db');
 const Role = require('src/_helpers/role');
 const _ = require('lodash');
 const { Residence, UserSettings } = require('../users/user.model');
+const { validateEmail } = require('../_helpers/send-email');
+const ACCOUNT_VALIDATIONS = {MAX_EMAIL_LENGTH: 100, MAX_PASSWORD_LENGTH: 50};
 
 module.exports = {
     authenticate,
@@ -292,7 +294,9 @@ async function update(id, params) {
                                                                                             .populate({ path: 'user', populate: 'coaches'}).populate({ path: 'user', populate: 'athletes'})) {
         throw 'Email "' + params.email + '" is already taken';
     }
-
+    if(!isAccountValidForSubmission(params))
+        throw 'Account informations are not valid';
+    
     // hash password if it was entered
     if (params.password) {
         params.passwordHash = hash(params.password);
@@ -425,4 +429,19 @@ async function sendPasswordResetEmail(account, origin) {
         html: `<h4>Reset Password Email</h4>
                ${message}`
     });
+}
+
+
+/* UTILS */
+function isAccountValidForSubmission(account) {
+    if(
+        (account.email == null || account.email.length == 0 || (account.email.length > ACCOUNT_VALIDATIONS.MAX_EMAIL_LENGTH || !validateEmail(account.email))) ||
+        (account.role == null || (account.role != Role.Admin && account.role != Role.User)) ||
+        (account.password != null && (account.password.length < 6 || account.password.length > ACCOUNT_VALIDATIONS.MAX_PASSWORD_LENGTH)) ||
+        (account.confirmPassword != null && (account.confirmPassword.length < 6 || account.confirmPassword.length > ACCOUNT_VALIDATIONS.MAX_PASSWORD_LENGTH)) ||
+        (account.password != null && account.confirmPassword != null && (account.password != account.confirmPassword))
+    )
+        return false;
+    
+    return true;
 }

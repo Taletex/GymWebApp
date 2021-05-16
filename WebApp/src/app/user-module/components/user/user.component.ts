@@ -141,11 +141,6 @@ export class UserComponent implements OnInit {
 
 
   /* === Initialization Functions === */
-  initPageInformations(userData: User, accountData: Account) {
-    this.initUserInformations(userData, accountData);
-    this.initFormInitialValues();
-  }
-
   initUserInformations(userData: User, accountData: Account) {
     if(!accountData && userData)
       this.userAccount.user = _.cloneDeep(userData);
@@ -353,15 +348,15 @@ export class UserComponent implements OnInit {
     if(event.target.files && event.target.files.length) {
       const [file] = event.target.files;
 
-      if(!this.acceptedFormats.includes(file.type)) {
-        this.resetInputFile();
-        this.toastr.warning("Le immmagini devono avere estensione .jpeg, .jpg o .png");
-        return;
-      } else if(Number((((file).size/1024)/1024).toFixed(4)) >= this.maxImageSize) {      // MB
-        this.resetInputFile();
-        this.toastr.warning("La dimensione massima delle immagini deve essere inferiore a " + this.maxImageSize + "MB");
-        return;
-      } else {
+      // if(!this.acceptedFormats.includes(file.type)) {
+      //   this.resetInputFile();
+      //   this.toastr.warning("Le immmagini devono avere estensione .jpeg, .jpg o .png");
+      //   return;
+      // } else if(Number((((file).size/1024)/1024).toFixed(4)) >= this.maxImageSize) {      // MB
+      //   this.resetInputFile();
+      //   this.toastr.warning("La dimensione massima delle immagini deve essere inferiore a " + this.maxImageSize + "MB");
+      //   return;
+      // } else {
         
         let reader = new FileReader();
         reader.onload = (e) => {
@@ -375,7 +370,7 @@ export class UserComponent implements OnInit {
         }
         
         reader.readAsDataURL(file);       // convert to base64 string
-      };
+      // };
     }
   }
 
@@ -433,7 +428,8 @@ export class UserComponent implements OnInit {
       .subscribe(
         (data: any) => {
           this.bLoading = false;
-          this.initPageInformations(data, null);
+          this.initUserInformations(data, null);                            // Update user informations 
+          this.userFormInitialValues = _.cloneDeep(this.userForm.value);    // Re init default form values
 
           this.accountService.updateUserValue(data);
 
@@ -643,7 +639,9 @@ export class UserComponent implements OnInit {
       .subscribe(
         (data: any) => {
           this.bLoading = false;
-          this.initPageInformations(data, null);
+          this.initUserInformations(data, null);                            // Update user informations 
+          this.personalRecordInitialValues = _.cloneDeep(this.personalRecordList);  // Re init default form values
+
           this.toastr.success('User information successfully updated!');
         },
         (error: HttpErrorResponse) => {
@@ -654,30 +652,7 @@ export class UserComponent implements OnInit {
   }
 
   isPersonalRecordFormValid(): boolean {
-    for (let i = 0; i < this.personalRecordList.length; i++) {
-
-      // Exercise must be valid
-      if (!this.personalRecordList[i].exercise.name)
-        return false;
-
-      // series, rep, weight and rest must be defined and must be less and more than their limits
-      for(let s of this.personalRecordList[i].series) {
-        if( 
-            (s.seriesNumber == null || s.seriesNumber < this.TRAINING_VALIDATIONS.MIN_SERIES_NUMBER || s.seriesNumber > this.TRAINING_VALIDATIONS.MAX_SERIES_NUMBER) ||
-            (s.repNumber == null || s.repNumber < this.TRAINING_VALIDATIONS.MIN_REP_NUMBER || s.repNumber > this.TRAINING_VALIDATIONS.MAX_REP_NUMBER) ||
-            (s.weight == null || s.weight < this.TRAINING_VALIDATIONS.MIN_WEIGHT_NUMBER || s.weight > this.TRAINING_VALIDATIONS.MAX_WEIGHT_NUMBER) ||
-            (s.rest == null || s.rest < this.TRAINING_VALIDATIONS.MIN_REST_TIME || s.rest > this.TRAINING_VALIDATIONS.MAX_REST_TIME) ||
-            (s.comment.length > this.TRAINING_VALIDATIONS.MAX_SESSION_COMMENT_LENGTH)
-        )
-          return false;
-      }
-
-      //one rep pr must be valid
-      if(this.personalRecordList[i].oneRepPR.weight == null || this.personalRecordList[i].oneRepPR.weight < this.TRAINING_VALIDATIONS.MIN_WEIGHT_NUMBER || this.personalRecordList[i].oneRepPR.weight > this.TRAINING_VALIDATIONS.MAX_WEIGHT_NUMBER || !this.personalRecordList[i].oneRepPR.measure)
-        return false;
-    }
-
-    return true;
+    return this.userService.arePersonalRecordsValidForSubmission(this.personalRecordList);
   }
 
   areAllPrsHidden(): boolean {
@@ -736,7 +711,9 @@ export class UserComponent implements OnInit {
       .subscribe(
         (data: any) => {
           this.bLoading = false;
-          this.initPageInformations(data, null);
+          this.initUserInformations(data, null);                                    // Update user informations 
+          this.settingsFormInitialValues = _.cloneDeep(this.settingsForm.value);    // Re init default form values
+
           this.toastr.success('User information successfully updated!');
         },
         (error: HttpErrorResponse) => {
@@ -763,8 +740,10 @@ export class UserComponent implements OnInit {
       this.accountService.update(this.userAccount.id, this.accountForm.value)
           .pipe(first())
           .subscribe({
-              next: () => {
+              next: (data) => {
                   this.bLoading = false;
+                  this.initUserInformations(null, data);                                    // Update user informations 
+                  this.accountFormInitialValues = _.cloneDeep(this.accountForm.value);      // Re init default form values
                   this.toastr.success('Update successful');
               },
               error: error => {
