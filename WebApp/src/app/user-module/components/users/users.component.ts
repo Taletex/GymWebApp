@@ -70,6 +70,15 @@ export class UsersComponent implements OnInit {
 
         if(userListUserIdx != -1)
           scope.userList[userListUserIdx] = _.cloneDeep(user);
+        
+        // Update user in current user link
+        let athleteUserIdx = scope.account.user.athletes.findIndex((a) => { return a['_id'] == user._id });
+        let coachUserIdx = scope.account.user.coaches.findIndex((c) => { return c['_id'] == user._id });
+        if(athleteUserIdx != -1)
+          scope.account.user.athletes[athleteUserIdx] = _.cloneDeep(user);
+        if(coachUserIdx != -1)
+          scope.account.user.coaches[coachUserIdx] = _.cloneDeep(user);
+          
       }
     })
   }

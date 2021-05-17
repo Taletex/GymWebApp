@@ -275,6 +275,10 @@ module.exports = (io, clientSocketList) => {
             });
     };
 
+    function isLinkRequestYetSent(fromUser, destUser, nType) {
+        return ( destUser.notifications.find((n)=> { return (n.type == nType && n.from.equals(fromUser._id) && !n.bConsumed)} ) != undefined);
+    }
+
     // Add a notification to a given User
     function sendNotification(req, res, next) {
         // Validate request
@@ -287,9 +291,9 @@ module.exports = (io, clientSocketList) => {
             .then(([dUser, fUser]) => {
                 if (!dUser || !fUser) { return res.status(404).send({ message: "User not found" }); }
 
-                // 1. Check if request type is coach or athlete request and the link between coach and athlete does not exist (if it exists the notification can't be sent)
-                if((req.body.type == NOTIFICATION_TYPE.COACH_REQUEST && !isLinkYetEstablished(dUser, fUser)) ||
-                   (req.body.type == NOTIFICATION_TYPE.ATHLETE_REQUEST && !isLinkYetEstablished(fUser, dUser)) ||
+                // 1. Check if request type is coach or athlete request and the link between coach and athlete does not exist (if it exists the notification can't be sent) or if the request has been yet sent
+                if((req.body.type == NOTIFICATION_TYPE.COACH_REQUEST && (!isLinkYetEstablished(dUser, fUser) && !isLinkRequestYetSent(fUser, dUser, NOTIFICATION_TYPE.COACH_REQUEST))) ||
+                   (req.body.type == NOTIFICATION_TYPE.ATHLETE_REQUEST && (!isLinkYetEstablished(fUser, dUser) && !isLinkRequestYetSent(fUser, dUser, NOTIFICATION_TYPE.ATHLETE_REQUEST))) ||
                    (req.body.type != NOTIFICATION_TYPE.COACH_REQUEST && req.body.type != NOTIFICATION_TYPE.ATHLETE_REQUEST)) {
 
                     // 2. Push the new notification in destination user
@@ -316,7 +320,7 @@ module.exports = (io, clientSocketList) => {
                             return res.status(500).send({ message: "SendNotification: Error updating user with id " + req.params._id + " (" + err + ")"});
                         });
                 } else {
-                    return res.status(500).send({ message: "SendNotification: Error sending the notification request (notification type not recognizer or link between athlete/coach already exists)" });
+                    return res.status(500).send({ message: "SendNotification: Error sending the notification request (notification type not recognizer, link between athlete/coach already exists or request yet sent)" });
                 }
                 
                 
