@@ -774,6 +774,7 @@ export class TrainingComponent implements OnInit {
   }
 
   updateTrainingWithOldVersion(oldTraining: Training) {
+    this.trainingService.trainingExerciseDecorator(oldTraining, this.exerciseList);
     oldTraining.oldVersions = _.cloneDeep(this.training.oldVersions);     // updates oldTraining oldVersions with the current training one
     this.originalTraining = _.cloneDeep(this.training);                   // original training is now the current training
     this.training = _.cloneDeep(oldTraining);                             // current training is now the old trianing choosen from the UI

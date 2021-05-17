@@ -434,7 +434,7 @@ module.exports = (io, clientSocketList) => {
         // each exercise
         for(let e of session.exercises) {
             // exercise must be defined
-            if(!e.exercise.name)
+            if(!e.exercise)
                 return false;
             
             for(let s of e.series) {
@@ -491,7 +491,7 @@ module.exports = (io, clientSocketList) => {
             return false;
 
         // training state and discipline must be valid
-        if(training.state == null || training.type == null || training.type == '' || training.type.length < this.TRAINING_VALIDATIONS.MIN_TYPE_LENGTH || training.type.length > this.TRAINING_VALIDATIONS.MAX_TYPE_LENGTH)
+        if(training.state == null || training.type == null || training.type == '' || training.type.length < TRAINING_VALIDATIONS.MIN_TYPE_LENGTH || training.type.length > TRAINING_VALIDATIONS.MAX_TYPE_LENGTH)
             return false;
 
         // end date must be after start date, end date and start date must be before 2100-01-01

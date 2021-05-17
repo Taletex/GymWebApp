@@ -28,6 +28,19 @@ export class TrainingService {
         }
     }
 
+    public trainingExerciseDecorator(training: Training, exerciseList: any[]) {
+        for(let w of training.weeks) {
+            for(let s of w.sessions) {
+                for(let e of s.exercises) {
+                    if(e.exercise.name == null) {
+                        e.exercise = _.cloneDeep(exerciseList.find((exercise) => {return exercise._id == e.exercise}));
+                    }
+                }
+            }
+        }
+    }
+
+
     /**
      * This function return a new training in which all the entities are replaced with their ids. Useful to send slim data to the backend.
      * @param fullTraining the training which entities need to be replaced with their ids
@@ -176,6 +189,7 @@ export class TrainingService {
      * @param oldTraining 
      */
     pushOldVersion(training: Training, oldTraining: Training) {
+        oldTraining.oldVersions = [];
         let trainingToPush = JSON.stringify(this.replaceTrainingEntitiesWithIds(oldTraining));
 
         if(training.oldVersions.length < 2)
