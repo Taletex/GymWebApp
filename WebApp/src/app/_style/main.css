@@ -2618,7 +2618,7 @@ ngb-carousel .picsum-img-wrapper > img {
 
 @media (max-width: 767.98px) {
   .navbar-expand .navbar-nav .dropdown-menu-lg {
-    min-width: 100% !important;
+    min-width: 250px !important;
   }
 }
 .dropdown-no-arrow .dropdown-toggle::after {

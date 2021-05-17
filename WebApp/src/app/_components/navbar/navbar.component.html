@@ -16,7 +16,7 @@
       <ul class="navbar-nav navbar-align align-items-center">
         
         <!-- Messages -->
-        <li class="nav-item dropdown d-none d-md-inline">
+        <!-- <li class="nav-item dropdown d-none d-md-inline">
           <a class="nav-icon dropdown-toggle disabled" disabled href="#" id="messagesDropdown" data-toggle="dropdown">
             <div class="position-relative">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -94,12 +94,12 @@
               <a href="#" class="text-muted">Show all messages</a>
             </div>
           </div>
-        </li>
+        </li> -->
 
         <!-- Notifications -->
-        <li class="nav-item dropdown d-none d-md-inline">
-          <a class="nav-icon dropdown-toggle disabled" disabled href="#" id="alertsDropdown" data-toggle="dropdown">
-            <div class="position-relative">
+        <li class="nav-item dropdown d-inline">
+          <a class="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-toggle="dropdown">
+            <div class="">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 class="feather feather-bell-off align-middle">
@@ -114,83 +114,35 @@
           </a>
           <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right py-0" aria-labelledby="alertsDropdown">
             <div class="dropdown-menu-header">
-              4 New Notifications
+              {{unreadNotificationLength}} New Notifications
             </div>
-            <div class="list-group">
-              <a href="#" class="list-group-item">
+            <div class="list-group" style="max-height: 70vh; overflow: auto;" *ngIf="account.user">
+              <a class="list-group-item" *ngFor="let n of unreadNotificationList">
                 <div class="row mx-0 align-items-center">
-                  <div class="col-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                      class="feather feather-alert-circle text-danger">
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <line x1="12" y1="8" x2="12" y2="12"></line>
-                      <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                    </svg>
-                  </div>
                   <div class="col-10">
-                    <div class="text-dark">Update completed</div>
-                    <div class="text-muted small mt-1">Restart server 12 to complete the update.</div>
-                    <div class="text-muted small mt-1">2h ago</div>
+                    <div class="text-dark">{{n.type}}</div>
+                    <div class="text-muted small mt-1" [innerHTML]="n.message"></div>
+                    <div class="text-muted small mt-1">Da {{n.from.name != null ? n.from.name : ''}} {{n.from.surname != null ? n.from.surname : n.from}}</div>
+                    <div class="text-muted small mt-1">Ore {{n.creationDate | date:'HH:mm:ss - dd/MM/yyyy'}}</div>
                   </div>
-                </div>
-              </a>
-              <a href="#" class="list-group-item">
-                <div class="row mx-0 align-items-center">
                   <div class="col-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                      class="feather feather-bell text-warning">
-                      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                      <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                    </svg>
-                  </div>
-                  <div class="col-10">
-                    <div class="text-dark">Lorem ipsum</div>
-                    <div class="text-muted small mt-1">Aliquam ex eros, imperdiet vulputate hendrerit et.</div>
-                    <div class="text-muted small mt-1">6h ago</div>
-                  </div>
-                </div>
-              </a>
-              <a href="#" class="list-group-item">
-                <div class="row mx-0 align-items-center">
-                  <div class="col-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                      class="feather feather-home text-primary">
-                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                      <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                    </svg>
-                  </div>
-                  <div class="col-10">
-                    <div class="text-dark">Login from 192.186.1.1</div>
-                    <div class="text-muted small mt-1">8h ago</div>
-                  </div>
-                </div>
-              </a>
-              <a href="#" class="list-group-item">
-                <div class="row mx-0 align-items-center">
-                  <div class="col-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                      class="feather feather-user-plus text-success">
-                      <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                      <circle cx="8.5" cy="7" r="4"></circle>
-                      <line x1="20" y1="8" x2="20" y2="14"></line>
-                      <line x1="23" y1="11" x2="17" y2="11"></line>
-                    </svg>
-                  </div>
-                  <div class="col-10">
-                    <div class="text-dark">New connection</div>
-                    <div class="text-muted small mt-1">Anna accepted your request.</div>
-                    <div class="text-muted small mt-1">12h ago</div>
+                    <div *ngIf="!n.bConsumed && (n.type == NOTIFICATION_TYPE.COACH_REQUEST || n.type == NOTIFICATION_TYPE.ATHLETE_REQUEST)" (click)="acceptRequest(n)" class="mb-2 image-button" ngbTooltip="Accetta Richiesta" placement="left"><img src="assets/icons/actions/confirm.svg" style="width:20px; height:auto;"></div>
+                    <div *ngIf="!n.bConsumed && (n.type == NOTIFICATION_TYPE.COACH_REQUEST || n.type == NOTIFICATION_TYPE.ATHLETE_REQUEST)" (click)="refuseRequest(n)" class="image-button" ngbTooltip="Rifiuta Richiesta" placement="left"><img src="assets/icons/actions/cancel.svg" style="width:20px; height:auto;"></div>
+                    <div *ngIf="!n.bConsumed && (n.type == NOTIFICATION_TYPE.DISMISS || n.type == NOTIFICATION_TYPE.REQUEST_SUCCESS || n.type == NOTIFICATION_TYPE.REQUEST_REFUSE || n.type == NOTIFICATION_TYPE.CANCEL_ATHLETE_TO_COACH_LINK || n.type == NOTIFICATION_TYPE.CANCEL_COACH_TO_ATHLETE_LINK || n.type == NOTIFICATION_TYPE.TRAINING_CREATED || n.type == NOTIFICATION_TYPE.TRAINING_MODIFIED)" (click)="dismissNotification(n)" class="image-button" ngbTooltip="Visualizza Richiesta" placement="left"><img src="assets/icons/actions/visibility.svg" style="width:20px; height:auto;"></div>
                   </div>
                 </div>
               </a>
             </div>
             <div class="dropdown-menu-footer">
-              <a href="#" class="text-muted">Show all notifications</a>
+              <a routerLink="/notifications" class="text-muted">Show all notifications</a>
             </div>
+            <div class='h-100 w-100' [hidden]="!bLoading">
+              <div class="w-100 h-100 loader-container">
+                  <div class="container d-flex align-items-center justify-content-center w-100 h-100">
+                      <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                  </div>
+              </div>
+          </div>
           </div>
         </li>
 
