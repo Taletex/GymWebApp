@@ -31,8 +31,8 @@ let socketSize = 0;
 if (process.env.NODE_ENV === 'production') {
     try {
         httpServer = require('https').createServer({
-            key: fs.readFileSync('server.key'),
-            cert: fs.readFileSync('server.cert')
+            key: fs.readFileSync('../../key.pem'),
+            cert: fs.readFileSync('../../cert.pem')
         }, app)
         console.log("Setting Https server");
     } catch {
