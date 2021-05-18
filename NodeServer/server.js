@@ -31,8 +31,8 @@ let socketSize = 0;
 if (process.env.NODE_ENV === 'production') {
     try {
         httpServer = require('https').createServer({
-            key: fs.readFileSync('../../key.pem'),
-            cert: fs.readFileSync('../../cert.pem')
+            key: fs.readFileSync('../../etc/letsencrypt/live/mytrainingplatform.it/privkey.pem'),
+            cert: fs.readFileSync('../../etc/letsencrypt/live/mytrainingplatform.it/fullchain.pem')
         }, app)
         console.log("Setting Https server");
     } catch {
