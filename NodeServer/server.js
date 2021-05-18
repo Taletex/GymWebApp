@@ -89,7 +89,7 @@ app.use(errorHandler);
 
 
 /* START SERVER */
-const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 4000;
+const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 4000) : 4000;
 const hostname = '0.0.0.0';
 httpServer.listen(port, () => {
     console.log("Server listening on port " + port + (process.env.NODE_ENV === 'production' ? ' (production environment)' : ' (development environment)'));
