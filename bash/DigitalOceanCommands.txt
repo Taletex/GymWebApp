@@ -5,16 +5,16 @@ Comandi
 - Connessione: ssh root@139.59.153.56
 Nota: se non funziona un comando prova a lanciarlo preceduto da sudo -u nodejs (e.g. sudo -u nodejs pm2 restart hello)
 
-AVVIARE APPLICAZIONI:
-NodeJS Server (posizionati dentro il node server)
-- Start: pm2 start server.js
+AVVIARE APPLICAZIONI (Development):
+NodeJS Server - Production (posizionati dentro il node server)
+- Start: NODE_ENV=production pm2 start server.js
 - Restart: sudo -u nodejs pm2 restart server
 - Delete: pm2 delete server
 - Sbloccare la porta 4000: sudo ufw allow 4000
 Alla fine lancia sempre pm2 save
 
 
-WebApp (posizionati dentro la webapp)
+WebApp - Development (posizionati dentro la webapp)
 - Start: pm2 start "ng serve --host 0.0.0.0 --port 1738"
 - Restart: sudo -u nodejs pm2 restart (mettere id del processo)
 - Delete: pm2 delete (id del processo)
@@ -27,15 +27,16 @@ How to avviare Su Digital Ocean:
    + ssh root@localhost
    + Mettere la password
 - Update repo:
+   + cd ..
    + cd GymWebApp
    + git pull
 - [Superfluo] Cambiare le porte e gli indirizzi nel file "environment.prod.ts" ('http://www.mytrainingplatform.it:4000'). Nota: è sufficiente solo questo file perchè la web app è avviata in produzione sul server, altrimenti dovresti cambiare il valore anche  nel file environment.ts.
 - Inserire username e psw per il servizio di mailing smtp in config.json del server
 - Avviare NodeServer:
-  + cd root
+  + cd ..
   + cd GymWebApp
   + cd NodeServer
-  + pm2 start server.js
+  + NODE_ENV=production pm2 start server.js
   + pm2 save
 - Avviare WebApp (in produzione)
   + Come buildare e deployare l'app angular sul server digital ocean (cerca sezione "Build Angular Client"): https://grokonez.com/frontend/angular/angular-deployment/how-to-deploy-angular-on-nginx-remote-server-example-use-vultr-vps-hosting#Build_Angular_Client
@@ -54,14 +55,15 @@ psw (la psw)
 
 
 
-Avviare server NodeServer.
+Avviare solo server NodeServer.
+0. cd ..
 1. cd GymWebApp
 2. cd NodeServer
 3. pm2 ps 
 4. pm2 delete (id processo server)
 5. npm install (installazione dipendenze)
 6. Verificare che config.json contenga le info giuste per il mailserver
-7. pm2 start server.js
+7. NODE_ENV=production pm2 start server.js
 
 
 

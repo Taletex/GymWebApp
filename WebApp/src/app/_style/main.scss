@@ -438,6 +438,7 @@ $custom-lightgray: rgb(179 179 179 / 15%);
   cursor: pointer;
   display: flex;
   align-items: center;
+  opacity: 1;
 
   @media screen and (max-width: 1400px) {
     img {
@@ -447,13 +448,13 @@ $custom-lightgray: rgb(179 179 179 / 15%);
   }
 
   &:hover {
-    opacity: 75%;
+    opacity: .75;
   }
 }
 
 .inverse-image-button {
   cursor: pointer;
-  opacity: 30%; 
+  opacity: .3; 
 
   @media screen and (max-width: 1400px) {
     img {
@@ -463,11 +464,11 @@ $custom-lightgray: rgb(179 179 179 / 15%);
   }
 
   &:hover {
-    opacity: 75%;
+    opacity: .75;
   }
 
   &.active {
-    opacity: 100%;
+    opacity: 1;
   }
 }
 
@@ -486,6 +487,7 @@ $custom-lightgray: rgb(179 179 179 / 15%);
 .image-button-big {
   cursor: pointer;
   z-index: 1 !important;
+  opacity: 1;
 
   @media screen and (max-width: 1400px) {
     img {
@@ -506,7 +508,7 @@ $custom-lightgray: rgb(179 179 179 / 15%);
   &:hover,
   &:active {
     text-decoration: none;
-    opacity: 65%;
+    opacity: .65;
   }
 }
 
@@ -1199,7 +1201,7 @@ ngb-carousel .picsum-img-wrapper>img {
 
 /* loader */
 .loader-container {
-  position:absolute; background-color:black; opacity:50%; right:0; top:0; z-index: 100;
+  position:absolute; background-color:black; opacity:.5; right:0; top:0; z-index: 100;
 }
 .lds-ring {
   display: inline-block;

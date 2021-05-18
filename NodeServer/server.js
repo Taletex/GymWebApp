@@ -31,9 +31,9 @@ let socketSize = 0;
 if (process.env.NODE_ENV === 'production') {
     try {
         httpServer = require('https').createServer({
-            key: fs.readFileSync('../../etc/letsencrypt/live/mytrainingplatform.it/privkey.pem', 'utf8'),
-            cert: fs.readFileSync('../../etc/letsencrypt/live/mytrainingplatform.it/cert.pem', 'utf8'),
-            ca: fs.readFileSync('../../etc/letsencrypt/live/mytrainingplatform.it/chain.pem', 'utf8')
+            key: fs.readFileSync('/etc/letsencrypt/live/mytrainingplatform.it/privkey.pem', 'utf8'),
+            cert: fs.readFileSync('/etc/letsencrypt/live/mytrainingplatform.it/cert.pem', 'utf8'),
+            ca: fs.readFileSync('/etc/letsencrypt/live/mytrainingplatform.it/chain.pem', 'utf8')
         }, app)
         console.log("Setting Https server");
     } catch {
