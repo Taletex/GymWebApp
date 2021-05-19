@@ -44,6 +44,9 @@
                                         <a routerLink="/trainings" routerLinkActive="active" class="badge badge-success p-1 mr-2">{{trainingStatusLengthList[TRAINING_STATES.COMPLETED] != null ?  trainingStatusLengthList[TRAINING_STATES.COMPLETED] : '0'}} Completati</a> 
                                         <a routerLink="/trainings" routerLinkActive="active" class="badge badge-danger p-1">{{trainingStatusLengthList[TRAINING_STATES.ABORTED] != null ?  trainingStatusLengthList[TRAINING_STATES.ABORTED] : '0'}} Cancellati</a> 
                                     </div>
+                                    <div class="mb-2" *ngIf="!trainingList || trainingList.length == 0">
+                                        Nessun allenamento disponibile
+                                    </div>
                                 </div>
                                 <div class="d-inline-block">
                                     <div class="stat">
@@ -56,7 +59,7 @@
                 </div>
 
                 <!-- COACH STATUS CARD -->
-                <div class="col-12 col-sm-6 col-xl d-flex px-2 body__element mb-3">
+                <div class="col-12 col-sm-6 col-xl d-flex px-2 body__element mb-3" *ngIf="account.user.userType == USER_TYPES.COACH || account.user.userType == USER_TYPES.BOTH">
                     <div class="card flex-fill">
                         <div class="card-body py-4">
                             <div class="media">
@@ -77,7 +80,7 @@
                 </div>
 
                  <!-- ATHLETE STATUS CARD -->
-                 <div class="col-12 col-sm-6 col-xl d-flex px-2 body__element mb-3">
+                 <div class="col-12 col-sm-6 col-xl d-flex px-2 body__element mb-3" *ngIf="account.user.userType == USER_TYPES.ATHLETE || account.user.userType == USER_TYPES.BOTH">
                     <div class="card flex-fill">
                         <div class="card-body py-4">
                             <div class="media">
@@ -109,6 +112,9 @@
                         </div>
                         <div class="card-body pt-0 font-size-sm-7" *ngIf="trainingList && trainingList.length > 0">
                             <app-training-calendar [(trainingList)]="trainingList" [(account)]="account"></app-training-calendar>
+                        </div>
+                        <div class="card-body pt-0" *ngIf="!trainingList || trainingList.length == 0">
+                            <div class="w-100 alert-info p-3"><span>Nessun allenamento disponibile!</span></div>
                         </div>
                     </div>
                 </div>

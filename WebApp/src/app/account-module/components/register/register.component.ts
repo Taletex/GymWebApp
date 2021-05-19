@@ -9,6 +9,7 @@ import { MustMatch } from '@app/_helpers';
 import { ToastrService } from 'ngx-toastr';
 import { userTypeValidator } from '@app/_helpers/user-type.validator';
 import { emailValidator } from '@app/_helpers/email.validator';
+import { USER_TYPES } from '@app/_models/training-model';
 
 @Component({ 
     selector: 'app-register',
@@ -32,7 +33,7 @@ export class RegisterComponent implements OnInit {
 
     ngOnInit() {
         this.form = this.formBuilder.group({
-            userType: ['', Validators.required],
+            userType: [USER_TYPES.ATHLETE, Validators.required],
             name: ['', [Validators.required, Validators.maxLength(this.ACCOUNT_VALIDATORS.MAX_NAME_LENGTH)]],
             surname: ['', [Validators.required, Validators.maxLength(this.ACCOUNT_VALIDATORS.MAX_SURNAME_LENGTH)]],
             email: ['', [Validators.required, Validators.email, Validators.maxLength(this.ACCOUNT_VALIDATORS.MAX_EMAIL_LENGTH)]],

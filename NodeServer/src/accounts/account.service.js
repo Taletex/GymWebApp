@@ -217,7 +217,7 @@ async function getAccountByUserId(userId) {
                                                  .populate({ path: 'user', populate: 'coaches'}).populate({ path: 'user', populate: 'athletes'});
 
     if (!account) throw 'Account not found';
-    return account[0];
+    return basicDetails(account[0]);
 }
 
 async function create(params) {
