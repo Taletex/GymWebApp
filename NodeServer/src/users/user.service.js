@@ -822,11 +822,11 @@ module.exports = (io, clientSocketList) => {
             (user.yearsOfExperience != null && (user.yearsOfExperience < USER_VALIDATIONS.MIN_EXPERIENCE || user.yearsOfExperience > USER_VALIDATIONS.MAX_EXPERIENCE)) ||
             (user.contacts.email != null && (user.contacts.email.length > USER_VALIDATIONS.MAX_EMAIL_LENGTH || !validateEmail(user.contacts.email))) ||
             (user.contacts.telephone != null && (user.contacts.telephone.length > USER_VALIDATIONS.MAX_TELEPHONE_LENGTH)) ||
-            (user.contacts.socials.facebook != null && (user.socials.facebook.length > USER_VALIDATIONS.MAX_GENERIC_CONTACT_LENGTH)) ||
-            (user.contacts.socials.twitter != null && (user.socials.twitter.length > USER_VALIDATIONS.MAX_GENERIC_CONTACT_LENGTH)) ||
-            (user.contacts.socials.instagram != null && (user.socials.instagram.length > USER_VALIDATIONS.MAX_GENERIC_CONTACT_LENGTH)) ||
-            (user.contacts.socials.linkedin != null && (user.socials.linkedin.length > USER_VALIDATIONS.MAX_GENERIC_CONTACT_LENGTH)) ||
-            (user.contacts.socials.other != null && (user.socials.other.length > USER_VALIDATIONS.MAX_GENERIC_CONTACT_LENGTH)) ||
+            (user.contacts.socials.facebook != null && (user.contacts.socials.facebook.length > USER_VALIDATIONS.MAX_GENERIC_CONTACT_LENGTH)) ||
+            (user.contacts.socials.twitter != null && (user.contacts.socials.twitter.length > USER_VALIDATIONS.MAX_GENERIC_CONTACT_LENGTH)) ||
+            (user.contacts.socials.instagram != null && (user.contacts.socials.instagram.length > USER_VALIDATIONS.MAX_GENERIC_CONTACT_LENGTH)) ||
+            (user.contacts.socials.linkedin != null && (user.contacts.socials.linkedin.length > USER_VALIDATIONS.MAX_GENERIC_CONTACT_LENGTH)) ||
+            (user.contacts.socials.other != null && (user.contacts.socials.other.length > USER_VALIDATIONS.MAX_GENERIC_CONTACT_LENGTH)) ||
             (user.residence.state != null && user.residence.state.length > USER_VALIDATIONS.MAX_GENERIC_RESIDENCE_FIELD_LENGTH) ||
             (user.residence.province != null && user.residence.province.length > USER_VALIDATIONS.MAX_GENERIC_RESIDENCE_FIELD_LENGTH) ||
             (user.residence.cap != null && user.residence.cap.length > USER_VALIDATIONS.MAX_CAP_LENGTH) ||
