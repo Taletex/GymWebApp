@@ -10,21 +10,23 @@ const fs = require('fs');
      */
     async function clearImagesDirectory(dirPath, filesToMantain) {
         return new Promise((resolve, reject) => {
-            fs.readdir(dirPath, (err, files) => {
-                if (err) {
-                    console.log(err);
-                    reject(err);
-                } else {
-                    files.forEach(file => {
-                        const fileDir = dirPath + "/" + file;
-                
-                        if (!filesToMantain.includes(fileDir.replace("./", "/"))) {
-                            fs.unlinkSync(fileDir);
-                        }
-                    });
-                }
-                resolve('success');
-            });
+            if (fs.existsSync(dirPath)) {
+                fs.readdir(dirPath, (err, files) => {
+                    if (err) {
+                        console.log(err);
+                        reject(err);
+                    } else {
+                        files.forEach(file => {
+                            const fileDir = dirPath + "/" + file;
+                    
+                            if (!filesToMantain.includes(fileDir.replace("./", "/"))) {
+                                fs.unlinkSync(fileDir);
+                            }
+                        });
+                    }
+                    resolve('success');
+                });
+            }
         })
     }
 

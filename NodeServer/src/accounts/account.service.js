@@ -101,23 +101,8 @@ async function register(params, origin) {
     const user = new db.User({
         name: params.name,
         surname: params.surname,
-        dateOfBirth: new Date(),
-        placeOfBirth: new Residence(),
-        sex: "M",
         userType: params.userType,
-        bodyWeight: 50,
-        yearsOfExperience: 0,
-        disciplines: [],
-        gyms: [],
-        coaches: [],
-        athletes: [],
-        personalRecords: [],
-        contacts: new db.Contacts({email: params.email, telephone: '', socials: {}}),
-        residence: new db.Residence(),
-        biography: "",
-        profilePicture: "",
-        notifications: [],
-        settings: new UserSettings()
+        contacts: new db.Contacts({email: params.email})
     });
 
     const data = await user.save()
@@ -245,23 +230,8 @@ async function create(params) {
     const user = new db.User({
         name: params.name,
         surname: params.surname,
-        dateOfBirth: new Date(),
-        placeOfBirth: new Residence(),
-        sex: "M",
         userType: params.userType,
-        bodyWeight: 0,
-        yearsOfExperience: 0,
-        disciplines: [],
-        gyms: [],
-        coaches: [],
-        athletes: [],
-        personalRecords: [],
-        contacts: new db.Contacts({email: params.email, telephone: '', socials: {}}),
-        residence: new db.Residence(),
-        biography: "",
-        profilePicture: "",
-        notifications: [],
-        settings: new UserSettings()
+        contacts: new db.Contacts({email: params.email})
     });
 
     const data = await user.save()
