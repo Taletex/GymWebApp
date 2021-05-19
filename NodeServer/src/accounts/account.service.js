@@ -105,7 +105,7 @@ async function register(params, origin) {
         placeOfBirth: new Residence(),
         sex: "M",
         userType: params.userType,
-        bodyWeight: 0,
+        bodyWeight: 50,
         yearsOfExperience: 0,
         disciplines: [],
         gyms: [],
