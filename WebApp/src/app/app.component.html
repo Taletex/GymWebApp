@@ -6,7 +6,7 @@
 
   <div class="main-content scrollbar bg-light w-100 h-100">
     <app-navbar *ngIf="account && account.jwtToken" [(sidebarOptions)]="sidebarOptions"></app-navbar>
-    <div [@routeAnimations]="prepareRoute(outlet)">
+    <div [@routeAnimations]="prepareRoute(outlet)" class="h-100 w-100" >
       <router-outlet class="h-100 w-100" #outlet="outlet"></router-outlet>
     </div>
   </div>
