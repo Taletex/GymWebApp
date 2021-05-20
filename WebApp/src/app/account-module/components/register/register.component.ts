@@ -22,6 +22,8 @@ export class RegisterComponent implements OnInit {
     loading = false;
     submitted = false;
     ACCOUNT_VALIDATORS = this.accountService.ACCOUNT_VALIDATORS;
+    bShowPsw: boolean = false;
+    bShowConfirmPsw: boolean = false;
 
     constructor(
         private formBuilder: FormBuilder,

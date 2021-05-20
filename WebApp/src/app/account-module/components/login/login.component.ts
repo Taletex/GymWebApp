@@ -5,6 +5,7 @@ import { first } from 'rxjs/operators';
 
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { ToastrService } from 'ngx-toastr';
+import * as CryptoJS from 'crypto-js';
 
 @Component({
     selector: 'app-login',
@@ -16,6 +17,11 @@ export class LoginComponent implements OnInit {
     loading = false;
     submitted = false;
     ACCOUNT_VALIDATORS = this.accountService.ACCOUNT_VALIDATORS;
+    bShowPsw: boolean = false;
+
+    // Declare this key and iv values in declaration
+    private key = '!$_mtp-20052021_$!';
+    private iv = 'mtp_!$11092011$!_mtp';
 
     constructor(
         private formBuilder: FormBuilder,
@@ -26,11 +32,32 @@ export class LoginComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        let bRememberMe = (localStorage.getItem("mtp_rememberMe") == "true")
+        let username;
+        let psw;
+
+        if(localStorage.getItem("mtp_rememberMe") == "true") {
+            username = localStorage.getItem("mtp_username");
+            psw = this.decryptUsingAES256(localStorage.getItem("mtp_psw"));
+        }
+
         this.form = this.formBuilder.group({
-            email: ['', [Validators.required, Validators.email, Validators.maxLength(this.ACCOUNT_VALIDATORS.MAX_EMAIL_LENGTH)]],
-            password: ['', [Validators.required, Validators.minLength(this.ACCOUNT_VALIDATORS.MIN_PSW_LENGTH), Validators.maxLength(this.ACCOUNT_VALIDATORS.MAX_PSW_LENGTH)]]
+            email: [username || '', [Validators.required, Validators.email, Validators.maxLength(this.ACCOUNT_VALIDATORS.MAX_EMAIL_LENGTH)]],
+            password: [psw || '', [Validators.required, Validators.minLength(this.ACCOUNT_VALIDATORS.MIN_PSW_LENGTH), Validators.maxLength(this.ACCOUNT_VALIDATORS.MAX_PSW_LENGTH)]],
+            rememberMe: bRememberMe
         });
     }
+
+    // Encrypt / Decrypt functions
+    encryptUsingAES256(encString: string): string {
+        return CryptoJS.AES.encrypt(encString, this.key).toString();
+    }
+    
+    decryptUsingAES256(decString: string): string {
+        let decrypted = CryptoJS.AES.decrypt(decString, this.key);
+        return decrypted.toString(CryptoJS.enc.Utf8);
+    }
+
 
     // convenience getter for easy access to form fields
     get f() { return this.form.controls; }
@@ -41,6 +68,16 @@ export class LoginComponent implements OnInit {
         // stop here if form is invalid
         if (this.form.invalid) {
             return;
+        }
+
+        if(this.f.rememberMe.value) {
+            localStorage.setItem("mtp_rememberMe", "true");
+            localStorage.setItem("mtp_username", this.f.email.value);
+            localStorage.setItem("mtp_psw", this.encryptUsingAES256(this.f.password.value));
+        } else {
+            localStorage.setItem("mtp_rememberMe", "false");
+            localStorage.setItem("mtp_username", "");
+            localStorage.setItem("mtp_psw", "");
         }
 
         this.loading = true;

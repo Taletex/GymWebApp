@@ -6,36 +6,57 @@
         <form [formGroup]="form" ngNativeValidate (ngSubmit)="onSubmit()">
             <div class="form-group">
                 <label class="col-form-label form-control-max-xxl">Email</label>
-                <input type="text" formControlName="email" required class="form-control form-control-max-xxl" name="loginEmail" autocomplete="email" [maxlength]="ACCOUNT_VALIDATORS.MAX_EMAIL_LENGTH"
+                <input type="text" formControlName="email" required class="form-control form-control-max-xxl"
+                    name="loginEmail" [maxlength]="ACCOUNT_VALIDATORS.MAX_EMAIL_LENGTH"
                     [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
                 <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
-                    <div *ngIf="f.email.errors.required">Email is required</div>
-                    <div *ngIf="f.email.errors.email">Email is invalid</div>
+                    <div *ngIf="f.email.errors.required">Email obbligatoria</div>
+                    <div *ngIf="f.email.errors.email">Email non valida</div>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-form-label form-control-max-xxl">Password</label>
-                <input type="password" formControlName="password" required class="form-control form-control-max-xxl" name="loginPassword" autocomplete="current-password"
-                    [minlength]="ACCOUNT_VALIDATORS.MIN_PSW_LENGTH" [maxlength]="ACCOUNT_VALIDATORS.MAX_PSW_LENGTH" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
-                <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-                    <div *ngIf="f.password.errors.required">Password is required</div>
+                <div class="input-group">
+                    <input type="password" formControlName="password" required
+                        class="form-control form-control-max-xxl border-right-0" name="loginPassword"
+                        [minlength]="ACCOUNT_VALIDATORS.MIN_PSW_LENGTH"
+                        [maxlength]="ACCOUNT_VALIDATORS.MAX_PSW_LENGTH"
+                        [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
+                        [type]="bShowPsw ? 'text' : 'password'" />
+                    <div class="input-group-append" (click)="bShowPsw = !bShowPsw">
+                        <span class="input-group-text bg-white d-flex align-items-center fa fa-eye"
+                            [ngClass]="{'fa-eye-slash': bShowPsw}"></span>
+                    </div>
                 </div>
+
+                <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                    <div *ngIf="f.password.errors.required">Password obbligatoria</div>
+                </div>
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" formControlName="rememberMe" id="rememberMe" class="form-check-input"/>
+                <label for="rememberMe" class="form-check-label">Ricordami</label>
             </div>
             <div class="form-row m-0">
                 <div class="form-group mb-0">
                     <input type="submit" [disabled]="loading" class="btn btn-primary" value="Login">
                 </div>
                 <div class="d-flex align-items-center">
-                    <a routerLink="../register" class="btn btn-sm btn-link">Register</a>
+                    <a routerLink="../register" class="btn btn-sm btn-link">Registrazione</a>
                 </div>
                 <div class="form-group mb-0 col text-right">
-                    <a routerLink="../forgot-password" class="btn btn-link pr-0">Forgot Password?</a>
+                    <a routerLink="../forgot-password" class="btn btn-link pr-0">Password dimenticata?</a>
                 </div>
             </div>
         </form>
         <div class="loading-overlay" *ngIf="loading">
             <div class="container d-flex align-items-center justify-content-center w-100 h-100">
-                <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                <div class="lds-ring">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
             </div>
         </div>
     </div>
