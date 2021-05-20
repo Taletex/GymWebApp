@@ -21,6 +21,7 @@ export class AppComponent {
   account: Account;
   baseServerUrl = this.httpService.baseServerUrl;
   sidebarOptions = {bExpanded: true};
+  private triggerWidth: number = 767.98;
 
   constructor(public router: Router, private accountService: AccountService, private httpService: HttpService) {
     this.accountService.account.subscribe( x => { this.account = x; });
@@ -36,5 +37,11 @@ export class AppComponent {
 
   expandSidebar() {
     this.sidebarOptions.bExpanded = true;
+  }
+
+  collapseSidebarInOverlay() {
+    if(window.innerWidth < this.triggerWidth) {
+      this.sidebarOptions.bExpanded = false;
+    }
   }
 }

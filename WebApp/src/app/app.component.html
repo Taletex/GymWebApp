@@ -1,6 +1,6 @@
 <div class="d-flex p-0 m-0" style="height:100vh!important">
 
-  <div class="sidebar-content p-0" *ngIf="account && account.jwtToken" [ngClass]="{'expanded': sidebarOptions.bExpanded}">
+  <div class="sidebar-content p-0" *ngIf="account && account.jwtToken" [ngClass]="{'expanded': sidebarOptions.bExpanded}" (click)="collapseSidebarInOverlay()">
     <app-sidebar [(options)]="sidebarOptions"></app-sidebar>
   </div>
 
