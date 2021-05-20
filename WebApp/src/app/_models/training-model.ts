@@ -238,6 +238,7 @@ export enum TRAINING_STATES {
 export enum TRAINING_TYPES {
     POWERLIFTING = "powerlifting",
     WEIGHTLIFTING = "weightlifting",
+    STRONGMAN = "strongman",
     CROSSFIT = "crossfit",
     BODYBUILDING = "bodybuilding",
     SALA = "sala attrezzi",
@@ -254,7 +255,11 @@ export enum EXERCISE_GROUPS {
     ARMISTRINGS = "bicipiti femorali",
     NECK = "collo",
     HEAD = "testa",
-    CALVES = "polpacci"
+    CALVES = "polpacci",
+    CHEST = "petto",
+    BACK = "schiena",
+    DORSAL = "dorsali",
+    SHOULDERS = "spalle"    
 }
 
 export enum OPTION_VISIBILITY {

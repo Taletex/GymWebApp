@@ -51,7 +51,7 @@ const PersonalRecordSchema = mongoose.Schema({
         required: false
     },
     series: { type: [PRSeriesSchema], default: [] },
-    oneRepPR: { type: [PRSeriesSchema], default: [] },
+    oneRepPR: { type: PRSeriesSchema, default: new pRSeriesSchema() },
     bPublic: { type: Boolean, required: false, default: false }
 }, { _id: false})
 const personalRecordSchema = mongoose.model('PersonalRecord', PersonalRecordSchema);

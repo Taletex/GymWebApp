@@ -67,10 +67,11 @@ export class AccountService {
     }
 
     logout() {
-        this.http.post<any>(`${baseUrl}/revoke-token`, {}, { withCredentials: true }).subscribe();
+        this.http.post<any>(`${baseUrl}/revoke-token`, {}, { withCredentials: true }).subscribe(() => {
+            this.router.navigate(['/account/login']);
+        });
         this.stopRefreshTokenTimer();
         this.accountSubject.next(null);
-        this.router.navigate(['/account/login']);
     }
 
     refreshToken() {

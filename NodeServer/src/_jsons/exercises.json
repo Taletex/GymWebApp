@@ -1,188 +1,250 @@
 [
     {
         "name": "Squat",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Squat",
-        "creator": null
+        "creator": null,
+        "groups": ["gambe","quadricipiti","bicipiti femorali","schiena","polpacci"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Bench Press",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Bench Press",
-        "creator": null
+        "creator": null,
+        "groups": ["braccia","bicipiti","tricipiti","petto"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Deadlift",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Deadlift",
-        "creator": null
+        "creator": null,
+        "groups": ["gambe","quadricipiti","bicipiti femorali","schiena","polpacci"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Clean&Jerk",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Clean and Jerk",
-        "creator": null
+        "creator": null,
+        "groups": ["gambe","quadricipiti","bicipiti femorali", "schiena", "addome", "braccia", "spalle", "tricipiti"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Snatch",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Snatch",
-        "creator": null
+        "creator": null,
+        "groups": ["gambe","quadricipiti","bicipiti femorali", "schiena", "addome", "braccia", "spalle", "tricipiti"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Pull Ups",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Pull Ups",
-        "creator": null
+        "creator": null,
+        "groups": ["braccia","bicipiti","tricipiti","dorsali"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Dips",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Dips",
-        "creator": null
+        "creator": null,
+        "groups": ["braccia","bicipiti","tricipiti"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Leg Curl",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Leg Curl",
-        "creator": null
+        "creator": null,
+        "groups": ["gambe","quadricipiti","bicipiti femorali"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Leg Extension",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Leg Extension",
-        "creator": null
+        "creator": null,
+        "groups": ["gambe","quadricipiti","bicipiti femorali"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Bulgarian Squat",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Bulgarian Squat",
-        "creator": null
+        "creator": null,
+        "groups": ["gambe","quadricipiti","bicipiti femorali"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Leg Press",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Leg Press",
-        "creator": null
+        "creator": null,
+        "groups": ["gambe","quadricipiti","bicipiti femorali"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Calf Raise",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Calf Raise",
-        "creator": null
+        "creator": null,
+        "groups": ["gambe","quadricipiti","bicipiti femorali","polpacci"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Lats",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Lats",
-        "creator": null
+        "creator": null,
+        "groups": ["braccia","bicipiti","tricipiti","dorsali"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Barbell Curl",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Barbell Curl",
-        "creator": null
+        "creator": null,
+        "groups": ["braccia","bicipiti"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Dumbbell Curl",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Dumbbell Curl",
-        "creator": null
+        "creator": null,
+        "groups": ["braccia","bicipiti"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "French Press",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard French Press",
-        "creator": null
+        "creator": null,
+        "groups": ["braccia","tricipiti"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Military Press",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Military Press",
-        "creator": null
+        "creator": null,
+        "groups": ["braccia","tricipiti","spalle"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Push Press",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Push Press",
-        "creator": null
+        "creator": null,
+        "groups": ["braccia","tricipiti","spalle"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Jerk",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Jerk",
-        "creator": null
+        "creator": null,
+        "groups": ["gambe","quadricipiti","bicipiti femorali", "schiena", "addome", "braccia", "spalle", "tricipiti"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Plank",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Plank",
-        "creator": null
+        "creator": null,
+        "groups": ["addome"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Roll ABS",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Roll ABS",
-        "creator": null
+        "creator": null,
+        "groups": ["addome"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Barbell Row",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Barbell Row",
-        "creator": null
+        "creator": null,
+        "groups": ["braccia","bicipiti","dorsali","schiena"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Dumbbell Row",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Dumbbell Row",
-        "creator": null
+        "creator": null,
+        "groups": ["braccia","bicipiti","dorsali","schiena"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Front Squat",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Front Squat",
-        "creator": null
+        "creator": null,
+        "groups": ["gambe","quadricipiti","bicipiti femorali"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Overhead Squat",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Overhead Squat",
-        "creator": null
+        "creator": null,
+        "groups": ["gambe","quadricipiti","bicipiti femorali"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Landmine",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Landmine",
-        "creator": null
+        "creator": null,
+        "groups": ["braccia","bicipiti","tricipiti"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Log Lift",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Log Lift",
-        "creator": null
+        "creator": null,
+        "groups": ["gambe","quadricipiti","bicipiti femorali", "schiena", "addome", "braccia", "spalle", "tricipiti"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Push Up",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Push Up",
-        "creator": null
+        "creator": null,
+        "groups": ["braccia","bicipiti","tricipiti","petto"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "T-bar Row",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard T-Bar Row",
-        "creator": null
+        "creator": null,
+        "groups": ["braccia","bicipiti","dorsali","schiena"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Lunges",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Lunges",
-        "creator": null
+        "creator": null,
+        "groups": ["gambe","quadricipiti","bicipiti femorali"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     },
     {
         "name": "Hyperextension",
-        "variant": {"name": "Standard", "intensityCoefficient": 1},
+        "variant": {"name": "Standard","intensityCoefficient": 1},
         "description": "Standard Hyperextension",
-        "creator": null
+        "creator": null,
+        "groups": ["gambe","quadricipiti","bicipiti femorali"],
+        "disciplines": ["powerlifting","weightlifting","strongman","crossfit","bodybuilding","sala attrezzi"]
     }
 ]

@@ -9,17 +9,17 @@
                 <div class="d-flex input-group w-auto ml-auto">
                     <div class="input-group-prepend d-none d-md-inline"><span class="input-group-text">ACTIONS</span></div>
                     <div class="d-flex align-items-center form-control round-right-5 round-md-5">
-                        <div (click)="changeMode(PAGEMODE.READONLY)" class="inverse-image-button"
+                        <div (click)="changeMode(PAGEMODE.READONLY)" class="image-button"
                             [ngClass]="{'active': pageStatus[PAGES.USERS] == PAGEMODE.READONLY}"
                             ngbTooltip="Visualizza" placement="left"><img src="assets/icons/actions/visibility.svg"
                                 style="width:20px; height:auto;"></div>
                         <div *ngIf="account.role == Role.Admin || userAccount.user._id == account.user._id"
-                            (click)="changeMode(PAGEMODE.WRITE)" class="ml-2 inverse-image-button"
+                            (click)="changeMode(PAGEMODE.WRITE)" class="ml-2 image-button"
                             [ngClass]="{'active': pageStatus[PAGES.USERS] == PAGEMODE.WRITE}" ngbTooltip="Modifica"
                             placement="left"><img src="assets/icons/actions/edit.svg" style="width:20px; height:auto;">
                         </div>
                         <div *ngIf="account.role == Role.Admin"
-                            (click)="deleteAccount()" class="ml-2 inverse-image-button" ngbTooltip="Elimina Utente"
+                            (click)="deleteAccount()" class="ml-2 image-button" ngbTooltip="Elimina Utente"
                             placement="left"><img src="assets/icons/actions/garbage-can.svg" style="width:20px; height:auto;">
                         </div>
                     </div>
@@ -864,10 +864,10 @@
                                         </div>
 
                                         <!-- Password -->
-                                        <div class="col-12 p-0 mt-4"><h6 class="h6 text-success">Password <span *ngIf="account.role == Role.Admin">e Ruolo</span></h6></div>
+                                        <div class="col-12 p-0 mt-4"><h6 class="h6 text-success">Password</h6></div>
                                         <div class="form-row form-row-inner col-12 border border-success">
                                             <div class="form-group col-12 col-xl-6">
-                                                <label class="col-form-label col-form-label-sm text-muted">Password (lasciare vuoto il campo per mantenere la stessa password)</label>
+                                                <label class="col-form-label col-form-label-sm text-muted">Password *</label>
                                                 <input type="password" formControlName="password" [maxlength]="USER_VALIDATIONS.MAX_PSW_LENGTH" class="form-control form-control-sm" [ngClass]="{ 'is-invalid': fa.password.errors }" />
                                                 <div *ngIf="fa.password.errors" class="invalid-feedback">
                                                     <div *ngIf="fa.password.errors.required">Password obbligatoria</div>
@@ -875,12 +875,15 @@
                                                 </div>
                                             </div>
                                             <div class="form-group col-12 col-xl-6">
-                                                <label class="col-form-label col-form-label-sm text-muted">Conferma Password (lasciare vuoto il campo per mantenere la stessa password)</label>
+                                                <label class="col-form-label col-form-label-sm text-muted">Conferma Password *</label>
                                                 <input type="password" formControlName="confirmPassword" [maxlength]="USER_VALIDATIONS.MAX_PSW_LENGTH" class="form-control form-control-sm" [ngClass]="{ 'is-invalid': fa.confirmPassword.errors }" />
                                                 <div *ngIf="fa.confirmPassword.errors" class="invalid-feedback">
                                                     <div *ngIf="fa.confirmPassword.errors.required">Conferma Password è obbligatoria</div>
                                                     <div *ngIf="fa.confirmPassword.errors.mustMatch">Le password devono essere uguali</div>
                                                 </div>
+                                            </div>
+                                            <div class="form-group col-12">
+                                                <small class="text-muted">* Lasciare vuoto il campo per mantenere la stessa password</small>
                                             </div>
                                         </div>
 
