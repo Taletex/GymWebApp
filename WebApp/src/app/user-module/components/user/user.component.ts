@@ -59,6 +59,7 @@ export class UserComponent implements OnInit {
   public today = new Date();
   public personalRecordList: PersonalRecord[] = <PersonalRecord[]>[];    // Aux array to store personal records from form
   public exerciseList: Exercise[] = <Exercise[]>[];
+  public originalExerciseList: Exercise[] = <Exercise[]>[];
   public copiedSeries: PRSeries = new PRSeries();
   public copiedPR: PersonalRecord = new PersonalRecord();
   public TRAINING_TYPES = TRAINING_TYPES;
@@ -226,10 +227,7 @@ export class UserComponent implements OnInit {
       .subscribe(
         (data: any) => {
           this.initUserInformations(null, data);
-          // For Test Purpose
-          this.activityList.push(new Activity('lasjd0123uasd', 'competition', 'Torneo Nazionale WPA', ['powerlifting'], new Federation("10892asjnd", "WPA"), 'nazionale', ['all'], ['all'], new Residence('italia', 'PA', '91000', 'alimena', 'via della piovra 5'), new Date("05/22/2021"), new Date("05/23/2021"), "Gara nazionale WPA 2021, utile per le qualificazioni ai mondiali", [this.userAccount.user._id], ["50 euro"], [], ["prozis"], this.userAccount.user._id, true));
-          this.activityList.push(new Activity('123ouqnsidunq', 'competition', 'Torneo Nazionale FIPL', ['powerlifting'], new Federation("10892asjnd", "FIPL"), 'nazionale', ['all'], ['all'], new Residence('italia', 'MI', '92000','san zenone al lambro', 'via delle rose 123'), new Date("10/06/2021"), new Date("10/08/2021"), "Gara nazionale FIPL 2021, utile per le qualificazioni ai mondiali", [this.userAccount.user._id], ["50 euro"], ["100 euro primo posto", "50 euro secondo posto"], ["prozis"], this.userAccount.user._id, true));
-          // end test
+          this.testActivities();
           this.postUserInitialization();
           this.initFormInitialValues();
 
@@ -251,10 +249,7 @@ export class UserComponent implements OnInit {
       .subscribe(
         (data: any) => {
           this.initUserInformations(null, data);
-          // For Test Purpose
-          this.activityList.push(new Activity('lasjd0123uasd', 'competition', 'Torneo Nazionale WPA', ['powerlifting'], new Federation("10892asjnd", "WPA"), 'nazionale', ['all'], ['all'], new Residence('italia', 'PA', '91000', 'alimena', 'via della piovra 5'), new Date("05/22/2021"), new Date("05/23/2021"), "Gara nazionale WPA 2021, utile per le qualificazioni ai mondiali", [this.userAccount.user._id], ["50 euro"], [], ["prozis"], this.userAccount.user._id, true));
-          this.activityList.push(new Activity('123ouqnsidunq', 'competition', 'Torneo Nazionale FIPL', ['powerlifting'], new Federation("10892asjnd", "FIPL"), 'nazionale', ['all'], ['all'], new Residence('italia', 'MI', '92000','san zenone al lambro', 'via delle rose 123'), new Date("10/06/2021"), new Date("10/08/2021"), "Gara nazionale FIPL 2021, utile per le qualificazioni ai mondiali", [this.userAccount.user._id], ["50 euro"], ["100 euro primo posto", "50 euro secondo posto"], ["prozis"], this.userAccount.user._id, true));
-          // end test
+          this.testActivities();
           this.postUserInitialization();
           this.initFormInitialValues();
 
@@ -277,10 +272,7 @@ export class UserComponent implements OnInit {
         (data: any) => {
           this.initUserInformations(data, null);
 
-          // For Test Purpose
-          this.activityList.push(new Activity('lasjd0123uasd', 'competition', 'Torneo Nazionale WPA', ['powerlifting'], new Federation("10892asjnd", "WPA"), 'nazionale', ['all'], ['all'], new Residence('italia', 'PA', '91000', 'alimena', 'via della piovra 5'), new Date("05/22/2021"), new Date("05/23/2021"), "Gara nazionale WPA 2021, utile per le qualificazioni ai mondiali", [this.userAccount.user._id], ["50 euro"], [], ["prozis"], this.userAccount.user._id, true));
-          this.activityList.push(new Activity('123ouqnsidunq', 'competition', 'Torneo Nazionale FIPL', ['powerlifting'], new Federation("10892asjnd", "FIPL"), 'nazionale', ['all'], ['all'], new Residence('italia', 'MI', '92000','san zenone al lambro', 'via delle rose 123'), new Date("10/06/2021"), new Date("10/08/2021"), "Gara nazionale FIPL 2021, utile per le qualificazioni ai mondiali", [this.userAccount.user._id], ["50 euro"], ["100 euro primo posto", "50 euro secondo posto"], ["prozis"], this.userAccount.user._id, true));
-          // end test
+          this.testActivities();
           
           this.postUserInitialization();
           this.initFormInitialValues();
@@ -298,14 +290,16 @@ export class UserComponent implements OnInit {
 
   setAccountFromCurrentAccount() {
     this.initUserInformations(null, this.account);
-
-    // For Test Purpose
-    this.activityList.push(new Activity('lasjd0123uasd', 'competition', 'Torneo Nazionale WPA', ['powerlifting'], new Federation("10892asjnd", "WPA"), 'nazionale', ['all'], ['all'], new Residence('italia', 'PA', '91000', 'alimena', 'via della piovra 5'), new Date("05/22/2021"), new Date("05/23/2021"), "Gara nazionale WPA 2021, utile per le qualificazioni ai mondiali", [this.userAccount.user._id], ["50 euro"], [], ["prozis"], this.userAccount.user._id, true));
-    this.activityList.push(new Activity('123ouqnsidunq', 'competition', 'Torneo Nazionale FIPL', ['powerlifting'], new Federation("10892asjnd", "FIPL"), 'nazionale', ['all'], ['all'], new Residence('italia', 'MI', '92000','san zenone al lambro', 'via delle rose 123'), new Date("10/06/2021"), new Date("10/08/2021"), "Gara nazionale FIPL 2021, utile per le qualificazioni ai mondiali", [this.userAccount.user._id], ["50 euro"], ["100 euro primo posto", "50 euro secondo posto"], ["prozis"], this.userAccount.user._id, true));
-    // end test
-    
+    this.testActivities();
     this.postUserInitialization();
     this.initFormInitialValues();
+  }
+
+  testActivities() {
+     // For Test Purpose
+     // this.activityList.push(new Activity('lasjd0123uasd', 'competition', 'Torneo Nazionale WPA', ['powerlifting'], new Federation("10892asjnd", "WPA"), 'nazionale', ['all'], ['all'], new Residence('italia', 'PA', '91000', 'alimena', 'via della piovra 5'), new Date("05/22/2021"), new Date("05/23/2021"), "Gara nazionale WPA 2021, utile per le qualificazioni ai mondiali", [this.userAccount.user._id], ["50 euro"], [], ["prozis"], this.userAccount.user._id, true));
+     // this.activityList.push(new Activity('123ouqnsidunq', 'competition', 'Torneo Nazionale FIPL', ['powerlifting'], new Federation("10892asjnd", "FIPL"), 'nazionale', ['all'], ['all'], new Residence('italia', 'MI', '92000','san zenone al lambro', 'via delle rose 123'), new Date("10/06/2021"), new Date("10/08/2021"), "Gara nazionale FIPL 2021, utile per le qualificazioni ai mondiali", [this.userAccount.user._id], ["50 euro"], ["100 euro primo posto", "50 euro secondo posto"], ["prozis"], this.userAccount.user._id, true));
+     // end test
   }
 
 
@@ -461,21 +455,26 @@ export class UserComponent implements OnInit {
       )
     )
 
+  // Code to remove from exercise list exercises which are yet used as PR .
+  initExerciseListOnPRbasis() {
+    this.exerciseList = _.cloneDeep(this.originalExerciseList);
+    for (let i = 0; i < this.personalRecordList.length; i++) {
+      let currentPRid = this.personalRecordList[i].exercise._id;
+      _.remove(this.exerciseList, function (exercise) {
+        return exercise._id == currentPRid;
+      })
+    }
+  }
+
   getExercises() {
     this.bLoading = true;
 
     this.httpService.getExercisesForUser(this.userAccount.user._id)
       .subscribe(
         (data: Array<Exercise>) => {
-          for (let i = 0; i < this.personalRecordList.length; i++) {
-            let currentPRid = this.personalRecordList[i].exercise._id;
-            _.remove(data, function (exercise) {
-              return exercise._id == currentPRid;
-            })
-          }
-
-          this.exerciseList = _.sortBy(data, ['name', 'variant.name']);;
-          console.log(this.exerciseList);
+          this.originalExerciseList = _.sortBy(_.cloneDeep(data), ['name', 'variant.name']);
+          this.initExerciseListOnPRbasis();
+          console.log("Exercise List", this.exerciseList);
           this.bLoading = false;
         },
         (error: HttpErrorResponse) => {
@@ -563,6 +562,7 @@ export class UserComponent implements OnInit {
   resetPR(index: number) {
     if (index < this.personalRecordList.length) {
       this.personalRecordList[index] = _.cloneDeep(new PersonalRecord());
+      this.initExerciseListOnPRbasis();
     } else {
       console.log('ERROR: resetting PR of index ' + index);
     }
@@ -571,6 +571,7 @@ export class UserComponent implements OnInit {
   deletePR(index: number) {
     if (index < this.personalRecordList.length) {
       this.personalRecordList.splice(index, 1);
+      this.initExerciseListOnPRbasis();
     } else {
       console.log('ERROR: removing PR of index ' + index);
     }
@@ -587,6 +588,7 @@ export class UserComponent implements OnInit {
   pastePR(index: number) {
     if (index < this.personalRecordList.length) {
       this.personalRecordList[index] = _.cloneDeep(this.copiedPR);
+      this.initExerciseListOnPRbasis();
     } else {
       console.log('ERROR: pasting PR of index ' + index);
     }
@@ -599,7 +601,7 @@ export class UserComponent implements OnInit {
       this.newExercise.name = (document.getElementById("pr_" + exerciseIndex) as HTMLInputElement).value;
       document.getElementById("exerciseModalButton").click();
     }
-    else
+    else 
       this.assignExercise(event.item, exerciseIndex);
 
   }
@@ -607,6 +609,7 @@ export class UserComponent implements OnInit {
   /** After selecting an exercise this function performs a copy of all fields of selected exercises in the current exercise (except for series) */
   assignExercise(newExercise, exerciseIndex: number) {
     this.personalRecordList[exerciseIndex].exercise = _.cloneDeep(newExercise);
+    this.initExerciseListOnPRbasis();
     console.log(this.personalRecordList[exerciseIndex]);
   }
 

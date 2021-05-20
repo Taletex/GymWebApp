@@ -25,7 +25,7 @@
             </select>
         </div>
         <div class="col-6 col-md-3 d-flex flex-column justify-content-center form-group pl-2 pr-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">
-            <label class="col-form-label col-form-label-sm p-0 text-muted">Utente</label>
+            <label class="col-form-label col-form-label-sm p-0 text-muted">{{filters && filters.filterUserListType && filters.filterUserListType != 'links' ? 'Utente' : 'Collegamento'}}</label>
             <div class="input-group">
                 <input type="text" [(ngModel)]="filters.name" class="form-control form-control-sm" (keyup)="filterUsers($event)"
                     id="filterAuthorName" name="filterAuthorName" placeholder="Nome..." [disabled]="bLoading">
@@ -43,7 +43,7 @@
             </select>
         </div>
         <div class="col-6 col-md-2 d-flex flex-column justify-content-center form-group pl-2 pr-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">
-            <label for="filterDoB" class="col-form-label col-form-label-sm p-0 text-muted">DoB</label>
+            <label for="filterDoB" class="col-form-label col-form-label-sm p-0 text-muted">Data Nascita</label>
             <input type="date" [(ngModel)]="filters.dateOfBirth" class="form-control form-control-sm" (keyup)="filterUsers($event)" (change)="filterUsers($event)"
                     id="filterDoB" name="filterDoB" [disabled]="bLoading">
         </div>
@@ -73,7 +73,7 @@
         <div class="maincontainer__header table-header card-header pl-2 pr-3 border-bottom border-secondary d-flex flex-column justify-content-center bg-dark text-white">
             <div class="col-12 row m-0 p-0 d-flex align-items-center justify-content-center">
                 <div class="col-6 col-md-3 d-flex align-items-center" (click)="sortListByFieldUI('user')" [ngClass]="{'cursor-pointer': !bLoading}">
-                    <div><b class="d-block">Utente</b></div>
+                    <div><b class="d-block">{{filters && filters.filterUserListType && filters.filterUserListType != 'links' ? 'Utente' : 'Collegamento'}}</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['user']==null, 'fa fa-long-arrow-down': sortListStatus['user']==false, 'fa fa-long-arrow-up': sortListStatus['user']==true}"></span></div>
                 </div>
                 <div class="col-3 col-md-2 d-flex align-items-center" (click)="sortListByFieldUI('userType')" [ngClass]="{'cursor-pointer': !bLoading}">
@@ -81,7 +81,7 @@
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['userType']==null, 'fa fa-long-arrow-down': sortListStatus['userType']==false, 'fa fa-long-arrow-up': sortListStatus['userType']==true}"></span></div>
                 </div>
                 <div class="col-2 d-none d-md-flex align-items-center" (click)="sortListByFieldUI('dateOf Birth')" [ngClass]="{'cursor-pointer': !bLoading}">
-                    <div><b class="d-block">DoB</b></div>
+                    <div><b class="d-block">Data Nascita</b></div>
                     <div class="ml-2 fa"><span [ngClass]="{'fa fa-arrows-v': sortListStatus['dateOfBirth']==null, 'fa fa-long-arrow-down': sortListStatus['dateOfBirth']==false, 'fa fa-long-arrow-up': sortListStatus['dateOfBirth']==true}"></span></div>
                 </div>
                 <div class="col-1 d-none d-md-flex align-items-center" (click)="sortListByFieldUI('sex')" [ngClass]="{'cursor-pointer': !bLoading}">
@@ -107,7 +107,7 @@
                 <img src="assets/icons/misc/alert.svg" style="width:40px; height:auto;">
                 <span class="badge badge-light mt-2 white-space-initial" [hidden]="filters.filterUserListType == 'links'">Nessun utente presente nella piattaforma</span>
                 <div class="badge badge-light mt-2 white-space-initial" [hidden]="filters.filterUserListType == 'all'">
-                    <span class="d-block font-size-10">Non hai nessun collegamento attivo!</span>
+                    <span class="d-block font-size-10">Non hai nessun <span class="text-primary">collegamento</span> attivo!</span>
                     <span class="d-block font-size-9 mt-2">Clicca qui sotto per visualizzare gli utenti del sistema e iniziare a collegarti con loro!</span>
                 </div>
                 <button class="btn btn-sm btn-outline-info mt-2" [hidden]="filters.filterUserListType == 'all'" (click)="filters.filterUserListType = 'all'; setUserList(null);">Mostra Utenti</button>
