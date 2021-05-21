@@ -440,13 +440,12 @@ $custom-lightgray: rgb(179 179 179 / 15%);
   align-items: center;
   opacity: 1;
 
-  @media screen and (max-width: 1400px) {
+  @media screen and (max-width: 1200px) {
     img {
-      width: 14px !important;
+      width: 16px !important;
       height: auto;
     }
   }
-
   &:hover {
     opacity: .75;
   }
@@ -1396,6 +1395,12 @@ ngb-carousel .picsum-img-wrapper>img {
   }
 }
 
+@for $i from 0 through 100 {
+  .min-h-vh-#{$i} {
+    height: $i*1vh !important;
+  }
+}
+
 .h6 {
   font-size: 1rem;
   word-break: break-all;
@@ -1541,4 +1546,7 @@ ngb-carousel .picsum-img-wrapper>img {
   }
 }
 
-
+.cal-event {
+  width: 18px !important;
+  height: 18px !important;
+}
