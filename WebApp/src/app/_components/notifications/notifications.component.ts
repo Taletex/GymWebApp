@@ -5,7 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Notification, User } from '@app/_models/training-model';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { Account, Role } from '@app/_models';
-import { NOTIFICATION_TYPE, NOTIFICATION_ONLY_DISMISS } from '@app/_services/general-service/general-service.service';
+import { NOTIFICATION_TYPE, NOTIFICATION_ONLY_DISMISS, NOTIFICATION_TYPE_NAMES } from '@app/_services/general-service/general-service.service';
 import * as _ from "lodash";
 
 @Component({
@@ -23,6 +23,7 @@ export class NotificationsComponent implements OnInit {
   public sortListStatus: any;
   private currentSortField: any;
   public NOTIFICATION_TYPE = NOTIFICATION_TYPE;
+  public NOTIFICATION_TYPE_NAMES = NOTIFICATION_TYPE_NAMES;
   public bWindowOverMd: boolean;
   private lastWindowWidth: number;
   private triggerWidth: number = 767.98;

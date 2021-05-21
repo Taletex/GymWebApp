@@ -17,7 +17,7 @@ export class SidebarComponent implements OnInit {
 
   public account: Account;
   public Role = Role;
-  public unreadNotificationLength: number;
+  public unreadNotificationsLength: number;
 
   // pagemode
   public PAGEMODE = PAGEMODE;
@@ -31,7 +31,7 @@ export class SidebarComponent implements OnInit {
   constructor(public router: Router, private accountService: AccountService, private generalService: GeneralService) {
     this.accountService.account.subscribe(x => {
       this.account = x;
-      this.unreadNotificationLength = (_.filter(this.account.user.notifications, function(n) { return !n.bConsumed; })).length;
+      this.unreadNotificationsLength = (_.filter(this.account.user.notifications, function(n) { return !n.bConsumed; })).length;
     });
     
     // Init responsiveness aux

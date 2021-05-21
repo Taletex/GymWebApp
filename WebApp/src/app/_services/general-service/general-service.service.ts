@@ -63,6 +63,20 @@ export enum NOTIFICATION_TYPE {
     DISMISS = "dismiss"
 }
 
+export const NOTIFICATION_TYPE_NAMES = {
+    coach_request: "Richiesta Coach",
+    athlete_request: "Richiesta Atleta",
+    request_success: "Richiesta accettata",
+    request_refuse: "Richiesta rifiutata",
+    cancel_athlete_to_coach_link: "Cancella collegamento Atleta → Coach",
+    cancel_coach_to_athlete_link: "Cancella collegamento Coach → Atleta",
+    cancel_athlete_to_coach_link_request: "Cancella richiesta collegamento Atleta → Coach",
+    cancel_coach_to_athlete_link_request: "Cancella richiesta collegamento Coach → Atleta",
+    training_created: "Allenamento creato",
+    training_modified: "Allenamento modificato",
+    dismiss: "Visualizza"
+}
+
 export const NOTIFICATION_ONLY_DISMISS = [
     NOTIFICATION_TYPE.REQUEST_SUCCESS,
     NOTIFICATION_TYPE.REQUEST_REFUSE,

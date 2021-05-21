@@ -28,8 +28,10 @@
         <div class="col-6 col-md-3 d-flex flex-column justify-content-center form-group pl-2 pr-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">
             <label class="col-form-label col-form-label-sm p-0 text-muted">Tipo</label>
             <div class="input-group">
-                <input type="text" [(ngModel)]="filters.type" class="form-control form-control-sm" (keyup)="filterNotifications($event)"
-                    id="filterType" name="filterType" placeholder="Tipo..." [disabled]="bLoading">
+                <select [(ngModel)]="filters.type" class="form-control form-control-sm cursor-pointer" id="filterType" name="filterType" (change)="filterNotifications($event)" [disabled]="bLoading">
+                    <option [value]="''" selected>Tutti</option>
+                    <option *ngFor="let t of NOTIFICATION_TYPE | keyvalue" [value]="t.value" class="text-capitalize">{{NOTIFICATION_TYPE_NAMES[t.value]}}</option>
+                </select>
             </div>
         </div>
         <div class="col-12 col-md-3 d-flex flex-column justify-content-center form-group pl-2 pr-1 mt-2 mb-0 m-md-0" *ngIf="filters.bExpanded">
@@ -120,7 +122,7 @@
                         [ngClass]="{'list-group-item-cyan': !elem.bConsumed, 'bg-custom-lightgray': elem.bConsumed}">
                             <!-- <div class="d-inline d-md-none col-2"><img src="assets/icons/actions/plus.svg" class="table-icon-md"></div> -->
                             <div class="d-none d-md-inline col-md-1"><img [hidden]="elem.bConsumed" src="assets/icons/misc/dot.svg" class="table-icon-lg"></div>
-                            <div class="d-none d-md-inline col-md-2 truncate-fullwidth"><span>{{elem.type}}</span></div>
+                            <div class="d-none d-md-inline col-md-2 truncate-fullwidth"><span>{{NOTIFICATION_TYPE_NAMES[elem.type]}}</span></div>
                             <div class="d-none d-md-inline col-md-2 truncate-fullwidth"><span>{{elem.creationDate | date:'HH:mm:ss - dd/MM/yyyy'}}</span></div>
                             <div class="d-none d-md-inline col-md-2 truncate-fullwidth"><span>{{elem.from.name != null ? elem.from.name : ''}} {{elem.from.surname != null ? elem.from.surname : elem.from}}</span></div>
                             <div class="col-9 col-md-3"><div [innerHTML]="elem.message"></div></div>

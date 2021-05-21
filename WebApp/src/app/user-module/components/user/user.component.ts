@@ -6,7 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { Account, Role } from '@app/_models';
-import { GeneralService, NOTIFICATION_TYPE, PAGEMODE, PAGES, PageStatus, USERPROFILE_SECTIONS } from '@app/_services/general-service/general-service.service';
+import { GeneralService, NOTIFICATION_TYPE, NOTIFICATION_TYPE_NAMES, PAGEMODE, PAGES, PageStatus, USERPROFILE_SECTIONS } from '@app/_services/general-service/general-service.service';
 import { UserService } from '@app/user-module/services/user-service/user-service.service';
 
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -89,6 +89,7 @@ export class UserComponent implements OnInit {
 
   // User service aux
   public NOTIFICATION_TYPE = NOTIFICATION_TYPE;
+  public NOTIFICATION_TYPE_NAMES = NOTIFICATION_TYPE_NAMES;
   public OPTION_VISIBILITY = OPTION_VISIBILITY;
   public USER_VALIDATIONS: any;
 

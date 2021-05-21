@@ -1,10 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Account, Role } from '@app/_models';
+import { Account, APP_PAGES, Role } from '@app/_models';
 import { Notification } from '@app/_models/training-model';
 import { AccountService } from '@app/_services/account-service/account-service.service';
-import { NOTIFICATION_TYPE } from '@app/_services/general-service/general-service.service';
+import { NOTIFICATION_TYPE, NOTIFICATION_TYPE_NAMES } from '@app/_services/general-service/general-service.service';
 import { HttpService } from '@app/_services/http-service/http-service.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -18,17 +18,19 @@ export class NavbarComponent implements OnInit {
   @Input() sidebarOptions: any;
   public account: Account;
   public Role = Role;
-  public unreadNotificationLength: number;
+  public unreadNotificationsLength: number;
   public unreadNotificationList: Notification[];
   public baseServerUrl = this.httpService.baseServerUrl;
   public bLoading = false;
   public NOTIFICATION_TYPE = NOTIFICATION_TYPE;
+  public NOTIFICATION_TYPE_NAMES = NOTIFICATION_TYPE_NAMES;
+  public APP_PAGES = APP_PAGES;
 
   constructor(private toastr: ToastrService, public router: Router, private accountService: AccountService, private httpService: HttpService) {
     this.accountService.account.subscribe((x) => {
       this.account = x;
       this.unreadNotificationList = (this.account.user.notifications.filter(n => !n.bConsumed));
-      this.unreadNotificationLength = this.unreadNotificationList.length;
+      this.unreadNotificationsLength = this.unreadNotificationList.length;
     });
   }
 

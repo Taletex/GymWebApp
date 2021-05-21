@@ -56,7 +56,7 @@
                             [maxlength]="ACCOUNT_VALIDATORS.MAX_PSW_LENGTH"
                             [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
                             [type]="bShowPsw ? 'text' : 'password'" />
-                        <div class="input-group-append cursor-pointer" (click)="bShowPsw = !bShowPsw">
+                        <div class="input-group-append cursor-pointer input-group-append-max-xxl" (click)="bShowPsw = !bShowPsw">
                             <span class="input-group-text bg-white d-flex align-items-center fa fa-eye"
                                 [ngClass]="{'fa-eye-slash': bShowPsw}"></span>
                         </div>
@@ -75,7 +75,7 @@
                             [maxlength]="ACCOUNT_VALIDATORS.MAX_PSW_LENGTH"
                             [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }"
                             [type]="bShowConfirmPsw ? 'text' : 'password'" />
-                        <div class="input-group-append cursor-pointer" (click)="bShowConfirmPsw = !bShowConfirmPsw">
+                        <div class="input-group-append cursor-pointer input-group-append-max-xxl" (click)="bShowConfirmPsw = !bShowConfirmPsw">
                             <span class="input-group-text bg-white d-flex align-items-center fa fa-eye"
                                 [ngClass]="{'fa-eye-slash': bShowConfirmPsw}"></span>
                         </div>
