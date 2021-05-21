@@ -48,14 +48,29 @@ DROP MONGO DB:
 - Basta inserire da linea di comando: mongo gymapp --eval "db.dropDatabase()"
 
 
+AVVIARE MONGODB E SETTARE UTENZA (username e psw)
+1. Posizionarsi nella folder root dell'utente root (di default quando ti colleghi stai li)
+2. Installare mongodb: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/
+3. Aprire il terminale mongo
+	a. use gymapp
+	b. db.createUser({user: "taletex",pwd: "psw",roles: [ { role: "dbOwner", db: "gymapp" } ]})
+	c. chiudi terminale mongo
+4. Aprire il file /etc/mongod.conf
+	a. decommentare la riga #security
+	b. sotto questa riga aggiungere      authorization: enabled
+	c. chiudi e salva il file
+5. Sempre dalla folder root dell'utente root riavvia mongo: sudo systemctl restart mongod
+6. Riavvia il server e assicurati che si connetta al db usando le credenziali corrette
+Note: https://stackoverflow.com/questions/4881208/how-to-secure-mongodb-with-username-and-password
+
+
 TRASFERIMENTO CON FILE ZILLA
 Indirizzo: sftp://139.59.153.56
 username: root
 psw (la psw)
 
 
-
-Avviare solo server NodeServer.
+AVVIARE SOLO SERVER NODESERVER
 0. cd ..
 1. cd GymWebApp
 2. cd NodeServer

@@ -8,7 +8,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="card h-100">
+                <div class="card">
                     <div class="card-body h-100">
                         <div class="form-row m-0">
                             <div class="form-row m-0">
@@ -27,12 +27,6 @@
                                     <input type="number" min=0.1 [(ngModel)]="newExercise.variant.intensityCoefficient" class="form-control form-control-sm" id="exerciseVariantCoefficient" name="exerciseVariantCoefficient"
                                         required [min]="EXERCISE_VALIDATIONS.MIN_INTENSITY_COEFFICIENT_NUMBER" [max]="EXERCISE_VALIDATIONS.MAX_INTENSITY_COEFFICIENT_NUMBER"
                                         [ngClass]="{'is-invalid': (newExercise.variant.intensityCoefficient == null || newExercise.variant.intensityCoefficient < EXERCISE_VALIDATIONS.MIN_INTENSITY_COEFFICIENT_NUMBER || newExercise.variant.intensityCoefficient > EXERCISE_VALIDATIONS.MAX_INTENSITY_COEFFICIENT_NUMBER)}">
-                                </div>
-                                <div class="col-12 form-group">
-                                    <label for="exerciseDescription" class="col-form-label col-form-label-sm text-muted">Descrizione</label>
-                                    <textarea maxlength="60" [(ngModel)]="newExercise.description" class="form-control form-control-sm" id="exerciseDescription" name="exerciseDescription"
-                                        [maxlength]="EXERCISE_VALIDATIONS.MAX_EXERCISE_DESCRIPTION_LENGTH" [ngClass]="{'is-invalid': newExercise.description.length > EXERCISE_VALIDATIONS.MAX_EXERCISE_DESCRIPTION_LENGTH}">
-                                    </textarea>
                                 </div>
                                 <div class="col-12 col-xl-6 form-group">
                                     <label for="exerciseGroups" class="col-form-label col-form-label-sm text-muted">Gruppi</label>
@@ -82,14 +76,26 @@
                                         </ng-template>
                                     </ng-multiselect-dropdown>
                                 </div>
+                                <div class="col-12 form-group">
+                                    <label for="exerciseDescription" class="col-form-label col-form-label-sm text-muted">Descrizione</label>
+                                    <textarea maxlength="60" [(ngModel)]="newExercise.description" class="form-control form-control-sm" id="exerciseDescription" name="exerciseDescription"
+                                        [maxlength]="EXERCISE_VALIDATIONS.MAX_EXERCISE_DESCRIPTION_LENGTH" [ngClass]="{'is-invalid': newExercise.description.length > EXERCISE_VALIDATIONS.MAX_EXERCISE_DESCRIPTION_LENGTH}">
+                                    </textarea>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer" style="overflow:visible">
-                <button type="submit" ngbAutofocus class="btn btn-success" [ngClass]="{'disabled header-invalid cursor-not-allowed': !isExerciseValidToSubmit(newExercise)}" 
-                    ngbTooltip="Alcuni input presentano valori errati" [disableTooltip]="isExerciseValidToSubmit(newExercise)">CREA</button>
+            <div class="modal-footer overflow-visible">
+                <div class="form-group d-flex align-items-center justify-content-end">
+                    <button type="submit" [disabled]="bLoading" ngbAutofocus class="btn btn-sm-sm btn-success mr-2"
+                        [ngClass]="{'disabled header-invalid cursor-not-allowed': !isExerciseValidToSubmit(newExercise)}"
+                        ngbTooltip="Alcuni input presentano valori errati"
+                        [disableTooltip]="isExerciseValidToSubmit(newExercise)">Crea</button>
+                    <div [disabled]="bLoading" class="btn btn-sm-sm btn-secondary"
+                        (click)="modal.dismiss('Cancel')">Annulla</div>
+                </div>
             </div>
         </form>
         

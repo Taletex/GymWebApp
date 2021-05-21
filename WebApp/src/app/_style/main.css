@@ -4582,6 +4582,9 @@ ngb-carousel .picsum-img-wrapper > img {
     line-height: 1.5 !important;
     border-radius: 0.2rem !important;
   }
+  .btn-sm-sm.header-invalid {
+    padding-right: 1.7rem !important;
+  }
 }
 
 .cal-event {

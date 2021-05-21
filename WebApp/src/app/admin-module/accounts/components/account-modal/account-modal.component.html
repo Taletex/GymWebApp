@@ -9,7 +9,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="card h-100">
+                <div class="card">
                     <div class="card-body h-100">
 
                         <!-- USER INFORMATIONS -->
@@ -120,11 +120,12 @@
             </div>
             <div class="modal-footer overflow-visible">
                 <div class="form-group d-flex align-items-center justify-content-end">
-                    <button [disabled]="bLoading" ngbAutofocus class="btn btn-sm-sm btn-success mr-2"><span
-                            *ngIf="bLoading" class="spinner-border spinner-border-sm mr-1"></span>Salva</button>
+                    <button [disabled]="bLoading" ngbAutofocus class="btn btn-sm-sm btn-success mr-2"
+                        [ngClass]="{'disabled header-invalid cursor-not-allowed': submitted && form.invalid}"
+                        ngbTooltip="Alcuni input presentano valori errati"
+                        [disableTooltip]="!submitted || (submitted && !form.invalid)">Crea</button>
                     <button [disabled]="bLoading" class="btn btn-sm-sm btn-secondary"
-                        (click)="modal.dismiss('Cancel')"><span *ngIf="bLoading"
-                            class="spinner-border spinner-border-sm mr-1"></span>Annulla</button>
+                        (click)="modal.dismiss('Cancel')">Annulla</button>
                 </div>
             </div>
         </form>

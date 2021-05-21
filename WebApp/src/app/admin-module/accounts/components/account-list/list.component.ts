@@ -89,9 +89,9 @@ export class ListComponent implements OnInit {
 
               this.toastr.success('Account successfully created!');
             },
-            (error: HttpErrorResponse) => {
+            (error: any) => {
               this.bLoading = false;
-              this.toastr.error('An error occurred while creating the account!');
+              this.toastr.error(error ||'An error occurred while creating the account!');
               console.log(error);
             });
       }
