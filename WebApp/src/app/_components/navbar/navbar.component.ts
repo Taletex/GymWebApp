@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MESSAGES } from '@app/_helpers';
 import { Account, APP_PAGES, Role } from '@app/_models';
 import { Notification } from '@app/_models/training-model';
 import { AccountService } from '@app/_services/account-service/account-service.service';
@@ -54,11 +55,11 @@ export class NavbarComponent implements OnInit {
         // Note: this function doesn't need to update user and notification list because this is done using the socket!
         this.bLoading = false;
         console.log("acceptRequest result data", data);
-        this.toastr.success('Richiesta correttamente accettata!');
+        this.toastr.success(MESSAGES.NOTIFICATION_ACCEPTED);
       },
       (error: HttpErrorResponse) => {
         this.bLoading = false;
-        this.toastr.error("Si è verificato un errore durante l'invio di accettazione richiesta");
+        this.toastr.error(String(error) || String(error) || MESSAGES.NOTIFICATION_ACCEPTED_FAIL);
         console.log("acceptRequest error", error);
       });
   }
@@ -71,11 +72,11 @@ export class NavbarComponent implements OnInit {
         // Note: this function doesn't need to update user and notification list because this is done using the socket!
         this.bLoading = false;
         console.log("refuseRequest result data", data);
-        this.toastr.success('Richiesta correttamente rifiutata!');
+        this.toastr.success(MESSAGES.NOTIFICATION_REFUSED);
       },
       (error: HttpErrorResponse) => {
         this.bLoading = false;
-        this.toastr.error("Si è verificato un errore durante l'invio di rifiuto richiesta");
+        this.toastr.error(String(error) || MESSAGES.NOTIFICATION_REFUSED_FAIL);
         console.log("refuseRequest error", error);
       });
   }
@@ -89,11 +90,11 @@ export class NavbarComponent implements OnInit {
         // Note: this function doesn't need to update user and notification list because this is done using the socket!
         this.bLoading = false;
         console.log("dismissNotification result data", data);
-        this.toastr.success('Richiesta visualizzata!');
+        this.toastr.success(MESSAGES.NOTIFICATION_DISMISSED);
       },
       (error: HttpErrorResponse) => {
         this.bLoading = false;
-        this.toastr.error("Si è verificato un errore durante l'invio di visualizzazione richiesta");
+        this.toastr.error(String(error) || MESSAGES.NOTIFICATION_DISMISSED_FAIL);
         console.log("dismissNotification error", error);
       });
   }

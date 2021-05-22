@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import * as _ from 'lodash';
 import { HttpErrorResponse } from '@angular/common/http';
 import { GeneralService, PAGEMODE, PAGES } from '@app/_services/general-service/general-service.service';
+import { MESSAGES } from '@app/_helpers';
 
 @Component({ templateUrl: 'list.component.html', styleUrls: ['./list.component.scss'] })
 export class ListComponent implements OnInit {
@@ -70,7 +71,7 @@ export class ListComponent implements OnInit {
             },
                 (error: HttpErrorResponse) => {
                     this.bLoading = false;
-                    this.toastr.error('An error occurred while loading the account list!');
+                    this.toastr.error(String(error) || MESSAGES.ACCOUNTS_GET_FAIL);
                     console.log(error);
                 });
     }
@@ -87,11 +88,11 @@ export class ListComponent implements OnInit {
               this.resetFilters();
               this.initNewAccountModalResult();
 
-              this.toastr.success('Account successfully created!');
+              this.toastr.success(MESSAGES.ACCOUNT_CREATE_SUCCESS);
             },
-            (error: any) => {
+            (error: HttpErrorResponse) => {
               this.bLoading = false;
-              this.toastr.error(error ||'An error occurred while creating the account!');
+              this.toastr.error(String(error) || MESSAGES.ACCOUNT_CREATE_FAIL);
               console.log(error);
             });
       }
@@ -109,11 +110,11 @@ export class ListComponent implements OnInit {
                     this.accountList = _.cloneDeep(_.sortBy(this.originalAccountList, ['role', 'user.name', 'user.surname']));
                     this.filterAccounts(null);
 
-                    this.toastr.success('Account successfully deleted!');
+                    this.toastr.success(MESSAGES.ACCOUNT_DELETE_SUCCESS);
                 },
                     (error: HttpErrorResponse) => {
                         this.bLoading = false;
-                        this.toastr.error('An error occurred while deleting the account!');
+                        this.toastr.error(String(error) || MESSAGES.ACCOUNT_DELETE_FAIL);
                         console.log(error);
                     });
         }

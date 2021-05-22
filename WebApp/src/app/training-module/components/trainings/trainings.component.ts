@@ -9,6 +9,7 @@ import { Role } from '@app/_models';
 import { TrainingService } from '@app/training-module/services/training-service/training-service.service';
 import { forkJoin } from 'rxjs';
 import * as _ from "lodash";
+import { MESSAGES } from '@app/_helpers';
 
 @Component({
   selector: 'app-trainings',
@@ -82,7 +83,7 @@ export class TrainingsComponent implements OnInit {
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
-          this.toastr.error('An error occurred while loading the training and athlete list.');
+          this.toastr.error(String(error) || MESSAGES.TRAINING_ATHLETE_GET_FAIL);
           console.log(error);
         });
   }
@@ -99,11 +100,11 @@ export class TrainingsComponent implements OnInit {
           this.resetFilters();
 
           this.initNewTraining();
-          this.toastr.success('Training successfully created.');
+          this.toastr.success(MESSAGES.TRAINING_CREATE_SUCCESS);
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
-          this.toastr.error('An error occurred while creating the training.');
+          this.toastr.error(String(error) || MESSAGES.TRAINING_CREATE_FAIL);
           console.log(error);
         });
   }
@@ -118,11 +119,11 @@ export class TrainingsComponent implements OnInit {
             this.originalTrainingList.splice(this.originalTrainingList.findIndex((t) => { return t._id == id; }), 1);
             this.trainingList = _.cloneDeep(_.orderBy(this.originalTrainingList, ['startDate', 'type'], ['desc', 'asc']));
             this.filterTrainings(null);
-            this.toastr.success('Training successfully deleted.');
+            this.toastr.success(MESSAGES.TRAINING_DELETE_SUCCESS);
           },
           (error: HttpErrorResponse) => {
             this.bLoading = false;
-            this.toastr.error('An error occurred while deleting the training.');
+            this.toastr.error(String(error) || MESSAGES.TRAINING_DELETE_FAIL);
             console.log(error);
           });
     }
@@ -131,14 +132,14 @@ export class TrainingsComponent implements OnInit {
   /* IMPORT/EXPORT FUNCTIONS */
   exportTraining(training: Training) {
     this.trainingService.exportTraining(training);
-    this.toastr.success("Training successfully exported.");
+    this.toastr.success(MESSAGES.TRAINING_EXPORT_SUCCESS);
   }
 
   exportAllTrainings() {
     for(let i=0; i<this.originalTrainingList.length; i++) {
       this.trainingService.exportTraining(this.originalTrainingList[i]);
     }
-    this.toastr.success("Trainings successfully exported.");
+    this.toastr.success(MESSAGES.TRAININGS_EXPORT_SUCCESS);
   }
 
 

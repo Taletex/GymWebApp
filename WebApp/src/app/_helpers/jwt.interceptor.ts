@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import { AccountService } from '@app/_services/account-service/account-service.service';
+import { error } from '@angular/compiler/src/util';
 
 
 @Injectable()

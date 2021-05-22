@@ -11,6 +11,7 @@ import { GeneralService, PAGEMODE, PAGES, PageStatus } from '@app/_services/gene
 import { ExerciseService } from '@app/_services/exercise-service/exercise-service.service';
 import * as _ from 'lodash';
 import * as $ from 'jquery';
+import { MESSAGES } from '@app/_helpers';
 
 @Component({
   selector: 'app-exercise',
@@ -90,7 +91,8 @@ export class ExerciseComponent implements OnInit {
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
-          this.toastr.error('An error occurred while loading the exercise!');
+          this.toastr.error(String(error) || MESSAGES.EXERCISE_GET_FAIL);
+          this.router.navigate([PAGES.EXERCISES]);
           console.log(error);
         });
   }
@@ -107,7 +109,7 @@ export class ExerciseComponent implements OnInit {
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
-          this.toastr.error('An error occurred while loading the exercise list!');
+          this.toastr.error(String(error) || MESSAGES.EXERCISES_GET_FAIL);
           console.log(error);
         });
   }
@@ -173,7 +175,7 @@ export class ExerciseComponent implements OnInit {
 
   saveExercise() {
     if(!this.isExerciseValidToSubmit(this.exercise)) {
-      this.toastr.warning("Salvataggio non riuscito: alcuni campi non sono correttamente valorizzati!");
+      this.toastr.warning(MESSAGES.SAVE_FAIL_CAUSE_FORM);
       return;
     }
 
@@ -190,11 +192,11 @@ export class ExerciseComponent implements OnInit {
         this.bLoading = false;
         this.exercise = data;
         this.initImageInputAuxVariables();
-        this.toastr.success('Exercise successfully updated!');
+        this.toastr.success(MESSAGES.EXERCISE_UPDATE_SUCCESS);
       },
       (error: HttpErrorResponse) => {
         this.bLoading = false;
-        this.toastr.error('An error occurred while updating the exercise!');
+        this.toastr.error(String(error) || MESSAGES.EXERCISE_UPDATE_FAIL);
         console.log(error);
       });
   }
@@ -206,12 +208,12 @@ export class ExerciseComponent implements OnInit {
         .subscribe(
           (data: any) => {
             this.bLoading = false;
-            this.toastr.success('Exercise successfully deleted!');
+            this.toastr.success(MESSAGES.EXERCISE_DELETE_SUCCESS);
             this.router.navigate(['exercises']);
           },
           (error: HttpErrorResponse) => {
             this.bLoading = false;
-            this.toastr.error('An error occurred while deleting the exercise!');
+            this.toastr.error(String(error) || MESSAGES.EXERCISE_DELETE_FAIL);
             console.log(error);
           });
     }

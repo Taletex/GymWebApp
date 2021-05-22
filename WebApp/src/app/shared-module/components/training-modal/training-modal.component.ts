@@ -5,6 +5,7 @@ import { UtilsService } from '@app/_services/utils-service/utils-service.service
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { TrainingService } from '@app/training-module/services/training-service/training-service.service';
 import { ToastrService } from 'ngx-toastr';
+import { MESSAGES } from '@app/_helpers';
 
 @Component({
   selector: 'app-training-modal',
@@ -66,7 +67,7 @@ export class TrainingModalComponent implements OnInit {
 
   submit() {
     if(!this.areBasicTrainingInfosValidToSubmit(this.newTraining)) {
-      this.toastr.warning("Creazione non riuscita: alcuni campi non sono correttamente valorizzati!");
+      this.toastr.warning(MESSAGES.SAVE_FAIL_CAUSE_FORM);
       return;
     }
 

@@ -16,6 +16,7 @@ import { Role } from '@app/_models';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { stringify } from '@angular/compiler/src/util';
+import { MESSAGES } from '@app/_helpers';
 
 declare const tinymce: any;
 const NOTIFICATION_WAIT_SECONDS: number = 30;
@@ -161,7 +162,8 @@ export class TrainingComponent implements OnInit {
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
-          this.toastr.error('An error occurred while loading the training!');
+          this.toastr.error(String(error) || MESSAGES.TRAINING_GET_FAIL);
+          this.router.navigate([PAGES.TRAININGS]);
           console.log(error);
         });
 
@@ -323,7 +325,7 @@ export class TrainingComponent implements OnInit {
       },
       (error: HttpErrorResponse) => {
         this.bLoading = false;
-        this.toastr.error('An error occurred while loading the exercise list!');
+        this.toastr.error(String(error) || MESSAGES.EXERCISES_GET_FAIL);
         console.log(error);
       });
   }
@@ -335,7 +337,7 @@ export class TrainingComponent implements OnInit {
         (data: any) => {
           this.bLoading = false;
           this.assignExercise(data, this.currentExerciseList, this.currentExerciseIndex);
-          this.toastr.success('Exercise successfully created!');
+          this.toastr.success(MESSAGES.EXERCISE_CREATE_SUCCESS);
 
           // Re init exercise list
           this.getExercises();
@@ -343,7 +345,7 @@ export class TrainingComponent implements OnInit {
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
-          this.toastr.error('An error occurred while creating the exercise!');
+          this.toastr.error(String(error) || MESSAGES.EXERCISE_CREATE_FAIL);
           console.log(error);
         });
   }
@@ -704,7 +706,7 @@ export class TrainingComponent implements OnInit {
   saveTraining() {
 
     if(!this.trainingService.isTrainingValidToSubmit(this.training)) {
-      this.toastr.warning("Salvataggio non riuscito: sono presenti degli errori nella compilazione dell'allenamento!");
+      this.toastr.warning(MESSAGES.TRAINING_FORM_WARNING);
       return;
     }
 
@@ -717,11 +719,11 @@ export class TrainingComponent implements OnInit {
         this.bLoading = false;
         this.initTrainingsStructures(data);
         this.resetDraft();
-        this.toastr.success('Training successfully updated!');
+        this.toastr.success(MESSAGES.TRAINING_UPDATE_SUCCESS);
       },
       (error: HttpErrorResponse) => {
         this.bLoading = false;
-        this.toastr.error('An error occurred while updating the training!');
+        this.toastr.error(String(error) || MESSAGES.TRAINING_UPDATE_FAIL);
         console.log(error);
       });
   }
@@ -733,12 +735,12 @@ export class TrainingComponent implements OnInit {
       .subscribe(
         () => {
           this.bLoading = false;
-          this.toastr.success('Training successfully deleted!');
+          this.toastr.success(MESSAGES.TRAINING_DELETE_SUCCESS);
           this.router.navigate(['trainings']);
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
-          this.toastr.error('An error occurred while deleting the training!');
+          this.toastr.error(String(error) || MESSAGES.TRAINING_DELETE_FAIL);
           console.log(error);
         });
     }
@@ -810,7 +812,7 @@ export class TrainingComponent implements OnInit {
   convertPercentage(newMeasure?) {
     if(newMeasure) {
       this.readOnlyTraining = this.trainingService.convertPercentage(this.training, this.account.user.personalRecords, newMeasure);
-      this.toastr.warning("Note: exercises percentage value conversion has been done using the current user 1RM exercise with the best matching (in terms of exercise name and variant)");
+      this.toastr.warning(MESSAGES.EXERCISE_CONVERSION_WARNING);
     }
     else
       this.readOnlyTraining = _.cloneDeep(this.training);
@@ -855,7 +857,7 @@ export class TrainingComponent implements OnInit {
   /* IMPORT/EXPORT FUNCTIONS */
   exportTraining() {
     this.trainingService.exportTraining(this.training);
-    this.toastr.success("Training successfully exported.");
+    this.toastr.success(MESSAGES.TRAINING_EXPORT_SUCCESS);
   }
 
   importTraining(event: any) {
@@ -865,9 +867,9 @@ export class TrainingComponent implements OnInit {
       this.bTinyMCEEditorOpen = false;
       this.changeMode(PAGEMODE.READONLY);
 
-      this.toastr.success("Training successfully imported. Save it to keep the changes.");
+      this.toastr.success(MESSAGES.TRAINING_IMPORT_SUCCESS);
     }).error(() => {
-      this.toastr.error("An error occurs during import process");
+      this.toastr.error(MESSAGES.TRAINING_IMPORT_FAIL);
     })
   }
 
@@ -919,13 +921,13 @@ export class TrainingComponent implements OnInit {
       this.httpService.sendTrainingNotifications(this.training._id, _.map(this.training.athletes, function (a) { return a._id;}), notification)
       .subscribe(
         (data) => {
-          this.toastr.success("Notifica inviata correttamente a tutti gli atleti dell'allenamento!");
+          this.toastr.success(MESSAGES.TRAINING_NOTIFICATION_ALL_SUCCESS);
           console.log("sendNotifications data", data);
           this.bLoading = false;
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
-          this.toastr.error("Si è verificato un errore durante l'invio delle notifiche agli atleti dell'allenamento");
+          this.toastr.error(String(error) || MESSAGES.TRAINING_NOTIFICATION_FAIL);
           console.log("sendNotification error", error);
         });
     }
@@ -938,7 +940,7 @@ export class TrainingComponent implements OnInit {
       this.httpService.sendTrainingEmails(this.training, "<div style='font-family:Arial, Helvetica, sans-serif;'>" + this.generalService.trainingReadViewToString(this.readOnlyTraining, this.options) + "</div>")
       .subscribe(
         (data: any) => {
-          let message = "Notifica inviata correttamente agli atleti ";
+          let message: string = MESSAGES.TRAINING_NOTIFICATION_SUCCESS;
           if(data.successAthletes != null && data.successAthletes.length > 0) {
             for(let athlete of data.successAthletes) {
               message = message + ` ${athlete.name} ${athlete.surname},`;
@@ -950,7 +952,7 @@ export class TrainingComponent implements OnInit {
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
-          this.toastr.error("Si è verificato un errore durante l'invio delle email agli atleti dell'allenamento. Verifica che gli utenti destinatari abbiano configurato una email.");
+          this.toastr.error(String(error) || MESSAGES.TRAINING_EMAIL_FAIL);
           console.log("sendTrainingEmails error", error);
         });
     }

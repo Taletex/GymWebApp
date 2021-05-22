@@ -211,13 +211,13 @@ async function getById(id) {
 
 async function getAccountByUserId(userId) {
     if (!db.isValidId(userId)) throw 'Account not found';
-    const account = await db.Account.find({user: userId}).populate({ path: 'user', populate: {path: 'personalRecords', populate: {path: 'exercise'}}})
+    const account = await db.Account.findOne({user: userId}).populate({ path: 'user', populate: {path: 'personalRecords', populate: {path: 'exercise'}}})
                                                  .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}, populate: {path: 'from'}}})
                                                  .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}, populate: {path: 'destination'}}})
                                                  .populate({ path: 'user', populate: 'coaches'}).populate({ path: 'user', populate: 'athletes'});
 
     if (!account) throw 'Account not found';
-    return basicDetails(account[0]);
+    return basicDetails(account);
 }
 
 async function create(params) {

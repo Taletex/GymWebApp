@@ -3,6 +3,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Exercise, EXERCISE_GROUPS, TRAINING_STATES, TRAINING_TYPES } from '@app/_models/training-model';
 import { ExerciseService } from '@app/_services/exercise-service/exercise-service.service';
 import { ToastrService } from 'ngx-toastr';
+import { MESSAGES } from '@app/_helpers';
 
 @Component({
   selector: 'app-exercise-modal',
@@ -64,7 +65,7 @@ export class ExerciseModalComponent implements OnInit {
 
   submit() {
     if(!this.isExerciseValidToSubmit(this.newExercise)) {
-      this.toastr.warning("Creazione non riuscita: alcuni campi non sono correttamente valorizzati!");
+      this.toastr.warning(MESSAGES.SAVE_FAIL_CAUSE_FORM);
       return;
     }
 

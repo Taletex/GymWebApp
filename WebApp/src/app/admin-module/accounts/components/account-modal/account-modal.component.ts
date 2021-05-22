@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MustMatch } from '@app/_helpers';
+import { MESSAGES, MustMatch } from '@app/_helpers';
 import { Account, Role } from '@app/_models';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { HttpService } from '@app/_services/http-service/http-service.service';
@@ -77,7 +77,7 @@ export class AccountModalComponent implements OnInit {
 
     // stop here if form is invalid
     if (this.form.invalid) {
-      this.toastr.warning("Salvataggio non riuscito: sono presenti degli errori nella compilazione del form");
+      this.toastr.warning(MESSAGES.SAVE_FAIL_CAUSE_FORM);
       return;
     }
 

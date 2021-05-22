@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MESSAGES } from '@app/_helpers';
 import { Account } from '@app/_models';
 import { Notification, User } from '@app/_models/training-model';
 import { NOTIFICATION_TYPE } from '@app/_services/general-service/general-service.service';
@@ -140,7 +141,7 @@ export class UserService {
         },
         (error: HttpErrorResponse) => {
           console.log("Send Notification Error", error);
-          reject(error || "Send Notification Error");
+          reject(error || MESSAGES.NOTIFICATION_SENT_FAIL);
         });
     });
   }
@@ -171,7 +172,7 @@ export class UserService {
         },
         (error: HttpErrorResponse) => {
           console.log("cancelAthleteCoachLink error", error);
-          reject(error || "cancelAthleteCoachLink error");
+          reject(error || MESSAGES.NOTIFICATIONS_CANCEL_LINK_FAIL);
         });
     });
   }
@@ -201,7 +202,7 @@ export class UserService {
         },
         (error: HttpErrorResponse) => {
           console.log("dismissNotification error", error);
-          reject(error || "dismissNotification error");
+          reject(error || MESSAGES.NOTIFICATION_DISMISSED_FAIL);
         });
     });
   }

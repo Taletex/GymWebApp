@@ -40,7 +40,7 @@ module.exports = (io, clientSocketList) => {
         // Validate request
         if (!req.body) {
             return res.status(400).send({
-                message: "User content can not be empty"
+                message: "USER_CONTENT_EMPTY"
             });
         }
 
@@ -73,7 +73,7 @@ module.exports = (io, clientSocketList) => {
                 res.send(data);
             }).catch(err => {
                 res.status(500).send({
-                    message: err.message || "Some error occurred while creating the User."
+                    message: err.message || "USER_CREATE_GENERIC_ERROR"
                 });
             });
     };
@@ -88,7 +88,7 @@ module.exports = (io, clientSocketList) => {
                 res.send(_.sortBy(users, ['name', 'surname']));
             }).catch(err => {
                 res.status(500).send({
-                    message: err.message || "Some error occurred while retrieving users."
+                    message: err.message || "USERS_GET_FAIL"
                 });
             });
     };
@@ -103,7 +103,7 @@ module.exports = (io, clientSocketList) => {
                 res.send(_.sortBy(_.filter(users, function (user) { return (user.userType == "athlete" || user.userType == "both"); }), ['name', 'surname']));
             }).catch(err => {
                 res.status(500).send({
-                    message: err.message || "Some error occurred while retrieving users."
+                    message: err.message || "USERS_GET_FAIL"
                 });
             });
     };
@@ -118,32 +118,32 @@ module.exports = (io, clientSocketList) => {
                 res.send(_.sortBy(_.filter(users, function (user) { return (user.userType == "coach" || user.userType == "both"); }), ['name', 'surname']));
             }).catch(err => {
                 res.status(500).send({
-                    message: err.message || "Some error occurred while retrieving users."
+                    message: err.message || "USERS_GET_FAIL"
                 });
             });
     };
 
     // Find a single user with a id
     function findOneUser(req, res, next) {
-        User.find({ _id: req.params._id }).populate({path: 'personalRecords', populate: {path: 'exercise'}})
+        User.findById(req.params._id).populate({path: 'personalRecords', populate: {path: 'exercise'}})
                                             .populate({path: 'notifications', populate: {path: 'from'}})
                                             .populate({path: 'notifications', populate: {path: 'destination'}})
                                             .populate('coaches').populate('athletes')
             .then(user => {
                 if (!user) {
                     return res.status(404).send({
-                        message: "User not found with id " + req.params._id
+                        message: "USER_NOT_FOUND_ID", id: req.params._id
                     });
                 }
-                res.send(user[0]);
+                res.send(user);
             }).catch(err => {
                 if (err.kind === 'ObjectId') {
                     return res.status(404).send({
-                        message: "User not found with id " + req.params._id
+                        message: "USER_NOT_FOUND_ID", id: req.params._id
                     });
                 }
                 return res.status(500).send({
-                    message: "Error retrieving user with id " + req.params._id
+                    message: "EXERCISE_ERROR_FOUND_ID", id: req.params._id
                 });
             });
     };
@@ -183,12 +183,12 @@ module.exports = (io, clientSocketList) => {
         // Validate Request
         if (!req.body) {
             return res.status(400).send({
-                message: "User content can not be empty"
+                message: "USER_CONTENT_EMPTY"
             });
         }
 
         if(!areUserInformationsValidForSubmission(req.body) || !arePersonalRecordsValidForSubmission(req.body.personalRecords) || !areSettingsValidForSubmission(req.body.settings))
-            return res.status(500).send({message: "User informations are not valid"});
+            return res.status(500).send({message: "USER_CONTENT_INVALID"});
 
         // Save new profile picture if there is one, then update user
         let fileDir = fileManager.usersImagesBaseDir + "/" + req.params._id;
@@ -222,32 +222,32 @@ module.exports = (io, clientSocketList) => {
                     .then(user => {
                         if (!user) {
                             return res.status(404).send({
-                                message: "User not found with id " + req.params._id
+                                message: "USER_NOT_FOUND_ID", id: req.params._id
                             });
                         }
 
                         // Returns the user update by finding it in the database
-                        User.find({ _id: user._id }).populate({path: 'personalRecords', populate: {path: 'exercise'}})
+                        User.findById(user._id).populate({path: 'personalRecords', populate: {path: 'exercise'}})
                                                     .populate({path: 'notifications', populate: {path: 'from'}})
                                                     .populate({path: 'notifications', populate: {path: 'destination'}})
                                                     .populate('coaches').populate('athletes')
                             .then(users => {
-                                res.send(users[0]);
+                                res.send(users);
                             })
                     }).catch(err => {
                         if (err.kind === 'ObjectId') {
                             return res.status(404).send({
-                                message: "User not found with id " + req.params._id
+                                message: "USER_NOT_FOUND_ID", id: req.params._id
                             });
                         }
                         return res.status(500).send({
-                            message: "Error updating user with id " + req.params._id
+                            message: "USER_ERROR_FOUND_ID", id: req.params._id
                         });
                     });  
 
             }).catch((err) => {
                 return res.status(500).send({
-                    message: "Error saving profile picture",
+                    message: "USER_IMAGE_ERROR",
                     err: err
                 });
             })
@@ -259,18 +259,18 @@ module.exports = (io, clientSocketList) => {
             .then(user => {
                 if (!user) {
                     return res.status(404).send({
-                        message: "User not found with id " + req.params._id
+                        message: "USER_NOT_FOUND_ID", id: req.params._id
                     });
                 }
-                res.send({ message: "User deleted successfully!" });
+                res.send({ message: "USER_DELETE_SUCCESS" });
             }).catch(err => {
                 if (err.kind === 'ObjectId' || err.name === 'NotFound') {
                     return res.status(404).send({
-                        message: "User not found with id " + req.params._id
+                        message: "USER_NOT_FOUND_ID", id: req.params._id
                     });
                 }
                 return res.status(500).send({
-                    message: "Could not delete user with id " + req.params._id
+                    message: "USER_DELETE_FAIL_ID", id: req.params._id
                 });
             });
     };
@@ -282,14 +282,14 @@ module.exports = (io, clientSocketList) => {
     // Add a notification to a given User
     function sendNotification(req, res, next) {
         // Validate request
-        if (!req.body) { return res.status(400).send({ message: "Notification content can not be empty" }); }
+        if (!req.body) { return res.status(400).send({ message: "NOTIFICATION_CONTENT_EMPTY" }); }
 
         Promise.all([
             User.findOne({ _id: req.params._id }),
             User.findOne({ _id: req.body.from })
         ])
             .then(([dUser, fUser]) => {
-                if (!dUser || !fUser) { return res.status(404).send({ message: "User not found" }); }
+                if (!dUser || !fUser) { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
 
                 // 1. Check if request type is coach or athlete request and the link between coach and athlete does not exist (if it exists the notification can't be sent) or if the request has been yet sent
                 if((req.body.type == NOTIFICATION_TYPE.COACH_REQUEST && (!isLinkYetEstablished(dUser, fUser) && !isLinkRequestYetSent(fUser, dUser, NOTIFICATION_TYPE.COACH_REQUEST))) ||
@@ -307,7 +307,7 @@ module.exports = (io, clientSocketList) => {
                                     .populate({path: 'notifications', populate: {path: 'destination'}})
                                     .populate('coaches').populate('athletes')
                         .then(user => {
-                            if (!user) { return res.status(404).send({ message: "SendNotification: User not found with id " + req.params._id }); }
+                            if (!user) { return res.status(404).send({ message: "USER_NOT_FOUND_ID", id: req.params._id }); }
 
                             // 4. Update destUser informations in destUser and fromUser clients
                             notificationService.sendUpdatedUserToItsSocket(user);    
@@ -316,17 +316,17 @@ module.exports = (io, clientSocketList) => {
                             // 5. Send response to calling client
                             res.send(user);                      
                         }).catch(err => {
-                            if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found with id " + req.params._id }); }
-                            return res.status(500).send({ message: "SendNotification: Error updating user with id " + req.params._id + " (" + err + ")"});
+                            if (err.kind === 'ObjectId') { return res.status(404).send({ message: "USER_NOT_FOUND_ID", id: req.params._id }); }
+                            return res.status(500).send({ message: "USER_ERROR_UPDATE_ID", id: req.params._id});
                         });
                 } else {
-                    return res.status(500).send({ message: "SendNotification: Error sending the notification request (notification type not recognizer, link between athlete/coach already exists or request yet sent)" });
+                    return res.status(500).send({ message: "NOTIFICATION_SENT_GENERIC_ERROR" });
                 }
                 
                 
             }).catch(err => {
-                if (err.kind === 'ObjectId') { return res.status(404).send({ message: "SendNotification: User not found" }); }
-                return res.status(500).send({ message: "SendNotification: Error updating user with id " + req.params._id + " (" + err + ")"});
+                if (err.kind === 'ObjectId') { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
+                return res.status(500).send({ message: "USER_ERROR_UPDATE_ID", id: req.params._id});
             });
     };
 
@@ -342,7 +342,7 @@ module.exports = (io, clientSocketList) => {
             User.findOne({ _id: notification.from })
         ])
             .then(([dUser, fUser]) => {
-                if (!dUser || !fUser) { return res.status(404).send({ message: "User not found" }); }
+                if (!dUser || !fUser) { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
 
                 destinationUser = dUser;
                 fromUser = fUser;
@@ -359,7 +359,7 @@ module.exports = (io, clientSocketList) => {
                         destinationUser.coaches.push(notification.from);
                         fromUser.athletes.push(destinationUser._id);
                     } else {
-                        return res.status(500).send({ message: "Error updating users in accept notification: link between athlete and coach already exists." });
+                        return res.status(500).send({ message: "NOTIFICATION_LINK_YET_EXISTS_ERROR" });
                     }
 
                     // 3. add a notification to the from user (to inform about the request success)
@@ -386,7 +386,7 @@ module.exports = (io, clientSocketList) => {
                                         .populate('coaches').populate('athletes')
                     ])
                         .then(([destinationUser, fromUser]) => {
-                            if (!destinationUser || !fromUser) { return res.status(404).send({ message: "User not found" }); }
+                            if (!destinationUser || !fromUser) { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
 
                             // Update fromUser and destUser informations in destUser client
                             notificationService.sendUpdatedUserToItsSocket(destinationUser);                    
@@ -399,15 +399,15 @@ module.exports = (io, clientSocketList) => {
                             // Send response to calling client
                             res.send(destinationUser);                      
                         }).catch(err => {
-                            if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found" }); }
-                            return res.status(500).send({ message: "Error updating user in accept notification" });
+                            if (err.kind === 'ObjectId') { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
+                            return res.status(500).send({ message: "NOTIFICATION_ACCEPT_UPDATE_USER_ERROR" });
                         });
                 } else {
-                    return res.status(500).send({ message: "Error updating user in accept notification: notification to accept not found." });
+                    return res.status(500).send({ message: "NOTIFICATION_ACCEPT_UPDATE_USER_ERROR_SPECIFIC" });
                 }
             }).catch(err => {
-                if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found" }); }
-                return res.status(500).send({ message: "Error updating user in accept notification" });
+                if (err.kind === 'ObjectId') { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
+                return res.status(500).send({ message: "NOTIFICATION_ACCEPT_UPDATE_USER_ERROR" });
             });
     };
 
@@ -422,7 +422,7 @@ module.exports = (io, clientSocketList) => {
             User.findOne({ _id: notification.from })
         ])
             .then(([dUser, fUser]) => {
-                if (!dUser || !fUser) { return res.status(404).send({ message: "User not found" }); }
+                if (!dUser || !fUser) { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
 
                 destinationUser = dUser;
                 fromUser = fUser;
@@ -454,7 +454,7 @@ module.exports = (io, clientSocketList) => {
                                         .populate('coaches').populate('athletes')
                     ])
                         .then(([destinationUser, fromUser]) => {
-                            if (!destinationUser || !fromUser) { return res.status(404).send({ message: "User not found" }); }
+                            if (!destinationUser || !fromUser) { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
 
                             // Update fromUser and destUser informations in destUser client
                             notificationService.sendUpdatedUserToItsSocket(destinationUser);                    
@@ -467,16 +467,16 @@ module.exports = (io, clientSocketList) => {
                             // Send response to calling client
                             res.send(destinationUser); 
                         }).catch(err => {
-                            if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found" }); }
-                            return res.status(500).send({ message: "Error updating user in refuseNotification" });
+                            if (err.kind === 'ObjectId') { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
+                            return res.status(500).send({ message: "NOTIFICATION_REFUSE_UPDATE_USER_ERROR" });
                         });
                 } else {
-                    return res.status(500).send({ message: "Error updating user in refuseNotification: notification to refuse not found." });
+                    return res.status(500).send({ message: "NOTIFICATION_REFUSE_UPDATE_USER_ERROR_SPECIFIC" });
                 }
 
             }).catch(err => {
-                if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found" }); }
-                return res.status(500).send({ message: "Error updating user in refuseNotification" });
+                if (err.kind === 'ObjectId') { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
+                return res.status(500).send({ message: "NOTIFICATION_REFUSE_UPDATE_USER_ERROR" });
             });
     };
 
@@ -488,7 +488,7 @@ module.exports = (io, clientSocketList) => {
             User.findOne({ _id: req.params._id })
         ])
             .then(([dUser]) => {
-                if (!dUser) { return res.status(404).send({ message: "User not found" }); }
+                if (!dUser) { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
 
                 destinationUser = dUser;
                 let notificationToConsumeIndex = _.findIndex(destinationUser.notifications, function(n) { return n._id == req.params._notId; });
@@ -509,7 +509,7 @@ module.exports = (io, clientSocketList) => {
                                         .populate('coaches').populate('athletes')
                     ])
                         .then(([destinationUser]) => {
-                            if (!destinationUser) { return res.status(404).send({ message: "User not found" }); }
+                            if (!destinationUser) { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
 
                             // Update destUser informations in destUser client
                             notificationService.sendUpdatedUserToItsSocket(destinationUser);    
@@ -520,21 +520,21 @@ module.exports = (io, clientSocketList) => {
                             // Send response to calling client
                             res.send(destinationUser);                      
                         }).catch(err => {
-                            if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found" }); }
-                            return res.status(500).send({ message: "Error updating user in dismissNotification" });
+                            if (err.kind === 'ObjectId') { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
+                            return res.status(500).send({ message: "NOTIFICATION_DISMISS_UPDATE_USER_ERROR" });
                         });
                 } else {
-                    return res.status(500).send({ message: "Error updating user in dismissNotification: notification to dismiss not found." });
+                    return res.status(500).send({ message: "NOTIFICATION_DISMISS_UPDATE_USER_ERROR_SPECIFIC" });
                 }
             }).catch(err => {
-                if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found" }); }
-                return res.status(500).send({ message: "Error updating user in dismissNotification" });
+                if (err.kind === 'ObjectId') { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
+                return res.status(500).send({ message: "NOTIFICATION_DISMISS_UPDATE_USER_ERROR" });
             });
     };
 
     function cancelAthleteCoachLink(req, res, next) {
         // Validate request
-        if (!req.body) { return res.status(400).send({ message: "Notification content can not be empty" }); }
+        if (!req.body) { return res.status(400).send({ message: "NOTIFICATION_CONTENT_EMPTY" }); }
 
         let notification = new Notification({ type: req.body.type, from: req.body.from, destination: req.body.destination, message: req.body.message, bConsumed: req.body.bConsumed, creationDate: req.body.creationDate });
         let coachUser;
@@ -545,7 +545,7 @@ module.exports = (io, clientSocketList) => {
             User.findOne({ _id: notification.from })
         ])
             .then(([dUser, fUser]) => {
-                if (!dUser || !fUser) { return res.status(404).send({ message: "User not found" }); }
+                if (!dUser || !fUser) { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
 
                 // 1. Assign coach and athlete user roles in order to operate on them properly (depeding on the link request cancellation direction we have to cancel the link in the proper direction).
                 switch (notification.type) {
@@ -590,7 +590,7 @@ module.exports = (io, clientSocketList) => {
                                         .populate('coaches').populate('athletes')
                     ])
                     .then(([cUser, aUser]) => {
-                        if (!cUser || !aUser) { return res.status(404).send({ message: "User not found" }); }
+                        if (!cUser || !aUser) { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
 
                         let fromUser = (cUser._id.equals(notification.from) ? cUser : aUser);
                         let destinationUser = (cUser._id.equals(notification.destination) ? cUser : aUser);
@@ -606,15 +606,15 @@ module.exports = (io, clientSocketList) => {
                         // Send response to calling client
                         res.send({destUser: destinationUser, fromUser: fromUser}); 
                     }).catch(err => {
-                        if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found" }); }
-                        return res.status(500).send({ message: "Error updating user in cancelAthleteCoachLink" });
+                        if (err.kind === 'ObjectId') { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
+                        return res.status(500).send({ message: "NOTIFICATION_CANCEL_LINK_UPDATE_USER_ERROR" });
                     });
                 } else {
-                    res.status(500).send({ message: "Error updating users in cancelAthleteCoachLink: link between athlete and coach does not exists." });
+                    res.status(500).send({ message: "NOTIFICATION_CANCEL_LINK_UPDATE_USER_ERROR_SPECIFIC" });
                 }
             }).catch(err => {
-                if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found" }); }
-                return res.status(500).send({ message: "Error updating user in cancelAthleteCoachLink" });
+                if (err.kind === 'ObjectId') { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
+                return res.status(500).send({ message: "NOTIFICATION_CANCEL_LINK_UPDATE_USER_ERROR" });
             });
     };
 
@@ -626,7 +626,7 @@ module.exports = (io, clientSocketList) => {
             User.findOne({ _id: req.params._id })
         ])
             .then(([dUser]) => {
-                if (!dUser) { return res.status(404).send({ message: "User not found" }); }
+                if (!dUser) { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
 
                 destinationUser = dUser;
                 let notificationToConsumeList = _.filter(destinationUser.notifications, function(n) { return !n.bConsumed && NOTIFICATION_ONLY_DISMISS.includes(n.type); });
@@ -650,7 +650,7 @@ module.exports = (io, clientSocketList) => {
                                         .populate('coaches').populate('athletes')
                     ])
                         .then(([destinationUser]) => {
-                            if (!destinationUser) { return res.status(404).send({ message: "User not found" }); }
+                            if (!destinationUser) { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
 
                             // Update destUser informations in destUser client
                             notificationService.sendUpdatedUserToItsSocket(destinationUser);    
@@ -663,15 +663,15 @@ module.exports = (io, clientSocketList) => {
                             // Send response to calling client
                             res.send(destinationUser);                      
                         }).catch(err => {
-                            if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found" }); }
-                            return res.status(500).send({ message: "Error updating user in dismissAllNotifications" });
+                            if (err.kind === 'ObjectId') { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
+                            return res.status(500).send({ message: "NOTIFICATIONS_DISMISS_UPDATE_USER_ERROR" });
                         });
                 } else {
-                    return res.status(500).send({ message: "Error updating user in dismissAllNotifications: there are no notification to dismiss." });
+                    return res.status(500).send({ message: "NOTIFICATIONS_DISMISS_UPDATE_USER_ERROR_SPECIFIC" });
                 }
             }).catch(err => {
-                if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found" }); }
-                return res.status(500).send({ message: "Error updating user in dismissAllNotifications" });
+                if (err.kind === 'ObjectId') { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
+                return res.status(500).send({ message: "NOTIFICATIONS_DISMISS_UPDATE_USER_ERROR" });
             });
     }
 
@@ -683,7 +683,7 @@ module.exports = (io, clientSocketList) => {
             User.findOne({ _id: req.params._id })
         ])
             .then(([dUser]) => {
-                if (!dUser) { return res.status(404).send({ message: "User not found" }); }
+                if (!dUser) { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
 
                 destinationUser = dUser;
                 let notificationToCancelIndex = _.findIndex(destinationUser.notifications, function(n) { return n._id == req.params._notId && n.bConsumed; });      // Note: we check if the notification is also bConsumed because a notification can be cancelled only if it is consumed
@@ -707,7 +707,7 @@ module.exports = (io, clientSocketList) => {
                                         .populate('coaches').populate('athletes')
                     ])
                         .then(([destinationUser]) => {
-                            if (!destinationUser) { return res.status(404).send({ message: "User not found" }); }
+                            if (!destinationUser) { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
 
                             // Update destUser informations in destUser client
                             notificationService.sendUpdatedUserToItsSocket(destinationUser);    
@@ -718,15 +718,15 @@ module.exports = (io, clientSocketList) => {
                             // Send response to calling client
                             res.send(destinationUser);                      
                         }).catch(err => {
-                            if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found" }); }
-                            return res.status(500).send({ message: "Error updating user in cancelNotification" });
+                            if (err.kind === 'ObjectId') { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
+                            return res.status(500).send({ message: "NOTIFICATION_DELETE_UPDATE_USER_ERROR" });
                         });
                 } else {
-                    return res.status(500).send({ message: "Error updating user in cancelNotification: notification to cancel not found." });
+                    return res.status(500).send({ message: "NOTIFICATION_DELETE_UPDATE_USER_ERROR_SPECIFIC" });
                 }
             }).catch(err => {
-                if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found" }); }
-                return res.status(500).send({ message: "Error updating user in cancelNotification" });
+                if (err.kind === 'ObjectId') { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
+                return res.status(500).send({ message: "NOTIFICATION_DELETE_UPDATE_USER_ERROR" });
             });
     }
 
@@ -738,7 +738,7 @@ module.exports = (io, clientSocketList) => {
             User.findOne({ _id: req.params._id })
         ])
             .then(([dUser]) => {
-                if (!dUser) { return res.status(404).send({ message: "User not found" }); }
+                if (!dUser) { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
 
                 destinationUser = dUser;
 
@@ -759,7 +759,7 @@ module.exports = (io, clientSocketList) => {
                                         .populate('coaches').populate('athletes')
                     ])
                         .then(([destinationUser]) => {
-                            if (!destinationUser) { return res.status(404).send({ message: "User not found" }); }
+                            if (!destinationUser) { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
 
                             // Update destUser informations in destUser client
                             notificationService.sendUpdatedUserToItsSocket(destinationUser);    
@@ -772,15 +772,15 @@ module.exports = (io, clientSocketList) => {
                             // Send response to calling client
                             res.send(destinationUser);                      
                         }).catch(err => {
-                            if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found" }); }
-                            return res.status(500).send({ message: "Error updating user in cancelAllNotifications" });
+                            if (err.kind === 'ObjectId') { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
+                            return res.status(500).send({ message: "NOTIFICATIONS_DELETE_UPDATE_USER_ERROR" });
                         });
                 } else {
-                    return res.status(500).send({ message: "Error updating user in cancelAllNotifications: there are no notification to cancel." });
+                    return res.status(500).send({ message: "NOTIFICATIONS_DELETE_UPDATE_USER_ERROR_SPECIFIC" });
                 }
             }).catch(err => {
-                if (err.kind === 'ObjectId') { return res.status(404).send({ message: "User not found" }); }
-                return res.status(500).send({ message: "Error updating user in cancelAllNotifications" });
+                if (err.kind === 'ObjectId') { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
+                return res.status(500).send({ message: "NOTIFICATIONS_DELETE_UPDATE_USER_ERROR" });
             });
     }
 

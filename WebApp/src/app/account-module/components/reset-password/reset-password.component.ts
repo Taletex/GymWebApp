@@ -5,7 +5,7 @@ import { first } from 'rxjs/operators';
 
 import { AccountService } from '@app/_services/account-service/account-service.service';
 
-import { MustMatch } from '@app/_helpers';
+import { MESSAGES, MustMatch } from '@app/_helpers';
 import { ToastrService } from 'ngx-toastr';
 
 enum TokenStatus {
@@ -30,7 +30,7 @@ export class ResetPasswordComponent implements OnInit {
     ACCOUNT_VALIDATORS = this.accountService.ACCOUNT_VALIDATORS;
     bShowPsw: boolean = false;
     bShowConfirmPsw: boolean = false;
-    
+
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
@@ -82,11 +82,11 @@ export class ResetPasswordComponent implements OnInit {
             .subscribe({
                 next: () => {
                     this.router.navigate(['../login'], { relativeTo: this.route }).then(() => {
-                        this.toastr.success('Password reset successful, you can now login');
+                        this.toastr.success(MESSAGES.PASSWORD_RESET_SUCCESS);
                     });;
                 },
                 error: error => {
-                    this.toastr.error(error);
+                    this.toastr.error(String(error) || MESSAGES.RESET_PSW_FAIL);
                     this.loading = false;
                 }
             });

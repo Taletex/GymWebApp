@@ -17,7 +17,6 @@ export class AccountComponent implements OnInit {
     // User Component Aux
     userComponent: any;
 
-
     constructor(private vcref: ViewContainerRef, private cfr: ComponentFactoryResolver, private accountService: AccountService, private router: Router) {
         this.accountService.account.subscribe(x => {
             this.account = x;

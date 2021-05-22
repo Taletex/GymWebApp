@@ -64,7 +64,7 @@ module.exports = (io, clientSocketList) => {
         // Validate request
         if(!req.body) {
             return res.status(400).send({
-                message: "Training content can not be empty"
+                message: "TRAINING_CONTENT_EMPTY"
             });
         }
         
@@ -126,12 +126,12 @@ module.exports = (io, clientSocketList) => {
                 
             }).catch(err => {
                 res.status(500).send({
-                    message: err.message || "Some error occurred while creating the Training."
+                    message: err.message || "TRAINING_CREATE_GENERIC_ERROR"
                 });
             });
         } else {
             res.status(500).send({
-                message: "Training contains invalid field values."
+                message: "TRAINING_CONTENT_INVALID"
             });
         }
     };
@@ -144,7 +144,7 @@ module.exports = (io, clientSocketList) => {
             res.send( _.sortBy(trainings, ['creationDate', 'author.name', 'author.surname']) );
         }).catch(err => {
             res.status(500).send({
-                message: err.message || "Some error occurred while retrieving trainings."
+                message: err.message || "TRAININGS_GET_FAIL"
             });
         });
     };
@@ -154,10 +154,10 @@ module.exports = (io, clientSocketList) => {
      * If the user is a coach it retrieves all the trainings where the user is the creator. If the user is an athlete it retrieves all the trainings where the user is the receiver
      */
     function findAllTrainingByUserId(req, res, next) {
-        User.find({_id: req.params._id}).then(data => {
+        User.findById(req.params._id).then(data => {
 
             let trainingList = [];
-            let user = data[0];
+            let user = data;
 
             Training.find().populate('author').populate('athletes').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
             .then(trainings => {
@@ -178,40 +178,40 @@ module.exports = (io, clientSocketList) => {
                 res.send(  _.sortBy(trainingList, ['creationDate', 'author.name', 'author.surname']) );
             }).catch(err => {
                 res.status(500).send({
-                    message: err.message || "Some error occurred while retrieving trainings."
+                    message: err.message || "TRAININGS_GET_FAIL"
                 });
             });
 
         }).catch(err => {
             if(err.kind === 'ObjectId') {
                 return res.status(404).send({
-                    message: "User not found with id " + req.params._id
+                    message: "USER_NOT_FOUND_ID", id: req.params._id
                 });                
             }
             return res.status(500).send({
-                message: "Error retrieving user with id " + req.params._id
+                message: "EXERCISE_ERROR_FOUND_ID", id: req.params._id
             });
         });
     };
 
     // Find a single training with a id
     function findOneTraining (req, res, next) {
-        Training.find({_id: req.params._id}).populate('author').populate('athletes').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
+        Training.findById(req.params._id).populate('author').populate('athletes').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
         .then(training => {
             if(!training) {
                 return res.status(404).send({
-                    message: "Training not found with id " + req.params._id
+                    message: "TRAINING_NOT_FOUND_ID", id: req.params._id
                 });            
             }
-            res.send(training[0]);
+            res.send(training);
         }).catch(err => {
             if(err.kind === 'ObjectId') {
                 return res.status(404).send({
-                    message: "Training not found with id " + req.params._id
+                    message: "TRAINING_NOT_FOUND_ID", id: req.params._id
                 });                
             }
             return res.status(500).send({
-                message: "Error retrieving training with id " + req.params._id
+                message: "TRAINING_ERROR_FOUND_ID", id: req.params._id
             });
         });
     };
@@ -221,7 +221,7 @@ module.exports = (io, clientSocketList) => {
         // Validate Request
         if(!req.body) {
             return res.status(400).send({
-                message: "Training content can not be empty"
+                message: "TRAINING_CONTENT_EMPTY"
             });
         }
 
@@ -252,28 +252,28 @@ module.exports = (io, clientSocketList) => {
             .then(training => {
                 if(!training) {
                     return res.status(404).send({
-                        message: "Training not found with id " + req.params._id
+                        message: "TRAINING_NOT_FOUND_ID", id: req.params._id
                     });
                 }
 
                 // Returns the training updated by finding it in the database
-                Training.find({_id: req.params._id}).populate('author').populate('athletes').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
+                Training.findById(req.params._id).populate('author').populate('athletes').populate({ path: 'weeks', populate: { path: 'sessions', populate: { path: 'exercises', populate: { path: 'exercise' }} }})
                 .then(data => {
-                    res.send(data[0]);
+                    res.send(data);
                 })
             }).catch(err => {
                 if(err.kind === 'ObjectId') {
                     return res.status(404).send({
-                        message: "Training not found with id " + req.params._id
+                        message: "TRAINING_NOT_FOUND_ID", id: req.params._id
                     });                
                 }
                 return res.status(500).send({
-                    message: "Error updating training with id " + req.params._id
+                    message: "TRAINING_ERROR_UPDATE_ID", id: req.params._id
                 });
             });
         } else {
             res.status(500).send({
-                message: "Training contains invalid field values."
+                message: "TRAINING_CONTENT_INVALID"
             });
         }
     };
@@ -284,18 +284,18 @@ module.exports = (io, clientSocketList) => {
         .then(training => {
             if(!training) {
                 return res.status(404).send({
-                    message: "Training not found with id " + req.params._id
+                    message: "TRAINING_NOT_FOUND_ID", id: req.params._id
                 });
             }
-            res.send({message: "Training deleted successfully!"});
+            res.send({message: "TRAINING_DELETE_SUCCESS"});
         }).catch(err => {
             if(err.kind === 'ObjectId' || err.name === 'NotFound') {
                 return res.status(404).send({
-                    message: "Training not found with id " + req.params._id
+                    message: "TRAINING_NOT_FOUND_ID", id: req.params._id
                 });                
             }
             return res.status(500).send({
-                message: "Could not delete training with id " + req.params._id
+                message: "TRAINING_DELETE_FAIL_ID", id: req.params._id
             });
         });
     };
@@ -335,13 +335,13 @@ module.exports = (io, clientSocketList) => {
                 res.status(200).send(users);
             }).catch(err => {
                 res.status(500).send({
-                    message: err.message || "Some error occurred while send training notifications."
+                    message: err.message || "TRAINING_NOTIFICATION_FAIL"
                 });
             });
 
         }).catch(err => {
             res.status(500).send({
-                message: err.message || "Some error occurred while send training notifications."
+                message: err.message || "TRAINING_NOTIFICATION_FAIL"
             });
         });
     }
@@ -383,17 +383,17 @@ module.exports = (io, clientSocketList) => {
                 Promise.all(emailPromise).then((results) => {
         
                     // 4. Send response to client
-                    res.status(200).send({message: "Email correttamente inviate agli utenti", successAthletes: athletes});
+                    res.status(200).send({message: "TRAINING_EMAIL_SENT_SUCCESS", successAthletes: athletes});
                 }).catch(err => {
                     res.status(500).send({
-                        message: err.message || "Some error occurred while sending the Training emails."
+                        message: err.message || "TRAINING_EMAIL_FAIL"
                     });
                 });
 
             } else
-                res.status(500).send({message: "Send Training Email list is empty."});
+                res.status(500).send({message: "TRAINING_EMAIL_LIST_EMPTY_ERROR"});
         } else 
-            res.status(500).send({message: "Send Training Email body request is empty."});
+            res.status(500).send({message: "TRAINING_EMAIL_BODY_EMPTY_ERROR"});
     }
 
 
@@ -408,7 +408,7 @@ module.exports = (io, clientSocketList) => {
                 fs.appendFileSync(filePath, new Buffer.from(buffer));   // Save training in files folder
                 resolve(buffer);
             }).catch((err) => {
-                reject(err | "Error during pdf creation");
+                reject(err | "PDF_CREATION_ERROR");
             });;
         });
     }

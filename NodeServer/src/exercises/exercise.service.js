@@ -24,7 +24,7 @@ module.exports = () => {
         // Validate request
         if (!req.body) {
             return res.status(400).send({
-                message: "Exercise content can not be empty"
+                message: "EXERCISE_CONTENT_EMPTY"
             });
         }
 
@@ -47,12 +47,12 @@ module.exports = () => {
                 res.send(data);
             }).catch(err => {
                 res.status(500).send({
-                    message: err.message || "Some error occurred while creating the Exercise."
+                    message: err.message || "EXERCISE_CREATE_GENERIC_ERROR"
                 });
             });
         } else {
             res.status(500).send({
-                message: "Exercise contains invalid field values."
+                message: "EXERCISE_CONTENT_INVALID"
             });
         }
         
@@ -65,7 +65,7 @@ module.exports = () => {
                 res.send(_.sortBy(exercises, ['name', 'variant.name']));
             }).catch(err => {
                 res.status(500).send({
-                    message: err.message || "Some error occurred while retrieving exercises."
+                    message: err.message || "EXERCISES_GET_FAIL"
                 });
             });
     };
@@ -77,47 +77,47 @@ module.exports = () => {
      * */
     async function findAllExerciseForUser(req, res) {
 
-        User.find({ _id: req.params._id }).then(users => {
-            if (!users) {
+        User.findById(req.params._id).then(user => {
+            if (!user) {
                 return res.status(404).send({
-                    message: "User not found with id " + req.params._id
+                    message: "USER_NOT_FOUND_ID", id: req.params._id
                 });
             }
 
-            switch (users[0].userType) {
+            switch (user.userType) {
                 case 'coach': {
-                    Exercise.find({ $or: [{ creator: null }, { creator: users[0]._id }] })
+                    Exercise.find({ $or: [{ creator: null }, { creator: user._id }] })
                         .then(exercises => {
                             res.send(_.sortBy(exercises, ['name', 'variant.name']));
                         }).catch(err => {
                             res.status(500).send({
-                                message: err.message || "Some error occurred while retrieving exercises."
+                                message: err.message || "EXERCISES_GET_FAIL"
                             });
                         });
                     break;
                 }
 
                 case 'athlete': {
-                    let coachesIds = _.map(users[0].coaches, function (coach) { return coach._id; });
+                    let coachesIds = _.map(user.coaches, function (coach) { return coach._id; });
                     Exercise.find({ $or: [{ creator: null }, { creator: coachesIds }] })
                         .then(exercises => {
                             res.send(_.sortBy(exercises, ['name', 'variant.name']));
                         }).catch(err => {
                             res.status(500).send({
-                                message: err.message || "Some error occurred while retrieving exercises."
+                                message: err.message || "EXERCISES_GET_FAIL"
                             });
                         });
                     break;
                 }
 
                 case 'both': {
-                    let coachesIds = _.map(users[0].coaches, function (coach) { return coach._id; });
-                    Exercise.find({ $or: [{ creator: null }, { creator: users[0]._id }, { creator: coachesIds }] })
+                    let coachesIds = _.map(user.coaches, function (coach) { return coach._id; });
+                    Exercise.find({ $or: [{ creator: null }, { creator: user._id }, { creator: coachesIds }] })
                         .then(exercises => {
                             res.send(_.sortBy(exercises, ['name', 'variant.name']));
                         }).catch(err => {
                             res.status(500).send({
-                                message: err.message || "Some error occurred while retrieving exercises."
+                                message: err.message || "EXERCISES_GET_FAIL"
                             });
                         });
                     break;
@@ -127,33 +127,33 @@ module.exports = () => {
         }).catch(err => {
             if (err.kind === 'ObjectId') {
                 return res.status(404).send({
-                    message: "User not found with id " + req.params._id
+                    message: "USER_NOT_FOUND_ID", id: req.params._id
                 });
             }
             return res.status(500).send({
-                message: "Error retrieving user with id " + req.params._id
+                message: "EXERCISE_ERROR_FOUND_ID", id: req.params._id
             });
         });
     };
 
     // Find a single exercise with a id
     async function findOneExercise(req, res) {
-        Exercise.find({ _id: req.params._id })
+        Exercise.findById(req.params._id)
             .then(exercise => {
                 if (!exercise) {
                     return res.status(404).send({
-                        message: "Exercise not found with id " + req.params._id
+                        message: "EXERCISE_NOT_FOUND_ID", id: req.params._id
                     });
                 }
-                res.send(exercise[0]);
+                res.send(exercise);
             }).catch(err => {
                 if (err.kind === 'ObjectId') {
                     return res.status(404).send({
-                        message: "Exercise not found with id " + req.params._id
+                        message: "EXERCISE_NOT_FOUND_ID", id: req.params._id
                     });
                 }
                 return res.status(500).send({
-                    message: "Error retrieving exercise with id " + req.params._id
+                    message: "EXERCISE_ERROR_FOUND_ID", id: req.params._id
                 });
             });
     };
@@ -164,7 +164,7 @@ module.exports = () => {
         // Validate Request
         if (!req.body) {
             return res.status(400).send({
-                message: "Exercise content can not be empty"
+                message: "EXERCISE_CONTENT_EMPTY"
             });
         }
 
@@ -196,7 +196,7 @@ module.exports = () => {
                     findOneAndUpdateExercise(req, res);
                 }).catch((err) => {
                     return res.status(500).send({
-                        message: "Error saving exercise images"
+                        message: "EXERCISE_IMAGE_ERROR"
                     });
                 })
             } else {
@@ -204,7 +204,7 @@ module.exports = () => {
             }
         } else {
             res.status(500).send({
-                message: "Exercise contains invalid field values."
+                message: "EXERCISE_CONTENT_INVALID"
             });
         }
         
@@ -224,18 +224,18 @@ module.exports = () => {
             .then(exercise => {
                 if (!exercise) {
                     return res.status(404).send({
-                        message: "Exercise not found with id " + req.params._id
+                        message: "EXERCISE_NOT_FOUND_ID", id: req.params._id
                     });
                 }
                 res.send(exercise);
             }).catch(err => {
                 if (err.kind === 'ObjectId') {
                     return res.status(404).send({
-                        message: "Exercise not found with id " + req.params._id
+                        message: "EXERCISE_NOT_FOUND_ID", id: req.params._id
                     });
                 }
                 return res.status(500).send({
-                    message: "Error updating exercise with id " + req.params._id
+                    message: "EXERCISE_ERROR_UPDATE_ID", id: req.params._id
                 });
             });
     }
@@ -247,7 +247,7 @@ module.exports = () => {
             .then(exercise => {
                 if (!exercise) {
                     return res.status(404).send({
-                        message: "Exercise not found with id " + req.params._id
+                        message: "EXERCISE_NOT_FOUND_ID", id: req.params._id
                     });
                 }
 
@@ -257,15 +257,15 @@ module.exports = () => {
                     fs.rmdirSync(fileDir, { recursive: true });
                 } 
 
-                res.send({ message: "Exercise deleted successfully!" });
+                res.send({ message: "EXERCISE_DELETE_SUCCESS" });
             }).catch(err => {
                 if (err.kind === 'ObjectId' || err.name === 'NotFound') {
                     return res.status(404).send({
-                        message: "Exercise not found with id " + req.params._id
+                        message: "EXERCISE_NOT_FOUND_ID", id: req.params._id
                     });
                 }
                 return res.status(500).send({
-                    message: "Could not delete exercise with id " + req.params._id
+                    message: "EXERCISE_DELETE_FAIL_ID", id: req.params._id
                 });
             });
     };
@@ -285,7 +285,7 @@ module.exports = () => {
                             resolve(img.src);
                         }
                     } else
-                        reject(err | "Error when saving images");
+                        reject(err | "EXERCISE_IMAGE_ERROR");
                 })
             }));
             

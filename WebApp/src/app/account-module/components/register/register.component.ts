@@ -5,7 +5,7 @@ import { first } from 'rxjs/operators';
 
 import { AccountService } from '@app/_services/account-service/account-service.service';
 
-import { MustMatch } from '@app/_helpers';
+import { MESSAGES, MustMatch } from '@app/_helpers';
 import { ToastrService } from 'ngx-toastr';
 import { userTypeValidator } from '@app/_helpers/user-type.validator';
 import { emailValidator } from '@app/_helpers/email.validator';
@@ -55,7 +55,7 @@ export class RegisterComponent implements OnInit {
 
         // stop here if form is invalid
         // if (this.form.invalid) {
-        //     this.toastr.warning("Registrazione non riuscita: sono presenti degli errori nella compilazione del form");
+        //     this.toastr.warning(MESSAGES.REGISTER_FAIL);
         //     return;
         // }
 
@@ -65,11 +65,11 @@ export class RegisterComponent implements OnInit {
             .subscribe({
                 next: () => {
                     this.router.navigate(['../login'], { relativeTo: this.route }).then(() => {
-                        this.toastr.success('Registration successful, please check your email for verification instructions');
+                        this.toastr.success(MESSAGES.REGISTER_SUCCESS);
                     });
                 },
                 error: error => {
-                    this.toastr.error(error);
+                    this.toastr.error(String(error) || MESSAGES.REGISTER_FAIL);
                     this.loading = false;
                 }
             });

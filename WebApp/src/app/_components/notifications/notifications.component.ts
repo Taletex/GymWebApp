@@ -7,6 +7,7 @@ import { AccountService } from '@app/_services/account-service/account-service.s
 import { Account, Role } from '@app/_models';
 import { NOTIFICATION_TYPE, NOTIFICATION_ONLY_DISMISS, NOTIFICATION_TYPE_NAMES } from '@app/_services/general-service/general-service.service';
 import * as _ from "lodash";
+import { MESSAGES } from '@app/_helpers';
 
 @Component({
   selector: 'app-notifications',
@@ -27,7 +28,6 @@ export class NotificationsComponent implements OnInit {
   public bWindowOverMd: boolean;
   private lastWindowWidth: number;
   private triggerWidth: number = 767.98;
-
   
   constructor(private httpService: HttpService, private toastr: ToastrService, private accountService: AccountService) { 
 
@@ -119,11 +119,11 @@ export class NotificationsComponent implements OnInit {
         // Note: this function doesn't need to update user and notification list because this is done using the socket!
         this.bLoading = false;
         console.log("acceptRequest result data", data);
-        this.toastr.success('Richiesta correttamente accettata!');
+        this.toastr.success(MESSAGES.NOTIFICATION_ACCEPTED);
       },
       (error: HttpErrorResponse) => {
         this.bLoading = false;
-        this.toastr.error("Si è verificato un errore durante l'invio di accettazione richiesta");
+        this.toastr.error(String(error) || MESSAGES.NOTIFICATION_ACCEPTED_FAIL);
         console.log("acceptRequest error", error);
       });
   }
@@ -136,11 +136,11 @@ export class NotificationsComponent implements OnInit {
         // Note: this function doesn't need to update user and notification list because this is done using the socket!
         this.bLoading = false;
         console.log("refuseRequest result data", data);
-        this.toastr.success('Richiesta correttamente rifiutata!');
+        this.toastr.success(MESSAGES.NOTIFICATION_REFUSED);
       },
       (error: HttpErrorResponse) => {
         this.bLoading = false;
-        this.toastr.error("Si è verificato un errore durante l'invio di rifiuto richiesta");
+        this.toastr.error(String(error) || MESSAGES.NOTIFICATION_REFUSED_FAIL);
         console.log("refuseRequest error", error);
       });
   }
@@ -154,11 +154,11 @@ export class NotificationsComponent implements OnInit {
         // Note: this function doesn't need to update user and notification list because this is done using the socket!
         this.bLoading = false;
         console.log("dismissNotification result data", data);
-        this.toastr.success('Richiesta visualizzata!');
+        this.toastr.success(MESSAGES.NOTIFICATION_DISMISSED);
       },
       (error: HttpErrorResponse) => {
         this.bLoading = false;
-        this.toastr.error("Si è verificato un errore durante l'invio di visualizzazione richiesta");
+        this.toastr.error(String(error) || MESSAGES.NOTIFICATION_DISMISSED_FAIL);
         console.log("dismissNotification error", error);
       });
   }
@@ -172,11 +172,11 @@ export class NotificationsComponent implements OnInit {
         // Note: this function doesn't need to update user and notification list because this is done using the socket!
         this.bLoading = false;
         console.log("dismissAllNotifications result data", data);
-        this.toastr.success('Tutte le richieste sono state visualizzate!');
+        this.toastr.success(MESSAGES.NOTIFICATIONS_DISMISSED);
       },
       (error: HttpErrorResponse) => {
         this.bLoading = false;
-        this.toastr.error("Si è verificato un errore durante l'invio di visualizzazione di tutte le richieste");
+        this.toastr.error(String(error) || MESSAGES.NOTIFICATIONS_DISMISSED_FAIL);
         console.log("dismissAllNotifications error", error);
       });
   }
@@ -190,11 +190,11 @@ export class NotificationsComponent implements OnInit {
         // Note: this function doesn't need to update user and notification list because this is done using the socket!
         this.bLoading = false;
         console.log("cancelNotification result data", data);
-        this.toastr.success('Richiesta cancellata!');
+        this.toastr.success(MESSAGES.NOTIFICATION_CANCELED);
       },
       (error: HttpErrorResponse) => {
         this.bLoading = false;
-        this.toastr.error("Si è verificato un errore durante l'invio di cancellazione della richiesta");
+        this.toastr.error(String(error) || MESSAGES.NOTIFICATION_DELETE_FAIL);
         console.log("cancelNotification error", error);
       });
   }
@@ -208,11 +208,11 @@ export class NotificationsComponent implements OnInit {
         // Note: this function doesn't need to update user and notification list because this is done using the socket!
         this.bLoading = false;
         console.log("cancelAllNotifications result data", data);
-        this.toastr.success('Tutte le richieste (visualizzate) sono state cancellate!');
+        this.toastr.success(MESSAGES.NOTIFICATIONS_CANCELED);
       },
       (error: HttpErrorResponse) => {
         this.bLoading = false;
-        this.toastr.error("Si è verificato un errore durante l'invio di cancellazione di tutte le richieste");
+        this.toastr.error(String(error) || MESSAGES.NOTIFICATIONS_DELETE_FAIL);
         console.log("cancelAllNotifications error", error);
       });
   }

@@ -6,6 +6,7 @@ import { first } from 'rxjs/operators';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { ToastrService } from 'ngx-toastr';
 import * as CryptoJS from 'crypto-js';
+import { MESSAGES } from '@app/_helpers';
 
 @Component({
     selector: 'app-login',
@@ -70,30 +71,28 @@ export class LoginComponent implements OnInit {
             return;
         }
 
-        if(this.f.rememberMe.value) {
-            localStorage.setItem("mtp_rememberMe", "true");
-            localStorage.setItem("mtp_username", this.f.email.value);
-            localStorage.setItem("mtp_psw", this.encryptUsingAES256(this.f.password.value));
-        } else {
-            localStorage.setItem("mtp_rememberMe", "false");
-            localStorage.setItem("mtp_username", "");
-            localStorage.setItem("mtp_psw", "");
-        }
-
         this.loading = true;
         this.accountService.login(this.f.email.value, this.f.password.value)
             .pipe(first())
             .subscribe({
                 next: () => {
                     // Set login info in local storage
-                    localStorage.setItem("mtp_bLoggedIn", "true");
+                    if(this.f.rememberMe.value) {
+                        localStorage.setItem("mtp_rememberMe", "true");
+                        localStorage.setItem("mtp_username", this.f.email.value);
+                        localStorage.setItem("mtp_psw", this.encryptUsingAES256(this.f.password.value));
+                    } else {
+                        localStorage.setItem("mtp_rememberMe", "false");
+                        localStorage.setItem("mtp_username", "");
+                        localStorage.setItem("mtp_psw", "");
+                    }
 
                     // get return url from query parameters or default to home page
                     const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
                     this.router.navigateByUrl(returnUrl);
                 },
                 error: error => {
-                    this.toastr.error(error);
+                    this.toastr.error(String(error) || MESSAGES.LOGIN_FAIL);
                     this.loading = false;
                 }
             });

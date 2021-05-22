@@ -7,6 +7,7 @@ import { AccountService } from '@app/_services/account-service/account-service.s
 import { Account, Role } from '@app/_models';
 import * as _ from "lodash";
 import { GeneralService, PAGEMODE, PAGES } from '@app/_services/general-service/general-service.service';
+import { MESSAGES } from '@app/_helpers';
 
 @Component({
   selector: 'app-exercises',
@@ -73,7 +74,7 @@ export class ExercisesComponent implements OnInit {
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
-          this.toastr.error('An error occurred while loading the exercise list!');
+          this.toastr.error(String(error) || MESSAGES.EXERCISES_GET_FAIL);
           console.log(error);
         });
   }
@@ -90,11 +91,11 @@ export class ExercisesComponent implements OnInit {
           this.resetFilters();
           this.initNewExercise();
 
-          this.toastr.success('Exercise successfully created!');
+          this.toastr.success(MESSAGES.EXERCISE_CREATE_SUCCESS);
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
-          this.toastr.error('An error occurred while creating the exercise!');
+          this.toastr.error(String(error) || MESSAGES.EXERCISE_CREATE_FAIL);
           console.log(error);
         });
   }
@@ -111,11 +112,11 @@ export class ExercisesComponent implements OnInit {
             this.exerciseList = _.cloneDeep(_.sortBy(this.originalExerciseList, ['name', 'variant.name']));
             this.filterExercises(null);
 
-            this.toastr.success('Exercise successfully deleted!');
+            this.toastr.success(MESSAGES.EXERCISE_DELETE_SUCCESS);
           },
           (error: HttpErrorResponse) => {
             this.bLoading = false;
-            this.toastr.error('An error occurred while deleting the exercise!');
+            this.toastr.error(String(error) || MESSAGES.EXERCISE_DELETE_FAIL);
             console.log(error);
           });
     }

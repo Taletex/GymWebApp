@@ -10,6 +10,7 @@ import { GeneralService, PAGEMODE, PAGES, NOTIFICATION_TYPE } from '@app/_servic
 import { Socket } from 'ngx-socket-io';
 import * as _ from "lodash";
 import { UserService } from '@app/user-module/services/user-service/user-service.service';
+import { MESSAGES } from '@app/_helpers';
 
 @Component({
   selector: 'app-users',
@@ -122,7 +123,7 @@ export class UsersComponent implements OnInit {
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
-          this.toastr.error('An error occurred while loading the user list!');
+          this.toastr.error(String(error) || MESSAGES.USERS_GET_FAIL);
           console.log("Get User Error", error);
         });
   }
@@ -142,7 +143,7 @@ export class UsersComponent implements OnInit {
       },
       (error: HttpErrorResponse) => {
         this.bLoading = false;
-        this.toastr.error('An error occurred while loading the athlete list!');
+        this.toastr.error(String(error) || MESSAGES.ATHLETE_GET_FAIL);
         console.log("Get Athletes Error", error);
       });
   }
@@ -162,7 +163,7 @@ export class UsersComponent implements OnInit {
       },
       (error: HttpErrorResponse) => {
         this.bLoading = false;
-        this.toastr.error('An error occurred while loading the coach list!');
+        this.toastr.error(String(error) || MESSAGES.COACH_GET_FAIL);
         console.log("Get Coaches Error", error);
       });
   }
@@ -269,11 +270,11 @@ export class UsersComponent implements OnInit {
     this.userService.sendNotification(notificationType, destinationUser, this.account)
     .then((data: any) => {
       this.bLoading = false;
-      this.toastr.success('Richiesta correttamente inviata!');
+      this.toastr.success(MESSAGES.NOTIFICATION_SENT);
     })
     .catch((error: any) => {
       this.bLoading = false;
-      this.toastr.error("Si è verificato un errore durante l'invio della richiesta");
+      this.toastr.error(String(error) || MESSAGES.NOTIFICATION_SENT_FAIL);
     });
   }
   
@@ -283,11 +284,11 @@ export class UsersComponent implements OnInit {
     this.userService.cancelAthleteCoachLink(notificationType, destinationUser, this.account)
     .then((data: any) => {
       this.bLoading = false;
-      this.toastr.success('Richiesta correttamente inviata!');
+      this.toastr.success(MESSAGES.NOTIFICATION_SENT);
     })
     .catch((error: any) => {
       this.bLoading = false;
-      this.toastr.error("Si è verificato un errore durante l'invio della richiesta");
+      this.toastr.error(String(error) || MESSAGES.NOTIFICATIONS_CANCEL_LINK_FAIL);
     });
   }
 
@@ -297,11 +298,11 @@ export class UsersComponent implements OnInit {
     this.userService.cancelAthleteCoachLinkRequest(notificationType, destinationUser)
     .then((data: any) => {
       this.bLoading = false;
-      this.toastr.success('Richiesta di collegamento correttamente eliminata!');
+      this.toastr.success(MESSAGES.NOTIFICATION_LINK_DISMISSED);
     })
     .catch((error: any) => {
       this.bLoading = false;
-      this.toastr.error("Si è verificato un errore durante l'eliminazione della richiesta di collegamento!");
+      this.toastr.error(String(error) || MESSAGES.NOTIFICATIONS_CANCEL_LINK_REQUEST_FAIL);
     });
   }
 

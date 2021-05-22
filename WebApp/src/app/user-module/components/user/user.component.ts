@@ -21,6 +21,7 @@ import { userTypeValidator } from '@app/_helpers/user-type.validator';
 import { roleValidator } from '@app/_helpers/role.validator';
 import { ExerciseService } from '@app/_services/exercise-service/exercise-service.service';
 import { TrainingService } from '@app/training-module/services/training-service/training-service.service';
+import { MESSAGES } from '@app/_helpers';
 
 @Component({
   selector: 'app-user',
@@ -240,7 +241,8 @@ export class UserComponent implements OnInit {
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
-          this.toastr.error('An error occurred while loading the account!');
+          this.toastr.error(String(error) || MESSAGES.ACCOUNT_GET_FAIL);
+          this.router.navigate(["admin/" + PAGES.ACCOUNTS]);
           console.log(error);
         });
   }
@@ -262,7 +264,8 @@ export class UserComponent implements OnInit {
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
-          this.toastr.error('An error occurred while loading the account!');
+          this.toastr.error(String(error) || MESSAGES.ACCOUNT_GET_FAIL);
+          this.router.navigate([PAGES.USERS]);
           console.log(error);
         });
   }
@@ -284,7 +287,8 @@ export class UserComponent implements OnInit {
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
-          this.toastr.error('An error occurred while loading the user!');
+          this.toastr.error(String(error) || MESSAGES.USER_GET_FAIL);
+          this.router.navigate([PAGES.USERS]);
           console.log(error);
         });
   }
@@ -411,7 +415,7 @@ export class UserComponent implements OnInit {
 
     // stop here if userForm is invalid
     if(this.userForm.invalid) {
-      this.toastr.warning("Salvataggio non riuscito: sono presenti degli errori nella compilazione dell'utente");
+      this.toastr.warning(MESSAGES.USER_FORM_WARNING);
       return;
     }
 
@@ -428,11 +432,11 @@ export class UserComponent implements OnInit {
 
           this.accountService.updateUserValue(data);
 
-          this.toastr.success('User information successfully updated!');
+          this.toastr.success(MESSAGES.USER_UPDATE_SUCCESS);
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
-          this.toastr.error('An error occurred while updating the user!');
+          this.toastr.error(String(error) || MESSAGES.USER_UPDATE_FAIL);
           console.log(error);
         });
   }
@@ -480,7 +484,7 @@ export class UserComponent implements OnInit {
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
-          this.toastr.error('An error occurred while loading the exercise list!');
+          this.toastr.error(String(error) || MESSAGES.EXERCISES_GET_FAIL);
           console.log(error);
         });
   }
@@ -492,7 +496,7 @@ export class UserComponent implements OnInit {
         (data: any) => {
           this.bLoading = false;
           this.assignExercise(data, this.currentExerciseIndex);
-          this.toastr.success('Exercise successfully created!');
+          this.toastr.success(MESSAGES.EXERCISE_CREATE_SUCCESS);
 
           // Re init exercise list
           this.getExercises();
@@ -500,7 +504,7 @@ export class UserComponent implements OnInit {
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
-          this.toastr.error('An error occurred while creating the exercise!');
+          this.toastr.error(String(error) || MESSAGES.EXERCISE_CREATE_FAIL);
           console.log(error);
         });
   }
@@ -631,7 +635,7 @@ export class UserComponent implements OnInit {
   onSubmitPersonaRecords() {
 
     if(!this.isPersonalRecordFormValid()) {
-      this.toastr.warning("Salvataggio non riuscito: sono presenti degli errori nella compilazione dei personal record");
+      this.toastr.warning(MESSAGES.PR_FORM_WARNING);
       return;
     }
 
@@ -646,11 +650,11 @@ export class UserComponent implements OnInit {
           this.initUserInformations(data, null);                            // Update user informations 
           this.personalRecordInitialValues = _.cloneDeep(this.personalRecordList);  // Re init default form values
 
-          this.toastr.success('User information successfully updated!');
+          this.toastr.success(MESSAGES.USER_UPDATE_SUCCESS);
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
-          this.toastr.error('An error occurred while updating the user!');
+          this.toastr.error(String(error) || MESSAGES.USER_UPDATE_FAIL);
           console.log(error);
         });
   }
@@ -703,7 +707,7 @@ export class UserComponent implements OnInit {
 
     // stop here if settingsForm is invalid
     if(this.settingsForm.invalid) {
-      this.toastr.warning("Salvataggio non riuscito: sono presenti degli errori nella compilazione delle impostazioni");
+      this.toastr.warning(MESSAGES.SETTINGS_FORM_WARNING);
       return;
     }
 
@@ -718,11 +722,11 @@ export class UserComponent implements OnInit {
           this.initUserInformations(data, null);                                    // Update user informations 
           this.settingsFormInitialValues = _.cloneDeep(this.settingsForm.value);    // Re init default form values
 
-          this.toastr.success('User information successfully updated!');
+          this.toastr.success(MESSAGES.USER_UPDATE_SUCCESS);
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
-          this.toastr.error('An error occurred while updating the user!');
+          this.toastr.error(String(error) || MESSAGES.USER_UPDATE_FAIL);
           console.log(error);
         });
   }
@@ -736,7 +740,7 @@ export class UserComponent implements OnInit {
 
       // stop here if accountForm is invalid
       if(this.accountForm.invalid) {
-        this.toastr.warning("Salvataggio non riuscito: sono presenti degli errori nella compilazione dell'account");
+        this.toastr.warning(MESSAGES.ACCOUNT_FORM_WARNING);
         return;
       }
 
@@ -748,10 +752,10 @@ export class UserComponent implements OnInit {
                   this.bLoading = false;
                   this.initUserInformations(null, data);                                    // Update user informations 
                   this.accountFormInitialValues = _.cloneDeep(this.accountForm.value);      // Re init default form values
-                  this.toastr.success('Update successful');
+                  this.toastr.success(MESSAGES.ACCOUNT_UPDATE_SUCCESS);
               },
               error: error => {
-                  this.toastr.error(error);
+                  this.toastr.error(String(error) || MESSAGES.ACCOUNT_UPDATE_FAIL);
                   this.bLoading = false;
               }
           });
@@ -770,12 +774,12 @@ export class UserComponent implements OnInit {
               .subscribe(() => {
                 this.bLoading = false;
                 this.router.navigate(['../'], { relativeTo: this.route }).then(() => {
-                    this.toastr.success('Account successfully deleted!');
+                    this.toastr.success(MESSAGES.ACCOUNT_DELETE_SUCCESS);
                 });
             },
             (error: HttpErrorResponse) => {
                 this.bLoading = false;
-                this.toastr.error('An error occurred while deleting the account!');
+                this.toastr.error(String(error) || MESSAGES.ACCOUNT_DELETE_FAIL);
                 console.log(error);
             });
       }
@@ -789,11 +793,11 @@ export class UserComponent implements OnInit {
     this.userService.sendNotification(notificationType, destinationUser, fromAccount)
     .then(() => {
       this.bLoading = false;
-      this.toastr.success('Richiesta correttamente inviata!');
+      this.toastr.success(MESSAGES.NOTIFICATION_SENT);
     })
-    .catch(() => {
+    .catch((error: any) => {
       this.bLoading = false;
-      this.toastr.error("Si è verificato un errore durante l'invio della richiesta");
+      this.toastr.error(String(error) || MESSAGES.NOTIFICATION_SENT_FAIL);
     });
   }
   
@@ -806,11 +810,11 @@ export class UserComponent implements OnInit {
       if(bLinkAction)
         this.removeLink(notificationType, destinationUser._id); 
       this.bLoading = false;
-      this.toastr.success('Richiesta correttamente inviata!');
+      this.toastr.success(MESSAGES.NOTIFICATION_SENT);
     })
-    .catch(() => {
+    .catch((error: any) => {
       this.bLoading = false;
-      this.toastr.error("Si è verificato un errore durante l'invio della richiesta");
+      this.toastr.error(String(error) || MESSAGES.NOTIFICATIONS_CANCEL_LINK_FAIL);
     });
   }
 
@@ -820,11 +824,11 @@ export class UserComponent implements OnInit {
     this.userService.cancelAthleteCoachLinkRequest(notificationType, destinationUser)
     .then(() => {
       this.bLoading = false;
-      this.toastr.success('Richiesta di collegamento correttamente eliminata!');
+      this.toastr.success(MESSAGES.NOTIFICATION_LINK_DISMISSED);
     })
-    .catch(() => {
+    .catch((error: any) => {
       this.bLoading = false;
-      this.toastr.error("Si è verificato un errore durante l'eliminazione della richiesta di collegamento!");
+      this.toastr.error(String(error) || MESSAGES.NOTIFICATIONS_CANCEL_LINK_REQUEST_FAIL);
     });
   }
 
@@ -851,11 +855,11 @@ export class UserComponent implements OnInit {
         this.addLink(notification.type, notification.from);   // MUST update link list since socket does not update it (or its user)
         this.bLoading = false;
         console.log("acceptRequest result data", data);
-        this.toastr.success('Richiesta correttamente accettata!');
+        this.toastr.success(MESSAGES.NOTIFICATION_ACCEPTED);
       },
       (error: HttpErrorResponse) => {
         this.bLoading = false;
-        this.toastr.error("Si è verificato un errore durante l'invio di accettazione richiesta");
+        this.toastr.error(String(error) || MESSAGES.NOTIFICATION_ACCEPTED_FAIL);
         console.log("acceptRequest error", error);
       });
   }
@@ -868,11 +872,11 @@ export class UserComponent implements OnInit {
         this.removeNotification(notification._id);  // MUST update notifications list since socket does not update it (or its user)
         this.bLoading = false;
         console.log("refuseRequest result data", data);
-        this.toastr.success('Richiesta correttamente rifiutata!');
+        this.toastr.success(MESSAGES.NOTIFICATION_REFUSED);
       },
       (error: HttpErrorResponse) => {
         this.bLoading = false;
-        this.toastr.error("Si è verificato un errore durante l'invio di rifiuto richiesta");
+        this.toastr.error(String(error) || MESSAGES.NOTIFICATION_REFUSED_FAIL);
         console.log("refuseRequest error", error);
       });
   }

@@ -5,6 +5,7 @@ import { first } from 'rxjs/operators';
 import { AccountService } from '@app/_services/account-service/account-service.service';
 
 import { ToastrService } from 'ngx-toastr';
+import { MESSAGES } from '@app/_helpers';
 
 enum EmailStatus {
     Verifying,
@@ -39,7 +40,7 @@ export class VerifyEmailComponent implements OnInit {
             .subscribe({
                 next: () => {
                     this.router.navigate(['../login'], { relativeTo: this.route }).then(() => {
-                        this.toastr.success('Verification successful, you can now login');
+                        this.toastr.success(MESSAGES.VERIFICATION_SUCCESS);
                     });
                 },
                 error: () => {

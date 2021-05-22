@@ -7,3 +7,4 @@ export * from './date-before-after.validator';
 export * from './email.validator';
 export * from './role.validator';
 export * from './user-type.validator';
+export * from './messages';

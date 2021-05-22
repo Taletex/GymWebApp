@@ -4,6 +4,7 @@ import { first, finalize } from 'rxjs/operators';
 
 import { AccountService } from '@app/_services/account-service/account-service.service';
 import { ToastrService } from 'ngx-toastr';
+import { MESSAGES } from '@app/_helpers';
 
 @Component({ 
     selector: 'app-forgot-password',
@@ -45,8 +46,8 @@ export class ForgotPasswordComponent implements OnInit {
             .pipe(first())
             .pipe(finalize(() => this.loading = false))
             .subscribe({
-                next: () => this.toastr.success('Please check your email for password reset instructions'),
-                error: error => this.toastr.error(error)
+                next: () => this.toastr.success(MESSAGES.FORGOT_PASSWORD),
+                error: error => this.toastr.error(String(error) || MESSAGES.FORGOT_PASSWORD_FAIL)
             });
     }
 }

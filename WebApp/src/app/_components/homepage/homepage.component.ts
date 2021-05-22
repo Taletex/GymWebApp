@@ -8,6 +8,7 @@ import { Training, TRAINING_STATES, USER_TYPES } from '@app/_models/training-mod
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr'
 import * as _ from 'lodash';
+import { MESSAGES } from '@app/_helpers';
 
 @Component({
   selector: 'app-homepage',
@@ -51,7 +52,7 @@ export class HomepageComponent implements OnInit {
         },
         (error: HttpErrorResponse) => {
           this.bLoading = false;
-          this.toastr.error('Si è verificato un errore durante il caricamento della homepage');
+          this.toastr.error(String(error) || MESSAGES.HOMEPAGE_LOAD_ERROR);
           console.log(error);
         });
   }
