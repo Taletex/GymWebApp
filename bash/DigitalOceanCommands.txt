@@ -81,6 +81,13 @@ AVVIARE SOLO SERVER NODESERVER
 7. NODE_ENV=production pm2 start server.js
 
 
+NOTA: Bug sull'uso della libreria html-pdf-node.
+Praticamente ha un bug sull'uso di una sua libreria (puppeter), per fixarlo devi lanciare questi comandi sul server quando installi l'app (è quindi un requirements per l'installazione dell'applicazione su un server Ubuntu):
+- sudo apt-get update
+- sudo apt-get install -y libgbm-dev
+(ref: https://github.com/actions/virtual-environments/issues/732)
+
+
 
 
 
