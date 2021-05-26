@@ -5,7 +5,7 @@ import { MESSAGES } from '@app/_helpers';
 import { Account, APP_PAGES, Role } from '@app/_models';
 import { Notification } from '@app/_models/training-model';
 import { AccountService } from '@app/_services/account-service/account-service.service';
-import { NOTIFICATION_TYPE, NOTIFICATION_TYPE_NAMES } from '@app/_services/general-service/general-service.service';
+import { GeneralService, NOTIFICATION_TYPE, NOTIFICATION_TYPE_NAMES, PAGEMODE, PAGES } from '@app/_services/general-service/general-service.service';
 import { HttpService } from '@app/_services/http-service/http-service.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -26,8 +26,10 @@ export class NavbarComponent implements OnInit {
   public NOTIFICATION_TYPE = NOTIFICATION_TYPE;
   public NOTIFICATION_TYPE_NAMES = NOTIFICATION_TYPE_NAMES;
   public APP_PAGES = APP_PAGES;
+  public PAGEMODE = PAGEMODE;
+  public PAGES = PAGES;
 
-  constructor(private toastr: ToastrService, public router: Router, private accountService: AccountService, private httpService: HttpService) {
+  constructor(private toastr: ToastrService, public router: Router, private accountService: AccountService, private httpService: HttpService, private generalService: GeneralService) {
     this.accountService.account.subscribe((x) => {
       this.account = x;
       this.unreadNotificationList = (this.account.user.notifications.filter(n => !n.bConsumed));
@@ -45,6 +47,11 @@ export class NavbarComponent implements OnInit {
   expandSidebar() {
     this.sidebarOptions.bExpanded = true;
   }
+
+  // From services
+  openPageWithMode(mode: PAGEMODE, page: PAGES, id?: string) {
+    this.generalService.openPageWithMode(mode, page, id);
+  } 
 
   /* NOTIFICATIONS */
   acceptRequest(notification: Notification) {

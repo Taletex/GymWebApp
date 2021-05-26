@@ -86,17 +86,14 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group form-check">
-                <input type="checkbox" formControlName="acceptTerms" id="acceptTerms" class="form-check-input"
-                    [ngClass]="{ 'is-invalid': submitted && f.acceptTerms.errors }" />
-                <label for="acceptTerms" class="form-check-label">Accetta Termini & Condizioni</label>
-                <div *ngIf="submitted && f.acceptTerms.errors" class="invalid-feedback">Accetta Termini & Condizioni
-                    obbligatorio</div>
+            <div class="form-group form-check" [ngClass]="{'alert alert-link': submitted && f.acceptTerms.errors}">
+                <input type="checkbox" formControlName="acceptTerms" id="acceptTerms" class="form-check-input cursor-pointer" [ngClass]="{ 'is-invalid': submitted && f.acceptTerms.errors }" />
+                    <label class="form-check-label d-flex">Accetta <app-policy-modal (onClose)="acceptTerms(true)" (onAbort)="acceptTerms(false)"><a class="cursor-pointer text-white ml-1" [ngClass]="{'text-danger': submitted && f.acceptTerms.errors}">Termini & Condizioni</a></app-policy-modal></label>
+                <div *ngIf="submitted && f.acceptTerms.errors" class="invalid-feedback">Accetta Termini & Condizioni obbligatorio</div>
             </div>
             <div class="form-group mb-0">
                 <button type="submit" [disabled]="loading" class="btn btn-sm-sm btn-primary">
-                    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-                    Registrati
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>Registrati
                 </button>
                 <a routerLink="../login" href="" class="btn btn-sm-sm btn-link">Annulla</a>
             </div>

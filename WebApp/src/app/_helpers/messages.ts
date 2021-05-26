@@ -101,7 +101,7 @@ export enum MESSAGES {
     EXERCISE_CREATE_GENERIC_ERROR = "Si è verificato un errore durante la creazione dell'esercizio",
     EXERCISE_IMAGE_ERROR = "Si è verificato un errore durante il salvataggio delle immagini dell'esercizio",
     EXERCISE_DELETE_FAIL_ID = "Si è verificato un errore durante l'eliminazione dell'esercizio con id ",
-
+    EXERCISE_DELETE_FAIL_TRAININGS = "Sono presenti degli allenamenti che utilizzano l'esercizio che si vuole eliminare: non è possibile procedere con l'eliminazione",
     TRAINING_NOT_FOUND_ID = "Allenamento non trovato, id ",
     TRAINING_ERROR_FOUND_ID = "Si è verifiato un errore durante la ricerca dell'allenamento con id ",
     TRAINING_ERROR_UPDATE_ID = "Si è verifiato un errore durante l'aggiornamento dell'allenamento con id ",

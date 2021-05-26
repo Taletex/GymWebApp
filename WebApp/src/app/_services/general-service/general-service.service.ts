@@ -133,6 +133,8 @@ export class GeneralService {
     }
 
     setPageStatus(mode: PAGEMODE, page: PAGES) {
+        if(page == PAGES.PROFILES)
+            page = PAGES.USERS;
         this.pageStatus[page] = mode;
         if (typeof (Storage) !== "undefined")
             sessionStorage.pageStatus = JSON.stringify(this.pageStatus);

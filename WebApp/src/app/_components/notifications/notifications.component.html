@@ -124,7 +124,7 @@
                             <div class="d-none d-md-inline col-md-1"><img [hidden]="elem.bConsumed" src="assets/icons/misc/dot.svg" class="table-icon-lg"></div>
                             <div class="d-none d-md-inline col-md-2 truncate-fullwidth"><span>{{NOTIFICATION_TYPE_NAMES[elem.type]}}</span></div>
                             <div class="d-none d-md-inline col-md-2 truncate-fullwidth"><span>{{elem.creationDate | date:'HH:mm:ss - dd/MM/yyyy'}}</span></div>
-                            <div class="d-none d-md-inline col-md-2 truncate-fullwidth"><span>{{elem.from.name != null ? elem.from.name : ''}} {{elem.from.surname != null ? elem.from.surname : elem.from}}</span></div>
+                            <div class="d-none d-md-inline col-md-2 truncate-fullwidth"><span>Da {{(elem.from != null && elem.from.name != null && elem.from.surname != null) ? (elem.from.name + " " + elem.from.surname) : 'Utente Cancellato'}}</span></div>
                             <div class="col-9 col-md-3"><div [innerHTML]="elem.message"></div></div>
                             <div class="col-3 col-md-2 d-flex justify-content-end px-2 px-md-2">
                                 <div *ngIf="!elem.bConsumed && (elem.type == NOTIFICATION_TYPE.COACH_REQUEST || elem.type == NOTIFICATION_TYPE.ATHLETE_REQUEST)" (click)="acceptRequest(elem)" class="ml-2 image-button" ngbTooltip="Accetta Richiesta" placement="left"><img src="assets/icons/actions/confirm.svg" style="width:20px; height:auto;"></div>
@@ -150,7 +150,7 @@
                         </div>
                         <div class="row m-0">
                             <div class="col-4 text-muted">Mittente</div>
-                            <div class="col-8">{{elem.from.name != null ? elem.from.name : ''}} {{elem.from.surname != null ? elem.from.surname : elem.from}}</div>
+                            <div class="col-8">{{(elem.from != null && elem.from.name != null && elem.from.surname != null) ? (elem.from.name + " " + elem.from.surname) : 'Utente Cancellato'}}</div>
                         </div>
                     </ng-template>
                 </ngb-panel>

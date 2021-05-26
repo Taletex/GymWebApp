@@ -47,6 +47,10 @@ export class RegisterComponent implements OnInit {
         });
     }
 
+    acceptTerms(bAccept: boolean) {
+        this.f.acceptTerms.setValue(bAccept);
+    }
+
     // convenience getter for easy access to form fields
     get f() { return this.form.controls; }
 
@@ -54,10 +58,10 @@ export class RegisterComponent implements OnInit {
         this.submitted = true;
 
         // stop here if form is invalid
-        // if (this.form.invalid) {
-        //     this.toastr.warning(MESSAGES.REGISTER_FAIL);
-        //     return;
-        // }
+        if (this.form.invalid) {
+            this.toastr.warning(MESSAGES.REGISTER_FAIL);
+            return;
+        }
 
         this.loading = true;
         this.accountService.register(this.form.value)

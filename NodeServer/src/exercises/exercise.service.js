@@ -3,6 +3,8 @@ const { User } = require('src/users/user.model.js')
 const fileManager = require('src/_helpers/fileManager');
 const _ = require('lodash');
 const fs = require('fs');
+const { Training } = require('../trainings/training.model');
+const { ObjectID } = require('mongodb');
 
 module.exports = () => {
 
@@ -243,31 +245,39 @@ module.exports = () => {
 
     // Delete a exercise with the specified id in the request
     async function deleteExercise(req, res) {
-        Exercise.findOneAndRemove({ _id: req.params._id })
-            .then(exercise => {
-                if (!exercise) {
-                    return res.status(404).send({
-                        message: "EXERCISE_NOT_FOUND_ID", id: req.params._id
-                    });
-                }
+        let bExists = await Training.exists({"weeks.sessions.exercises.exercise": ObjectID(req.params._id)});
+        if(!bExists) {
+            Exercise.findOneAndRemove({ _id: req.params._id })
+                .then(exercise => {
+                    if (!exercise) {
+                        return res.status(404).send({
+                            message: "EXERCISE_NOT_FOUND_ID", id: req.params._id
+                        });
+                    }
 
-                // delete image folder
-                let fileDir = fileManager.imagesBaseDir + "/" + req.params._id;
-                if (fs.existsSync(fileDir)) {
-                    fs.rmdirSync(fileDir, { recursive: true });
-                } 
+                    // delete image folder
+                    let fileDir = fileManager.imagesBaseDir + "/" + req.params._id;
+                    if (fs.existsSync(fileDir)) {
+                        fs.rmdirSync(fileDir, { recursive: true });
+                    } 
 
-                res.send({ message: "EXERCISE_DELETE_SUCCESS" });
-            }).catch(err => {
-                if (err.kind === 'ObjectId' || err.name === 'NotFound') {
-                    return res.status(404).send({
-                        message: "EXERCISE_NOT_FOUND_ID", id: req.params._id
+                    res.send({ message: "EXERCISE_DELETE_SUCCESS" });
+                }).catch(err => {
+                    if (err.kind === 'ObjectId' || err.name === 'NotFound') {
+                        return res.status(404).send({
+                            message: "EXERCISE_NOT_FOUND_ID", id: req.params._id
+                        });
+                    }
+                    return res.status(500).send({
+                        message: "EXERCISE_DELETE_FAIL_ID", id: req.params._id
                     });
-                }
-                return res.status(500).send({
-                    message: "EXERCISE_DELETE_FAIL_ID", id: req.params._id
                 });
+        } else{
+            return res.status(500).send({
+                message: "EXERCISE_DELETE_FAIL_TRAININGS"
             });
+        }
+
     };
 
     /* UTILS */

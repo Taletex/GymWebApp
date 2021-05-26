@@ -122,7 +122,7 @@
                   <div class="col-10">
                     <div class="text-dark">{{NOTIFICATION_TYPE_NAMES[n.type]}}</div>
                     <div class="text-muted small mt-1" [innerHTML]="n.message"></div>
-                    <div class="text-muted small mt-1">Da {{n.from.name != null ? n.from.name : ''}} {{n.from.surname != null ? n.from.surname : n.from}}</div>
+                    <div class="text-muted small mt-1">Da {{(n.from != null && n.from.name != null && n.from.surname != null) ? (n.from.name + " " + n.from.surname) : 'Utente Cancellato'}}</div>
                     <div class="text-muted small mt-1">Ore {{n.creationDate | date:'HH:mm:ss - dd/MM/yyyy'}}</div>
                   </div>
                   <div class="col-2">
@@ -190,7 +190,8 @@
                 <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
               </svg> Statistiche</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item disabled" disabled href="/pages-settings.html">Impostazioni &amp; Privacy</a>
+            <a class="dropdown-item cursor-pointer" (click)="openPageWithMode(PAGEMODE.WRITE, PAGES.PROFILES)">Impostazioni&amp;Privacy</a>
+            <a class="dropdown-item cursor-pointer"><app-policy-modal>Policy&amp;Cookie Privacy</app-policy-modal></a>
             <a class="dropdown-item disabled" disabled href="#">Aiuto</a>
             <a class="dropdown-item" href="#" (click)="logout()">Logout</a>
           </div>

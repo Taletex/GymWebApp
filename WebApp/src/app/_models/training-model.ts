@@ -21,7 +21,6 @@ export class Contacts {
     ) {}
 }
 
-
 export class Residence {
     constructor(
         public state: string = "Italy", 
@@ -32,7 +31,6 @@ export class Residence {
     ) {}
 }
 
-
 export class UserSettings {
     constructor(
         public showActivities: OPTION_VISIBILITY = OPTION_VISIBILITY.ALL,
@@ -40,7 +38,6 @@ export class UserSettings {
         public showPublicInfo: OPTION_VISIBILITY = OPTION_VISIBILITY.ALL
     ) {}
 }
-
 
 export class PRSeries {
     constructor(
@@ -138,14 +135,12 @@ export class User {
     ) {}
 }
 
-
 export class Variant {
     constructor(
         public name: string = "Standard", 
         public intensityCoefficient: number = 1
     ) {}
 }
-
 
 export class Series {
     constructor(
@@ -156,7 +151,6 @@ export class Series {
         public rest: number = 90
     ) {}
 }
-
 
 export class Exercise {
     _id: string;
@@ -198,14 +192,12 @@ export class Session {
     }
 }
 
-
 export class Week {
     constructor(
         public comment: string = "", 
         public sessions: Session[] = [new Session()]
     ) {}
 }
-
 
 export class Training {
     _id: string;

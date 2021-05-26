@@ -6,9 +6,10 @@ const emailHelper = require('src/_helpers/send-email');
 const db = require('src/_helpers/db');
 const Role = require('src/_helpers/role');
 const _ = require('lodash');
-const { Residence, UserSettings } = require('../users/user.model');
+const { Residence, UserSettings, User } = require('../users/user.model');
 const { validateEmail } = require('../_helpers/send-email');
 const { USER_TYPES } = require('../_helpers/enum');
+const { ObjectID } = require('mongodb');
 const ACCOUNT_VALIDATORS = {MAX_EMAIL_LENGTH: 100, MIN_PSW_LENGTH: 6, MAX_PSW_LENGTH: 50, MAX_NAME_LENGTH: 30, MAX_SURNAME_LENGTH: 30};
 
 module.exports = {
@@ -128,6 +129,12 @@ async function register(params, origin) {
 
     // send email
     await sendVerificationEmail(account, origin);
+
+    // if is first account, create empty account
+    // if(isFirstAccount) {
+    //     const defaultUser = await new db.User({name: "Account", surname: "Cancellato", userType: 'both'}).save();
+    //     await new db.Account({user: defaultUser._id, role: Role.User, verificationToken: randomTokenString(), email:"postmaster@mytrainingplatform.it", passwordHash: hash("123456"), "acceptTerms":true}).save();
+    // }
 }
 
 async function verifyEmail({ token }) {
@@ -285,6 +292,15 @@ async function _delete(id) {
     const account = await getAccount(id);
     const user = await getUser(account.user._id);
 
+    // Update entities referecing the account which will be deleted
+    await db.Training.deleteMany({author: user._id});
+    await db.Training.updateMany({ $pull: { athletes: user._id } });
+    await db.Exercise.deleteMany({"creator": [user._id] });
+    await db.User.updateMany({ $pull: {athletes: user._id } });
+    await db.User.updateMany({ $pull: {coaches: user._id } });
+    await db.User.updateMany({ $pull: { notifications: { from: user._id} } });
+    await db.User.updateMany({ $pull: { notifications: { destination: user._id} } });
+
     await account.remove();
     await user.remove();
 }
@@ -407,7 +423,7 @@ async function sendPasswordResetEmail(account, origin) {
 function isAccountValidForSubmission(account) {
     if(
         (account.email == null || account.email.length == 0 || (account.email.length > ACCOUNT_VALIDATORS.MAX_EMAIL_LENGTH || !validateEmail(account.email))) ||
-        (account.role == null || (account.role != Role.Admin && account.role != Role.User)) ||
+        (account.role != null && (account.role != Role.Admin && account.role != Role.User)) ||
         (account.password != null && (account.password.length < 6 || account.password.length > ACCOUNT_VALIDATORS.MAX_PASSWORD_LENGTH)) ||
         (account.confirmPassword != null && (account.confirmPassword.length < 6 || account.confirmPassword.length > ACCOUNT_VALIDATORS.MAX_PASSWORD_LENGTH)) ||
         (account.password != null && account.confirmPassword != null && (account.password != account.confirmPassword))

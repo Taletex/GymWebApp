@@ -58,7 +58,7 @@ import { NavbarComponent } from './_components/navbar/navbar.component';
     SidebarComponent,
     NotificationsComponent,
     TrainingCalendarComponent,
-    NavbarComponent
+    NavbarComponent,
   ],
   providers: [
     { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AccountService] },

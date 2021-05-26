@@ -83,6 +83,9 @@ export class UserComponent implements OnInit {
   public accountFormInitialValues: any;
   public accountFormSubmitted = false;
   public accountFormDeleting = false;
+  public areYouSureDeleteAccountMsg: string;
+  public bShowPsw: boolean = false;
+  public bShowConfirmPsw: boolean = false;
 
   // Aux attributes for new exercise handling
   public newExercise: Exercise = new Exercise();
@@ -766,23 +769,33 @@ export class UserComponent implements OnInit {
   }
 
   deleteAccount() {
-      if (confirm('Vuoi procedere?')) {
-          this.accountFormDeleting = true;
-          this.bLoading = true;
-          this.accountService.delete(this.userAccount.id)
-              .pipe(first())
-              .subscribe(() => {
-                this.bLoading = false;
-                this.router.navigate(['../'], { relativeTo: this.route }).then(() => {
-                    this.toastr.success(MESSAGES.ACCOUNT_DELETE_SUCCESS);
-                });
-            },
-            (error: HttpErrorResponse) => {
-                this.bLoading = false;
-                this.toastr.error(String(error) || MESSAGES.ACCOUNT_DELETE_FAIL);
-                console.log(error);
-            });
-      }
+    this.accountFormDeleting = true;
+    this.bLoading = true;
+    this.accountService.delete(this.userAccount.id)
+        .pipe(first())
+        .subscribe(() => {
+          this.bLoading = false;
+          if(this.account.user._id == this.userAccount.user._id) {
+            this.accountService.deleteRememberMeInformations();
+            this.router.navigate(['/']).then(() => {
+              this.toastr.success(MESSAGES.ACCOUNT_DELETE_SUCCESS);
+          });
+          } else {
+            this.router.navigate(['../'], { relativeTo: this.route }).then(() => {
+              this.toastr.success(MESSAGES.ACCOUNT_DELETE_SUCCESS);
+          });
+          }
+      },
+      (error: HttpErrorResponse) => {
+          this.bLoading = false;
+          this.toastr.error(String(error) || MESSAGES.ACCOUNT_DELETE_FAIL);
+          console.log(error);
+      });
+  }
+
+  confirmDeleteAccount() {
+    this.areYouSureDeleteAccountMsg = "Sei sicuro di voler eliminare l'account? L'operazione non è reversibile. Ogni dato verrà perso.";
+    document.getElementById("confirmationModalButton").click();
   }
 
 

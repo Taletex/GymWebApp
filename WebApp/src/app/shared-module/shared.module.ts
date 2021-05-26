@@ -7,6 +7,7 @@ import { TrainingModalComponent } from './components/training-modal/training-mod
 import { ExerciseModalComponent } from './components/exercise-modal/exercise-modal.component';
 import { UserModalComponent } from './components/user-modal/user-modal.component';
 import { ConfirmationModalComponent } from './components/confirmation-modal/confirmation-modal.component';
+import { PolicyModalComponent } from './components/policy-modal/policy-modal.component';
 import { PageNotAuthorizedComponent } from './components/page-not-authorized/page-not-authorized.component';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { SessionModalComponent } from './components/session-modal/session-modal.component';
@@ -22,6 +23,7 @@ export { TrainingModalComponent } from './components/training-modal/training-mod
 export { ExerciseModalComponent } from './components/exercise-modal/exercise-modal.component';
 export { UserModalComponent } from './components/user-modal/user-modal.component';
 export { ConfirmationModalComponent } from './components/confirmation-modal/confirmation-modal.component';
+export { PolicyModalComponent } from './components/policy-modal/policy-modal.component';
 export { SessionModalComponent } from './components/session-modal/session-modal.component';
 export { PageNotAuthorizedComponent } from './components/page-not-authorized/page-not-authorized.component';
 export { UploadFilesComponent } from './components/upload-files/upload-files.component';
@@ -41,6 +43,7 @@ export { ExerciseViewComponent } from './components/exercise-view/exercise-view.
         ExerciseModalComponent,
         UserModalComponent,
         ConfirmationModalComponent,
+        PolicyModalComponent,
         PageNotAuthorizedComponent,
         SessionModalComponent,
         WeekViewComponent,
@@ -56,6 +59,7 @@ export { ExerciseViewComponent } from './components/exercise-view/exercise-view.
         ExerciseModalComponent,
         UserModalComponent, 
         ConfirmationModalComponent,
+        PolicyModalComponent,
         PageNotAuthorizedComponent,
         SessionModalComponent,
         WeekViewComponent,

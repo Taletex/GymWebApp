@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { AccountRoutingModule } from './account-routing.module';
 import { LayoutComponent } from './layout.component';
 import { LoginComponent } from './components/login/login.component';
+import { SharedModule } from '@app/shared-module/shared.module';
 import { RegisterComponent } from './components/register/register.component';
 import { VerifyEmailComponent } from './components/verify-mail/verify-email.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
@@ -16,7 +17,8 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
         CommonModule,
         NgbModule,
         ReactiveFormsModule,
-        AccountRoutingModule
+        AccountRoutingModule,
+        SharedModule
     ],
     declarations: [
         LayoutComponent,

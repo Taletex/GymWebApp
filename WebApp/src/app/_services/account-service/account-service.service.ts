@@ -142,6 +142,12 @@ export class AccountService {
             }));
     }
 
+    deleteRememberMeInformations() {
+        localStorage.setItem("mtp_rememberMe", "false");
+        localStorage.setItem("mtp_username", "");
+        localStorage.setItem("mtp_psw", "");
+    }
+
     // helper methods
 
     private refreshTokenTimeout;
@@ -159,4 +165,5 @@ export class AccountService {
     private stopRefreshTokenTimer() {
         clearTimeout(this.refreshTokenTimeout);
     }
+
 }

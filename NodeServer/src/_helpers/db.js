@@ -1,6 +1,8 @@
 const config = require('config.json');
 const mongoose = require('mongoose');
 const {User} = require('src/users/user.model.js');
+const {Exercise} = require('src/exercises/exercise.model.js');
+const {Training} = require('src/trainings/training.model.js');
 const {Contacts} = require('src/users/user.model.js');
 const {Residence} = require('src/users/user.model.js');
 const connectionOptions = { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false };
@@ -24,6 +26,8 @@ db.once('open', function() {
 module.exports = {
     Account: require('src/accounts/account.model'),
     User: User,
+    Exercise: Exercise,
+    Training: Training,
     Contacts: Contacts,
     Residence: Residence,
     RefreshToken: require('src/accounts/refresh-token.model'),
