@@ -31,7 +31,7 @@ module.exports = {
 };
 
 async function authenticate({ email, password, ipAddress }) {
-    const account = await db.Account.findOne({ email }).populate('user')
+    const account = await db.Account.findOne({ email: { $regex: new RegExp("^" + email.toLowerCase(), "i")} }).populate('user')
                                                        .populate({ path: 'user', populate: {path: 'personalRecords', populate: {path: 'exercise'}}})
                                                        .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'from'}}})
                                                        .populate({ path: 'user', populate: {path: 'notifications', populate: {path: 'destination'}}})

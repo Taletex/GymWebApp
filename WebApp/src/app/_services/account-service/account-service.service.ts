@@ -68,10 +68,11 @@ export class AccountService {
 
     logout() {
         localStorage.setItem("mtp_bLoggedIn", "false");
-        this.http.post<any>(`${baseUrl}/revoke-token`, {}, { withCredentials: true });
-        this.stopRefreshTokenTimer();
-        this.accountSubject.next(null);
-        this.router.navigate(['/account/login']);
+        this.http.post<any>(`${baseUrl}/revoke-token`, {}, { withCredentials: true }).subscribe((res) => {
+            this.stopRefreshTokenTimer();
+            this.accountSubject.next(null);
+            this.router.navigate(['/account/login']);
+        });
     }
 
     refreshToken() {
