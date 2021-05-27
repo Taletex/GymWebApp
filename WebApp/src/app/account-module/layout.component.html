@@ -1,6 +1,6 @@
 ﻿<div class="main__account row m-0">
 
-    <div class="account__maincontainer col-12 p-0">
+    <div class="account__maincontainer col-12 p-0" *ngIf="!bUnderMaintenance">
 
         <!-- NAVBAR -->
         <div class="nav-container">
@@ -131,4 +131,14 @@
 
     </div>
 
+    <div class="account__undermaintenance col-12 p-0" *ngIf="bUnderMaintenance">
+        <div class="card d-block p-5">
+            <h1 class="h1 mb-5">Applicazione in manutenzione!</h1>
+            <div class="d-flex align-items-center justify-content-center">
+                <img src="assets/icons/favicon-white.png" style="width:100px; height:auto;" class="mb-4">
+                <img src="assets/icons/favicon-white.png" style="width:100px; height:auto; transform: rotateY(180deg);" class="mb-4 ml-2">
+            </div>
+            <h1 class="h1"><small>Per il momento dovrai accontentarti del blocco note per i tuoi allenamenti!</small></h1>
+        </div>
+    </div>
 </div>

@@ -40,6 +40,28 @@ $black-custom: #141414;
         }
         /* ===== END SCROLLBAR ===== */
 
+    .account__undermaintenance {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        overflow: auto;
+        min-height: 100vh;
+        background-image: url('../../assets/img/HomepageHeader3.jpg');
+        background-position: center;
+        background-size: cover;
+
+        .card {
+            background-color: rgba(0,0,0,0.5);
+            color: white;
+            text-align: center;
+
+            .h1 {
+                word-break: break-word;
+            }
+        }
+    }
+
     .account__maincontainer {
         height: 100%;
         overflow: auto;

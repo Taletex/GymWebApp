@@ -9,6 +9,7 @@ import { AccountService } from '@app/_services/account-service/account-service.s
 })
 export class LayoutComponent {
     public navbarActiveList = {home: true, services: false, contacts: false, login: false, register: false}; 
+    public bUnderMaintenance: boolean = false;
 
     constructor(public router: Router, private accountService: AccountService, private route: ActivatedRoute) {
         // redirect to home if already logged in
