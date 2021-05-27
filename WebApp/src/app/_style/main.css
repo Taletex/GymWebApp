@@ -51,6 +51,10 @@
   display: none;
 }
 
+html, body {
+  height: 100% !important;
+}
+
 /* COLOURS */
 .bg-custom-cyan {
   background-color: rgba(112, 181, 249, 0.2) !important;

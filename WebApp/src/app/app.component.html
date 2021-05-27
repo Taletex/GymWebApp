@@ -1,4 +1,4 @@
-<div class="d-flex p-0 m-0" style="height:100vh!important">
+<div class="d-flex h-100 p-0 m-0">
 
   <div class="sidebar-content p-0" *ngIf="account && account.jwtToken" [ngClass]="{'expanded': sidebarOptions.bExpanded}" (click)="collapseSidebarInOverlay()">
     <app-sidebar [(options)]="sidebarOptions"></app-sidebar>
@@ -6,7 +6,7 @@
 
   <div class="main-content scrollbar bg-light w-100 h-100">
     <app-navbar *ngIf="account && account.jwtToken" [(sidebarOptions)]="sidebarOptions"></app-navbar>
-    <div [@routeAnimations]="prepareRoute(outlet)" class="h-100 w-100" >
+    <div [@routeAnimations]="prepareRoute(outlet)" class="w-100" >
       <router-outlet class="h-100 w-100" #outlet="outlet"></router-outlet>
     </div>
   </div>

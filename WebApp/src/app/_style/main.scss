@@ -5,6 +5,11 @@ $custom-cyan: rgb(112 181 249 / 20%);
 $custom-cyan-hover: rgb(112 181 249 / 40%);
 $custom-lightgray: rgb(179 179 179 / 15%);
 
+html, body {
+  height: 100% !important;
+}
+
+
 /* COLOURS */
 .bg-custom-cyan {
   background-color: $custom-cyan !important;
