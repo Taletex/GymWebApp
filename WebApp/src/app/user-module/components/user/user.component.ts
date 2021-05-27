@@ -310,6 +310,9 @@ export class UserComponent implements OnInit {
      // end test
   }
 
+  getActivities() {
+    // TODO: basing on user settings you should not exec the get Activities!
+  }
 
 
   /* === User Form utilities === */

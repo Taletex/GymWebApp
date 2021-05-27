@@ -10,6 +10,7 @@ const { Residence, UserSettings, User } = require('../users/user.model');
 const { validateEmail } = require('../_helpers/send-email');
 const { USER_TYPES } = require('../_helpers/enum');
 const { ObjectID } = require('mongodb');
+const generalService = require('../_helpers/general.service')();
 const ACCOUNT_VALIDATORS = {MAX_EMAIL_LENGTH: 100, MIN_PSW_LENGTH: 6, MAX_PSW_LENGTH: 50, MAX_NAME_LENGTH: 30, MAX_SURNAME_LENGTH: 30};
 
 module.exports = {

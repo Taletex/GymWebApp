@@ -6,6 +6,7 @@ const authorize = require('src/_middleware/authorize')
 const Role = require('src/_helpers/role');
 const accountService = require('./account.service');
 const { ACCOUNT_VALIDATORS, USER_TYPES } = require('../_helpers/enum');
+const generalService = require('../_helpers/general.service')();
 
 // routes
 router.post('/authenticate', authenticateSchema, authenticate);
@@ -166,7 +167,14 @@ function getById(req, res, next) {
     }
 
     accountService.getById(req.params.id)
-        .then(account => account ? res.json(account) : res.sendStatus(404))
+        .then((account) => {
+            if(account) {
+                generalService.filterUserByPrivacySettings([account.user], req.user);
+                res.json(account);
+            } else {
+                res.sendStatus(404)
+            }
+        })
         .catch(next);
 }
 
@@ -177,7 +185,14 @@ function getAccountByUserId(req, res, next) {
     }
 
     accountService.getAccountByUserId(req.params.id)
-        .then(account => account ? res.json(account) : res.sendStatus(404))
+        .then((account) => {
+            if(account) {
+                generalService.filterUserByPrivacySettings([account.user], req.user);
+                res.json(account);
+            } else {
+                res.sendStatus(404)
+            }
+        })
         .catch(next);
 }
 

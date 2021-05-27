@@ -5,6 +5,8 @@ const fs = require('fs');
 const _ = require('lodash');
 const { validateEmail } = require('../_helpers/send-email');
 const moment = require('moment');
+const role = require('../_helpers/role');
+const generalService = require('../_helpers/general.service')();
 
 /** REST CALLBACKS **/
 module.exports = (io, clientSocketList) => {
@@ -33,7 +35,6 @@ module.exports = (io, clientSocketList) => {
         cancelNotification,
         cancelAllNotifications
     };
-
 
     // Create and Save a new User
     function createUser (req, res, next) {
@@ -85,6 +86,7 @@ module.exports = (io, clientSocketList) => {
                 .populate({path: 'notifications', populate: {path: 'destination'}})
                 .populate('coaches').populate('athletes')
             .then(users => {
+                generalService.filterUserByPrivacySettings(users, req.user);
                 res.send(_.sortBy(users, ['name', 'surname']));
             }).catch(err => {
                 res.status(500).send({
@@ -100,6 +102,7 @@ module.exports = (io, clientSocketList) => {
                 .populate({path: 'notifications', populate: {path: 'destination'}})
                 .populate('coaches').populate('athletes')
             .then(users => {
+                generalService.filterUserByPrivacySettings(users, req.user);
                 res.send(_.sortBy(_.filter(users, function (user) { return (user.userType == "athlete" || user.userType == "both"); }), ['name', 'surname']));
             }).catch(err => {
                 res.status(500).send({
@@ -115,6 +118,7 @@ module.exports = (io, clientSocketList) => {
                 .populate({path: 'notifications', populate: {path: 'destination'}})
                 .populate('coaches').populate('athletes')
             .then(users => {
+                generalService.filterUserByPrivacySettings(users, req.user);
                 res.send(_.sortBy(_.filter(users, function (user) { return (user.userType == "coach" || user.userType == "both"); }), ['name', 'surname']));
             }).catch(err => {
                 res.status(500).send({
@@ -135,6 +139,7 @@ module.exports = (io, clientSocketList) => {
                         message: "USER_NOT_FOUND_ID", id: req.params._id
                     });
                 }
+                generalService.filterUserByPrivacySettings([user], req.user);
                 res.send(user);
             }).catch(err => {
                 if (err.kind === 'ObjectId') {
@@ -311,6 +316,7 @@ module.exports = (io, clientSocketList) => {
 
                             // 4. Update destUser informations in destUser and fromUser clients
                             notificationService.sendUpdatedUserToItsSocket(user);    
+                            generalService.filterUserByPrivacySettings([user], {_id: req.body.from, role: role.User});
                             notificationService.sendUpdatedUserToClientSocket(user, req.body.from);
 
                             // 5. Send response to calling client
@@ -389,11 +395,13 @@ module.exports = (io, clientSocketList) => {
                             if (!destinationUser || !fromUser) { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
 
                             // Update fromUser and destUser informations in destUser client
-                            notificationService.sendUpdatedUserToItsSocket(destinationUser);                    
+                            notificationService.sendUpdatedUserToItsSocket(destinationUser);  
+                            generalService.filterUserByPrivacySettings([fromUser], {_id: destinationUser._id, role: role.User});
                             notificationService.sendUpdatedUserToClientSocket(fromUser, destinationUser._id);
 
                             // Update fromUser and destUser informations in fromUser client
-                            notificationService.sendUpdatedUserToItsSocket(fromUser);           
+                            notificationService.sendUpdatedUserToItsSocket(fromUser); 
+                            generalService.filterUserByPrivacySettings([destinationUser], {_id: fromUser._id, role: role.User});
                             notificationService.sendUpdatedUserToClientSocket(destinationUser, fromUser._id);
 
                             // Send response to calling client
@@ -457,11 +465,13 @@ module.exports = (io, clientSocketList) => {
                             if (!destinationUser || !fromUser) { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
 
                             // Update fromUser and destUser informations in destUser client
-                            notificationService.sendUpdatedUserToItsSocket(destinationUser);                    
+                            notificationService.sendUpdatedUserToItsSocket(destinationUser);    
+                            generalService.filterUserByPrivacySettings([fromUser], {_id: destinationUser._id, role: role.User});
                             notificationService.sendUpdatedUserToClientSocket(fromUser, destinationUser._id);
 
                             // Update fromUser and destUser informations in fromUser client
-                            notificationService.sendUpdatedUserToItsSocket(fromUser);           
+                            notificationService.sendUpdatedUserToItsSocket(fromUser);       
+                            generalService.filterUserByPrivacySettings([destinationUser], {_id: fromUser._id, role: role.User});
                             notificationService.sendUpdatedUserToClientSocket(destinationUser, fromUser._id);
 
                             // Send response to calling client
@@ -515,6 +525,7 @@ module.exports = (io, clientSocketList) => {
                             notificationService.sendUpdatedUserToItsSocket(destinationUser);    
 
                             // Update destUser informations in fromUser client
+                            generalService.filterUserByPrivacySettings([destinationUser], {_id: notificationToConsume.from, role: role.User});
                             notificationService.sendUpdatedUserToClientSocket(destinationUser, notificationToConsume.from);
 
                             // Send response to calling client
@@ -596,11 +607,13 @@ module.exports = (io, clientSocketList) => {
                         let destinationUser = (cUser._id.equals(notification.destination) ? cUser : aUser);
 
                         // Update fromUser and destUser informations in destUser client
-                        notificationService.sendUpdatedUserToItsSocket(destinationUser);                    
+                        notificationService.sendUpdatedUserToItsSocket(destinationUser);   
+                        generalService.filterUserByPrivacySettings([fromUser], {_id: destinationUser._id, role: role.User});
                         notificationService.sendUpdatedUserToClientSocket(fromUser, destinationUser._id);
 
                         // Update fromUser and destUser informations in fromUser client
-                        notificationService.sendUpdatedUserToItsSocket(fromUser);           
+                        notificationService.sendUpdatedUserToItsSocket(fromUser);     
+                        generalService.filterUserByPrivacySettings([destinationUser], {_id: fromUser._id, role: role.User});
                         notificationService.sendUpdatedUserToClientSocket(destinationUser, fromUser._id);
 
                         // Send response to calling client
@@ -657,6 +670,7 @@ module.exports = (io, clientSocketList) => {
 
                             // Update destUser informations in fromUser clients
                             for(let j=0; j<notificationToConsumeList.length; j++) {
+                                generalService.filterUserByPrivacySettings([destinationUser], {_id: notificationToConsumeList[j].from, role: role.User});
                                 notificationService.sendUpdatedUserToClientSocket(destinationUser, notificationToConsumeList[j].from);
                             }
 
@@ -713,6 +727,7 @@ module.exports = (io, clientSocketList) => {
                             notificationService.sendUpdatedUserToItsSocket(destinationUser);    
 
                             // Update destUser informations in fromUser client
+                            generalService.filterUserByPrivacySettings([destinationUser], {_id: notificationToCancel.from, role: role.User});
                             notificationService.sendUpdatedUserToClientSocket(destinationUser, notificationToCancel.from);
 
                             // Send response to calling client
@@ -766,6 +781,7 @@ module.exports = (io, clientSocketList) => {
 
                             // Update destUser informations in fromUser clients
                             for(let i=0; i<notificationToCancelList.length; i++) {
+                                generalService.filterUserByPrivacySettings([destinationUser], {_id: notificationToCancelList[i].from, role: role.User});
                                 notificationService.sendUpdatedUserToClientSocket(destinationUser, notificationToCancelList[i].from);
                             }
 
