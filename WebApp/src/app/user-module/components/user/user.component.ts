@@ -68,6 +68,7 @@ export class UserComponent implements OnInit {
   public gymsList = [];
   public maxImageSize: number = 2;    //MB
   public acceptedFormats: string[] = ["image/png", "image/jpeg"];
+  public areYouSureChangeUserType: string;
 
   // Personal Record Form
   public TRAINING_VALIDATIONS;
@@ -124,6 +125,7 @@ export class UserComponent implements OnInit {
   ngOnInit() {
     this.USER_VALIDATIONS = this.userService.USER_VALIDATIONS;
     this.TRAINING_VALIDATIONS = this.trainingService.TRAINING_VALIDATIONS;
+    this.areYouSureDeleteAccountMsg = "Sei sicuro di voler eliminare l'account? L'operazione non è reversibile. Ogni dato verrà perso.";
 
     if(this.account.role == Role.Admin && this.accountId!=null)                                                                // if admin and accountId!=null get the account from be
       this.getAccount(this.accountId);
@@ -425,6 +427,17 @@ export class UserComponent implements OnInit {
       return;
     }
 
+    // If user type has been changed (in athlete or coach), show confirmation modal
+    if(this.userAccount.user.userType != this.userForm.value.userType && this.userForm.value.userType != USER_TYPES.BOTH) {
+      this.areYouSureChangeUserType = "Sei sicuro di voler cambiare tipo utente? L'operazione non è reversibile e può comportare la perdita di dati: " + (this.userForm.value.userType == USER_TYPES.ATHLETE ? 'collegamenti con gli atleti, allenamenti di cui si è allenatori, esercizi creati' : 'collegamenti con i coach e allenamenti di cui si è atleti');
+      document.getElementById("confirmationModalButton2").click();
+      return;
+    }
+
+    this.updateUser();
+  }
+
+  updateUser() {
     // set user value to send to backend
     this.assignFormValuesToUser();
 
@@ -445,7 +458,7 @@ export class UserComponent implements OnInit {
           this.toastr.error(String(error) || MESSAGES.USER_UPDATE_FAIL);
           console.log(error);
         });
-  }
+      }
 
 
   /* === PR Form utilities === */
@@ -797,7 +810,6 @@ export class UserComponent implements OnInit {
   }
 
   confirmDeleteAccount() {
-    this.areYouSureDeleteAccountMsg = "Sei sicuro di voler eliminare l'account? L'operazione non è reversibile. Ogni dato verrà perso.";
     document.getElementById("confirmationModalButton").click();
   }
 

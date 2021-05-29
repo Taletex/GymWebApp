@@ -6,6 +6,8 @@ const _ = require('lodash');
 const { validateEmail } = require('../_helpers/send-email');
 const moment = require('moment');
 const role = require('../_helpers/role');
+const { USER_TYPES } = require('../_helpers/enum');
+const db = require('../_helpers/db');
 const generalService = require('../_helpers/general.service')();
 
 /** REST CALLBACKS **/
@@ -37,7 +39,7 @@ module.exports = (io, clientSocketList) => {
     };
 
     // Create and Save a new User
-    function createUser (req, res, next) {
+    async function createUser (req, res, next) {
         // Validate request
         if (!req.body) {
             return res.status(400).send({
@@ -80,7 +82,7 @@ module.exports = (io, clientSocketList) => {
     };
 
     // Retrieve and return all users from the database.
-    function findAllUser(req, res, next) {
+    async function findAllUser(req, res, next) {
         User.find().populate({path: 'personalRecords', populate: {path: 'exercise'}})
                 .populate({path: 'notifications', populate: {path: 'from'}})
                 .populate({path: 'notifications', populate: {path: 'destination'}})
@@ -96,7 +98,7 @@ module.exports = (io, clientSocketList) => {
     };
 
     // Retrieve and return all users from the database.
-    function findAllAthlete(req, res, next) {
+    async function findAllAthlete(req, res, next) {
         User.find().populate({path: 'personalRecords', populate: {path: 'exercise'}})
                 .populate({path: 'notifications', populate: {path: 'from'}})
                 .populate({path: 'notifications', populate: {path: 'destination'}})
@@ -112,7 +114,7 @@ module.exports = (io, clientSocketList) => {
     };
 
     // Retrieve and return all users from the database.
-    function findAllCoaches (req, res, next) {
+    async function findAllCoaches (req, res, next) {
         User.find().populate({path: 'personalRecords', populate: {path: 'exercise'}})
                 .populate({path: 'notifications', populate: {path: 'from'}})
                 .populate({path: 'notifications', populate: {path: 'destination'}})
@@ -128,7 +130,7 @@ module.exports = (io, clientSocketList) => {
     };
 
     // Find a single user with a id
-    function findOneUser(req, res, next) {
+    async function findOneUser(req, res, next) {
         User.findById(req.params._id).populate({path: 'personalRecords', populate: {path: 'exercise'}})
                                             .populate({path: 'notifications', populate: {path: 'from'}})
                                             .populate({path: 'notifications', populate: {path: 'destination'}})
@@ -182,9 +184,26 @@ module.exports = (io, clientSocketList) => {
 
     }
 
+    async function updateWhenChangeUserType(req) {
+        const user = await db.User.findById(req.params._id);
+        if(!user) throw "USER_NOT_FOUND_ID";
+    
+        if(user.userType != req.body.userType && req.body.userType == USER_TYPES.ATHLETE) {         // User is loosing coach userType: delete its trainings and exercises, cancel coach link from is athletes, drop also its athletes list
+            await db.Training.deleteMany({author: user._id});
+            await db.Exercise.deleteMany({"creator": [user._id] });
+            await db.User.updateMany({ $pull: {coaches: user._id } });
+            await db.User.updateMany({ $pull: { notifications: { from: user._id, type: NOTIFICATION_TYPE.ATHLETE_REQUEST} } });
+            req.body.athletes = [];
+        } else if(user.userType != req.body.userType && req.body.userType == USER_TYPES.COACH) {    // User is loosing athlete userType: delete his name from trainings where he is athlete and delete athlete links from his coaches, drop also its coaches list
+            await db.Training.updateMany({ $pull: { athletes: user._id } });
+            await db.User.updateMany({ $pull: {athletes: user._id } });
+            await db.User.updateMany({ $pull: { notifications: { from: user._id, type: NOTIFICATION_TYPE.COACH_REQUEST} } });
+            req.body.coaches = [];
+        }
+}
 
     // Update a user identified by the id in the request
-    function updateUser(req, res, next) {
+    async function updateUser(req, res, next) {
         // Validate Request
         if (!req.body) {
             return res.status(400).send({
@@ -202,64 +221,60 @@ module.exports = (io, clientSocketList) => {
                 req.body.profilePicture = data;
                 fileManager.clearImagesDirectory(fileDir, [req.body.profilePicture]);
 
-                // Find user and update it with the request body
-                User.findOneAndUpdate({ _id: req.params._id }, {
-                    name: req.body.name,
-                    surname: req.body.surname,
-                    dateOfBirth: req.body.dateOfBirth,
-                    placeOfBirth: req.body.placeOfBirth,
-                    sex: req.body.sex,
-                    userType: req.body.userType,
-                    bodyWeight: req.body.bodyWeight,
-                    yearsOfExperience: req.body.yearsOfExperience,
-                    disciplines: req.body.disciplines,
-                    gyms: req.body.gyms,
-                    coaches: req.body.coaches,
-                    athletes: req.body.athletes,
-                    personalRecords: req.body.personalRecords,
-                    contacts: req.body.contacts,
-                    residence: req.body.residence,
-                    biography: req.body.biography,
-                    profilePicture: req.body.profilePicture,
-                    notifications: _.orderBy(req.body.notifications, ['bConsumed', 'creationDate'], ['asc', 'desc']),
-                    settings: req.body.settings
-                }, { new: true })
-                    .then(user => {
-                        if (!user) {
-                            return res.status(404).send({
-                                message: "USER_NOT_FOUND_ID", id: req.params._id
-                            });
-                        }
+                // If usertype changed we need to update user informations and other user informations (delete links, exercises, trainings, etc.)
+                updateWhenChangeUserType(req)
+                    .then((data)=>{
+                        // Find user and update it with the request body
+                        User.findOneAndUpdate({ _id: req.params._id }, {
+                            name: req.body.name,
+                            surname: req.body.surname,
+                            dateOfBirth: req.body.dateOfBirth,
+                            placeOfBirth: req.body.placeOfBirth,
+                            sex: req.body.sex,
+                            userType: req.body.userType,
+                            bodyWeight: req.body.bodyWeight,
+                            yearsOfExperience: req.body.yearsOfExperience,
+                            disciplines: req.body.disciplines,
+                            gyms: req.body.gyms,
+                            coaches: req.body.coaches,
+                            athletes: req.body.athletes,
+                            personalRecords: req.body.personalRecords,
+                            contacts: req.body.contacts,
+                            residence: req.body.residence,
+                            biography: req.body.biography,
+                            profilePicture: req.body.profilePicture,
+                            notifications: _.orderBy(req.body.notifications, ['bConsumed', 'creationDate'], ['asc', 'desc']),
+                            settings: req.body.settings
+                        }, { new: true })
+                            .then(user => {
+                                if (!user) {
+                                    return res.status(404).send({
+                                        message: "USER_NOT_FOUND_ID", id: req.params._id
+                                    });
+                                }
 
-                        // Returns the user update by finding it in the database
-                        User.findById(user._id).populate({path: 'personalRecords', populate: {path: 'exercise'}})
-                                                    .populate({path: 'notifications', populate: {path: 'from'}})
-                                                    .populate({path: 'notifications', populate: {path: 'destination'}})
-                                                    .populate('coaches').populate('athletes')
-                            .then(users => {
-                                res.send(users);
-                            })
-                    }).catch(err => {
-                        if (err.kind === 'ObjectId') {
-                            return res.status(404).send({
-                                message: "USER_NOT_FOUND_ID", id: req.params._id
-                            });
-                        }
-                        return res.status(500).send({
-                            message: "USER_ERROR_FOUND_ID", id: req.params._id
-                        });
-                    });  
+                                // Returns the user update by finding it in the database
+                                User.findById(user._id).populate({path: 'personalRecords', populate: {path: 'exercise'}})
+                                                            .populate({path: 'notifications', populate: {path: 'from'}})
+                                                            .populate({path: 'notifications', populate: {path: 'destination'}})
+                                                            .populate('coaches').populate('athletes')
+                                    .then(updatedUser => { res.send(updatedUser); })
+                            }).catch(err => {
+                                if (err.kind === 'ObjectId')
+                                    return res.status(404).send({message: "USER_NOT_FOUND_ID", id: req.params._id});
+                                return res.status(500).send({message: "USER_ERROR_FOUND_ID", id: req.params._id});
+                            });  
+                    }).catch((err) => {
+                        return res.status(500).send({message: "USER_UPDATE_ERROR_GENERIC"});
+                    })
 
             }).catch((err) => {
-                return res.status(500).send({
-                    message: "USER_IMAGE_ERROR",
-                    err: err
-                });
+                return res.status(500).send({message: "USER_IMAGE_ERROR", err: err});
             })
     };
 
     // Delete a user with the specified id in the request
-    function deleteUser(req, res, next) {
+    async function deleteUser(req, res, next) {
         User.findOneAndRemove({ _id: req.params._id })
             .then(user => {
                 if (!user) {
@@ -280,12 +295,8 @@ module.exports = (io, clientSocketList) => {
             });
     };
 
-    function isLinkRequestYetSent(fromUser, destUser, nType) {
-        return ( destUser.notifications.find((n)=> { return (n.type == nType && n.from.equals(fromUser._id) && !n.bConsumed)} ) != undefined);
-    }
-
     // Add a notification to a given User
-    function sendNotification(req, res, next) {
+    async function sendNotification(req, res, next) {
         // Validate request
         if (!req.body) { return res.status(400).send({ message: "NOTIFICATION_CONTENT_EMPTY" }); }
 
@@ -337,7 +348,7 @@ module.exports = (io, clientSocketList) => {
     };
 
     // Accept a notification for a given User
-    function acceptNotification(req, res, next) {
+    async function acceptNotification(req, res, next) {
         let destinationUser;
         let fromUser;
         let notification = req.body;
@@ -419,7 +430,7 @@ module.exports = (io, clientSocketList) => {
             });
     };
 
-    function refuseNotification(req, res, next) {
+    async function refuseNotification(req, res, next) {
         let destinationUser;
         let fromUser;
         let notification = req.body;
@@ -490,7 +501,7 @@ module.exports = (io, clientSocketList) => {
             });
     };
 
-    function dismissNotification(req, res, next) {
+    async function dismissNotification(req, res, next) {
         let destinationUser;
 
         // Find destination user
@@ -543,7 +554,7 @@ module.exports = (io, clientSocketList) => {
             });
     };
 
-    function cancelAthleteCoachLink(req, res, next) {
+    async function cancelAthleteCoachLink(req, res, next) {
         // Validate request
         if (!req.body) { return res.status(400).send({ message: "NOTIFICATION_CONTENT_EMPTY" }); }
 
@@ -631,7 +642,7 @@ module.exports = (io, clientSocketList) => {
             });
     };
 
-    function dismissAllNotifications(req, res, next) {
+    async function dismissAllNotifications(req, res, next) {
         let destinationUser;
 
         // Find destination user
@@ -689,7 +700,7 @@ module.exports = (io, clientSocketList) => {
             });
     }
 
-    function cancelNotification(req, res, next) {
+    async function cancelNotification(req, res, next) {
         let destinationUser;
 
         // Find destination user
@@ -745,7 +756,7 @@ module.exports = (io, clientSocketList) => {
             });
     }
 
-    function cancelAllNotifications(req, res, next) {
+    async function cancelAllNotifications(req, res, next) {
         let destinationUser;
 
         // Find destination user
@@ -801,6 +812,10 @@ module.exports = (io, clientSocketList) => {
     }
 
     /* UTILS */
+    function isLinkRequestYetSent(fromUser, destUser, nType) {
+        return ( destUser.notifications.find((n)=> { return (n.type == nType && n.from.equals(fromUser._id) && !n.bConsumed)} ) != undefined);
+    }
+
     function isLinkYetEstablished(coach, athlete) {
         return (coach.athletes.includes(athlete._id) || athlete.coaches.includes(coach._id));
     }

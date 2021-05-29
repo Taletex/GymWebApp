@@ -395,27 +395,15 @@
                                         <!-- GymRegistry Infos -->
                                         <div class="col-12 p-0 mt-4"><h6 class="h6 text-dark">Sport</h6></div>
                                         <div class="form-row form-row-inner col-12 border border-dark">
-                                            <!-- User Type -->
-                                            <div class="col-12 col-md-6 col-lg-4 form-group">
-                                                <label for="userType" class="col-form-label col-form-label-sm text-muted">Tipo Utente</label>
-                                                <select formControlName="userType" required class="form-control form-control-sm cursor-pointer" [ngClass]="{'is-invalid': fu.userType.errors}">
-                                                    <option [value]="'athlete'">Atleta</option>
-                                                    <option [value]="'coach'">Coach</option>
-                                                    <option [value]="'both'">Both</option>
-                                                </select>
-                                                <div *ngIf="(fu.userType.errors)" class="invalid-feedback">
-                                                    <div *ngIf="fu.userType.errors.required">Tipo utente obbligatorio</div>
-                                                </div>
-                                            </div>
 
                                             <!-- BodyWeight -->
-                                            <div class="col-12 col-sm-6 col-lg-4 form-group">
+                                            <div class="col-12 col-sm-6 form-group">
                                                 <label for="userBw" class="col-form-label col-form-label-sm text-muted">Peso (kg)</label>
                                                 <input type="number" [min]="USER_VALIDATIONS.MIN_WEIGHT" [max]="USER_VALIDATIONS.MAX_WEIGHT" formControlName="bodyWeight" class="form-control form-control-sm" [ngClass]="{'is-invalid': fu.bodyWeight.errors}">
                                             </div>
 
                                             <!-- Years of experience -->
-                                            <div class="col-12 col-sm-6 col-lg-4 form-group">
+                                            <div class="col-12 col-sm-6 form-group">
                                                 <label for="userYearsOfExperience" class="col-form-label col-form-label-sm text-muted">Esperienza (anni)</label>
                                                 <input type="number" [min]="USER_VALIDATIONS.MIN_EXPERIENCE" [max]="USER_VALIDATIONS.MAX_EXPERIENCE"  formControlName="yearsOfExperience" class="form-control form-control-sm" [ngClass]="{'is-invalid': fu.yearsOfExperience.errors }">
                                             </div>
@@ -441,7 +429,6 @@
                                                 <label for="userGyms" class="col-form-label col-form-label-sm text-muted">Palestre</label>
                                                 <div class="d-flex flex-column flex-md-row">
                                                     <ng-multiselect-dropdown 
-                                                        [hidden]="gymsList.length == 0"
                                                         class="w-100 small" 
                                                         id="userGyms" 
                                                         name="userGyms" 
@@ -453,10 +440,27 @@
                                                         [ngClass]="{'is-invalid': fu.gyms.errors }">
                                                     </ng-multiselect-dropdown>
                                                     <div class="d-flex align-items-baseline ml-0 ml-md-2">
-                                                        <input type="text" id="gymsAuxInput" placeholder="Palestra..." class="form-control form-control-sm">
+                                                        <input type="text" id="gymsAuxInput" placeholder="Aggiungi Palestra..." class="form-control form-control-sm">
                                                         <span (click)="pushGym()" ngbTooltip="Aggiungi" class="standard-action-icon-btn fa fa-plus-circle text-success ml-2"></span>
                                                     </div>
                                                 </div>
+                                            </div>
+
+                                            <!-- User Type -->
+                                            <div class="col-12 form-group">
+                                                <label for="userType" class="col-form-label col-form-label-sm text-muted">Tipo Utente *</label>
+                                                <select formControlName="userType" required class="form-control form-control-sm cursor-pointer" [ngClass]="{'is-invalid': fu.userType.errors}">
+                                                    <option [value]="'athlete'">Atleta</option>
+                                                    <option [value]="'coach'">Coach</option>
+                                                    <option [value]="'both'">Entrambi</option>
+                                                </select>
+                                                <div *ngIf="(fu.userType.errors)" class="invalid-feedback">
+                                                    <div *ngIf="fu.userType.errors.required">Tipo utente obbligatorio</div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-12">
+                                                <small class="text-muted d-block" *ngIf="userAccount.user.userType==USER_TYPES.BOTH || userAccount.user.userType==USER_TYPES.ATHLETE">* Cambiare tipo utente a "Coach" comporta l'eliminazione di informazioni dalla piattaforma, quali: collegamenti con i coach e allenamenti di cui si è atleti </small>
+                                                <small class="text-muted d-block mt-2" *ngIf="userAccount.user.userType==USER_TYPES.BOTH || userAccount.user.userType==USER_TYPES.COACH">* Cambiare tipo utente a "Atleta" comporta l'eliminazione di informazioni dalla piattaforma, quali: collegamenti con gli atleti, allenamenti di cui si è allenatori, esercizi creati</small>
                                             </div>
                                         </div>
 
@@ -940,6 +944,10 @@
 
     <app-confirmation-modal *ngIf="account.role == Role.Admin || userAccount.user._id == account.user._id" [hidden]="true" (onClose)="deleteAccount()" [(message)]="areYouSureDeleteAccountMsg">
         <button id="confirmationModalButton" class="image-button cursor-pointer"></button>
+    </app-confirmation-modal>
+
+    <app-confirmation-modal [hidden]="true" (onClose)="updateUser()" [(message)]="areYouSureChangeUserType">
+        <button id="confirmationModalButton2" class="image-button cursor-pointer"></button>
     </app-confirmation-modal>
 
 </div>

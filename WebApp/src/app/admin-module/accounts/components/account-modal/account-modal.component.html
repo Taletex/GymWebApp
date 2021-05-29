@@ -48,7 +48,7 @@
                                     [ngClass]="{'is-invalid': submitted && f.userType.errors }">
                                     <option value="coach">Coach</option>
                                     <option value="athlete">Athlete</option>
-                                    <option value="both">Both</option>
+                                    <option value="both">Entrambi</option>
                                 </select>
                                 <div *ngIf="submitted && f.userType.errors" class="invalid-feedback">
                                     <div *ngIf="f.userType.errors.required">Tipo utente obbligatorio</div>
