@@ -8,6 +8,7 @@ import { AccountService } from '@app/_services/account-service/account-service.s
 import { GeneralService, NOTIFICATION_TYPE, NOTIFICATION_TYPE_NAMES, PAGEMODE, PAGES } from '@app/_services/general-service/general-service.service';
 import { HttpService } from '@app/_services/http-service/http-service.service';
 import { ToastrService } from 'ngx-toastr';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-navbar',
@@ -32,7 +33,7 @@ export class NavbarComponent implements OnInit {
   constructor(private toastr: ToastrService, public router: Router, private accountService: AccountService, private httpService: HttpService, private generalService: GeneralService) {
     this.accountService.account.subscribe((x) => {
       this.account = x;
-      this.unreadNotificationList = (this.account.user.notifications.filter(n => !n.bConsumed));
+      this.unreadNotificationList = _.orderBy(_.cloneDeep(this.account.user.notifications.filter(n => !n.bConsumed)), ['bConsumed', 'creationDate'], ['asc', 'desc']);
       this.unreadNotificationsLength = this.unreadNotificationList.length;
     });
   }

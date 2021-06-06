@@ -194,11 +194,13 @@ module.exports = (io, clientSocketList) => {
             await db.User.updateMany({ $pull: {coaches: user._id } });
             await db.User.updateMany({ $pull: { notifications: { from: user._id, type: NOTIFICATION_TYPE.ATHLETE_REQUEST} } });
             req.body.athletes = [];
+            req.body.notifications = req.body.notifications.filter(n => n.type != NOTIFICATION_TYPE.COACH_REQUEST);
         } else if(user.userType != req.body.userType && req.body.userType == USER_TYPES.COACH) {    // User is loosing athlete userType: delete his name from trainings where he is athlete and delete athlete links from his coaches, drop also its coaches list
             await db.Training.updateMany({ $pull: { athletes: user._id } });
             await db.User.updateMany({ $pull: {athletes: user._id } });
             await db.User.updateMany({ $pull: { notifications: { from: user._id, type: NOTIFICATION_TYPE.COACH_REQUEST} } });
             req.body.coaches = [];
+            req.body.notifications = req.body.notifications.filter(n => n.type != NOTIFICATION_TYPE.ATHLETE_REQUEST);
         }
 }
 
@@ -308,8 +310,8 @@ module.exports = (io, clientSocketList) => {
                 if (!dUser || !fUser) { return res.status(404).send({ message: "USER_NOT_FOUND" }); }
 
                 // 1. Check if request type is coach or athlete request and the link between coach and athlete does not exist (if it exists the notification can't be sent) or if the request has been yet sent
-                if((req.body.type == NOTIFICATION_TYPE.COACH_REQUEST && (!isLinkYetEstablished(dUser, fUser) && !isLinkRequestYetSent(fUser, dUser, NOTIFICATION_TYPE.COACH_REQUEST))) ||
-                   (req.body.type == NOTIFICATION_TYPE.ATHLETE_REQUEST && (!isLinkYetEstablished(fUser, dUser) && !isLinkRequestYetSent(fUser, dUser, NOTIFICATION_TYPE.ATHLETE_REQUEST))) ||
+                if((req.body.type == NOTIFICATION_TYPE.COACH_REQUEST && (!isLinkYetEstablished(dUser, fUser) && !isLinkRequestYetSent(fUser, dUser, NOTIFICATION_TYPE.COACH_REQUEST) && areRoleRightsInCoachRequest(fUser, dUser))) ||
+                   (req.body.type == NOTIFICATION_TYPE.ATHLETE_REQUEST && (!isLinkYetEstablished(fUser, dUser) && !isLinkRequestYetSent(fUser, dUser, NOTIFICATION_TYPE.ATHLETE_REQUEST) && areRoleRightsInAthleteRequest(fUser, dUser))) ||
                    (req.body.type != NOTIFICATION_TYPE.COACH_REQUEST && req.body.type != NOTIFICATION_TYPE.ATHLETE_REQUEST)) {
 
                     // 2. Push the new notification in destination user
@@ -367,16 +369,16 @@ module.exports = (io, clientSocketList) => {
                 // 1. in destination user set the notification as consumed and pop exceeded elements in the notifications list 
                 if(notificationService.consumeAndCleanNotifications(destinationUser, req.params._notId)) {
 
-                    // 2. update destiantion and from coaches and athletes lists (only if there is no existing link between coach and athlete)
-                    if ( notification.type == NOTIFICATION_TYPE.COACH_REQUEST && !isLinkYetEstablished(destinationUser, fromUser) ) {
+                    // 2. update destination and from coaches and athletes lists (only if there is no existing link between coach and athlete)
+                    if ( notification.type == NOTIFICATION_TYPE.COACH_REQUEST && !isLinkYetEstablished(destinationUser, fromUser) && areRoleRightsInCoachRequest(fromUser, destinationUser) ) {
                         destinationUser.athletes.push(notification.from._id);
                         fromUser.coaches.push(destinationUser._id);
                     } 
-                    else if ( notification.type == NOTIFICATION_TYPE.ATHLETE_REQUEST && !isLinkYetEstablished(fromUser, destinationUser) ) {
+                    else if ( notification.type == NOTIFICATION_TYPE.ATHLETE_REQUEST && !isLinkYetEstablished(fromUser, destinationUser) && areRoleRightsInAthleteRequest(fromUser, destinationUser) ) {
                         destinationUser.coaches.push(notification.from);
                         fromUser.athletes.push(destinationUser._id);
                     } else {
-                        return res.status(500).send({ message: "NOTIFICATION_LINK_YET_EXISTS_ERROR" });
+                        return res.status(500).send({ message: "NOTIFICATION_ACCEPT_GENERIC_ERROR" });
                     }
 
                     // 3. add a notification to the from user (to inform about the request success)
@@ -449,6 +451,11 @@ module.exports = (io, clientSocketList) => {
                 // 1. in destination user set the notification as consumed and pop exceeded elements in the notifications list
                 if(notificationService.consumeAndCleanNotifications(destinationUser, req.params._notId)) {
                     
+                    // check if roles of request are proper
+                    if ((notification.type == NOTIFICATION_TYPE.COACH_REQUEST && !areRoleRightsInCoachRequest(fromUser, destinationUser)) ||
+                        (notification.type == NOTIFICATION_TYPE.ATHLETE_REQUEST && !areRoleRightsInAthleteRequest(fromUser, destinationUser))) 
+                        return res.status(500).send({ message: "NOTIFICATION_REFUSE_GENERIC_ERROR" });
+
                     // 2. add a notification to the from user (to inform about the refused request)
                     let message = "L'utente " + destinationUser.name + " " + destinationUser.surname + " ha RIFIUTATO la richiesta di " + (notification.type == NOTIFICATION_TYPE.COACH_REQUEST ? "seguirti come coach" : (notification.type == NOTIFICATION_TYPE.ATHLETE_REQUEST ? 'essere seguito come atleta' : ''));
                     fromUser.notifications.push(new Notification({ type: NOTIFICATION_TYPE.REQUEST_REFUSE, from: destinationUser._id, destination: fromUser._id, message: message, bConsumed: false, creationDate: new Date() }));
@@ -580,6 +587,12 @@ module.exports = (io, clientSocketList) => {
                         athleteUser = dUser;
                         break;
                 }
+
+                // check if roles of request are proper
+                if ((notification.type == NOTIFICATION_TYPE.COACH_REQUEST && !areRoleRightsInCoachRequest(fromUser, destinationUser)) ||
+                    (notification.type == NOTIFICATION_TYPE.ATHLETE_REQUEST && !areRoleRightsInAthleteRequest(fromUser, destinationUser))) 
+                    return res.status(500).send({ message: "NOTIFICATION_CANCEL_LINK_GENERIC_ERROR" });
+
 
                 // 2. Cancel the link between athlete and coach, if it exists, else return an error
                 let coachToRemoveIndex = _.findIndex(coachUser.athletes, function(a) { return athleteUser._id.equals(a) });
@@ -906,5 +919,14 @@ module.exports = (io, clientSocketList) => {
 
         return true;
     }
+
+    function areRoleRightsInCoachRequest(athlete, coach) {
+        return ((athlete.userType == USER_TYPES.ATHLETE || athlete.userType == USER_TYPES.BOTH) && (coach.userType == USER_TYPES.COACH || coach.userType == USER_TYPES.BOTH))
+    }
+
+    function areRoleRightsInAthleteRequest(coach, athlete) {
+        return ((coach.userType == USER_TYPES.COACH || coach.userType == USER_TYPES.BOTH) && (athlete.userType == USER_TYPES.ATHLETE || athlete.userType == USER_TYPES.BOTH))
+    }
+
 
 }
