@@ -1,11 +1,12 @@
 https://cloud.digitalocean.com/droplets/208667120/graphs?i=73e048&period=hour&preserveScrollPosition=true
 tutorial base: https://marketplace.digitalocean.com/apps/nodejs?ipAddress=localhost#getting-started
 
-Comandi
+====== Comandi ======
 - Connessione: ssh root@139.59.153.56
 Nota: se non funziona un comando prova a lanciarlo preceduto da sudo -u nodejs (e.g. sudo -u nodejs pm2 restart hello)
+====== ======= ====== 
 
-AVVIARE APPLICAZIONI (Development):
+====== AVVIARE APPLICAZIONI (Development) ======
 NodeJS Server - Production (posizionati dentro il node server)
 - Start: NODE_ENV=production pm2 start server.js
 - Restart: sudo -u nodejs pm2 restart server
@@ -13,15 +14,15 @@ NodeJS Server - Production (posizionati dentro il node server)
 - Sbloccare la porta 4000: sudo ufw allow 4000
 Alla fine lancia sempre pm2 save
 
-
 WebApp - Development (posizionati dentro la webapp)
 - Start: pm2 start "ng serve --host 0.0.0.0 --port 1738"
 - Restart: sudo -u nodejs pm2 restart (mettere id del processo)
 - Delete: pm2 delete (id del processo)
 - Sbloccare la porta 1738: sudo ufw allow 1738
+====== ====== ====== ====== ====== ====== ====== 
 
 
-AVVIARE L'APP COMPLETA:
+====== AVVIARE L'APP COMPLETA ======
 How to avviare Su Digital Ocean:
 - Connessione da terminale: 
    + ssh root@localhost
@@ -32,6 +33,7 @@ How to avviare Su Digital Ocean:
    + git pull
 - [Superfluo] Cambiare le porte e gli indirizzi nel file "environment.prod.ts" ('http://www.mytrainingplatform.it:4000'). Nota: è sufficiente solo questo file perchè la web app è avviata in produzione sul server, altrimenti dovresti cambiare il valore anche  nel file environment.ts.
 - Inserire username e psw per il servizio di mailing smtp in config.json del server
+- Inserire username e psw per l'autenticazione del db in config.json del server
 - Avviare NodeServer:
   + cd ..
   + cd GymWebApp
@@ -42,11 +44,20 @@ How to avviare Su Digital Ocean:
   + Come buildare e deployare l'app angular sul server digital ocean (cerca sezione "Build Angular Client"): https://grokonez.com/frontend/angular/angular-deployment/how-to-deploy-angular-on-nginx-remote-server-example-use-vultr-vps-hosting#Build_Angular_Client
        - Praticamente devi fare ng build --prod per buildare e poi il contenuto di dist lo copi in /var/www/html del server
   + Nota: il percorso dove copiare la cartella dist, è: /var/www/html
+====== ====== ========= ====== ====== 
 
 
-DROP MONGO DB:
+====== UTILS MONGO DB ======
+Droppare il db:
 - Basta inserire da linea di comando: mongo gymapp --eval "db.dropDatabase()"
 
+Autenticazione db:
+- mongo
+- user gymapp
+- db.auth('taletex', 'lapsw')
+
+Rimuovere tutti gli elementi da una collection (dopo essersi autenticati):
+- db.nomecollection.remove({})
 
 AVVIARE MONGODB E SETTARE UTENZA (username e psw)
 1. Posizionarsi nella folder root dell'utente root (di default quando ti colleghi stai li)
@@ -62,15 +73,17 @@ AVVIARE MONGODB E SETTARE UTENZA (username e psw)
 5. Sempre dalla folder root dell'utente root riavvia mongo: sudo systemctl restart mongod
 6. Riavvia il server e assicurati che si connetta al db usando le credenziali corrette
 Note: https://stackoverflow.com/questions/4881208/how-to-secure-mongodb-with-username-and-password
+====== ====== ====== ====== 
 
 
-TRASFERIMENTO CON FILE ZILLA
+====== TRASFERIMENTO CON FILE ZILLA ======
 Indirizzo: sftp://139.59.153.56
 username: root
 psw (la psw)
+====== ====== ====== ====== ====== ====== 
 
 
-AVVIARE SOLO SERVER NODESERVER
+====== AVVIARE SOLO SERVER NODESERVER ======
 0. cd ..
 1. cd GymWebApp
 2. cd NodeServer
@@ -79,6 +92,8 @@ AVVIARE SOLO SERVER NODESERVER
 5. npm install (installazione dipendenze)
 6. Verificare che config.json contenga le info giuste per il mailserver
 7. NODE_ENV=production pm2 start server.js
+NOTA: a volte il server non funziona piu non consentendo il login. In tal caso è sufficente riavviare il server
+====== ====== ====== ====== ====== ====== 
 
 
 NOTA: Bug sull'uso della libreria html-pdf-node.

@@ -25,7 +25,7 @@
                                 <div class="col-12 col-md-6 form-group">
                                     <label for="exerciseVariantCoefficient" class="col-form-label col-form-label-sm text-muted">Coefficente di intensità</label>
                                     <input type="number" min=0.1 [(ngModel)]="newExercise.variant.intensityCoefficient" class="form-control form-control-sm" id="exerciseVariantCoefficient" name="exerciseVariantCoefficient"
-                                        required [min]="EXERCISE_VALIDATIONS.MIN_INTENSITY_COEFFICIENT_NUMBER" [max]="EXERCISE_VALIDATIONS.MAX_INTENSITY_COEFFICIENT_NUMBER"
+                                        required [min]="EXERCISE_VALIDATIONS.MIN_INTENSITY_COEFFICIENT_NUMBER" [max]="EXERCISE_VALIDATIONS.MAX_INTENSITY_COEFFICIENT_NUMBER" step=0.01
                                         [ngClass]="{'is-invalid': (newExercise.variant.intensityCoefficient == null || newExercise.variant.intensityCoefficient < EXERCISE_VALIDATIONS.MIN_INTENSITY_COEFFICIENT_NUMBER || newExercise.variant.intensityCoefficient > EXERCISE_VALIDATIONS.MAX_INTENSITY_COEFFICIENT_NUMBER)}">
                                 </div>
                                 <div class="col-12 col-xl-6 form-group">

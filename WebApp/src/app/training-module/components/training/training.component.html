@@ -10,7 +10,7 @@
                         </h5>
                         <h5 class="h6 d-flex align-items-center m-0">
                             <span class="d-none d-md-inline">({{training.startDate | date:'dd/MM/yyyy'}} - {{training.endDate | date:'dd/MM/yyyy'}})</span>
-                            <span class="d-inline d-md-none">Da {{training.startDate | date:'dd/MM/yyyy'}} a {{training.endDate | date:'dd/MM/yyyy'}})</span>
+                            <span class="d-inline d-md-none">Da {{training.startDate | date:'dd/MM/yyyy'}} a {{training.endDate | date:'dd/MM/yyyy'}}</span>
                             <span class="badge badge-info ml-2 text-uppercase" [ngClass]="{'badge-info': training.state == TRAINING_STATES.NEW, 'badge-primary': training.state == TRAINING_STATES.STARTED, 'badge-success': training.state == TRAINING_STATES.COMPLETED, 'badge-danger': training.state == TRAINING_STATES.ABORTED, 'badge-warning': training.state == TRAINING_STATES.PARTIAL_COMPLETED}">{{training.state}}</span>
                             <img [hidden]="!bDirty" src="assets/icons/misc/alert.svg" class="ml-2 standard-icon-md" ngbTooltip="Modifiche non salvate" placement="top">
                         </h5>
@@ -269,7 +269,7 @@
                                         <div class="dropdown-toggle image-button h-100" type="button" id="dropdownMenuButtonWeek{{weekIndex}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="fa fa-bars"></span>
                                         </div>
-                                        <div class="dropdown-menu py-1" aria-labelledby="dropdownMenuButtonWeek{{weekIndex}}">
+                                        <div class="dropdown-menu weekOptionsDropdown py-1" aria-labelledby="dropdownMenuButtonWeek{{weekIndex}}">
                                             <div class="px-2 py-1 d-flex font-size-8" (click)="copyWeek($event, weekIndex, false)"><span class="image-button"><img src="assets/icons/actions/copy.svg" style="width:15px; height:auto;"></span> <span class="ml-2">Copia</span></div>
                                             <div class="px-2 py-1 d-flex font-size-8" (click)="pasteWeek($event, weekIndex, false)"><span class="image-button"><img src="assets/icons/actions/contract.svg" style="width:15px; height:auto;"></span> <span class="ml-2">Incolla</span></div>
                                             <div class="px-2 py-1 d-flex font-size-8" (click)="resetWeek($event, weekIndex, false)"><span class="image-button"><img src="assets/icons/actions/return.svg" style="width:15px; height:auto;"></span> <span class="ml-2">Reset</span></div>
@@ -286,7 +286,7 @@
                                 <ul ngbNav #nav="ngbNav" [(activeId)]="activeSession[weekIndex]" class="nav-tabs">
                                     <li [ngbNavItem]="0">
                                         <a ngbNavLink [ngClass]="{'header-invalid': week.comment.length > TRAINING_VALIDATIONS.MAX_WEEK_COMMENT_LENGTH}" ngbTooltip="Alcuni input presentano valori errati" [disableTooltip]="!(week.comment.length > TRAINING_VALIDATIONS.MAX_WEEK_COMMENT_LENGTH)" placement="right">
-                                            INFO&nbsp;<img src="assets/icons/actions/info-dark.svg" style="width:15px; height:auto;">
+                                            <span class="d-none d-xl-inline">INFO&nbsp;</span><img src="assets/icons/actions/info-dark.svg" style="width:15px; height:auto;">
                                         </a>
                                         <ng-template ngbNavContent>
                                             <div class="form-row m-0">
