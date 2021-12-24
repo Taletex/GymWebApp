@@ -129,6 +129,11 @@ export class TrainingsComponent implements OnInit {
     }
   }
 
+  copyTraining(training: Training) {
+    this.newTraining = _.cloneDeep(training);
+    this.createTraining();
+  }
+
   /* IMPORT/EXPORT FUNCTIONS */
   exportTraining(training: Training) {
     this.trainingService.exportTraining(training);
