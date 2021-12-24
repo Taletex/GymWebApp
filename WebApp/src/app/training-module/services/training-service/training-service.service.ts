@@ -9,8 +9,28 @@ import * as moment from 'moment';
 })
 export class TrainingService {
 
-    public TRAINING_VALIDATIONS: any = {MAX_SESSION_NAME_LENGTH: 50, MAX_SESSION_COMMENT_LENGTH: 100, MAX_SERIES_NUMBER: 99999, MIN_SERIES_NUMBER: 1, MAX_REP_NUMBER: 99999, MIN_REP_NUMBER: 1, MAX_WEIGHT_NUMBER: 99999, MIN_WEIGHT_NUMBER: 0, 
-                                        MAX_REST_TIME: 99999, MIN_REST_TIME: 0, MAX_DATE: "2100-01-01T00:00", MAX_WEEK_COMMENT_LENGTH: 500, MAX_TRAINING_COMMENT_LENGTH: 1000, MIN_TYPE_LENGTH: 1, MAX_TYPE_LENGTH: 50};
+    public TRAINING_VALIDATIONS: any = 
+        {   
+            MIN_WEEKS_NUMBER: 1,
+            MAX_WEEKS_NUMBER: 999,
+            MIN_SESSION_NUMBER: 1,
+            MAX_SESSION_NUMBER: 999,
+            MAX_SESSION_NAME_LENGTH: 50, 
+            MAX_SESSION_COMMENT_LENGTH: 100, 
+            MAX_SERIES_NUMBER: 99999, 
+            MIN_SERIES_NUMBER: 1, 
+            MAX_REP_NUMBER: 99999, 
+            MIN_REP_NUMBER: 1, 
+            MAX_WEIGHT_NUMBER: 99999, 
+            MIN_WEIGHT_NUMBER: 0, 
+            MAX_REST_TIME: 99999, 
+            MIN_REST_TIME: 0, 
+            MAX_DATE: "2100-01-01T00:00", 
+            MAX_WEEK_COMMENT_LENGTH: 500, 
+            MAX_TRAINING_COMMENT_LENGTH: 1000, 
+            MIN_TYPE_LENGTH: 1, 
+            MAX_TYPE_LENGTH: 50
+        };
     
     constructor() { }
 

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Training, TRAINING_TYPES, User } from '@app/_models/training-model';
+import { Session, Training, TRAINING_TYPES, User, Week } from '@app/_models/training-model';
 import { UtilsService } from '@app/_services/utils-service/utils-service.service';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { TrainingService } from '@app/training-module/services/training-service/training-service.service';
@@ -19,6 +19,8 @@ export class TrainingModalComponent implements OnInit {
   public TRAINING_TYPES = TRAINING_TYPES;
   public TRAINING_VALIDATIONS: any;
   public modal: any;
+  private sessionsForWeek: Number = 1;
+  private weeksNumber: Number = 1;
 
   @Input() newTraining: Training;
   @Input() athleteList: Array<any>;
@@ -69,6 +71,17 @@ export class TrainingModalComponent implements OnInit {
     if(!this.areBasicTrainingInfosValidToSubmit(this.newTraining)) {
       this.toastr.warning(MESSAGES.SAVE_FAIL_CAUSE_FORM);
       return;
+    }
+
+    // Init weeks and sessions
+    this.newTraining.weeks.pop();
+    for(let i=0; i<this.weeksNumber; i++) {
+      let week = new Week();
+      week.sessions.pop();
+      for(let j=0; j<this.sessionsForWeek; j++) 
+        week.sessions.push(new Session());
+      
+      this.newTraining.weeks.push(week);
     }
 
     this.modal.close(this.newTraining);

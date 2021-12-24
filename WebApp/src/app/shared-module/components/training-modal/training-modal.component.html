@@ -85,6 +85,18 @@
                                     </ng-template>
                                 </ng-multiselect-dropdown>
                             </div>
+                            <div class="col-12 col-sm-6 col-md-4 form-group">
+                                <label for="newTrainingWeeksNumber" class="col-form-label col-form-label-sm">Settimane</label>
+                                <input type="number" [min]="TRAINING_VALIDATIONS.MIN_WEEKS_NUMBER" [max]="TRAINING_VALIDATIONS.MAX_WEEKS_NUMBER" [(ngModel)]="weeksNumber"
+                                    class="form-control form-control-sm form-control-sm-max-md" id="newTrainingWeeksNumber" name="newTrainingWeeksNumber"
+                                    [ngClass]="{'is-invalid': (weeksNumber > TRAINING_VALIDATIONS.MIN_WEEKS_NUMBER && weeksNumber < TRAINING_VALIDATIONS.MAX_WEEKS_NUMBER)}">
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-4 form-group">
+                                <label for="newTrainingDayForWeeks" class="col-form-label col-form-label-sm">Sessioni a settimana</label>
+                                <input type="number" [min]="TRAINING_VALIDATIONS.MIN_SESSION_NUMBER" [max]="TRAINING_VALIDATIONS.MAX_SESSION_NUMBER" [(ngModel)]="sessionsForWeek"
+                                    class="form-control form-control-sm form-control-sm-max-md" id="newTrainingDayForWeeks" name="newTrainingDayForWeeks"
+                                    [ngClass]="{'is-invalid': (sessionsForWeek > TRAINING_VALIDATIONS.MIN_SESSION_NUMBER && sessionsForWeek < TRAINING_VALIDATIONS.MAX_SESSION_NUMBER)}">
+                            </div>
                             <div class="col-12 form-group">
                                 <label for="newTrainingcomment"
                                     class="col-form-label col-form-label-sm text-muted">Commento</label>
