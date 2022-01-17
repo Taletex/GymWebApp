@@ -9,7 +9,7 @@
                 <div class="row m-0 d-flex">
                     <span *ngIf="options.format.seriesFormat == 'seriesxrep'">Serie &times; <span class="d-sm-none">Rip.</span> <span class="d-none d-sm-inline">Ripetizioni</span></span>
                     <span *ngIf="options.format.seriesFormat == 'repxseries'"><span class="d-sm-none">Rip.</span> <span class="d-none d-sm-inline">Ripetizioni</span> &times; Serie</span>
-                    <span class="ml-auto">Riposo</span>
+                    <span class="ml-auto" *ngIf="!options.format.bHideRestColumn">Riposo</span>
                 </div>
             </div>
         </div>
@@ -22,14 +22,14 @@
             </div>
             <div class="col-8 pr-0">
                 <div *ngFor="let series of exercise.series; index as seriesIndex" class="row m-0 d-flex">
-                    <span *ngIf="options.format.seriesFormat == 'seriesxrep'">{{series.seriesNumber}} &times; {{series.repNumber}} @ {{series.weight}} {{series.measure}}</span>
-                    <span *ngIf="options.format.seriesFormat == 'repxseries'">{{series.repNumber}} &times; {{series.seriesNumber}} @ {{series.weight}} {{series.measure}}</span>
-                    <span class="ml-auto">{{series.rest}}''</span>
+                    <span *ngIf="options.format.seriesFormat == 'seriesxrep'">{{series.seriesNumber}}&times;{{series.repNumber}}@{{series.weight}}{{series.measure}}</span>
+                    <span *ngIf="options.format.seriesFormat == 'repxseries'">{{series.repNumber}}&times;{{series.seriesNumber}}@{{series.weight}}{{series.measure}}</span>
+                    <span class="ml-auto" *ngIf="!options.format.bHideRestColumn">{{series.rest}}''</span>
                 </div>
             </div>
         </div>
     </div>
-    <div class="card-footer border-0 bg-white px-3 d-flex">
+    <div class="card-footer border-0 bg-white px-3 d-flex" *ngIf="!options.format.bHideComments">
         <span>{{(session.comment == null || session.comment == '') ? 'Nessun commento' : ('Commento: ' + session.comment)}}</span>
     </div>
 </div>

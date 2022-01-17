@@ -10,7 +10,7 @@ import { TrainingService } from '../../services/training-service/training-servic
 import { HttpErrorResponse } from '@angular/common/http';
 import { Training, Week, Series, Exercise, Session, Variant, SessionExercise, Notification, TRAINING_STATES, TRAINING_TYPES } from '@app/_models/training-model';
 import * as _ from "lodash";
-import { GeneralService, PAGES, PAGEMODE, NOTIFY_MEDIUM_TYPE, PageStatus, NOTIFICATION_TYPE } from '@app/_services/general-service/general-service.service';
+import { GeneralService, PAGES, PAGEMODE, NOTIFY_MEDIUM_TYPE, PageStatus, NOTIFICATION_TYPE, DEVICE_TYPE } from '@app/_services/general-service/general-service.service';
 import * as $ from 'jquery';
 import { Role } from '@app/_models';
 import { AccountService } from '@app/_services/account-service/account-service.service';
@@ -59,6 +59,8 @@ export class TrainingComponent implements OnInit {
   public NOTIFY_MEDIUM_TYPE = NOTIFY_MEDIUM_TYPE;
   public PAGES = PAGES;
   public pageStatus: PageStatus = new PageStatus();
+  public DEVICE_TYPE = DEVICE_TYPE;
+  public deviceType: DEVICE_TYPE;
 
   // Aux attributes for new exercise handling
   public newExercise: Exercise = new Exercise();
@@ -117,7 +119,8 @@ export class TrainingComponent implements OnInit {
 
     // Init attributes
     this.setDefaultoptions();
-
+    this.deviceType = generalService.deviceType;
+    
     // Init training attributes
     let trainingId = (this.router.url).split('/')[2];
     this.bLoading = true;
@@ -842,7 +845,7 @@ export class TrainingComponent implements OnInit {
 
   /* READ OPTIONS FUNCTIONS */
   setDefaultoptions() {
-    this.options = {format: {weeksForRow: 1, seriesFormat: "seriesxrep", maxSessionContainerHeight: "auto"}, currentUser: this.account.user};
+    this.options = {format: {weeksForRow: 1, seriesFormat: "seriesxrep", maxSessionContainerHeight: "auto", bHideRestColumn: false, bHideComments: false}, currentUser: this.account.user};
   }
 
   clampWeeksForRowValue() {

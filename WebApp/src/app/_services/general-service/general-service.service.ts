@@ -5,6 +5,12 @@ import { Series, Session, SessionExercise, Training, Week } from '@app/_models/t
 import * as _ from 'lodash';
 import * as $ from 'jquery';
 
+export enum DEVICE_TYPE {
+    TABLET = 'tablet',
+    SMARTPHONE = 'smartphone',
+    DESKTOP = 'desktop'
+}
+
 export enum PAGEMODE {
     READONLY = "readonly",
     WRITE = "write",
@@ -101,9 +107,10 @@ export enum VIEW_TYPES {
 export class GeneralService {
 
     public pageStatus: PageStatus;
-
+    public deviceType: DEVICE_TYPE;
     constructor(private router: Router) {
         this.initPageStatus();
+        this.deviceType = this.getDeviceType();
         console.log(this.pageStatus);
     }
 
@@ -319,7 +326,16 @@ export class GeneralService {
         }
     }
 
-
+    getDeviceType() {
+        const ua = navigator.userAgent;
+        if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
+            return DEVICE_TYPE.TABLET;
+        }
+        else if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)) {
+            return DEVICE_TYPE.SMARTPHONE;
+        }
+        return DEVICE_TYPE.DESKTOP;
+    };
 
     /* STYLE UTILS */
     blinkBtn(btnId: string) {
@@ -328,7 +344,10 @@ export class GeneralService {
         setTimeout(()=>{
           $("#"+btnId).removeClass("whiteFlashBlink");
         }, 1000)
-      }    
+    } 
+    
 }
+
+
 
 

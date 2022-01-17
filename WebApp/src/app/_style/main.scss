@@ -698,6 +698,12 @@ html, body {
   }
 }
 
+@for $i from 1 through 100 {
+  .font-size-perc-#{$i} {
+    font-size: 1% * $i !important;
+  }
+}
+
 @for $i from 1 through 30 {
   .font-size-#{$i} {
     font-size: 0.1rem * $i !important;

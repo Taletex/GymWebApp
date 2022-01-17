@@ -7,7 +7,7 @@
             <app-session-view [session]="session" [sessionIndex]="sessionIndex" [weekIndex]="weekIndex" [(options)]="options"></app-session-view>
         </div>
     </div>
-    <div class="card-footer text-white bg-dark border-0">
+    <div class="card-footer text-white bg-dark border-0" *ngIf="!options.format.bHideComments">
         <span [hidden]="(week.comment == null || week.comment == '')">Commento: {{week.comment}}</span>
     </div>
 </div>

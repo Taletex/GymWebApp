@@ -101,12 +101,18 @@
                                     <a class="dropdown-item cursor-pointer" (click)="convertPercentage()">Ripristina originale</a>
                                     <div class="dropdown-divider"></div>
                                     <h6 class="h6 dropdown-header">Formattazione</h6>
-                                    <a class="dropdown-item cursor-pointer d-flex align-items-center justify-content-center">
+                                    <a class="dropdown-item cursor-pointer d-flex align-items-center justify-content-center" *ngIf="deviceType == DEVICE_TYPE.DESKTOP">
                                         <span>Settimane per riga: </span><input type="number" class="ml-2" [(ngModel)]="options.format.weeksForRow" min="1" max="8" (ngModelChange)="clampWeeksForRowValue()">
                                     </a>
                                     <a class="dropdown-item cursor-pointer">
                                         <button (click)="options.format.seriesFormat = 'seriesxrep'" class="btn btn-sm btn-outline-secondary">Serie x Rep</button>
                                         <button (click)="options.format.seriesFormat = 'repxseries'" class="btn btn-sm btn-outline-secondary ml-2">Rep x Series</button>
+                                    </a>
+                                    <a class="dropdown-item cursor-pointer d-flex align-items-center justify-content-center">
+                                        <span>Nascondi Riposo</span><input type="checkbox" class="ml-2" [(ngModel)]="options.format.bHideRestColumn">
+                                    </a>
+                                    <a class="dropdown-item cursor-pointer d-flex align-items-center justify-content-center">
+                                        <span>Nascondi Commenti</span><input type="checkbox" class="ml-2" [(ngModel)]="options.format.bHideComments">
                                     </a>
                                     <a class="dropdown-item cursor-pointer" (click)="setDefaultoptions()">Ripristina originale</a>
                                 </div>
@@ -147,7 +153,9 @@
                                 </span>
                                 <span *ngIf="account.user._id != training.author._id">Atleta {{account.user.name}} {{account.user.surname}} ({{account.user.dateOfBirth | date:'dd/MM/yyyy'}} &bull; {{account.user.bodyWeight}} kg)</span>
                             </h6>
-                            <span class="font-size-8" [hidden]="(readOnlyTraining.comment == null || readOnlyTraining.comment == '')">Commento: {{readOnlyTraining.comment}}</span>
+                            <span *ngIf="!options.format.bHideComments">
+                                <span class="font-size-8" [hidden]="(readOnlyTraining.comment == null || readOnlyTraining.comment == '')">Commento: {{readOnlyTraining.comment}}</span>
+                            </span>
                         </div>
                     </div>
 
