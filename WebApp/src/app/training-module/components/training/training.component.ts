@@ -291,29 +291,30 @@ export class TrainingComponent implements OnInit {
     }, 1 * 1000, this);         
   }
 
-  setReadOnlySessionContainerHeight() {
+  setReadOnlySessionContainerHeight(newMaxHeight: any = 0) {
     let maxHeight = 0;
     let height = 0;
 
-    for(let i=0; i<this.readOnlyTraining.weeks.length; i++) {
-      for(let j=0; j<this.readOnlyTraining.weeks[i].sessions.length; j++) {
-        height = $("#sessionContainer_" + i.toString() + "_" + j.toString()).height();
-        if(height > maxHeight) {
-          maxHeight = height;
+    if(newMaxHeight!="auto") {
+      for(let i=0; i<this.readOnlyTraining.weeks.length; i++) {
+        for(let j=0; j<this.readOnlyTraining.weeks[i].sessions.length; j++) {
+          height = $("#sessionComment_" + i.toString() + "_" + j.toString()).height();
+          if(height > maxHeight) {
+            maxHeight = height;
+          }
         }
       }
+      maxHeight = maxHeight + 25;
+      this.options.format.maxSessionContainerHeight = maxHeight + "px";
+    } else {
+      maxHeight = newMaxHeight;
     }
-
-    maxHeight = maxHeight + 50;
 
     for(let i=0; i<this.readOnlyTraining.weeks.length; i++) {
       for(let j=0; j<this.readOnlyTraining.weeks[i].sessions.length; j++) {
-        $("#sessionContainer_" + i + "_" + j).height(maxHeight);
+        $("#sessionComment_" + i + "_" + j).height(maxHeight);
       }
     }
-
-    if(maxHeight) 
-      this.options.format.maxSessionContainerHeight = maxHeight + "px";
   }
 
   getExercises() {
@@ -845,7 +846,7 @@ export class TrainingComponent implements OnInit {
 
   /* READ OPTIONS FUNCTIONS */
   setDefaultoptions() {
-    this.options = {format: {weeksForRow: 1, seriesFormat: "seriesxrep", maxSessionContainerHeight: "auto", bHideRestColumn: false, bHideComments: false}, currentUser: this.account.user};
+    this.options = {format: {weeksForRow: 1, seriesFormat: "seriesxrep", maxSessionContainerHeight: "auto", bHideExerciseDescription: false, bHideRestColumn: false, bHideComments: false}, currentUser: this.account.user};
   }
 
   clampWeeksForRowValue() {
@@ -854,6 +855,12 @@ export class TrainingComponent implements OnInit {
     else
       if(this.options.format.weeksForRow > 8)
         this.options.format.weeksForRow = 8;
+  }
+
+  onWeeksForRowChange() {
+    this.clampWeeksForRowValue();
+    this.setReadOnlySessionContainerHeight("auto");
+    this.setReadOnlySessionContainerHeight();
   }
 
 

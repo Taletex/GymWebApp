@@ -2639,6 +2639,10 @@ html, body {
   text-decoration: none;
 }
 
+.comment-box {
+  overflow-wrap: anywhere;
+}
+
 /* TABLES STYLE */
 @media (max-width: 767.98px) {
   .main-list-table .table-header {

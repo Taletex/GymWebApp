@@ -2,10 +2,10 @@
     <div class="card-header m-0 px-0 text-white" style="background-color: rgba(0, 0, 0, 0.6) !important;">
         <h6 class="h6 m-0 px-3">Sessione <span *ngIf="sessionIndex!=null">{{sessionIndex+1}}</span> <span *ngIf="session.name!=null && session.name!=''"> - {{session.name}}</span></h6>
         <div class="row m-0 px-3 py-0" style="font-size: small; font-style: italic;">
-            <div class="col-4 px-0">
+            <div class="px-0" [ngClass]="{'col-6': options.format.bHideRestColumn, 'col-4': !options.format.bHideRestColumn}">
                 <span>Esercizio <span class="d-sm-none">(v)</span> <span class="d-none d-sm-inline">(variante)</span></span>
             </div>
-            <div class="col-8 pr-0">
+            <div class="pr-0" [ngClass]="{'col-6': options.format.bHideRestColumn, 'col-8': !options.format.bHideRestColumn}">
                 <div class="row m-0 d-flex">
                     <span *ngIf="options.format.seriesFormat == 'seriesxrep'">Serie &times; <span class="d-sm-none">Rip.</span> <span class="d-none d-sm-inline">Ripetizioni</span></span>
                     <span *ngIf="options.format.seriesFormat == 'repxseries'"><span class="d-sm-none">Rip.</span> <span class="d-none d-sm-inline">Ripetizioni</span> &times; Serie</span>
@@ -16,11 +16,11 @@
     </div>
     <div class="card-body h-100 p-0">
         <div *ngFor="let exercise of session.exercises; index as exerciseIndex" class="row m-0 px-3 py-1 border border-left-0 border-right-0 border-top-0">
-            <div class="col-4 px-0">
+            <div class="px-0" [ngClass]="{'col-6': options.format.bHideRestColumn, 'col-4': !options.format.bHideRestColumn}">
                 <div><span>{{exercise.exercise.name}} ({{exercise.exercise.variant.name}})</span></div>
-                <div><small>{{exercise.exercise.description}}</small></div>
+                <div *ngIf="!options.format.bHideExerciseDescription"><small>{{exercise.exercise.description}}</small></div>
             </div>
-            <div class="col-8 pr-0">
+            <div class="pr-0" [ngClass]="{'col-6': options.format.bHideRestColumn, 'col-8': !options.format.bHideRestColumn}">
                 <div *ngFor="let series of exercise.series; index as seriesIndex" class="row m-0 d-flex">
                     <span *ngIf="options.format.seriesFormat == 'seriesxrep'">{{series.seriesNumber}}&times;{{series.repNumber}}@{{series.weight}}{{series.measure}}</span>
                     <span *ngIf="options.format.seriesFormat == 'repxseries'">{{series.repNumber}}&times;{{series.seriesNumber}}@{{series.weight}}{{series.measure}}</span>
@@ -29,7 +29,7 @@
             </div>
         </div>
     </div>
-    <div class="card-footer border-0 bg-white px-3 d-flex" *ngIf="!options.format.bHideComments">
-        <span>{{(session.comment == null || session.comment == '') ? 'Nessun commento' : ('Commento: ' + session.comment)}}</span>
+    <div class="card-footer border-0 bg-white px-3 d-flex" *ngIf="!options.format.bHideComments" id="sessionComment_{{weekIndex}}_{{sessionIndex}}" >
+        <span class="comment-box">{{(session.comment == null || session.comment == '') ? 'Nessun commento' : ('Commento: ' + session.comment)}}</span>
     </div>
 </div>
