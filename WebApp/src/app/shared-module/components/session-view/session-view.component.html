@@ -29,7 +29,7 @@
             </div>
         </div>
     </div>
-    <div class="card-footer border-0 bg-white px-3 d-flex" *ngIf="!options.format.bHideComments" id="sessionComment_{{weekIndex}}_{{sessionIndex}}" >
+    <div class="card-footer border-0 bg-white px-3 d-flex" *ngIf="!options.format.bHideComments" id="sessionComment_{{weekIndex}}_{{sessionIndex}}">
         <span class="comment-box">{{(session.comment == null || session.comment == '') ? 'Nessun commento' : ('Commento: ' + session.comment)}}</span>
     </div>
 </div>

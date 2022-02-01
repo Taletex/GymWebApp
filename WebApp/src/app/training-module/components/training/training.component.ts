@@ -298,13 +298,14 @@ export class TrainingComponent implements OnInit {
     if(newMaxHeight!="auto") {
       for(let i=0; i<this.readOnlyTraining.weeks.length; i++) {
         for(let j=0; j<this.readOnlyTraining.weeks[i].sessions.length; j++) {
-          height = $("#sessionComment_" + i.toString() + "_" + j.toString()).height();
+          height = $("#sessionContainer_" + i.toString() + "_" + j.toString()).height();
           if(height > maxHeight) {
             maxHeight = height;
           }
         }
       }
-      maxHeight = maxHeight + 25;
+      if(!this.options.format.bHideComments)
+        maxHeight = maxHeight + 25;
       this.options.format.maxSessionContainerHeight = maxHeight + "px";
     } else {
       maxHeight = newMaxHeight;
@@ -312,7 +313,7 @@ export class TrainingComponent implements OnInit {
 
     for(let i=0; i<this.readOnlyTraining.weeks.length; i++) {
       for(let j=0; j<this.readOnlyTraining.weeks[i].sessions.length; j++) {
-        $("#sessionComment_" + i + "_" + j).height(maxHeight);
+        $("#sessionContainer_" + i + "_" + j).height(maxHeight);
       }
     }
   }
@@ -857,10 +858,12 @@ export class TrainingComponent implements OnInit {
         this.options.format.weeksForRow = 8;
   }
 
-  onWeeksForRowChange() {
+  updateSessionContainerHeight() {
     this.clampWeeksForRowValue();
     this.setReadOnlySessionContainerHeight("auto");
-    this.setReadOnlySessionContainerHeight();
+    setTimeout(() => {
+      this.setReadOnlySessionContainerHeight();
+    }, 10);
   }
 
 
