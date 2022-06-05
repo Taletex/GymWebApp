@@ -214,8 +214,7 @@ export class GeneralService {
         let weekToString = "";
         weekToString = weekToString +
             "\
-            <div class='card my-3 p-0' style='margin-left: 0px !important; margin-right: 10px !important; padding: 0px !important; position: relative; display: -ms-flexbox; display: flex; -ms-flex-direction: column; flex-direction: column; min-width: 0; word-wrap: break-word; background-color: #fff; background-clip: border-box; border: 1px solid rgba(0, 0, 0, 0.125); border-radius: 0.25rem; margin-top: 1rem !important; margin-bottom: 1rem !important; border-color: rgba(0, 0, 0, 0.6) !important; "
-                        + ((index == 0 || ((index + 1) % options.format.weeksForRow != 0)) ? "margin-right: 0.1% !important; " : "")
+            <div class='card my-3 p-0' style='margin-left: 0px !important; margin-right: 0px !important; padding: 0px !important; position: relative; display: -ms-flexbox; display: flex; -ms-flex-direction: column; flex-direction: column; min-width: 0; word-wrap: break-word; background-color: #fff; background-clip: border-box; margin-top: 1rem !important; margin-bottom: 1rem !important;"
                         + ((options.format.weeksForRow == 1 || options.format.weeksForRow == 0 || options.format.weeksForRow == null) ? "flex: 0 0 100% !important;" : "")
                         + ((options.format.weeksForRow == 2) ? "flex: 0 0 49.95% !important; font-size: 95% !important;" : "")
                         + ((options.format.weeksForRow == 3) ? "flex: 0 0 33.2666666667% !important; font-size: 90% !important;" : "")
@@ -225,10 +224,10 @@ export class GeneralService {
                         + ((options.format.weeksForRow == 7) ? "flex: 0 0 14.2% !important; font-size: 70% !important;" : "")
                         + ((options.format.weeksForRow == 8) ? "flex: 0 0 12.4125% !important; font-size: 65% !important;" : "")
                         + "'> \
-                <div class='card-header border border-dark bg-dark text-white' style='border-color: #343a40 !important; padding: 0.75rem 1.25rem; margin-bottom: 0; background-color: rgba(0, 0, 0, 0.03); border-bottom: 1px solid rgba(0, 0, 0, 0.125); border: 1px solid #dee2e6 !important; color: white !important; background-color: #343a40 !important'> \
+                <div class='card-header border bg-dark text-white' style='padding: 0.75rem 1.25rem; margin-bottom: 0; background-color: rgba(0, 0, 0, 0.03); border: 1px solid black !important; color: white !important; background-color: #343a40 !important'> \
                     <h6 class='m-0' style='margin: 0px !important'>WEEK " + (index + 1) + "</h6> \
                 </div> \
-                <div class='card-body border-0 p-0 m-0' style='-ms-flex: 1 1 auto; flex: 1 1 auto; min-height: 1px; padding: 1.25rem; border: 0px !important; padding: 0px !important; margin: 0px !important;'> \
+                <div class='card-body p-0 m-0' style='-ms-flex: 1 1 auto; flex: 1 1 auto; min-height: 1px; padding: 1.25rem; padding: 0px !important; margin: 0px !important; border: 1px solid black; '> \
             ";
 
         for (let i = 0; i < week.sessions.length; i++) {
@@ -241,7 +240,7 @@ export class GeneralService {
 
         if(!options.format.bHideComments) {
             weekToString = weekToString + 
-                "<div class='card-footer text-white bg-dark border-0' style='padding: 0.75rem 1.25rem; background-color: rgba(0, 0, 0, 0.03); border-top: 1px solid rgba(0, 0, 0, 0.125); color: white !important; border: 0px !important; background-color: #343a40 !important'> \
+                "<div class='card-footer text-white bg-dark border-0' style='padding: 0.75rem 1.25rem; background-color: rgba(0, 0, 0, 0.03); border-top: 1px solid black; color: white !important; background-color: #343a40 !important'> \
                     <span>" + ((week.comment == null || week.comment == '') ? 'Nessun commento' : ('Commento: ' + week.comment)) + "</span> \
                 </div>";
         }
@@ -265,8 +264,8 @@ export class GeneralService {
         let sessionToString = "";
         sessionToString = sessionToString +
         " \
-        <div class='card col-12 p-0' style='position: relative; width: 100%; padding-right: 15px; padding-left: 15px; -ms-flex: 0 0 100%; flex: 0 0 100%; max-width: 100%; padding: 0px !important; position: relative; display: -ms-flexbox; display: flex; -ms-flex-direction: column; flex-direction: column; min-width: 0; word-wrap: break-word; background-color: #fff; background-clip: border-box; border: 1px solid rgba(0, 0, 0, 0.125); border-radius: 0.25rem; border-radius: 0px !important; height: " + options.format.maxSessionContainerHeight + "'> \
-            <div class='card-header m-0 px-0 border-0 text-white' style='padding: 0.75rem 1.25rem; margin-bottom: 0; background-color: rgba(0, 0, 0, 0.03); border-bottom: 1px solid rgba(0, 0, 0, 0.125); margin: 0px !important; padding-left: 0px !important; padding-right: 0px !important; border: 0px !important; color: white !important; background-color: rgba(0, 0, 0, 0.6) !important; border-radius: 0px !important;'> \
+        <div class='card col-12 p-0' style='position: relative; width: 100%; padding-right: 15px; padding-left: 15px; -ms-flex: 0 0 100%; flex: 0 0 100%; max-width: 100%; padding: 0px !important; position: relative; display: -ms-flexbox; display: flex; -ms-flex-direction: column; flex-direction: column; min-width: 0; word-wrap: break-word; background-color: #fff; background-clip: border-box; border: 0px !important; height: " + options.format.maxSessionContainerHeight + "'> \
+            <div class='card-header m-0 px-0 border-0 text-white' style='margin-bottom: 0; background-color: rgba(0, 0, 0, 0.03); margin: 0px !important; padding-left: 0px !important; padding-right: 0px !important; border: 0px !important; color: white !important; background-color: rgba(0, 0, 0, 0.6) !important; border-radius: 0px;'> \
                 <h6 class='m-0 px-3' style='margin: 0px !important; padding-left: 1rem !important; padding-right: 1rem !important'>Sessione " + (index+1) + " - " + session.name + "</h6> \
                 <div class='row m-0 px-3 py-0' style='display: -ms-flexbox; display: flex; -ms-flex-wrap: wrap; flex-wrap: wrap; margin-right: -15px; margin-left: -15px; margin: 0px !important; padding: 0px 1rem 0px 1rem !important; font-size: small; font-style: italic; padding-left: 1rem !important; padding-right: 1rem !important'> \
                     <div class='col-4 px-0' style='margin: 0px !important; position: relative; width: 100%; padding-right: 15px; padding-left: 15px; -ms-flex: 0 0 33.333333%; flex: 0 0 33.333333%; max-width: 33.333333%; padding-left: 0px !important; padding-right: 0px !important'> \

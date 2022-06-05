@@ -795,6 +795,7 @@ export class TrainingComponent implements OnInit {
 
   closeTinyMCEEditor() {
     this.bTinyMCEEditorOpen = false;
+    this.updateSessionContainerHeight();
   }
 
   //TODO: Improve functionality
@@ -949,7 +950,7 @@ export class TrainingComponent implements OnInit {
     if(this.training.athletes.length > 0) {
       this.bLoading = true;
 
-      this.httpService.sendTrainingEmails(this.training, "<div style='font-family:Arial, Helvetica, sans-serif;'>" + this.generalService.trainingReadViewToString(this.readOnlyTraining, this.options) + "</div>")
+      this.httpService.sendTrainingEmails(this.training, this.generalService.trainingReadViewToString(this.readOnlyTraining, this.options))
       .subscribe(
         (data: any) => {
           let message: string = MESSAGES.TRAINING_NOTIFICATION_SUCCESS;
@@ -960,6 +961,7 @@ export class TrainingComponent implements OnInit {
           }
           this.toastr.success(message);
           console.log("sendTrainingEmails data", data);
+          this.updateSessionContainerHeight();
           this.bLoading = false;
         },
         (error: HttpErrorResponse) => {
