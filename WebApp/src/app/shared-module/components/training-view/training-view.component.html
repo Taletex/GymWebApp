@@ -1,7 +1,15 @@
 <div class="d-flex m-0" style="flex-wrap: wrap;">
 
-    <div *ngFor="let week of training.weeks; index as weekIndex; last as bLastWeek" style="min-width: 50px;"
-        [ngClass]="{'margin-right-1': weekIndex==0 || ((weekIndex+1)%options.format.weeksForRow!=0),'flex-1 font-size-perc-100': options.format.weeksForRow == 1 || options.format.weeksForRow == 0 || options.format.weeksForRow == null, 'flex-2 font-size-perc-95': options.format.weeksForRow == 2, 'flex-3 font-size-perc-90': options.format.weeksForRow == 3, 'flex-4 font-size-perc-85': options.format.weeksForRow == 4, 'flex-5 font-size-perc-80': options.format.weeksForRow == 5, 'flex-6 font-size-perc-75': options.format.weeksForRow == 6, 'flex-7 font-size-perc-70': options.format.weeksForRow == 7, 'flex-8 font-size-perc-65': options.format.weeksForRow == 8}">
+    <div *ngFor="let week of training.weeks; index as weekIndex; last as bLastWeek" style="min-width: 50px;" class="my-3"
+        [ngClass]="{'margin-right-1': weekIndex==0 || ((weekIndex+1)%options.format.weeksForRow!=0),
+                    'flex-1 font-size-perc-100': options.format.weeksForRow == 1 || options.format.weeksForRow == 0 || options.format.weeksForRow == null, 
+                    'flex-2 font-size-perc-95': options.format.weeksForRow == 2, 
+                    'flex-3 font-size-perc-90': options.format.weeksForRow == 3, 
+                    'flex-4 font-size-perc-85': options.format.weeksForRow == 4, 
+                    'flex-5 font-size-perc-80': options.format.weeksForRow == 5, 
+                    'flex-6 font-size-perc-75': options.format.weeksForRow == 6, 
+                    'flex-7 font-size-perc-70': options.format.weeksForRow == 7, 
+                    'flex-8 font-size-perc-65': options.format.weeksForRow == 8}">
         <app-week-view [week]="week" [weekIndex]="weekIndex" [(options)]="options"></app-week-view>
     </div>
 </div>
