@@ -304,7 +304,6 @@ export class TrainingComponent implements OnInit {
           }
         }
       }
-      if(!this.options.format.bHideComments)
         maxHeight = maxHeight + 25;
       this.options.format.maxSessionContainerHeight = maxHeight + "px";
     } else {
