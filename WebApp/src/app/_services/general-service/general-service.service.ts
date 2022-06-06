@@ -268,14 +268,14 @@ export class GeneralService {
             <div class='card-header m-0 px-0 border-0 text-white' style='margin-bottom: 0; background-color: rgba(0, 0, 0, 0.03); margin: 0px !important; padding-left: 0px !important; padding-right: 0px !important; border: 0px !important; color: white !important; background-color: rgba(0, 0, 0, 0.6) !important; border-radius: 0px;'> \
                 <h6 class='m-0 px-3' style='margin: 0px !important; padding-left: 1rem !important; padding-right: 1rem !important'>Sessione " + (index+1) + " - " + session.name + "</h6> \
                 <div class='row m-0 px-3 py-0' style='display: -ms-flexbox; display: flex; -ms-flex-wrap: wrap; flex-wrap: wrap; margin-right: -15px; margin-left: -15px; margin: 0px !important; padding: 0px 1rem 0px 1rem !important; font-size: small; font-style: italic; padding-left: 1rem !important; padding-right: 1rem !important'> \
-                    <div class='col-4 px-0' style='margin: 0px !important; position: relative; width: 100%; padding-right: 15px; padding-left: 15px; -ms-flex: 0 0 33.333333%; flex: 0 0 33.333333%; max-width: 33.333333%; padding-left: 0px !important; padding-right: 0px !important'> \
+                    <div class='col-4 px-0' style='margin: 0px !important; position: relative; width: 100%; padding-right: 15px; padding-left: 15px; padding-left: 0px !important; padding-right: 0px !important;" + (options.format.bHideRestColumn ? "-ms-flex: 0 0 50%; flex: 0 0 50%; max-width: 50%;" : "-ms-flex: 0 0 33.333333%; flex: 0 0 33.333333%; max-width: 33.333333%;") + "'> \
                         <span>Esercizio (variante)</span> \
                     </div> \
-                    <div class='col-8 px-0' style='margin: 0px !important; position: relative; width: 100%; padding-right: 15px; padding-left: 15px;  -ms-flex: 0 0 66.666667%; flex: 0 0 66.666667%; max-width: 66.666667%; padding-right: 0px !important; padding-left: 0px !important'> \
+                    <div class='col-8 px-0' style='margin: 0px !important; position: relative; width: 100%; padding-right: 15px; padding-left: 15px; padding-right: 0px !important; padding-left: 0px !important;" + (options.format.bHideRestColumn ? "-ms-flex: 0 0 50%; flex: 0 0 50%; max-width: 50%;" : "-ms-flex: 0 0 66.666667%; flex: 0 0 66.666667%; max-width: 66.666667%;") + "'> \
                         <div class='row m-0 d-flex' style='display: -ms-flexbox !important; display: flex !important; display: -ms-flexbox; display: flex; -ms-flex-wrap: wrap; flex-wrap: wrap; margin-right: -15px; margin-left: -15px; margin:0px !important'>" +
                     ((options.format.seriesFormat == 'seriesxrep') ? "<span>Serie × Ripetizioni</span>" : "<span>Ripetizioni × Serie</span>") +
-                    "<span class='ml-auto' style='margin-left: auto !important;'>Riposo</span> \
-                        </div> \
+                    (options.format.bHideRestColumn ? "" : ("<span class='ml-auto' style='margin-left: auto !important;'>Riposo</span>")) +
+                        "</div> \
                     </div> \
                 </div> \
             </div> \
@@ -317,11 +317,11 @@ export class GeneralService {
         exerciseToString = exerciseToString +
             " \
             <div class='row m-0 px-3 py-1 border border-left-0 border-right-0 border-top-0' style='border-bottom: 1px solid #dee2e6 !important; display: -ms-flexbox; display: flex; -ms-flex-wrap: wrap; flex-wrap: wrap; margin-right: -15px; margin-left: -15px; margin: 0px !important; padding-left: 1rem !important; padding-right: 1rem !important'> \
-                <div class='col-4 px-0' style='margin: 0px !important; position: relative; width: 100%; padding-right: 15px; padding-left: 15px; -ms-flex: 0 0 33.333333%; flex: 0 0 33.333333%; max-width: 33.333333%; padding-right: 0px !important; padding-left: 0px !important'> \
+                <div class='col-4 px-0' style='margin: 0px !important; position: relative; width: 100%; padding-right: 15px; padding-left: 15px; padding-right: 0px !important; padding-left: 0px !important;" + (options.format.bHideRestColumn ? "-ms-flex: 0 0 50%; flex: 0 0 50%; max-width: 50%;" : "-ms-flex: 0 0 33.333333%; flex: 0 0 33.333333%; max-width: 33.333333%;") + "'> \
                     <div><span> " + sessionExercise.exercise.name + " (" + sessionExercise.exercise.variant.name + ")</span></div>" +
                     (options.format.bHideExerciseDescription ? "" : "<div><small>(" + sessionExercise.exercise.description + ")</small></div>") +
                 "</div> \
-                <div class='col-8 px-0' style='margin: 0px !important; position: relative; width: 100%; padding-right: 15px; padding-left: 15px; -ms-flex: 0 0 66.666667%; flex: 0 0 66.666667%; max-width: 66.666667%; padding-right: 0px !important; padding-left: 0px !important'> \
+                <div class='col-8 px-0' style='margin: 0px !important; position: relative; width: 100%; padding-right: 15px; padding-left: 15px; padding-right: 0px !important; padding-left: 0px !important;" + (options.format.bHideRestColumn ? "-ms-flex: 0 0 50%; flex: 0 0 50%; max-width: 50%;" : "-ms-flex: 0 0 66.666667%; flex: 0 0 66.666667%; max-width: 66.666667%;") + "'> \
             ";
 
         for (let i = 0; i < sessionExercise.series.length; i++) {
@@ -348,9 +348,9 @@ export class GeneralService {
         seriesToString = seriesToString +
             " \
             <div class='row m-0 d-flex' style='display: -ms-flexbox; display: flex; -ms-flex-wrap: wrap; flex-wrap: wrap; margin-right: -15px; margin-left: -15px; margin: 0px !important; display: -ms-flexbox !important; display: flex !important;'> \
-                <span>" + ((options.format.seriesFormat == 'seriesxrep') ? (series.seriesNumber + " × " + series.repNumber) : (series.repNumber + " × " + series.seriesNumber)) + " @ " + series.weight + series.measure + "</span> \
-                <span class='ml-auto' style='margin-left: auto !important;'>" + series.rest + "s</span> \
-            </div> \
+                <span>" + ((options.format.seriesFormat == 'seriesxrep') ? (series.seriesNumber + " × " + series.repNumber) : (series.repNumber + " × " + series.seriesNumber)) + " @ " + series.weight + series.measure + "</span>" +
+                (options.format.bHideRestColumn ? "" : ("<span class='ml-auto' style='margin-left: auto !important;'>" + series.rest + "s</span>")) +
+            "</div> \
             ";
 
         return seriesToString;

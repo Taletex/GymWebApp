@@ -89,7 +89,10 @@
                         </div>
                         <div class="d-flex input-group w-auto ml-2 overflow-visible" *ngIf="pageStatus[PAGES.TRAININGS] == PAGEMODE.READONLY && !bLoading">
                             <div class="d-flex align-items-center form-control-min-xl dropdown">
-                                <div id="readOnlyTrainingOptionsDropdown" class="dropdown-toggle image-button" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ngbTooltip="Opzioni visualizzazione allenamento" placement="left">
+                                <div [hidden]="!bTinyMCEEditorOpen">
+                                    <span class="fa fa-gear cursor-not-allowed" ngbTooltip="Non è possibile modificare la visualizzazione in modalità Editor"></span>
+                                </div>
+                                <div [hidden]="bTinyMCEEditorOpen" id="readOnlyTrainingOptionsDropdown" class="dropdown-toggle image-button" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ngbTooltip="Opzioni visualizzazione allenamento" placement="left">
                                     <span class="fa fa-gear"></span>
                                 </div>
                                 <div class="dropdown-menu" aria-labelledby="readOnlyTrainingOptionsDropdown">
