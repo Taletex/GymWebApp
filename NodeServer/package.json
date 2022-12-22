@@ -28,7 +28,7 @@
     "html-pdf-node": "^1.0.7",
     "http-server": "^0.12.3",
     "joi": "^17.1.1",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "line-reader": "^0.4.0",
     "lodash": "^4.17.20",
     "moment": "^2.29.1",
